@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "kind": "control-manifest",
+  "generatedBy": "scripts/generate-control.mjs",
+  "authority": "derived control projections",
+  "source": {
+    "mpes": {
+      "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+      "sha256": "585e2f178e47ca344c576eec16367585d1f347c2776a3c0c93a7cd4f9be4b6f3"
+    },
+    "omni": {
+      "path": "docs/Omni_3.32.0.md",
+      "sha256": "061a15a918c3713075244ddcd548e7c3c946fd4bcb1e12b6995bdd777adc3d2b"
+    },
+    "package": {
+      "path": "package.json",
+      "sha256": "ccc96f8c1a93c3256e9285d9d6d7e1c9958949a1259beff4142b94bbd942185a"
+    },
+    "lockfile": {
+      "path": "package-lock.json",
+      "sha256": "85518025625e43079f8f14b302f717c123501818e58d5a416bd2bf4f3b502a7f"
+    }
+  },
+  "generatedFiles": [
+    "requirements.json",
+    "acceptance-scenarios.json",
+    "dependency-sbom.json",
+    "control-manifest.json"
+  ],
+  "maintainedRegisters": [
+    "decision-log.json",
+    "phase0-acceptance.json",
+    "support-matrix.json",
+    "owner-registry.json",
+    "capability-catalogue.json",
+    "effect-outbox-policy.json",
+    "credential-key-policy.json",
+    "capability-coverage.json",
+    "upstream.json",
+    "license-provenance.json",
+    "currentness-radar.json",
+    "compatibility-matrix.json",
+    "risk-threat-register.json",
+    "migration-register.json",
+    "release-evidence.json",
+    "engineering-controller.json",
+    "completion-ledger.json"
+  ],
+  "counts": {
+    "requirements": 335,
+    "acceptanceScenarios": 98,
+    "lockedPackages": 86
+  }
+}

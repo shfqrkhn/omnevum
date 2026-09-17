@@ -1,0 +1,28 @@
+{
+  "name": "omnevum",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run typecheck && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "generate:control": "node scripts/generate-control.mjs",
+    "audit:structure": "node scripts/structure-audit.mjs",
+    "audit:drift": "npm run generate:control && git diff --exit-code -- docs/control",
+    "ci": "npm run generate:control && npm run audit:structure && npm run typecheck && npm test && npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.1",
+    "fake-indexeddb": "6.2.5",
+    "typescript": "7.0.2",
+    "vite": "8.3.0",
+    "vitest": "5.0.1"
+  }
+}

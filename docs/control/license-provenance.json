@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "kind": "license-provenance-state",
+  "status": "INVENTORY_PENDING_REVIEW",
+  "authority": "MPES Sections 13.5 and 22.7; tool output is evidence, not legal truth",
+  "canonicalInputs": ["docs/control/upstream.json", "docs/control/dependency-sbom.json", "package.json", "package-lock.json"],
+  "requiredEvidence": ["exact-source-identity", "license-text-or-legal-reference", "copyright-notices", "source-obligations", "distribution-policy", "security-currentness"],
+  "policy": [
+    "No dependency is admitted from a package name alone.",
+    "License and source obligations are evaluated at exact source/version and distribution profile.",
+    "Copyleft or ambiguous obligations require isolation/compliance evidence or explicit rejection before release.",
+    "Automated ORT, ScanCode, REUSE/SPDX, or equivalent results are reviewed rather than treated as legal truth."
+  ],
+  "releaseBlockers": ["unreviewed-license", "missing-notice", "missing-corresponding-source-where-required", "unresolved-provenance"]
+}

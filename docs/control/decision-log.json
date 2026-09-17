@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "kind": "decision-log",
+  "items": [
+    {
+      "id": "OMN-DEC-001",
+      "title": "Phase 0 shell substrate",
+      "status": "PROVISIONAL",
+      "decision": "Use Vite, TypeScript, native DOM, and native IndexedDB for the initial foundation.",
+      "why": "Minimizes runtime dependencies and duplicate authority while keeping the public contracts replaceable.",
+      "alternatives": ["React launchpad", "Svelte launchpad", "NeumanOS adaptation", "Kurumi adaptation"],
+      "revisitWhen": "After exact-source NeumanOS/Kurumi characterization and schema-driven UI bake-off.",
+      "evidence": ["docs/evidence/phase0-research-2026-09-17.md"]
+    },
+    {
+      "id": "OMN-DEC-002",
+      "title": "Whole-application launchpad route",
+      "status": "DECIDED_FOR_PHASE0",
+      "decision": "Keep the small Omnevum Vite/TypeScript/native-DOM foundation as the launchpad; harvest NeumanOS and Kurumi patterns in isolated qualification work rather than adopting either whole application.",
+      "why": "Both candidates have high feature and test value, but importing either would introduce a second application authority, framework-specific route/store ownership, and lifecycle surface before Omnevum contracts are proven.",
+      "alternatives": ["adopt NeumanOS whole app", "adopt Kurumi whole app", "defer all reuse"],
+      "revisitWhen": "A representative benchmark proves an exact candidate can satisfy Omnevum canonical ownership, static-host, accessibility, migration, security, and replacement gates with lower total lifecycle cost.",
+      "evidence": ["docs/evidence/phase0-upstream-characterization-2026-09-17.md", "docs/control/capability-coverage.json"]
+    },
+    {
+      "id": "OMN-DEC-003",
+      "title": "Vault and sync candidate route",
+      "status": "DECIDED_FOR_PHASE0",
+      "decision": "Retain the native small Vault path for Phase 0 and qualify SelfStore as the leading Phase 2 encrypted backup/replica candidate; qualify remoteStorage.js only as an optional endpoint adapter.",
+      "why": "SelfStore has the strongest portable archive, crypto, target, merge, Recovery, and test seams; remoteStorage.js adds a useful open endpoint protocol but requires external service/auth/CORS and cannot be the static-core dependency.",
+      "alternatives": ["bespoke sync only", "adopt SelfStore immediately", "make remoteStorage mandatory"],
+      "revisitWhen": "Contract, security, quota, crash, migration, provider, and cross-origin tests pass on representative Vault fixtures.",
+      "evidence": ["docs/evidence/phase0-upstream-characterization-2026-09-17.md", "docs/control/effect-outbox-policy.json", "docs/control/credential-key-policy.json"]
+    }
+  ]
+}

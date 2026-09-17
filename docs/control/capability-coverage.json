@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "kind": "capability-coverage-matrix",
+  "status": "PHASE0_CHARACTERIZED",
+  "authority": "MPES Section 13.5; candidates are not runtime authority",
+  "items": [
+    {"source": "travisjneuman/neumanos", "capability": "whole-app PWA launchpad", "disposition": "HARVEST_REFERENCE", "coverage": "REFERENCE_ONLY", "evidence": "docs/evidence/phase0-upstream-characterization-2026-09-17.md"},
+    {"source": "raskell-io/kurumi", "capability": "local-first capture and AI PWA", "disposition": "HARVEST_REFERENCE", "coverage": "REFERENCE_ONLY", "evidence": "docs/evidence/phase0-upstream-characterization-2026-09-17.md"},
+    {"source": "selfstoredev/selfstore", "capability": "browser Vault backup and sync substrate", "disposition": "ADOPT_CANDIDATE_PHASE2", "coverage": "PHASE0_SPIKE_PENDING", "evidence": "docs/evidence/phase0-upstream-characterization-2026-09-17.md"},
+    {"source": "remotestorage/remotestorage.js", "capability": "user-controlled remote storage adapter", "disposition": "ADAPT_OPTIONAL_ENDPOINT_PHASE2", "coverage": "PHASE0_SPIKE_PENDING", "evidence": "docs/evidence/phase0-upstream-characterization-2026-09-17.md"},
+    {"source": "native IndexedDB", "capability": "canonical structured persistence", "disposition": "ADOPT_PROVISIONAL", "coverage": "PHASE0_IMPLEMENTED", "evidence": "src/core/storage.test.ts"}
+  ],
+  "rule": "No candidate is adopted from name or feature list alone; exact source, license, target, security, migration, and replacement evidence is required."
+}

@@ -1,0 +1,12 @@
+{
+  "name": "Omnevum",
+  "short_name": "Omnevum",
+  "description": "A local-first personal Life OS.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f8fa",
+  "theme_color": "#f7f8fa",
+  "icons": []
+}
+

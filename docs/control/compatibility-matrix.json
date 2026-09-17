@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "kind": "compatibility-migration-matrix",
+  "status": "INITIAL",
+  "authority": "MPES Sections 6, 8, 12, 19, and 28",
+  "rows": [
+    {"id": "COMP-001", "from": "none", "to": "schema-1", "case": "fresh install", "expected": "empty canonical store and usable Recovery", "status": "TESTED_INITIAL"},
+    {"id": "COMP-002", "from": "schema-1", "to": "schema-1", "case": "same-origin reopen", "expected": "records and tombstones preserved", "status": "TESTED_INITIAL"},
+    {"id": "COMP-003", "from": "vault-1", "to": "schema-1", "case": "cross-origin restore", "expected": "IDs, revisions, provenance preserved", "status": "TESTED_INITIAL"},
+    {"id": "COMP-004", "from": "older-schema", "to": "current", "case": "future migration", "expected": "explicit migrator or safe refusal; no reset", "status": "NOT_STARTED"},
+    {"id": "COMP-005", "from": "current", "to": "current", "case": "interrupted update", "expected": "repair/recovery path and no silent data loss", "status": "NOT_STARTED"}
+  ],
+  "rule": "Every schema, Vault, provider, package, and origin change adds a fixture and an explicit migration/rollback disposition before promotion."
+}

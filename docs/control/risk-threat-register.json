@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "kind": "risk-threat-register",
+  "status": "INITIAL_UNQUALIFIED",
+  "authority": "MPES Sections 18, 19, 21, 22, and 23",
+  "items": [
+    {"id": "RISK-001", "risk": "canonical data loss or reset", "control": "transactional IndexedDB, Vault restore, migration receipts, fault injection", "evidence": "src/core/storage.test.ts", "status": "PARTIAL"},
+    {"id": "RISK-002", "risk": "stale import resurrects deleted meaning", "control": "revision/tombstone precedence and sync qualification", "evidence": "src/core/storage.test.ts; future sync tests", "status": "PARTIAL"},
+    {"id": "RISK-003", "risk": "untrusted imported/rendered content executes", "control": "inert parsing, sanitizer fixtures, worker/resource bounds, no authority escalation", "evidence": "not yet available", "status": "OPEN"},
+    {"id": "RISK-004", "risk": "credential or AI context crosses owner boundary", "control": "credential/key broker, context broker, capability handles, command admission", "evidence": "contract only", "status": "OPEN"},
+    {"id": "RISK-005", "risk": "static host silently lacks required runtime behavior", "control": "frozen support matrix, truthful PLATFORM_LIMITED states, offline smoke", "evidence": "support matrix pending", "status": "OPEN"},
+    {"id": "RISK-006", "risk": "supply-chain or license defect reaches release", "control": "lockfile, SBOM, exact-source register, license/currentness/security gates", "evidence": "inventory pending review", "status": "OPEN"}
+  ],
+  "rule": "UNKNOWN, stale, skipped, or unverified controls are not PASS and remain release-visible."
+}

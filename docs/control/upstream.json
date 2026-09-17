@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "kind": "upstream-register",
+  "status": "PHASE0_CHARACTERIZED",
+  "snapshotDate": "2026-09-17",
+  "items": [
+    {"source": "https://github.com/travisjneuman/neumanos", "acceptedIdentity": "f4b2a174a339fc60524645a19417daedaf69ac91", "license": "MIT", "role": "launchpad harvest reference", "disposition": "HARVEST_REFERENCE", "characterization": "large React/Dexie product with multiple stores/services and strong isolated pattern value"},
+    {"source": "https://github.com/raskell-io/kurumi", "acceptedIdentity": "5453bbb08630d5b36138f8d3dc186b81be1ca93e", "license": "MIT", "role": "local-first launchpad harvest reference", "disposition": "HARVEST_REFERENCE", "characterization": "SvelteKit/Automerge product with coupled document, sync, AI, and route ownership"},
+    {"source": "https://github.com/selfstoredev/selfstore", "acceptedIdentity": "0b56c7fdf74fe8e8d5ffeb9025f3e6893275338e", "license": "MIT", "role": "Vault/sync substrate candidate", "disposition": "ADOPT_CANDIDATE_PHASE2", "characterization": "portable archive, encryption, passkey, target, replica, merge, and extensive test/spec seams"},
+    {"source": "https://github.com/remotestorage/remotestorage.js", "acceptedIdentity": "d899b5aee41849fc94c45470cfad08a7363780b6", "license": "MIT", "role": "optional personal-data endpoint adapter candidate", "disposition": "ADAPT_OPTIONAL_ENDPOINT_PHASE2", "characterization": "scoped remoteStorage client with OAuth/discovery, local cache, sync, and conformance tests"},
+    {"source": "npm:vite", "acceptedIdentity": "8.3.0", "license": "MIT", "role": "build tool", "disposition": "ADOPT_PROVISIONAL"},
+    {"source": "npm:typescript", "acceptedIdentity": "7.0.2", "license": "Apache-2.0", "role": "type checker", "disposition": "ADOPT_PROVISIONAL"},
+    {"source": "npm:vitest", "acceptedIdentity": "5.0.1", "license": "MIT", "role": "test runner", "disposition": "ADOPT_PROVISIONAL"},
+    {"source": "npm:fake-indexeddb", "acceptedIdentity": "6.2.5", "license": "MIT", "role": "test-only IndexedDB harness", "disposition": "ADOPT_PROVISIONAL"}
+  ],
+  "limits": [
+    "This is a currentness snapshot, not permanent release authority.",
+    "Candidate behavior and licenses require revalidation before adoption or release.",
+    "No vendor credential or secret is stored here.",
+    "Characterization is not adoption; each selected dependency still requires isolated contract, security, migration, target, and license evidence."
+  ]
+}

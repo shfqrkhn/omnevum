@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "kind": "engineering-controller",
+  "status": "PHASE_0_IN_PROGRESS",
+  "scope": "Omnevum finite accepted product completion",
+  "baseline": {
+    "omni": "docs/Omni_3.32.0.md",
+    "mpes": "docs/Omnevum-MPES-v0.12.0-converged.md",
+    "phaseGate": "PLATFORM_READY_FOR_CORE"
+  },
+  "verified": [
+    "workspace baseline reconciled",
+    "initial static PWA shell implemented",
+    "canonical IndexedDB store implemented",
+    "Vault export/import validation implemented",
+    "initial command and provenance tests implemented",
+    "machine-readable requirement and acceptance projections generated",
+    "required companion control registers materialized",
+    "structure audit, strict typecheck, unit tests, and production build pass",
+    "exact Phase 0 upstream characterization recorded",
+    "local browser smoke recorded with reload persistence, capture, search, and theme evidence"
+  ],
+  "unverified": [
+    "NeumanOS/Kurumi launchpad decision",
+    "SelfStore/remoteStorage storage decision",
+    "production static-host, browser-version, responsive, and assistive-technology evidence",
+    "service-worker offline/update/rollback proof",
+    "full Phase 0 acceptance gate and fault injection",
+    "security/untrusted-content/credential boundary evidence",
+    "static-host deployment, smoke, and rollback proof",
+    "MVP and later phases"
+  ],
+  "nextAction": "Serve the production build for static-host smoke, close browser/support/accessibility/offline/security/recovery evidence, and qualify the search/UI/analysis substrate bake-offs before expanding the MVP vertical slice.",
+  "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
+}

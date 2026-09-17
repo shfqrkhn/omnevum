@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "kind": "acceptance-profile",
+  "id": "phase-0",
+  "status": "PARTIAL",
+  "authority": "Omnevum MPES Section 25 Phase 0",
+  "gate": "PLATFORM_READY_FOR_CORE",
+  "profile": {
+    "hosting": ["github-pages-static-https", "local-static-https"],
+    "inputs": ["touch", "keyboard", "pointer"],
+    "accessibility": "WCAG-2.2-AA-target",
+    "storage": ["indexeddb-canonical", "opfs-optional"],
+    "optionalCapabilities": ["ai", "sync", "connectors", "background-notifications"]
+  },
+  "evidencePolicy": "NOT_RUN is not PASS; every PASS must reference reproducible evidence.",
+  "evidence": [
+    "docs/evidence/phase0-research-2026-09-17.md",
+    "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
+    "docs/evidence/phase0-browser-smoke-2026-09-17.md"
+  ],
+  "focus": [
+    "static-host shell and base-path routing",
+    "canonical owner and semantic command admission",
+    "IndexedDB persistence, revision, tombstone, and corruption behavior",
+    "portable Vault export/import and origin migration path",
+    "responsive Light and AMOLED Dark presentation",
+    "one service worker and offline shell behavior",
+    "generated control projections and structure audit"
+  ],
+  "statusValues": ["NOT_STARTED", "IN_PROGRESS", "PASS", "PARTIAL", "FAIL", "NOT_APPLICABLE", "UNKNOWN"]
+}

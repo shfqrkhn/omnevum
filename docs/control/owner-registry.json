@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "kind": "canonical-owner-registry",
+  "status": "PROVISIONAL_PHASE0",
+  "authority": "MPES Sections 4, 5, and 28",
+  "mutationAdmission": "All canonical mutation enters through the platform command/state-transition path and is validated before persistence.",
+  "owners": [
+    {"ownerId": "kernel.record", "meaning": "canonical record envelope, identity, provenance, truth, sensitivity, revision, tombstone", "writes": ["canonical-record"], "status": "IMPLEMENTED"},
+    {"ownerId": "platform.storage", "meaning": "canonical structured persistence and transaction boundary", "writes": ["indexeddb-record-store"], "status": "IMPLEMENTED"},
+    {"ownerId": "platform.vault", "meaning": "portable export/import and restore validation", "writes": ["vault-file", "restore-import"], "status": "IMPLEMENTED_UNENCRYPTED"},
+    {"ownerId": "platform.command", "meaning": "semantic create/update/archive admission", "writes": ["canonical-record"], "status": "IMPLEMENTED_INITIAL"},
+    {"ownerId": "platform.search", "meaning": "rebuildable derived search index", "writes": ["derived-index"], "status": "NOT_STARTED"},
+    {"ownerId": "platform.artifact", "meaning": "source-preserving files and derived transforms", "writes": ["artifact-metadata", "derived-artifact"], "status": "NOT_STARTED"},
+    {"ownerId": "platform.effect-outbox", "meaning": "deferred or outcome-uncertain external effects", "writes": ["operation-state"], "status": "CONTRACT_ONLY"},
+    {"ownerId": "platform.credential-key", "meaning": "credential handles, key lifecycle, device unlock, recovery metadata", "writes": ["secret-free-handle-metadata"], "status": "CONTRACT_ONLY"},
+    {"ownerId": "platform.presentation", "meaning": "theme, locale, branding, navigation and safe presentation profile", "writes": ["presentation-profile"], "status": "NOT_STARTED"},
+    {"ownerId": "platform.recovery", "meaning": "health, diagnostics, safe mode, repair and restore", "writes": ["recovery-state"], "status": "NOT_STARTED"}
+  ],
+  "rule": "A module may project or reference another owner's records but may not silently create a second writable owner for the same meaning."
+}

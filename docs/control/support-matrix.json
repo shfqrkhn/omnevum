@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "kind": "support-matrix",
+  "status": "EVIDENCE_PENDING",
+  "authority": "MPES Sections 6, 22, and 28; no row is a claim until tested",
+  "profiles": [
+    {
+      "id": "static-core",
+      "hosting": "GitHub Pages or equivalent static HTTPS",
+      "required": ["shell", "canonical-records", "search", "vault-export-import", "recovery", "offline-core"],
+      "forbiddenAssumptions": ["application-backend", "server-database", "mandatory-account", "mutable-cdn-code", "backend-held-secret"],
+      "status": "IN_PROGRESS"
+    },
+    {
+      "id": "enhanced-static",
+      "hosting": "static HTTPS with stronger optional headers",
+      "required": ["static-core"],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "self-hosted-static",
+      "hosting": "user-controlled static HTTPS origin",
+      "required": ["static-core", "origin-migration"],
+      "status": "NOT_STARTED"
+    }
+  ],
+  "browserRows": [
+    {"id": "chromium-mobile", "family": "Chromium", "versionPolicy": "supported-current-row-to-freeze", "status": "NOT_RUN"},
+    {"id": "safari-mobile", "family": "Safari/WebKit", "versionPolicy": "supported-current-row-to-freeze", "status": "NOT_RUN"},
+    {"id": "firefox-mobile", "family": "Firefox", "versionPolicy": "supported-current-row-to-freeze", "status": "NOT_RUN"},
+    {"id": "chromium-desktop", "family": "Chromium desktop", "versionPolicy": "supported-current-row-to-freeze", "status": "NOT_RUN"}
+  ],
+  "capabilityColumns": [
+    "base-path-routing",
+    "touch-keyboard-pointer-input",
+    "WCAG-2.2-AA-target",
+    "IndexedDB",
+    "OPFS-optional",
+    "service-worker",
+    "Web-Share-optional",
+    "installability-progressive"
+  ],
+  "evidenceRule": "Every claimed PASS names browser/version, host/profile, fixture, date, artifact or test receipt; unsupported APIs map to PLATFORM_LIMITED with a usable fallback where possible."
+}
