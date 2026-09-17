@@ -23,7 +23,7 @@ function values(value: unknown): string[] {
 }
 
 export function normalizeSearchText(value: string): string {
-  return value.normalize("NFKC").toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  return value.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 }
 
 export function makeSearchDocument(record: CanonicalRecord): SearchDocument {

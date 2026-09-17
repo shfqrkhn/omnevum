@@ -1,10 +1,11 @@
 export type PresentationTheme = "light" | "dark";
+export type PresentationLocale = "en-CA" | "fr-CA";
 
 export interface PresentationProfile {
   schemaVersion: 1;
   productName: string;
   theme: PresentationTheme;
-  locale: "en-CA";
+  locale: PresentationLocale;
 }
 
 export const DEFAULT_PRESENTATION: PresentationProfile = {
@@ -22,6 +23,6 @@ export function parsePresentationProfile(value: unknown): PresentationProfile {
     schemaVersion: 1,
     productName: productName || DEFAULT_PRESENTATION.productName,
     theme: candidate.theme === "dark" ? "dark" : "light",
-    locale: "en-CA"
+    locale: candidate.locale === "fr-CA" ? "fr-CA" : "en-CA"
   };
 }

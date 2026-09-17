@@ -44,4 +44,17 @@ describe("CommandBus", () => {
     expect((await store.get(created.id))?.data.text).toBe("newer");
     store.close();
   });
+
+  it("stores cross-domain relationships as explicit reference records", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-relate`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const source = await commands.create({ recordType: "note", owner: "core.capture", data: { text: "source" } });
+    const target = await commands.create({ recordType: "task", owner: "core.capture", data: { text: "target", status: "OPEN" } });
+    const relationship = await commands.relate(source.id, target.id, "supports");
+    expect(relationship.owner).toBe("platform.relate");
+    expect(relationship.recordType).toBe("relationship");
+    expect(relationship.data).toMatchObject({ sourceId: source.id, targetId: target.id, relation: "supports" });
+    store.close();
+  });
 });

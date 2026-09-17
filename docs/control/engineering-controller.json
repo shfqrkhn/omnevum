@@ -18,7 +18,15 @@
     "required companion control registers materialized",
     "structure audit, strict typecheck, unit tests, and production build pass",
     "exact Phase 0 upstream characterization recorded",
-    "local browser smoke recorded with reload persistence, capture, search, and theme evidence"
+    "local browser smoke recorded with reload persistence, capture, search, and theme evidence",
+    "MVP nucleus smoke recorded for Space, triage, Time observation, summary, and relationship reference flow",
+    "bounded Artifact ingest/Vault payload round-trip implemented",
+    "platform-owned Effect/Outbox state store and secret-field guard implemented",
+    "Recovery surface exposes archive restore, derived-index repair, and privacy-minimized diagnostics",
+    "qualified en-CA/fr-CA presentation locale persists without changing canonical identities",
+    "equal-revision semantic Vault conflicts are detected and reported",
+    "durable Effect/Outbox runner recovers interrupted operations through explicit reconciliation",
+    "23 unit tests pass across 5 test files after the recovery/localization/effect increment"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad decision",
@@ -28,8 +36,10 @@
     "full Phase 0 acceptance gate and fault injection",
     "security/untrusted-content/credential boundary evidence",
     "static-host deployment, smoke, and rollback proof",
-    "MVP and later phases"
+    "richer Time/Track/Compose capability contracts and target qualification",
+    "credential/key broker and external-effect replay evidence",
+    "MVP release and later phases"
   ],
-  "nextAction": "Serve the production build for static-host smoke, close browser/support/accessibility/offline/security/recovery evidence, and qualify the search/UI/analysis substrate bake-offs before expanding the MVP vertical slice.",
+  "nextAction": "Run the Phase 0 support/accessibility/offline/update and fault-injection matrix, then close the remaining credential, Effect/Outbox, and MVP outcome contracts before promoting the MVP gate.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }

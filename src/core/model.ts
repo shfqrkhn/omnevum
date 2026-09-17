@@ -1,7 +1,7 @@
 export const CURRENT_SCHEMA_VERSION = 1 as const;
 export const VAULT_FORMAT_VERSION = 1 as const;
 
-export type RecordType = "note" | "task" | "observation";
+export type RecordType = "note" | "task" | "observation" | "relationship" | "artifact";
 
 export type TruthClass =
   | "USER_OBSERVATION"
@@ -42,10 +42,17 @@ export interface HistoryEntry {
   record: CanonicalRecord;
 }
 
+export interface VaultArtifact {
+  id: string;
+  mimeType: string;
+  dataBase64: string;
+}
+
 export interface VaultDocument {
   format: "OMNEVUM_VAULT";
   version: typeof VAULT_FORMAT_VERSION;
   exportedAt: string;
   records: CanonicalRecord[];
   history?: HistoryEntry[];
+  artifacts?: VaultArtifact[];
 }

@@ -43,6 +43,7 @@ button:hover { background: var(--accent-strong); }
 .secondary { background: var(--surface); border-color: var(--line); color: var(--text); }
 .secondary:hover { background: var(--surface-muted); }
 .topbar, main, footer { width: min(100% - 2rem, 820px); margin-inline: auto; }
+.failure-shell { padding-top: 12vh; }
 .topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 2.5rem 0 1.5rem; }
 h1, h2, p { margin-top: 0; }
 h1 { margin-bottom: 0.5rem; font-size: clamp(2rem, 8vw, 3.6rem); letter-spacing: -0.045em; }
@@ -61,8 +62,13 @@ select, input[type="search"], input[type="text"] { width: 100%; min-height: 44px
 .form-row, .section-heading, .recovery-row { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; }
 .form-row { margin-top: 0.8rem; }
 .search-form { display: grid; gap: 0.2rem; }
+.relationship-form { display: grid; gap: 0.2rem; }
 .search-row input { flex: 1; }
 .search-row button { flex: 0 0 auto; }
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.65rem; }
+.summary-item { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.8rem; }
+.summary-item span { color: var(--muted); font-size: 0.85rem; }
+.summary-item strong { color: var(--accent); font-size: 1.3rem; }
 .hint, small { color: var(--muted); font-size: 0.88rem; }
 .record-list { display: grid; gap: 0.65rem; list-style: none; margin: 0; padding: 0; }
 .record-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; border: 1px solid var(--line); border-radius: 12px; padding: 0.9rem; }

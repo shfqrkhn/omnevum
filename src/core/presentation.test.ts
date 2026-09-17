@@ -15,4 +15,13 @@ describe("presentation profile", () => {
   it("never accepts an empty custom name or arbitrary theme", () => {
     expect(parsePresentationProfile({ productName: " ", theme: "neon" })).toEqual(DEFAULT_PRESENTATION);
   });
+
+  it("accepts the qualified French Canadian UI locale", () => {
+    expect(parsePresentationProfile({ productName: "JohnOS", theme: "dark", locale: "fr-CA" })).toEqual({
+      schemaVersion: 1,
+      productName: "JohnOS",
+      theme: "dark",
+      locale: "fr-CA"
+    });
+  });
 });

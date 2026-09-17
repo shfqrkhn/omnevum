@@ -25,13 +25,13 @@ const source = {
 };
 
 const requirements = [];
-const normativePattern = /\b(?:SHALL NOT|MUST NOT|SHALL|MUST)\b/g;
+const normativePattern = /\b(?:SHALL NOT|MUST NOT|SHALL|MUST)\b/gi;
 const extractRequirements = (document, text, path, generatedPrefix) => {
   let generatedId = 1;
   let heading = "";
   for (const [index, line] of text.split(/\r?\n/).entries()) {
     if (/^#{1,6}\s+/.test(line)) heading = line.replace(/^#{1,6}\s+/, "").trim();
-    const normativeKeywords = [...line.matchAll(normativePattern)].map((match) => match[0]);
+    const normativeKeywords = [...line.matchAll(normativePattern)].map((match) => match[0].toUpperCase());
     if (normativeKeywords.length === 0) continue;
     const id = line.match(/\bOMN-[A-Z0-9]+-\d{3}\b/)?.[0] ?? `OMN-AUTO-${generatedPrefix}-${String(generatedId++).padStart(4, "0")}`;
     requirements.push({
@@ -46,6 +46,11 @@ const extractRequirements = (document, text, path, generatedPrefix) => {
 };
 extractRequirements("MPES", mpes, source.mpes.path, "MPES");
 extractRequirements("Omni", omni, source.omni.path, "OMNI");
+const requirementIds = new Set();
+for (const requirement of requirements) {
+  if (requirementIds.has(requirement.id)) throw new Error(`duplicate requirement id ${requirement.id}`);
+  requirementIds.add(requirement.id);
+}
 
 const acceptance = [];
 for (const [index, line] of mpes.split(/\r?\n/).entries()) {
@@ -80,7 +85,8 @@ const lockedPackages = Object.entries(lock.packages ?? {})
     resolved: value.resolved ?? null,
     integrity: value.integrity ?? null,
     dev: value.dev === true,
-    license: "UNVERIFIED_NPM_METADATA"
+    license: value.license ?? "UNVERIFIED_NPM_METADATA",
+    licenseSource: value.license ? "package-lock metadata" : "missing"
   }))
   .sort((left, right) => left.name.localeCompare(right.name));
 writeJson("dependency-sbom.json", {
@@ -110,6 +116,7 @@ writeJson("control-manifest.json", {
   maintainedRegisters: [
     "decision-log.json",
     "phase0-acceptance.json",
+    "mvp-acceptance.json",
     "support-matrix.json",
     "owner-registry.json",
     "capability-catalogue.json",
@@ -117,6 +124,7 @@ writeJson("control-manifest.json", {
     "credential-key-policy.json",
     "capability-coverage.json",
     "upstream.json",
+    "patch-fork-delta.json",
     "license-provenance.json",
     "currentness-radar.json",
     "compatibility-matrix.json",

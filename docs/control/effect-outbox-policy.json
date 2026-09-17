@@ -1,17 +1,18 @@
 {
   "schemaVersion": 1,
   "kind": "effect-outbox-policy",
-  "status": "CONTRACT_ONLY",
+  "status": "IMPLEMENTED_INITIAL_RUNNER",
   "authority": "MPES Section 5.26",
   "states": ["PENDING", "IN_FLIGHT", "SUCCEEDED", "FAILED_RETRYABLE", "FAILED_TERMINAL", "CANCELLED", "EXPIRED", "OUTCOME_UNKNOWN", "RECONCILE"],
-  "requiredFields": ["operationId", "owner", "originatingCommand", "purpose", "destination", "payloadOrReference", "idempotencyOrReconciliationKey", "createdAt", "expiresAt", "status", "retryPolicy", "credentialHandle", "remoteIdentity", "evidence"],
+  "requiredFields": ["operationId", "owner", "originatingCommand", "purpose", "destination", "payloadOrReference", "idempotencyKey", "createdAt", "expiresAt", "status", "retryPolicy", "credentialHandle", "remoteIdentity", "evidence"],
   "rules": [
     "One platform-owned operation identity and queue; modules may not create incompatible generic retry queues.",
     "Revalidate purpose, authority, scope, disclosure, destination, credential state, and schema before replay.",
     "Resolve ambiguous outcomes before blind retry when duplicate external consequences are possible.",
     "Never claim exactly-once delivery solely because an idempotency key exists.",
     "Never persist raw credentials or retain sensitive payloads indefinitely by queue default.",
-    "Background Sync may accelerate replay but is never required for correctness."
+    "Background Sync may accelerate replay but is never required for correctness.",
+    "An interrupted IN_FLIGHT operation is promoted to OUTCOME_UNKNOWN and RECONCILE before an executor is allowed to run it again."
   ],
   "qualification": "State-machine, crash, revocation, duplicate, expiry, and reconciliation tests required before any external effect ships."
 }

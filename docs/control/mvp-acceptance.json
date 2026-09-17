@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "kind": "acceptance-profile",
+  "id": "mvp",
+  "status": "PARTIAL",
+  "authority": "Omnevum MPES Section 26 Phase 1",
+  "gate": "MVP_RELEASE_READY",
+  "dependsOn": ["PLATFORM_READY_FOR_CORE"],
+  "profile": {
+    "hosting": ["github-pages-static-https", "local-static-https"],
+    "inputs": ["touch", "keyboard", "pointer"],
+    "accessibility": "WCAG-2.2-AA-target",
+    "storage": ["indexeddb-canonical", "portable-vault"],
+    "domains": ["work", "personal-life"],
+    "optionalCapabilities": ["ai", "sync", "connectors", "background-notifications"]
+  },
+  "evidencePolicy": "NOT_RUN is not PASS; every PASS must reference reproducible evidence.",
+  "mandatoryOutcomes": [
+    "capture and triage a record in each MVP domain",
+    "search and review canonical records offline",
+    "create and inspect artifact, time, relationship, and space records",
+    "export, clear, and restore a Vault without losing canonical data",
+    "recover from a failed open or malformed import without destructive reset",
+    "persist presentation preferences across reload"
+  ],
+  "scenarioRange": "OMN-ACC-001..OMN-ACC-098",
+  "evidence": [
+    "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md"
+  ],
+  "statusValues": ["NOT_STARTED", "IN_PROGRESS", "PASS", "PARTIAL", "FAIL", "NOT_APPLICABLE", "UNKNOWN"]
+}

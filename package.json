@@ -15,8 +15,11 @@
     "test:watch": "vitest",
     "generate:control": "node scripts/generate-control.mjs",
     "audit:structure": "node scripts/structure-audit.mjs",
+    "audit:architecture": "node scripts/architecture-audit.mjs",
+    "audit:static": "node scripts/static-audit.mjs",
+    "audit:references": "node scripts/reference-audit.mjs",
     "audit:drift": "npm run generate:control && git diff --exit-code -- docs/control",
-    "ci": "npm run generate:control && npm run audit:structure && npm run typecheck && npm test && npm run build"
+    "ci": "npm run generate:control && npm run audit:structure && npm run audit:references && npm run audit:architecture && npm run typecheck && npm test && npm run build && npm run audit:static && npm run audit:drift && git diff --check"
   },
   "devDependencies": {
     "@types/node": "26.6.1",

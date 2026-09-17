@@ -1,6 +1,8 @@
-import type { CanonicalRecord, HistoryEntry, VaultDocument } from "./model";
+import type { CanonicalRecord, HistoryEntry, VaultArtifact, VaultDocument } from "./model";
+import { MAX_PORTABLE_ARTIFACT_BYTES } from "./artifact";
 import { VAULT_FORMAT_VERSION } from "./model";
 import { isSearchDocument, makeSearchDocument, SEARCH_INDEX_VERSION, searchDocuments, type SearchDocument, type SearchIndexMeta } from "./search";
+import { assertEffectOperation, type EffectOperation } from "./effect";
 import { assertCanonicalRecord, assertVaultDocument, isHistoryEntry } from "./validation";
 
 const RECORD_STORE = "records";
@@ -8,6 +10,8 @@ const SEARCH_STORE = "searchDocuments";
 const SEARCH_META_STORE = "searchMeta";
 const HISTORY_STORE = "history";
 const SETTINGS_STORE = "settings";
+const ARTIFACT_STORE = "artifactBlobs";
+const EFFECT_STORE = "effects";
 
 function requestResult<T>(request: IDBRequest<T>): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -32,7 +36,7 @@ export class CanonicalStore {
   public async open(): Promise<void> {
     if (this.database) return;
 
-    const request = indexedDB.open(this.databaseName, 4);
+    const request = indexedDB.open(this.databaseName, 6);
     request.onupgradeneeded = () => {
       const database = request.result;
       if (!database.objectStoreNames.contains(RECORD_STORE)) {
@@ -49,6 +53,12 @@ export class CanonicalStore {
       }
       if (!database.objectStoreNames.contains(SETTINGS_STORE)) {
         database.createObjectStore(SETTINGS_STORE, { keyPath: "id" });
+      }
+      if (!database.objectStoreNames.contains(ARTIFACT_STORE)) {
+        database.createObjectStore(ARTIFACT_STORE, { keyPath: "id" });
+      }
+      if (!database.objectStoreNames.contains(EFFECT_STORE)) {
+        database.createObjectStore(EFFECT_STORE, { keyPath: "operationId" });
       }
     };
     this.database = await requestResult(request);
@@ -72,21 +82,24 @@ export class CanonicalStore {
     return includeDeleted ? records : records.filter((record) => !record.deleted);
   }
 
-  public async put(record: CanonicalRecord): Promise<void> {
+  public async put(record: CanonicalRecord, artifactBlob?: Blob): Promise<void> {
     assertCanonicalRecord(record);
-    const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_META_STORE, HISTORY_STORE], "readwrite");
+    const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE], "readwrite");
     transaction.objectStore(RECORD_STORE).put(record);
     transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
     transaction.objectStore(HISTORY_STORE).put({ id: `${record.id}:${record.revision}`, recordId: record.id, revision: record.revision, recordedAt: new Date().toISOString(), record } satisfies HistoryEntry);
+    if (artifactBlob) transaction.objectStore(ARTIFACT_STORE).put({ id: record.id, blob: artifactBlob });
     await transactionDone(transaction);
   }
 
   public async clear(): Promise<void> {
-    const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_STORE, SEARCH_META_STORE, HISTORY_STORE], "readwrite");
+    const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE, EFFECT_STORE], "readwrite");
     transaction.objectStore(RECORD_STORE).clear();
     transaction.objectStore(SEARCH_STORE).clear();
     transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: true, rebuiltAt: new Date().toISOString() } satisfies SearchIndexMeta);
     transaction.objectStore(HISTORY_STORE).clear();
+    transaction.objectStore(ARTIFACT_STORE).clear();
+    transaction.objectStore(EFFECT_STORE).clear();
     await transactionDone(transaction);
   }
 
@@ -109,6 +122,39 @@ export class CanonicalStore {
     await transactionDone(transaction);
   }
 
+  public async getArtifact(id: string): Promise<Blob | undefined> {
+    const value = await requestResult(this.requireDatabase().transaction(ARTIFACT_STORE, "readonly").objectStore(ARTIFACT_STORE).get(id));
+    if (!value || typeof value !== "object" || !("blob" in value) || !(value.blob instanceof Blob)) return undefined;
+    return value.blob;
+  }
+
+  public async enqueueEffect(operation: EffectOperation): Promise<void> {
+    assertEffectOperation(operation);
+    const transaction = this.requireDatabase().transaction(EFFECT_STORE, "readwrite");
+    transaction.objectStore(EFFECT_STORE).put(operation);
+    await transactionDone(transaction);
+  }
+
+  public async getEffect(operationId: string): Promise<EffectOperation | undefined> {
+    const operation = await requestResult(this.requireDatabase().transaction(EFFECT_STORE, "readonly").objectStore(EFFECT_STORE).get(operationId));
+    if (!operation) return undefined;
+    assertEffectOperation(operation as EffectOperation);
+    return operation as EffectOperation;
+  }
+
+  public async updateEffect(operation: EffectOperation): Promise<void> {
+    assertEffectOperation(operation);
+    const transaction = this.requireDatabase().transaction(EFFECT_STORE, "readwrite");
+    transaction.objectStore(EFFECT_STORE).put(operation);
+    await transactionDone(transaction);
+  }
+
+  public async listEffects(status?: EffectOperation["status"]): Promise<EffectOperation[]> {
+    const operations = await requestResult(this.requireDatabase().transaction(EFFECT_STORE, "readonly").objectStore(EFFECT_STORE).getAll());
+    operations.forEach((operation) => assertEffectOperation(operation as EffectOperation));
+    return (operations as EffectOperation[]).filter((operation) => status === undefined || operation.status === status).sort((left, right) => left.createdAt.localeCompare(right.createdAt));
+  }
+
   public async search(query: string): Promise<CanonicalRecord[]> {
     await this.ensureSearchIndex();
     const transaction = this.requireDatabase().transaction(SEARCH_STORE, "readonly");
@@ -124,6 +170,24 @@ export class CanonicalStore {
     return meta as SearchIndexMeta;
   }
 
+  public async health(): Promise<StoreHealth> {
+    const [records, history, search, artifacts, effects] = await Promise.all([
+      this.list(true),
+      this.history(),
+      this.getSearchHealth(),
+      requestResult(this.requireDatabase().transaction(ARTIFACT_STORE, "readonly").objectStore(ARTIFACT_STORE).getAll()),
+      this.listEffects()
+    ]);
+    return {
+      activeRecords: records.filter((record) => !record.deleted).length,
+      archivedRecords: records.filter((record) => record.deleted).length,
+      historyEntries: history.length,
+      artifactPayloads: artifacts.length,
+      pendingEffects: effects.filter((effect) => effect.status === "PENDING" || effect.status === "IN_FLIGHT" || effect.status === "FAILED_RETRYABLE" || effect.status === "OUTCOME_UNKNOWN" || effect.status === "RECONCILE").length,
+      searchIndexValid: search.valid
+    };
+  }
+
   public async invalidateSearchIndex(): Promise<void> {
     const transaction = this.requireDatabase().transaction(SEARCH_META_STORE, "readwrite");
     transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
@@ -131,39 +195,83 @@ export class CanonicalStore {
   }
 
   public async exportVault(): Promise<VaultDocument> {
+    const artifacts: VaultArtifact[] = [];
+    for (const record of await this.list(true)) {
+      if (record.recordType !== "artifact") continue;
+      const blob = await this.getArtifact(record.id);
+      if (!blob) throw new Error(`Artifact payload missing for ${record.id}`);
+      if (blob.size > MAX_PORTABLE_ARTIFACT_BYTES) throw new Error("Artifact exceeds the bounded portable Vault limit");
+      const mimeType = typeof record.data.mimeType === "string" && record.data.mimeType.length > 0 ? record.data.mimeType : blob.type || "application/octet-stream";
+      artifacts.push({ id: record.id, mimeType, dataBase64: await blobToBase64(blob) });
+    }
     return {
       format: "OMNEVUM_VAULT",
       version: VAULT_FORMAT_VERSION,
       exportedAt: new Date().toISOString(),
       records: await this.list(true),
-      history: await this.history()
+      history: await this.history(),
+      artifacts
     };
   }
 
-  public async importVault(input: unknown): Promise<{ imported: number; skipped: number }> {
+  public async importVault(input: unknown): Promise<{ imported: number; skipped: number; conflicts: number }> {
     assertVaultDocument(input);
     const existing = new Map((await this.list(true)).map((record) => [record.id, record]));
-    const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_META_STORE, HISTORY_STORE], "readwrite");
+    const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE], "readwrite");
     const objectStore = transaction.objectStore(RECORD_STORE);
     const searchMetaStore = transaction.objectStore(SEARCH_META_STORE);
     const historyStore = transaction.objectStore(HISTORY_STORE);
+    const artifactStore = transaction.objectStore(ARTIFACT_STORE);
     let imported = 0;
     let skipped = 0;
+    let conflicts = 0;
+    const acceptedIds = new Set<string>();
 
     for (const record of input.records) {
       const current = existing.get(record.id);
-      if (!current || record.revision >= current.revision) {
+      if (!current) {
         objectStore.put(record);
+        acceptedIds.add(record.id);
         imported += 1;
+      } else if (record.revision > current.revision) {
+        objectStore.put(record);
+        acceptedIds.add(record.id);
+        imported += 1;
+      } else if (record.revision === current.revision && stableJson(record) !== stableJson(current)) {
+        conflicts += 1;
+        skipped += 1;
       } else {
         skipped += 1;
       }
     }
 
     for (const entry of input.history ?? []) historyStore.put(entry);
+    for (const artifact of input.artifacts ?? []) {
+      if (acceptedIds.has(artifact.id) || !existing.has(artifact.id)) artifactStore.put({ id: artifact.id, blob: base64ToBlob(artifact.dataBase64, artifact.mimeType) });
+    }
     searchMetaStore.put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
     await transactionDone(transaction);
-    return { imported, skipped };
+    return { imported, skipped, conflicts };
+  }
+
+  public async rebuildSearchIndex(): Promise<void> {
+    await this.rebuildSearchIndexInternal();
+  }
+
+  public async exportDiagnostics(): Promise<{
+    format: "OMNEVUM_DIAGNOSTICS";
+    version: 1;
+    exportedAt: string;
+    health: StoreHealth;
+    search: SearchIndexMeta;
+  }> {
+    return {
+      format: "OMNEVUM_DIAGNOSTICS",
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      health: await this.health(),
+      search: await this.getSearchHealth()
+    };
   }
 
   private searchRebuild: Promise<void> | null = null;
@@ -172,14 +280,14 @@ export class CanonicalStore {
     const health = await this.getSearchHealth();
     if (health.valid) return;
     if (!this.searchRebuild) {
-      this.searchRebuild = this.rebuildSearchIndex().finally(() => {
+      this.searchRebuild = this.rebuildSearchIndexInternal().finally(() => {
         this.searchRebuild = null;
       });
     }
     await this.searchRebuild;
   }
 
-  private async rebuildSearchIndex(): Promise<void> {
+  private async rebuildSearchIndexInternal(): Promise<void> {
     const records = await this.list();
     const documents: SearchDocument[] = records.map(makeSearchDocument);
     const transaction = this.requireDatabase().transaction([SEARCH_STORE, SEARCH_META_STORE], "readwrite");
@@ -194,4 +302,35 @@ export class CanonicalStore {
     if (!this.database) throw new Error("CanonicalStore is not open");
     return this.database;
   }
+}
+
+export interface StoreHealth {
+  activeRecords: number;
+  archivedRecords: number;
+  historyEntries: number;
+  artifactPayloads: number;
+  pendingEffects: number;
+  searchIndexValid: boolean;
+}
+
+function stableJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
+  if (typeof value === "object" && value !== null) {
+    return `{${Object.entries(value as Record<string, unknown>).sort(([left], [right]) => left.localeCompare(right)).map(([key, child]) => `${JSON.stringify(key)}:${stableJson(child)}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+async function blobToBase64(blob: Blob): Promise<string> {
+  const bytes = new Uint8Array(await blob.arrayBuffer());
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) binary += String.fromCharCode(...bytes.subarray(offset, offset + chunkSize));
+  return btoa(binary);
+}
+
+function base64ToBlob(value: string, mimeType: string): Blob {
+  const binary = atob(value);
+  const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+  return new Blob([bytes], { type: mimeType });
 }

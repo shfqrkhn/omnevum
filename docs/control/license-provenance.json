@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "license-provenance-state",
-  "status": "INVENTORY_PENDING_REVIEW",
+  "status": "INVENTORY_RECORDED_PENDING_REVIEW",
   "authority": "MPES Sections 13.5 and 22.7; tool output is evidence, not legal truth",
   "canonicalInputs": ["docs/control/upstream.json", "docs/control/dependency-sbom.json", "package.json", "package-lock.json"],
   "requiredEvidence": ["exact-source-identity", "license-text-or-legal-reference", "copyright-notices", "source-obligations", "distribution-policy", "security-currentness"],

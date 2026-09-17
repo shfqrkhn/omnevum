@@ -11,7 +11,7 @@
     {"ownerId": "platform.command", "meaning": "semantic create/update/archive admission", "writes": ["canonical-record"], "status": "IMPLEMENTED_INITIAL"},
     {"ownerId": "platform.search", "meaning": "rebuildable derived search index", "writes": ["derived-index"], "status": "NOT_STARTED"},
     {"ownerId": "platform.artifact", "meaning": "source-preserving files and derived transforms", "writes": ["artifact-metadata", "derived-artifact"], "status": "NOT_STARTED"},
-    {"ownerId": "platform.effect-outbox", "meaning": "deferred or outcome-uncertain external effects", "writes": ["operation-state"], "status": "CONTRACT_ONLY"},
+    {"ownerId": "platform.effect-outbox", "meaning": "deferred or outcome-uncertain external effects", "writes": ["operation-state"], "status": "IMPLEMENTED_INITIAL"},
     {"ownerId": "platform.credential-key", "meaning": "credential handles, key lifecycle, device unlock, recovery metadata", "writes": ["secret-free-handle-metadata"], "status": "CONTRACT_ONLY"},
     {"ownerId": "platform.presentation", "meaning": "theme, locale, branding, navigation and safe presentation profile", "writes": ["presentation-profile"], "status": "NOT_STARTED"},
     {"ownerId": "platform.recovery", "meaning": "health, diagnostics, safe mode, repair and restore", "writes": ["recovery-state"], "status": "NOT_STARTED"}

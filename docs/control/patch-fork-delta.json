@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "kind": "patch-fork-delta-register",
+  "status": "PHASE0_CHARACTERIZED",
+  "authority": "Derived integration record; upstream source and MPES remain authoritative",
+  "policy": [
+    "Prefer dependency-isolated adapters and upstream-compatible seams over copying an application wholesale.",
+    "Every adopted patch or fork must record exact source identity, license, delta, owner, tests, migration path, and exit or upgrade condition.",
+    "No upstream code is included in the product until license, provenance, security, bundle, and maintenance review passes."
+  ],
+  "entries": [
+    {
+      "id": "OMN-DELTA-001",
+      "candidate": "NeumanOS",
+      "source": "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
+      "sourceIdentity": "f4b2a174a339fc60524645a19417daedaf69ac91",
+      "license": "MIT",
+      "route": "HARVEST_REFERENCE",
+      "delta": "No product fork; retain only verified interaction and migration ideas behind Omnevum-owned contracts.",
+      "tests": "Characterization recorded; integration not claimed.",
+      "exitCondition": "Remove reference after equivalent contract tests and evidence exist."
+    },
+    {
+      "id": "OMN-DELTA-002",
+      "candidate": "Kurumi",
+      "source": "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
+      "sourceIdentity": "5453bbb08630d5b36138f8d3dc186b81be1ca93e",
+      "license": "MIT",
+      "route": "HARVEST_REFERENCE",
+      "delta": "No product fork; use local-first sync and AI-route observations only after Omnevum security and owner contracts qualify.",
+      "tests": "Characterization recorded; integration not claimed.",
+      "exitCondition": "Remove reference after equivalent contract tests and evidence exist."
+    },
+    {
+      "id": "OMN-DELTA-003",
+      "candidate": "SelfStore",
+      "source": "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
+      "sourceIdentity": "0b56c7fdf74fe8e8d5ffeb9025f3e6893275338e",
+      "license": "MIT",
+      "route": "ADOPT_CANDIDATE_PHASE2",
+      "delta": "Dependency-isolated Vault/replica spike only; canonical record and effect owners remain Omnevum-owned.",
+      "tests": "Upstream tests characterized; compatibility spike not run.",
+      "exitCondition": "Reject if Vault, merge, bundle, or maintenance evidence fails."
+    },
+    {
+      "id": "OMN-DELTA-004",
+      "candidate": "remoteStorage.js",
+      "source": "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
+      "sourceIdentity": "d899b5aee41849fc94c45470cfad08a7363780b6",
+      "license": "MIT",
+      "route": "ADAPT_OPTIONAL_ENDPOINT_PHASE2",
+      "delta": "Optional adapter behind Vault/sync contracts; never a static-core requirement or canonical owner.",
+      "tests": "Upstream tests characterized; endpoint adapter not run.",
+      "exitCondition": "Disable or remove if auth, conflict, quota, or endpoint evidence fails."
+    }
+  ]
+}

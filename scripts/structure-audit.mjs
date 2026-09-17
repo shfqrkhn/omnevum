@@ -7,6 +7,7 @@ const root = join(fileURLToPath(new URL(".", import.meta.url)), "..");
 const entries = readdirSync(root, { withFileTypes: true });
 const documentationRoots = entries.filter((entry) => entry.isDirectory() && ["docs", ".docs"].includes(entry.name)).map((entry) => entry.name);
 const required = [
+  "AGENTS.md",
   "README.md",
   "package.json",
   "index.html",
@@ -19,6 +20,7 @@ const required = [
   "docs/control/acceptance-scenarios.json",
   "docs/control/dependency-sbom.json",
   "docs/control/phase0-acceptance.json",
+  "docs/control/mvp-acceptance.json",
   "docs/control/support-matrix.json",
   "docs/control/owner-registry.json",
   "docs/control/capability-catalogue.json",
@@ -26,6 +28,7 @@ const required = [
   "docs/control/credential-key-policy.json",
   "docs/control/capability-coverage.json",
   "docs/control/upstream.json",
+  "docs/control/patch-fork-delta.json",
   "docs/control/license-provenance.json",
   "docs/control/currentness-radar.json",
   "docs/control/compatibility-matrix.json",
