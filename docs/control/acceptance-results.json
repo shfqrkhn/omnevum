@@ -291,6 +291,7 @@
       "text": "One first-party module fails during startup/runtime; Home/System/Recovery and unrelated modules remain usable.",
       "status": "PARTIAL",
       "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-failed-open-recovery-follow-up",
         "src/core/capability-runtime.test.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
       ],
@@ -305,6 +306,7 @@
       "text": "An update/migration is intentionally interrupted. Omnevum does not silently reset data and offers a tested recovery/repair path.",
       "status": "PARTIAL",
       "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-failed-open-recovery-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#service-worker-update-rollback-rehearsal",
         "src/core/storage.test.ts#exports-a-read-only-recovery-snapshot-when-canonical-state-is-malformed",
         "src/core/storage.test.ts#repairs-malformed-canonical-state-from-a-retained-snapshot-without-losing-valid-records",
