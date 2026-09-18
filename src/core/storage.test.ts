@@ -333,6 +333,23 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("can retry persistent storage from an explicit recovery action", async () => {
+    let requests = 0;
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-persistence-retry`, {
+      estimateStorage: async () => ({ usageBytes: 10, quotaBytes: 100 }),
+      requestPersistentStorage: async () => {
+        requests += 1;
+        return requests > 1;
+      }
+    });
+    await store.open();
+    expect((await store.health()).storage?.persistence).toBe("DENIED");
+    await expect(store.requestPersistence()).resolves.toBe("GRANTED");
+    expect((await store.health()).storage?.persistence).toBe("GRANTED");
+    expect(requests).toBe(2);
+    store.close();
+  });
+
   it("keeps canonical records on the IndexedDB fallback when optional persistence APIs are unavailable", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-indexeddb-fallback`, {
       estimateStorage: async () => undefined,

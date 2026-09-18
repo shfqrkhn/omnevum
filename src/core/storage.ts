@@ -432,6 +432,11 @@ export class CanonicalStore {
     };
   }
 
+  public async requestPersistence(): Promise<"GRANTED" | "DENIED" | "UNAVAILABLE"> {
+    this.persistence = await this.requestPersistentStorage();
+    return this.persistence;
+  }
+
   public async invalidateSearchIndex(): Promise<void> {
     const transaction = this.requireDatabase().transaction(SEARCH_META_STORE, "readwrite");
     transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);

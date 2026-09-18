@@ -659,8 +659,8 @@
       },
       {
         "path": "src/core/i18n.ts",
-        "sha256": "3fc2ef0c1896bbb25a63242c90d6a25aee8bc93babca62fe5a545d71aea6eadb",
-        "bytes": 52488
+        "sha256": "27129db4363722659f3e040cc391a80654bb9729f97a54423b77ad856aa47fe1",
+        "bytes": 52627
       },
       {
         "path": "src/core/id.ts",
@@ -804,13 +804,13 @@
       },
       {
         "path": "src/core/storage.test.ts",
-        "sha256": "b1e52f49d8f45c8f832e7cbfe8832a07e68799130912016b43342f46ccb04b63",
-        "bytes": 27231
+        "sha256": "e8b4bd6515ef186f51001919f6bbd1e0a9a40053ca767dc29fb7196b801d4cfa",
+        "bytes": 27908
       },
       {
         "path": "src/core/storage.ts",
-        "sha256": "b7d477848b5940cda4a7e5f470919289478274baee43c3ce683296e380f4c547",
-        "bytes": 44008
+        "sha256": "6da8540f793f8a3e009f707bafb3901321c30a2e679ff8df2b7c7c3a92afb51b",
+        "bytes": 44189
       },
       {
         "path": "src/core/sync-routes.test.ts",
@@ -904,8 +904,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "aaa316190e32eec07930658e50fe274525ab910cd84b8d98ef98b73c130157d8",
-        "bytes": 164459
+        "sha256": "cdb640dd33478a4449e5948f71004c58f6d65c3d4e5cb030d2bafcff21aee78f",
+        "bytes": 165476
       },
       {
         "path": "tsconfig.json",
