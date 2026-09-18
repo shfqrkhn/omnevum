@@ -832,11 +832,13 @@
       "evidence": [
         "src/core/storage.ts",
         "src/core/storage.test.ts#applies-an-allowed-id-scope-before-derived-search-tokenization",
+        "src/core/storage.test.ts#broadcasts-metadata-only-canonical-changes-to-another-open-store-without-exposing-record-data",
         "src/core/space.ts",
         "src/ui/app.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-scoped-search-boundary-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-scoped-search-boundary-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-cross-tab-canonical-invalidation-follow-up"
       ],
-      "notes": "Scoped text search now applies authorized canonical IDs before derived-index tokenization, and the UI computes Space scope before searching. Vector/analytical cache invalidation, cross-tab permission changes, external routes, and target qualification remain open."
+      "notes": "Scoped text search now applies authorized canonical IDs before derived-index tokenization, the UI computes Space scope before searching, and exact metadata-only BroadcastChannel events refresh external canonical views without carrying record content. A real two-tab permission/Space revocation receipt, vector/analytical cache invalidation, external routes, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-059",

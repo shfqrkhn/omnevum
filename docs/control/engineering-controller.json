@@ -77,7 +77,7 @@
     "current receipt-bound Edge desktop preview on Microsoft Edge 153.0.4234.32 accepts a synthetic canonical capture and retains it across reload with a healthy derived index; source 307470e",
     "current receipt-bound Edge preview detects a synthetic malformed IndexedDB canonical row, enters the Recovery shell, and completes read-only retained-state export without mutation; source 307470e",
     "current receipt-bound Edge preview performs an offline canonical capture and offline reload persistence with a healthy derived index; source 307470e",
-    "current release receipt is refreshed and independently hash-verified for source 072630d, artifact digest 377f379083b484e4931a8b3b149ba6e6604620de58f501e47b4096a3c83c7328, and service-worker cache omnevum-shell-e94145f2052b9c98",
+    "current release receipt is refreshed and independently hash-verified for source ac6f754, artifact digest e6826c947a2df71290b3c1e3eabf8234bc37109e24f79f4d74cc5f71aa60545d, and service-worker cache omnevum-shell-b2275e9d99e196b8",
     "current receipt-bound Edge preview proves presentation branding updates document.title and theme-color and persists after reload; source bd9e242",
     "current receipt-bound Edge preview at 390x844 records no horizontal overflow, visible labelled controls, sequential keyboard focus, and an empty warning/error console; source bd9e242",
     "current receipt-bound Edge preview accepts a synthetic capture, retains it after reload, and returns to a clean scoped origin; source bd9e242",
@@ -97,6 +97,7 @@
     "provider-neutral JsonEndpointEffectExecutor now sends typed idempotent operations through the credential broker, bounds remote responses, and routes ambiguous outcomes to explicit reconciliation; source f96f77a",
     "Device/Input broker now detects optional BarcodeDetector/QR support, filters bounded results, and releases media tracks through a scoped finally helper; source 6c7218a",
     "bounded local text/inert-HTML document finishing preserves the source Artifact and emits a lineage-linked DERIVED redaction Artifact through the visible Recovery surface; current synthetic Chromium receipt verifies active-content stripping, two payloads, provenance, and clean-origin recovery; source 072630d",
+    "CanonicalStore emits exact metadata-only cross-tab invalidations for canonical, setting, and effect writes; the UI refreshes external canonical changes and reloads external presentation changes; source ac6f754",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [
@@ -105,6 +106,7 @@
     "production static-host, browser-version, responsive, and assistive-technology evidence",
     "production static-host service-worker update/rollback and cross-origin deployment proof",
     "full Phase 0 acceptance gate, native quota/canonical-migration matrix, browser-family recovery interaction, and recovery matrix",
+    "two-tab permission/Space revocation browser receipt and vector/analytical derived-projection invalidation",
     "broader security/untrusted-content/credential, active-content, egress, and production boundary evidence",
     "static-host deployment, smoke, and rollback proof",
     "richer Time/Track/Compose capability contracts and target qualification",
@@ -116,6 +118,6 @@
     "built-artifact browser receipt and qualified broader document/office adapter evidence for local document finishing",
     "MVP release and later phases"
   ],
-  "nextAction": "No Git remote is configured in this workspace, so Pages deployment proof is blocked until the owner supplies/configures the intended remote. Until then, run the Phase 0 support/accessibility/offline/update and native fault-injection matrix locally, including failed-open repair and recovery-snapshot handling; keep MiniSearch adapter qualification open and do not treat workflow configuration or local preview as deployment proof.",
+  "nextAction": "No Git remote is configured in this workspace, so Pages deployment proof is blocked until the owner supplies/configures the intended remote. Until then, run the Phase 0 support/accessibility/offline/update and native fault-injection matrix locally, including failed-open repair and recovery-snapshot handling; capture the two-tab permission/Space revocation receipt, keep MiniSearch adapter qualification open, and do not treat workflow configuration or local preview as deployment proof.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }
