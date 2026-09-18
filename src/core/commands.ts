@@ -25,6 +25,11 @@ export interface DerivedArtifactInput {
 
 export type TriageRouteTarget = "note" | "task";
 
+export interface TriageSplitPart {
+  target: TriageRouteTarget;
+  text: string;
+}
+
 export class RevisionConflictError extends Error {
   public constructor(message = "Canonical record changed; reload before retrying") {
     super(message);
@@ -188,6 +193,50 @@ export class CommandBus {
     const updated = await this.update(source.id, routedSource, expectedRevision ?? source.revision);
     await this.archive(updated.id);
     return routed;
+  }
+
+  public async splitTriage(sourceId: string, parts: TriageSplitPart[], expectedRevision?: number): Promise<CanonicalRecord[]> {
+    const normalized = parts.map((part) => ({ target: part.target, text: part.text.trim().slice(0, 2000) }));
+    if (normalized.length < 2 || normalized.length > 4) throw new Error("Triage split requires two to four parts");
+    if (normalized.some((part) => (part.target !== "note" && part.target !== "task") || !part.text)) throw new Error("Each triage split part needs a note or task type and text");
+
+    const source = await this.store.get(sourceId, true);
+    if (!source) throw new Error("The triage source must be an active canonical record");
+    const existing = (await this.store.findByProvenance(sourceId)).filter((record) => record.data.triageDisposition === "SPLIT" && record.data.triageSplitSourceId === sourceId);
+    const existingByIndex = new Map(existing.flatMap((record) => typeof record.data.triageSplitIndex === "number" ? [[record.data.triageSplitIndex, record] as const] : []));
+    const matches = normalized.map((part, index) => {
+      const candidate = existingByIndex.get(index);
+      if (!candidate) return undefined;
+      if (candidate.recordType !== part.target || candidate.data.text !== part.text || candidate.data.triageSplitCount !== normalized.length) throw new Error("A previous triage split has different parts; no new state was written");
+      return candidate;
+    });
+    if (source.deleted) {
+      if (matches.every((record): record is CanonicalRecord => record !== undefined) && existing.length === normalized.length) return matches;
+      throw new Error("The triage source is already closed");
+    }
+    if (expectedRevision !== undefined && source.revision !== expectedRevision) throw new RevisionConflictError();
+
+    const { triageStatus: _status, triageDisposition: _disposition, triageLinkId: _link, triageRoutedTo: _routed, triageSplitSourceId: _splitSource, triageSplitIndex: _splitIndex, triageSplitCount: _splitCount, triageSplitChildren: _children, status: _sourceStatus, ...sourceData } = source.data;
+    const children: CanonicalRecord[] = [];
+    for (const [index, part] of normalized.entries()) {
+      const existingChild = matches[index];
+      if (existingChild) {
+        children.push(existingChild);
+        continue;
+      }
+      children.push(await this.create({
+        recordType: part.target,
+        owner: "core.capture",
+        truthClass: source.truthClass,
+        sensitivity: source.sensitivity,
+        provenance: { source: "USER_INPUT", sourceId: source.id },
+        ...(source.subjectId ? { subjectId: source.subjectId } : {}),
+        data: { ...sourceData, text: part.text, ...(part.target === "task" ? { status: source.data.status === "DONE" ? "DONE" : "OPEN" } : {}), triageStatus: "REVIEWED", triageDisposition: "SPLIT", triageSourceId: source.id, triageSplitSourceId: source.id, triageSplitIndex: index, triageSplitCount: normalized.length }
+      }));
+    }
+    const updated = await this.update(source.id, { ...source.data, triageStatus: "REVIEWED", triageDisposition: "SPLIT", triageSplitChildren: children.map((child) => child.id) }, expectedRevision ?? source.revision);
+    await this.archive(updated.id);
+    return children;
   }
 
   public async undo(id: string): Promise<CanonicalRecord> {

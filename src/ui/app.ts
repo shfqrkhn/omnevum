@@ -1,4 +1,4 @@
-import type { CommandBus, TriageRouteTarget } from "../core/commands";
+import type { CommandBus, TriageRouteTarget, TriageSplitPart } from "../core/commands";
 import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate, type AcquirePreview } from "../core/acquire";
 import { isCompletedTask, recordSpace, recordText, recordTriageStatus, type SpaceId, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
@@ -889,6 +889,43 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         }
       });
       actions.append(routeSelect, route);
+      const splitControls = document.createElement("div");
+      splitControls.className = "triage-split";
+      const splitType = document.createElement("select");
+      splitType.setAttribute("aria-label", copy.splitKind);
+      for (const [value, label] of [["note", copy.note], ["task", copy.task]] as const) {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        splitType.append(option);
+      }
+      const splitParts = document.createElement("textarea");
+      splitParts.rows = 2;
+      splitParts.maxLength = 8000;
+      splitParts.placeholder = copy.splitHint;
+      splitParts.setAttribute("aria-label", copy.splitParts);
+      const split = document.createElement("button");
+      split.type = "button";
+      split.className = "icon-button";
+      split.textContent = copy.split;
+      split.addEventListener("click", async () => {
+        const texts = splitParts.value.split(/\r?\n/).map((value) => value.trim()).filter(Boolean);
+        if (texts.length < 2) {
+          triageStatusMessage.textContent = copy.splitHint;
+          return;
+        }
+        try {
+          const target = splitType.value === "task" ? "task" : "note";
+          const parts: TriageSplitPart[] = texts.map((text) => ({ target, text }));
+          await commands.splitTriage(record.id, parts, record.revision);
+          triageStatusMessage.textContent = copy.splitSaved(parts.length);
+          await renderRecords(searchQuery.value);
+        } catch (error) {
+          triageStatusMessage.textContent = describeError(error, "Triage split failed; canonical data was not changed.");
+        }
+      });
+      splitControls.append(splitType, splitParts, split);
+      actions.append(splitControls);
       const archive = document.createElement("button");
       archive.type = "button";
       archive.className = "icon-button";

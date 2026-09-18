@@ -86,4 +86,23 @@ describe("CommandBus", () => {
     expect((await store.list()).map((record) => record.id)).toEqual([routed.id]);
     store.close();
   });
+
+  it("splits one triage source into bounded canonical parts and closes the staging source idempotently", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-triage-split`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const source = await commands.create({ recordType: "note", owner: "core.capture", truthClass: "SOURCE_CLAIM", sensitivity: "SHARED", data: { text: "mixed source", space: "work", triageStatus: "CLARIFY" } });
+    const parts = [{ target: "note" as const, text: "Keep the quoted context" }, { target: "task" as const, text: "Verify the follow-up" }];
+    const children = await commands.splitTriage(source.id, parts, source.revision);
+    expect(children).toHaveLength(2);
+    expect(children.map((record) => record.recordType)).toEqual(["note", "task"]);
+    expect(children[0]!.provenance).toMatchObject({ source: "USER_INPUT", sourceId: source.id });
+    expect(children[1]!.data).toMatchObject({ status: "OPEN", triageDisposition: "SPLIT", triageSourceId: source.id, triageSplitIndex: 1, triageSplitCount: 2 });
+    expect((await store.get(source.id, true))?.deleted).toBe(true);
+    expect((await store.list()).map((record) => record.id).sort()).toEqual(children.map((record) => record.id).sort());
+    const retried = await commands.splitTriage(source.id, parts);
+    expect(retried.map((record) => record.id)).toEqual(children.map((record) => record.id));
+    expect((await store.list()).filter((record) => record.data.triageSplitSourceId === source.id)).toHaveLength(2);
+    store.close();
+  });
 });

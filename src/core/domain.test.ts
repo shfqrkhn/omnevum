@@ -21,6 +21,7 @@ describe("domain record projections", () => {
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "REFERENCE" } })).toBe("REFERENCE");
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "LINKED" } })).toBe("LINKED");
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "ROUTED" } })).toBe("ROUTED");
+    expect(recordTriageDisposition({ ...base, data: { triageDisposition: "SPLIT" } })).toBe("SPLIT");
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "ROUTE" } })).toBeUndefined();
   });
 });

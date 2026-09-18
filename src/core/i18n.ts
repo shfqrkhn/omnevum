@@ -13,7 +13,7 @@ export interface UiCopy {
   scopeWithoutCopying: string; assignToSpace: string; filterSpace: string; allSpaces: string; addMembership: string; membershipCreated: (space: string) => string;
   compose: string; composeHeading: string; viewTitle: string; viewFields: string; viewSpace: string; defaultViewTitle: string; saveView: string; viewSaved: string; viewEmpty: string; chartLabel: string; tableLabel: string;
   searchPlaceholder: string; search: string; clear: string; triage: string; reviewInbox: string; inboxCount: string;
-  inboxClear: string; markReviewed: string; defer: string; clarify: string; reference: string; route: string; triageStatus: (status: TriageStatus) => string; relate: string; connectWithoutCopying: string; sourceRecord: string;
+  inboxClear: string; markReviewed: string; defer: string; clarify: string; reference: string; route: string; split: string; splitKind: string; splitParts: string; splitHint: string; splitSaved: (count: number) => string; triageStatus: (status: TriageStatus) => string; relate: string; connectWithoutCopying: string; sourceRecord: string;
   targetRecord: string; relationship: string; createLink: string; relationshipHint: string; timeObserve: string; track: string; trackHeading: string; metricName: string; value: string; unit: string; trackPlaceholder: string; saveObservation: string; trackHint: string; trackSaved: (name: string) => string;
   domains: string; financeHeading: string; merchant: string; currency: string; saveExpense: string; financeHint: string; healthHeading: string; subject: string; optionalNote: string; saveMeasurement: string; healthHint: string; expenseSaved: string; measurementSaved: string;
   focusHeading: string; focusHint: string; startFocus: string; stopFocus: string; noActiveSession: string;
@@ -46,7 +46,12 @@ const english: UiCopy = {
   importPreviewMessage: (records, history, artifacts, imported, skipped, conflicts, hasPresentation) => `Vault preview: ${records} record(s), ${history} history entr${history === 1 ? "y" : "ies"}, ${artifacts} artifact payload(s); ${imported} will import, ${skipped} will skip${conflicts ? `, ${conflicts} conflict(s)` : ""}${hasPresentation ? "; presentation settings included" : ""}. Proceed?`,
   importCancelled: "Vault import cancelled; canonical data was not changed.",
   reference: "Keep as reference",
-  route: "Route"
+  route: "Route",
+  split: "Split",
+  splitKind: "Part type",
+  splitParts: "Split parts",
+  splitHint: "One part per line; the original source is retained as an archived provenance record.",
+  splitSaved: (count) => `Split into ${count} canonical record(s); the staging source was archived.`
 };
 
 const french: UiCopy = {
@@ -62,7 +67,12 @@ const french: UiCopy = {
   importPreviewMessage: (records, history, artifacts, imported, skipped, conflicts, hasPresentation) => `Apercu du Vault: ${records} dossier(s), ${history} entree(s) d'historique, ${artifacts} artefact(s); ${imported} seront importes, ${skipped} ignores${conflicts ? `, ${conflicts} conflit(s)` : ""}${hasPresentation ? "; reglages de presentation inclus" : ""}. Continuer?`,
   importCancelled: "Importation du Vault annulee; les donnees canoniques n'ont pas change.",
   reference: "Garder comme reference",
-  route: "Router"
+  route: "Router",
+  split: "Diviser",
+  splitKind: "Type de partie",
+  splitParts: "Parties a diviser",
+  splitHint: "Une partie par ligne; la source originale reste archivee comme provenance.",
+  splitSaved: (count) => `Divise en ${count} dossier(s) canoniques; la source de triage est archivee.`
 };
 
 export function getUiCopy(locale: PresentationLocale): UiCopy {
