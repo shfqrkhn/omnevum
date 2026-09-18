@@ -809,8 +809,12 @@
         "line": 3506
       },
       "text": "Omnevum connects to a controlled browser-compatible MCP/standard tool endpoint through the AI/tool broker. An allowed tool can propose an admitted semantic action, while a malicious or changed tool schema/prompt cannot widen Vault context, obtain credentials, bypass Space/Scope or domain permissions, or directly mutate canonical state. Disconnecting or making the endpoint unavailable degrades only the optional integration and does not break the non-AI/core product.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/tool-broker.ts",
+        "src/core/tool-broker.test.ts"
+      ],
+      "notes": "The optional ToolBroker validates endpoint descriptors against the admitted semantic-command set, projects explicit scrubbed context through ContextBroker, validates proposal output through the shared AI boundary, and returns an unavailable/degraded result on endpoint loss. A real browser-compatible MCP/standard endpoint, permission UI, provider/process isolation, and built-target qualification remain open."
     },
     {
       "id": "OMN-ACC-060",

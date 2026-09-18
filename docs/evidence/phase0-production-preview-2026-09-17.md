@@ -305,3 +305,9 @@ The current source revision `ec482b0` is bound in `docs/control/release-evidence
 `AiBroker.proposal` now admits only the centralized semantic-command set, rejects authority-shaped controls such as provider, disclosure, permission, credential, network, and scope fields, rejects record/source/target IDs outside the projected context, and always returns a proposal requiring the normal command path. `src/core/ai.test.ts#rejects-malicious-proposal-commands-and-authority-context-widening` proves unadmitted mutation, disclosure widening, and out-of-scope IDs are rejected while an in-scope proposal remains non-committing.
 
 This is source/unit security evidence for the shared broker and proposal boundary. Provider adapters, process/browser isolation, real AI workflow UI, external route currentness/terms, command-path execution integration, and target/release qualification remain open.
+
+## Current optional tool-broker boundary follow-up
+
+The current source revision `ec482b0` and the unchanged receipt-bound artifact define the optional tool seam. `src/core/tool-broker.ts` admits only enabled descriptors whose declared commands are in the shared semantic-command set, projects the caller's explicit record IDs through `ContextBroker`, and validates endpoint output through `validateAiProposal`; it has no canonical-store or credential authority. `src/core/tool-broker.test.ts` proves an admitted proposal carries only scrubbed selected context and `requiresNormalCommandPath`, a changed schema declaring `network.fetch` is rejected, malicious output attempting disclosure/context widening is rejected, and endpoint loss returns `UNAVAILABLE` without touching core state.
+
+This is source/unit evidence for the optional browser-tool integration boundary. A real MCP/standard browser endpoint, permission/confirmation UI, process/browser isolation, external currentness/terms review, and target/release qualification remain open.

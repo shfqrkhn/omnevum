@@ -26,7 +26,7 @@
     {"id": "capability-runtime", "phase": 0, "owner": "platform.runtime", "status": "IMPLEMENTED_FAILURE_ISOLATION"},
     {"id": "vault-recovery", "phase": 1, "owner": "platform.vault", "status": "IMPLEMENTED_INITIAL"},
     {"id": "sync", "phase": 2, "owner": "platform.sync", "status": "CONTRACT_SPIKE_IMPLEMENTED_PROVIDER_NEUTRAL"},
-    {"id": "ai-broker", "phase": 3, "owner": "platform.ai", "status": "CONTRACT_SPIKE_DISABLED_BY_DEFAULT"},
+    {"id": "ai-broker", "phase": 3, "owner": "platform.ai", "status": "CONTRACT_SPIKE_SHARED_CONTEXT_TOOL_PROPOSAL_HARDENED_DISABLED_BY_DEFAULT"},
     {"id": "app-factory", "phase": 5, "owner": "platform.package", "status": "CONTRACT_SPIKE_DECLARATIVE_BASELINE"},
     {"id": "game-factory", "phase": 6, "owner": "platform.game", "status": "CONTRACT_SPIKE_DETERMINISTIC_LIFECYCLE"},
     {"id": "bounded-automation", "phase": 7, "owner": "platform.automation", "status": "CONTRACT_SPIKE_PROPOSAL_ONLY_ADMITTED_COMMAND_SET"},
