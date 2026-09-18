@@ -276,6 +276,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <span id="review-count" class="count" aria-label="${copy.inboxCount}">0</span>
         </div>
         <ul id="review-list" class="record-list"></ul>
+        <p id="triage-status" class="hint" role="status"></p>
         <p id="review-empty" class="empty-state">${copy.inboxClear}</p>
       </section>
 
@@ -511,6 +512,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const attentionPanel = root.querySelector<HTMLElement>("#attention-panel");
   const reviewList = root.querySelector<HTMLUListElement>("#review-list");
   const reviewCount = root.querySelector<HTMLElement>("#review-count");
+  const triageStatusMessage = root.querySelector<HTMLElement>("#triage-status")!;
   const reviewEmpty = root.querySelector<HTMLElement>("#review-empty");
   const relateForm = root.querySelector<HTMLFormElement>("#relate-form");
   const relateSource = root.querySelector<HTMLSelectElement>("#relate-source");
@@ -819,17 +821,18 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       text.textContent = `${typeLabel(record.recordType)}: ${recordText(record)} (${copy.triageStatus(triageStatus)})`;
       const actions = document.createElement("div");
       actions.className = "triage-actions";
-      const updateTriage = (status: TriageStatus, label: string): void => {
+      const updateTriage = (status: TriageStatus, label: string, extraData: Record<string, unknown> = {}): void => {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "icon-button";
         button.textContent = label;
         button.addEventListener("click", async () => {
           try {
-            await commands.update(record.id, { ...record.data, triageStatus: status }, record.revision);
+            const { triageDisposition: _previousDisposition, ...dataWithoutDisposition } = record.data;
+            await commands.update(record.id, { ...dataWithoutDisposition, ...extraData, triageStatus: status }, record.revision);
             await renderRecords(searchQuery.value);
           } catch (error) {
-            relateStatus.textContent = describeError(error, "Triage update failed; canonical data was not changed.");
+            triageStatusMessage.textContent = describeError(error, "Triage update failed; canonical data was not changed.");
           }
         });
         actions.append(button);
@@ -837,6 +840,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       updateTriage("REVIEWED", copy.markReviewed);
       updateTriage("DEFERRED", copy.defer);
       updateTriage("CLARIFY", copy.clarify);
+      updateTriage("REVIEWED", copy.reference, { triageDisposition: "REFERENCE" });
       const archive = document.createElement("button");
       archive.type = "button";
       archive.className = "icon-button";
@@ -846,7 +850,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           await commands.archive(record.id);
           await renderRecords(searchQuery.value);
         } catch (error) {
-          relateStatus.textContent = describeError(error, "Triage archive failed; canonical data was not changed.");
+          triageStatusMessage.textContent = describeError(error, "Triage archive failed; canonical data was not changed.");
         }
       });
       actions.append(archive);

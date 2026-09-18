@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { CanonicalRecord } from "./model";
-import { recordText, recordTriageStatus } from "./domain";
+import { recordText, recordTriageDisposition, recordTriageStatus } from "./domain";
 
 describe("domain record projections", () => {
   it("renders an evidence claim instead of exposing an opaque relationship label", () => {
@@ -14,5 +14,11 @@ describe("domain record projections", () => {
     expect(recordTriageStatus({ ...base, data: { triageStatus: "CLARIFY" } })).toBe("CLARIFY");
     expect(recordTriageStatus({ ...base, data: { triageStatus: "DEFERRED" } })).toBe("DEFERRED");
     expect(recordTriageStatus({ ...base, data: { triageStatus: "unknown" } })).toBe("INBOX");
+  });
+
+  it("recognizes only the explicit reference disposition", () => {
+    const base = { recordType: "note", data: {} } as unknown as CanonicalRecord;
+    expect(recordTriageDisposition({ ...base, data: { triageDisposition: "REFERENCE" } })).toBe("REFERENCE");
+    expect(recordTriageDisposition({ ...base, data: { triageDisposition: "ROUTE" } })).toBeUndefined();
   });
 });
