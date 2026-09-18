@@ -98,6 +98,7 @@
     "Device/Input broker now detects optional BarcodeDetector/QR support, filters bounded results, and releases media tracks through a scoped finally helper; source 6c7218a",
     "bounded local text/inert-HTML document finishing preserves the source Artifact and emits a lineage-linked DERIVED redaction Artifact through the visible Recovery surface; current synthetic Chromium receipt verifies active-content stripping, two payloads, provenance, and clean-origin recovery; source 072630d",
     "CanonicalStore emits exact metadata-only cross-tab invalidations for canonical, setting, and effect writes; the UI refreshes external canonical changes and reloads external presentation changes; source ac6f754",
+    "current receipt-bound Chromium two-tab preview on the ac6f754 artifact shows canonical capture, user-defined Space creation, membership projection, zero warning/error logs, and clean-origin recovery; source ac6f754",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [
