@@ -265,13 +265,15 @@
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#service-worker-update-rollback-rehearsal",
         "src/core/storage.test.ts#exports-a-read-only-recovery-snapshot-when-canonical-state-is-malformed",
+        "src/core/storage.test.ts#repairs-malformed-canonical-state-from-a-retained-snapshot-without-losing-valid-records",
         "src/core/storage.test.ts#fences-a-stale-client-after-another-client-upgrades-the-database",
         "src/core/storage.test.ts#preserves-canonical-data-when-an-indexeddb-migration-transaction-is-interrupted",
         "docs/evidence/phase0-production-preview-2026-09-17.md#recovery-snapshot-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#stale-client-storage-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#interrupted-canonical-migration-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#interrupted-canonical-migration-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-recovery-repair-follow-up"
       ],
-      "notes": "Local static Chromium service-worker update/rollback, malformed-state recovery snapshot, deterministic stale-client fencing, and an aborted IndexedDB upgrade followed by exact-record reopen are covered; native browser fault behavior, malformed-row repair tooling, and production deployment remain open."
+      "notes": "Local static Chromium service-worker update/rollback, malformed-state recovery snapshot, explicit repair-from-snapshot preserving valid records, deterministic stale-client fencing, and an aborted IndexedDB upgrade followed by exact-record reopen are covered; native browser fault behavior, browser interaction/accessibility, and production deployment remain open."
     },
     {
       "id": "OMN-ACC-018",
