@@ -5,6 +5,7 @@ import { isSearchDocument, makeSearchDocument, SEARCH_INDEX_VERSION, searchDocum
 import { assertEffectOperation, type EffectOperation } from "./effect";
 import { withVaultIntegrity, verifyVaultIntegrity } from "./vault";
 import { assertCanonicalRecord, assertVaultDocument, isHistoryEntry } from "./validation";
+import { isViewDefinition, VIEW_SETTING } from "./compose";
 
 const RECORD_STORE = "records";
 const SEARCH_STORE = "searchDocuments";
@@ -229,6 +230,9 @@ export class CanonicalStore {
       artifacts.push({ id: record.id, mimeType, dataBase64: await blobToBase64(blob) });
     }
     const presentation = await this.getSetting<unknown>("presentation");
+    const composeViews = await this.getSetting<unknown>(VIEW_SETTING);
+    const presentationOverlay = presentation && typeof presentation === "object" && !Array.isArray(presentation) ? { ...(presentation as Record<string, unknown>) } : {};
+    if (Array.isArray(composeViews) && composeViews.length <= 40 && composeViews.every(isViewDefinition)) presentationOverlay.composeViews = structuredClone(composeViews);
     return withVaultIntegrity({
       format: "OMNEVUM_VAULT",
       version: VAULT_FORMAT_VERSION,
@@ -236,13 +240,15 @@ export class CanonicalStore {
       records: await this.list(true),
       history: await this.history(),
       artifacts,
-      ...(presentation && typeof presentation === "object" && !Array.isArray(presentation) ? { presentation: presentation as Record<string, unknown> } : {})
+      ...(Object.keys(presentationOverlay).length > 0 ? { presentation: presentationOverlay } : {})
     });
   }
 
   public async importVault(input: unknown): Promise<{ imported: number; skipped: number; conflicts: number }> {
     assertVaultDocument(input);
     await verifyVaultIntegrity(input);
+    const importedComposeViews = input.presentation?.composeViews;
+    if (importedComposeViews !== undefined && (!Array.isArray(importedComposeViews) || importedComposeViews.length > 40 || !importedComposeViews.every(isViewDefinition))) throw new Error("Vault contains invalid Compose views");
     const existing = new Map((await this.list(true)).map((record) => [record.id, record]));
     const existingArtifactIds = new Set<string>();
     for (const artifact of input.artifacts ?? []) {
@@ -286,7 +292,13 @@ export class CanonicalStore {
       const payloadMissing = !existingArtifactIds.has(artifact.id);
       if (acceptedIds.has(artifact.id) || !current || payloadMissing) artifactStore.put({ id: artifact.id, blob: base64ToBlob(artifact.dataBase64, artifact.mimeType) });
     }
-    if (input.presentation) settingsStore.put({ id: "presentation", value: structuredClone(input.presentation), modifiedAt: new Date().toISOString() });
+    if (input.presentation) {
+      const { composeViews, ...presentation } = input.presentation;
+      settingsStore.put({ id: "presentation", value: structuredClone(presentation), modifiedAt: new Date().toISOString() });
+      if (composeViews !== undefined) {
+        settingsStore.put({ id: VIEW_SETTING, value: structuredClone(composeViews), modifiedAt: new Date().toISOString() });
+      }
+    }
     searchMetaStore.put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
     await transactionDone(transaction);
     return { imported, skipped, conflicts };

@@ -33,7 +33,8 @@
     "capability startup/runtime failures are isolated behind the platform runtime",
     "History UI exposes field-level revision snapshots without creating a second writable copy",
     "Safe Presentation Mode is reversible and preserves the stored presentation profile",
-    "103 unit tests pass across 40 test files after the Space, capability-isolation, history, and Safe Presentation increment"
+    "persisted Compose/View dashboard projects accessible list, table, chart, and capture boundaries",
+    "105 unit tests pass across 40 test files after the Compose/View and Vault-overlay increment"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad decision beyond the recorded harvest-reference route",

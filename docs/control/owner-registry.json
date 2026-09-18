@@ -13,13 +13,13 @@
     {"ownerId": "platform.artifact", "meaning": "source-preserving files and derived transforms", "writes": ["artifact-metadata", "derived-artifact"], "status": "IMPLEMENTED_BOUNDED"},
     {"ownerId": "platform.effect-outbox", "meaning": "deferred or outcome-uncertain external effects", "writes": ["operation-state"], "status": "IMPLEMENTED_INITIAL_RUNNER_RECONCILE"},
     {"ownerId": "platform.credential-key", "meaning": "credential handles, key lifecycle, device unlock, recovery metadata", "writes": ["secret-free-handle-metadata"], "status": "CONTRACT_SPIKE_SESSION_ONLY"},
-    {"ownerId": "platform.presentation", "meaning": "theme, locale, branding, navigation and safe presentation profile", "writes": ["presentation-profile"], "status": "IMPLEMENTED_INITIAL"},
+    {"ownerId": "platform.presentation", "meaning": "theme, locale, branding, navigation and safe presentation profile", "writes": ["presentation-profile"], "status": "IMPLEMENTED_SAFE_MODE"},
     {"ownerId": "platform.recovery", "meaning": "health, diagnostics, safe mode, repair and restore", "writes": ["recovery-state"], "status": "IMPLEMENTED_INITIAL"},
     {"ownerId": "platform.device-input", "meaning": "capability detection and explicit device/file/share input", "writes": ["staged-input"], "status": "CONTRACT_SPIKE"},
     {"ownerId": "platform.track", "meaning": "generic quantitative and qualitative observations", "writes": ["observation-record"], "status": "IMPLEMENTED_INITIAL"},
     {"ownerId": "platform.time", "meaning": "explicit focus/time observations and due-state semantics", "writes": ["time-observation"], "status": "IMPLEMENTED_INITIAL"},
     {"ownerId": "platform.relate", "meaning": "cross-record reference relationships", "writes": ["relationship-record"], "status": "IMPLEMENTED_INITIAL"},
-    {"ownerId": "platform.space", "meaning": "personal, household, and work context overlay", "writes": ["space-reference"], "status": "IMPLEMENTED_INITIAL_OVERLAY"},
+    {"ownerId": "platform.space", "meaning": "personal, household, and work context overlay", "writes": ["space-reference"], "status": "IMPLEMENTED_UI_FILTER_OVERLAY"},
     {"ownerId": "platform.data", "meaning": "bounded derived dataset projections", "writes": ["derived-dataset"], "status": "IMPLEMENTED_INITIAL"},
     {"ownerId": "platform.analyze", "meaning": "descriptive derived analysis and signals", "writes": ["derived-analysis"], "status": "IMPLEMENTED_DESCRIPTIVE_ONLY"},
     {"ownerId": "platform.acquire", "meaning": "bounded staging, source identity, candidate mapping, and admission preview", "writes": ["staged-input"], "status": "IMPLEMENTED_INITIAL_BOUNDED"},
@@ -28,7 +28,8 @@
     {"ownerId": "platform.place", "meaning": "bounded Place/Geo parsing and derived geometry", "writes": ["place-reference"], "status": "IMPLEMENTED_INITIAL"},
     {"ownerId": "platform.package", "meaning": "declarative package manifest and lifecycle admission", "writes": ["package-state"], "status": "CONTRACT_SPIKE"},
     {"ownerId": "platform.game", "meaning": "deterministic game lifecycle and save compatibility", "writes": ["game-save-state"], "status": "CONTRACT_SPIKE"},
-    {"ownerId": "platform.automation", "meaning": "bounded declarative predicates and admitted proposals", "writes": ["automation-proposal"], "status": "CONTRACT_SPIKE"}
+    {"ownerId": "platform.automation", "meaning": "bounded declarative predicates and admitted proposals", "writes": ["automation-proposal"], "status": "CONTRACT_SPIKE"},
+    {"ownerId": "platform.compose", "meaning": "persisted declarative user views and derived projections", "writes": ["compose-view-setting"], "status": "IMPLEMENTED_NATIVE_DASHBOARD"}
   ],
   "rule": "A module may project or reference another owner's records but may not silently create a second writable owner for the same meaning."
 }

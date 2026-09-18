@@ -74,6 +74,12 @@ select, input[type="search"], input[type="text"], input[type="number"] { width: 
 .summary-item { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.8rem; }
 .summary-item span { color: var(--muted); font-size: 0.85rem; }
 .summary-item strong { color: var(--accent); font-size: 1.3rem; }
+.compose-preview { display: grid; gap: 0.8rem; margin-top: 1rem; }
+.compose-preview h3, .view-widget h4 { margin: 0; }
+.view-widget { border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.8rem; overflow-x: auto; }
+.view-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.view-table caption { margin-bottom: 0.4rem; text-align: left; color: var(--muted); font-weight: 700; }
+.view-table th, .view-table td { border-bottom: 1px solid var(--line); padding: 0.45rem; text-align: left; vertical-align: top; }
 .hint, small { color: var(--muted); font-size: 0.88rem; }
 .record-list { display: grid; gap: 0.65rem; list-style: none; margin: 0; padding: 0; }
 .record-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; border: 1px solid var(--line); border-radius: 12px; padding: 0.9rem; }

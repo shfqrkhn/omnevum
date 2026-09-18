@@ -15,6 +15,8 @@ import { countRecords, groupCounts } from "../core/analysis";
 import type { CapabilityRuntime } from "../core/capability-runtime";
 import { SpaceService } from "../core/space";
 import { historyWithDiffs } from "../core/history";
+import { makeUserDashboard, projectView, ViewRegistry } from "../core/compose";
+import { readPath } from "../core/data";
 
 export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
@@ -230,6 +232,27 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </select>
       </section>
 
+      <section id="compose" class="panel" aria-labelledby="compose-heading">
+        <p class="eyebrow">${copy.compose}</p>
+        <h2 id="compose-heading">${copy.composeHeading}</h2>
+        <form id="compose-form" class="relationship-form">
+          <label for="compose-title">${copy.viewTitle}</label>
+          <input id="compose-title" name="title" type="text" maxlength="240" required value="${copy.defaultViewTitle}" />
+          <label for="compose-fields">${copy.viewFields}</label>
+          <input id="compose-fields" name="fields" type="text" maxlength="1000" value="recordType, data.text, owner, modifiedAt" required />
+          <label for="compose-space">${copy.viewSpace}</label>
+          <select id="compose-space" name="space">
+            <option value="">${copy.allSpaces}</option>
+            <option value="personal">${copy.personal}</option>
+            <option value="household">${copy.household}</option>
+            <option value="work">${copy.work}</option>
+          </select>
+          <button type="submit">${copy.saveView}</button>
+          <p id="compose-status" class="hint" role="status"></p>
+        </form>
+        <div id="compose-preview" class="compose-preview" aria-live="polite"></div>
+      </section>
+
       <section id="review" class="panel" aria-labelledby="review-heading">
         <div class="section-heading">
           <div>
@@ -364,6 +387,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const spaceMembership = root.querySelector<HTMLSelectElement>("#space-membership");
   const spaceFilter = root.querySelector<HTMLSelectElement>("#space-filter");
   const spaceStatus = root.querySelector<HTMLElement>("#space-status");
+  const composeForm = root.querySelector<HTMLFormElement>("#compose-form");
+  const composeTitle = root.querySelector<HTMLInputElement>("#compose-title");
+  const composeFields = root.querySelector<HTMLInputElement>("#compose-fields");
+  const composeSpace = root.querySelector<HTMLSelectElement>("#compose-space");
+  const composeStatus = root.querySelector<HTMLElement>("#compose-status");
+  const composePreview = root.querySelector<HTMLElement>("#compose-preview");
   const summaryTotal = root.querySelector<HTMLElement>("#summary-total");
   const analysisStatus = root.querySelector<HTMLElement>("#analysis-status");
   const summaryGrid = root.querySelector<HTMLElement>("#summary-grid");
@@ -409,7 +438,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
 
@@ -419,6 +448,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
 
   const trackService = new TrackService(store, commands);
   const spaceService = new SpaceService(store, commands);
+  const viewRegistry = new ViewRegistry(store);
   let stagedCandidates: AcquireCandidate[] = [];
   let activeSpace: SpaceId | undefined;
 
@@ -454,6 +484,99 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
     if (records.some((record) => record.id === previous)) spaceRecord.value = previous;
     spaceForm.querySelector("button[type=submit]")?.toggleAttribute("disabled", records.length === 0);
+  };
+
+  const renderComposeView = async (): Promise<void> => {
+    const view = (await viewRegistry.list())[0];
+    composePreview.replaceChildren();
+    if (!view) {
+      composePreview.textContent = copy.viewEmpty;
+      return;
+    }
+    let records = await scopedRecords();
+    if (view.space) records = (await spaceService.project(await store.list(), view.space)).filter((record) => record.owner !== "platform.space");
+    const viewForProjection = structuredClone(view);
+    delete viewForProjection.space;
+    records = projectView(viewForProjection, records).slice(0, 100);
+    const heading = document.createElement("h3");
+    heading.textContent = view.title;
+    const summary = document.createElement("p");
+    summary.className = "hint";
+    summary.textContent = `${records.length} record(s); projection only.`;
+    composePreview.append(heading, summary);
+    for (const widget of view.widgets) {
+      const section = document.createElement("section");
+      section.className = "view-widget";
+      const widgetHeading = document.createElement("h4");
+      widgetHeading.textContent = widget.title;
+      section.append(widgetHeading);
+      const fields = widget.fields ?? [];
+      if (widget.type === "form") {
+        const note = document.createElement("p");
+        note.className = "hint";
+        note.textContent = "Capture remains on the normal semantic command path; this generated form is a view projection.";
+        section.append(note);
+      } else if (widget.type === "list" || widget.type === "timeline") {
+        const list = document.createElement("ul");
+        list.className = "record-list";
+        for (const record of records.slice(0, 20)) {
+          const item = document.createElement("li");
+          item.textContent = fields.map((field) => formatViewValue(readPath(record, field))).filter(Boolean).join(" - ") || recordText(record);
+          list.append(item);
+        }
+        section.append(list);
+      } else if (widget.type === "table") {
+        section.append(makeViewTable(records, fields, copy.tableLabel));
+      } else if (widget.type === "chart") {
+        const chart = document.createElement("div");
+        chart.setAttribute("role", "img");
+        chart.setAttribute("aria-label", copy.chartLabel);
+        const groups = groupCounts(records, fields[0] ?? "recordType");
+        const list = document.createElement("ul");
+        for (const [key, count] of Object.entries(groups.value as Record<string, number>)) {
+          const item = document.createElement("li");
+          item.textContent = `${key}: ${formatNumber(presentation.locale, count)}`;
+          list.append(item);
+        }
+        chart.append(list);
+        section.append(chart);
+      } else {
+        const note = document.createElement("p");
+        note.className = "hint";
+        note.textContent = `${records.length} record(s) available to this projection.`;
+        section.append(note);
+      }
+      composePreview.append(section);
+    }
+  };
+
+  const makeViewTable = (records: Awaited<ReturnType<CanonicalStore["list"]>>, fields: string[], captionText: string): HTMLTableElement => {
+    const table = document.createElement("table");
+    table.className = "view-table";
+    const caption = document.createElement("caption");
+    caption.textContent = captionText;
+    table.append(caption);
+    const head = document.createElement("thead");
+    const headRow = document.createElement("tr");
+    for (const field of fields) {
+      const cell = document.createElement("th");
+      cell.scope = "col";
+      cell.textContent = field;
+      headRow.append(cell);
+    }
+    head.append(headRow);
+    const body = document.createElement("tbody");
+    for (const record of records.slice(0, 20)) {
+      const row = document.createElement("tr");
+      for (const field of fields) {
+        const cell = document.createElement("td");
+        cell.textContent = formatViewValue(readPath(record, field));
+        row.append(cell);
+      }
+      body.append(row);
+    }
+    table.append(head, body);
+    return table;
   };
 
   const renderSummary = async (): Promise<void> => {
@@ -682,6 +805,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     await renderSummary();
     await renderReview();
     await renderSpaceChoices();
+    await renderComposeView();
     await renderRelationshipChoices();
     const healthBefore = await store.health();
     if (!healthBefore.searchIndexValid) await store.rebuildSearchIndex();
@@ -860,6 +984,19 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     activeSpace = spaceFilter.value === "household" || spaceFilter.value === "work" ? spaceFilter.value : spaceFilter.value === "personal" ? "personal" : undefined;
     spaceStatus.textContent = activeSpace ? `Showing ${spaceLabel(activeSpace)} records.` : copy.showingAll;
     await renderRecords(searchQuery.value);
+  });
+
+  composeForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      const viewSpace = composeSpace.value === "household" || composeSpace.value === "work" ? composeSpace.value : composeSpace.value === "personal" ? "personal" : undefined;
+      const view = makeUserDashboard(composeTitle.value, composeFields.value.split(",").map((field) => field.trim()), viewSpace);
+      await viewRegistry.save(view);
+      composeStatus.textContent = copy.viewSaved;
+      await renderComposeView();
+    } catch (error) {
+      composeStatus.textContent = describeError(error, "View was not saved; canonical records were not changed.");
+    }
   });
 
   relateForm.addEventListener("submit", async (event) => {
@@ -1069,5 +1206,15 @@ function readSafePresentationMode(): boolean {
     return window.sessionStorage.getItem("omnevum-safe-presentation") === "1";
   } catch {
     return false;
+  }
+}
+
+function formatViewValue(value: unknown): string {
+  if (value === undefined || value === null) return "";
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") return String(value).slice(0, 240);
+  try {
+    return (JSON.stringify(value) ?? "[unavailable]").slice(0, 240);
+  } catch {
+    return "[unavailable]";
   }
 }

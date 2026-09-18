@@ -19,7 +19,7 @@
     {"id": "space-scope", "phase": 1, "owner": "platform.space", "status": "IMPLEMENTED_UI_FILTER_OVERLAY"},
     {"id": "evidence", "phase": 1, "owner": "platform.evidence", "status": "IMPLEMENTED_SOURCE_LINK"},
     {"id": "annotate-markup", "phase": 1, "owner": "platform.annotate", "status": "IMPLEMENTED_ANCHOR_STATES"},
-    {"id": "compose-view", "phase": 1, "owner": "platform.compose", "status": "IMPLEMENTED_SUMMARY"},
+    {"id": "compose-view", "phase": 1, "owner": "platform.compose", "status": "IMPLEMENTED_PERSISTED_NATIVE_DASHBOARD"},
     {"id": "effect-outbox", "phase": 1, "owner": "platform.effect-outbox", "status": "IMPLEMENTED_INITIAL_RUNNER"},
     {"id": "device-input", "phase": 1, "owner": "platform.device-input", "status": "CONTRACT_SPIKE_MANUAL_FALLBACK"},
     {"id": "presentation-i18n", "phase": 1, "owner": "platform.presentation", "status": "IMPLEMENTED_SAFE_MODE"},

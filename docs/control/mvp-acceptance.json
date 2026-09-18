@@ -19,6 +19,7 @@
     "capture and triage a record in each MVP domain",
     "search and review canonical records offline",
     "create and inspect artifact, time, relationship, and space records",
+    "save and reload a user-defined Compose/View dashboard with list, table, chart, and capture boundaries",
     "export, clear, and restore a Vault without losing canonical data",
     "recover from a failed open or malformed import without destructive reset",
     "persist presentation preferences across reload"
