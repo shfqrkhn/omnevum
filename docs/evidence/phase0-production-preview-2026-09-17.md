@@ -931,3 +931,11 @@ On 2026-09-18, the exact current built artifact (`11abbef0a1e3fc8f9688974e07a98c
 The visible current app captured `Current artifact offline qualification 2026-09-18`, returned `1 result(s); derived index healthy.` for the exact search sentinel, and then entered CDP network-offline mode. While offline, a full reload retained the app shell, service-worker controller, one active canonical record, and a healthy search index; repeating the same search returned one result. The browser warning/error log was empty. Network emulation was restored and the temporary origin, tab, and preview server were closed.
 
 This qualifies exact-current-artifact Chromium shell caching, local capture, derived search, offline reload retention, and explicit local-only behavior. It does not qualify GitHub Pages, Safari/Firefox, assistive technology, native quota/permission faults, physical mobile hardware, or human acceptance; OMN-ACC-001 and OMN-ACC-002 remain `PARTIAL`.
+
+## Current Edge exact-current-artifact offline follow-up
+
+On 2026-09-18, the same exact current built artifact (`11abbef0a1e3fc8f9688974e07a98cecf18779fc`, artifact digest `5022ab9c207daa0d5029ec28d0160917dfaaf9eabbe811352b90309c60dc7be2`, service-worker cache `omnevum-shell-b06ee4885b83b39a`) was served with `npm run preview -- --host 127.0.0.1 --port 4286` at `http://127.0.0.1:4286/?edge-offline-current=1` in a fresh Microsoft Edge local origin.
+
+With browser network emulation offline, the visible app captured `Current Edge offline qualification 2026-09-18`, returned one derived search result, and after a full reload retained one active canonical record, a controlled service worker, and a healthy derived index. Repeating the search offline again returned one result. The app-origin warning/error log was empty; unrelated Grammarly extension messages were excluded. Network emulation was restored and the temporary origin, tab, and preview server were closed.
+
+This qualifies exact-current-artifact Edge shell caching, local capture/search, offline reload retention, and app-origin degradation boundaries. It does not qualify GitHub Pages, Safari/Firefox, assistive technology, native quota/permission faults, physical mobile hardware, or human acceptance; OMN-ACC-001 and OMN-ACC-002 remain `PARTIAL`.
