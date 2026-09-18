@@ -78,7 +78,8 @@
     "current receipt-bound Edge preview detects a synthetic malformed IndexedDB canonical row, enters the Recovery shell, and completes read-only retained-state export without mutation; source 307470e",
     "current receipt-bound Edge preview performs an offline canonical capture and offline reload persistence with a healthy derived index; source 307470e",
     "current release receipt is refreshed and independently hash-verified for source bd9e242, artifact digest 21573b205032581c9efa72bb6a70fdfc693c9785204774216808e1541d676e3c, and service-worker cache omnevum-shell-bb5235f9801ca7f8",
-    "current receipt-bound Edge preview proves presentation branding updates document.title and theme-color and persists after reload; source bd9e242"
+    "current receipt-bound Edge preview proves presentation branding updates document.title and theme-color and persists after reload; source bd9e242",
+    "current receipt-bound Edge preview at 390x844 records no horizontal overflow, visible labelled controls, sequential keyboard focus, and an empty warning/error console; source bd9e242"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",
