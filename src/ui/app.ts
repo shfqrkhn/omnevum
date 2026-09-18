@@ -29,6 +29,7 @@ import { transitionEffect } from "../core/effect";
 import { createExternalEffect } from "../core/effect-service";
 import { createEffectRevalidationGuard } from "../core/effect-guard";
 import { EffectRunner } from "../core/effect-runner";
+import { CredentialKeyBroker } from "../core/credential";
 import { JsonEndpointEffectExecutor, JsonEndpointTransport } from "../core/remote";
 import { SyncEngine, SyncFailure } from "../core/sync";
 import { createRecordAppDefinition } from "../core/factory";
@@ -58,6 +59,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const recoveryCopy = getRecoveryCopy(presentation.locale);
   const timeCopy = getTimeCopy(presentation.locale);
   const factoryPreviewMode = new URLSearchParams(window.location.search).get("factory-preview") === "1";
+  const effectRevocationPreviewMode = new URLSearchParams(window.location.search).get("effect-revocation-preview") === "1";
   root.dataset.theme = presentation.theme;
   root.dataset.density = presentation.density;
   root.dataset.typeface = presentation.typeface;
@@ -1879,6 +1881,52 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
   };
 
+  const runEffectRevocationPreview = async (): Promise<void> => {
+    if (!effectRevocationPreviewMode) return;
+    const phaseSetting = "effect.preview.revocation.phase";
+    const phase = await store.getSetting<string>(phaseSetting);
+    if (phase === undefined) {
+      const broker = new CredentialKeyBroker();
+      const metadata = broker.issue("fixture-material", { provider: "qualification", scope: ["effect.execute"], audience: "local-preview" });
+      const operation = {
+        ...createExternalEffect({
+          destination: "http://localhost:1/__omnevum/credential-revocation",
+          purpose: "browser credential revocation qualification",
+          payloadOrReference: { fixture: "credential-revocation", phase: "preview" },
+          authorization: { authority: "local-user", permission: "effect.execute", space: "personal", disclosureClass: "PRIVATE", schema: "effect-json-v1" }
+        }),
+        credentialHandle: metadata.handleId
+      };
+      await store.enqueueEffect(operation);
+      await store.setSetting(phaseSetting, "PENDING_AFTER_RELOAD");
+      effectStageStatus.textContent = copy.effectQueued;
+      await renderEffects();
+      return;
+    }
+    if (phase !== "PENDING_AFTER_RELOAD") return;
+    const broker = new CredentialKeyBroker();
+    let executorCalls = 0;
+    const results = await new EffectRunner(store, {
+      supports: () => true,
+      execute: async () => {
+        executorCalls += 1;
+        return { outcome: "SUCCEEDED" as const };
+      }
+    }, createEffectRevalidationGuard({
+      authority: "local-user",
+      allowedPermissions: ["effect.execute"],
+      availableSpaces: async () => new Set((await spaceService.listSpaces()).map((space) => space.id)),
+      allowedDisclosureClasses: ["PRIVATE"],
+      supportedSchemas: ["effect-json-v1"],
+      credentialBroker: broker
+    })).runAvailable();
+    const cancelled = results.find((result) => result.purpose === "browser credential revocation qualification");
+    if (!cancelled || cancelled.status !== "CANCELLED" || executorCalls !== 0) throw new Error("Credential revocation preview did not cancel before executor use");
+    await store.setSetting(phaseSetting, "CANCELLED_AFTER_REVALIDATION");
+    effectRunStatus.textContent = copy.effectCancelled;
+    await renderEffects();
+  };
+
   effectStageForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     try {
@@ -2645,6 +2693,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   window.addEventListener("pagehide", unsubscribeExternalChanges, { once: true });
 
   await renderRecords();
+  await runEffectRevocationPreview();
 }
 
 async function readServiceWorkerDiagnostics(): Promise<NonNullable<NonNullable<Parameters<CanonicalStore["exportDiagnostics"]>[0]>["serviceWorker"]>> {
