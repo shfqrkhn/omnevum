@@ -1091,3 +1091,9 @@ This refreshes source reconstruction after the package-facing bounded automation
 ## Current release receipt rebinding follow-up
 
 On 2026-09-18, the current passing build was rebound in `docs/control/release-evidence.json` to source revision `f615dd8`. `npm run audit:static` verified the exact artifact digest `49d1c5cc1ab707ae1fca278d84b79c5c15ed2b338f92e7a2da5281c40c69f52c`, the stamped service-worker cache `omnevum-shell-248737aa0e685d1e`, and source ancestry. This is a provenance/currentness refresh only: the release register remains `NOT_RELEASE_READY` because deployment, target breadth, security/recovery qualification, and human acceptance remain open.
+
+## Current clean-agent reconstruction at confirmed-proposal revision follow-up
+
+At exact detached source revision `4f4689842fcd6d48da791e4126ebab545e9079c5` on 2026-09-18, `npm run benchmark:fresh-agent` created and removed a clean temporary worktree without the original conversation. It completed `npm ci`, `npm run audit:recovery`, the complete `npm run ci`, and the two-process factory interruption/resume benchmark. The run reported `FRESH_AGENT_NPM_CI_PASS`, `FRESH_AGENT_RECOVERY_AUDIT_PASS`, `FRESH_AGENT_CI_PASS`, `FACTORY_INTERRUPTION_EXPECTED_STOP_PASS`, `FACTORY_INTERRUPTION_RESUME_PASS`, `FRESH_AGENT_FACTORY_INTERRUPTION_PASS`, and `FRESH_AGENT_RESUME_PASS` with `clean-clone=true` and `original-conversation=false`; the clean suite passed with `50` test files, `199` tests passed, and `1` skipped.
+
+This refreshes clean-source reconstruction after the confirmed proposal router and current release receipt. It does not qualify independent fresh-AI authorship, a materially different second agent host, physical touch/mobile hardware, native Recovery-on-device interaction, deployment, or human acceptance; OMN-ACC-019, OMN-ACC-020, and OMN-ACC-077 remain `PARTIAL`/`UNKNOWN` as applicable.
