@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "fixture:effect": "node scripts/effect-loopback-fixture.mjs",
     "preview:effect-fixture": "node scripts/preview-effect-fixture.mjs",
+    "benchmark:fresh-agent": "node scripts/fresh-agent-resume-benchmark.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
