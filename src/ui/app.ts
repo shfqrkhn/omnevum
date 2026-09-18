@@ -1500,6 +1500,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
 
   const renderRecords = async (query = ""): Promise<number> => {
     const allRecords = await store.list();
+    if (activeSpace) {
+      const availableSpaces = await spaceService.listSpaces();
+      if (!availableSpaces.some((space) => space.id === activeSpace)) {
+        const revokedSpace = spaceLabel(activeSpace);
+        activeSpace = undefined;
+        spaceStatus.textContent = copy.spaceAccessRevoked(revokedSpace);
+      }
+    }
     const allowedIds = activeSpace ? new Set((await spaceService.project(allRecords, activeSpace)).map((record) => record.id)) : undefined;
     const candidateRecords = query.trim() ? await store.search(query, allowedIds) : allRecords;
     const records = candidateRecords.filter((record) => record.owner !== "platform.space" && (!allowedIds || allowedIds.has(record.id)));
