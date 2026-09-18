@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const root = join(fileURLToPath(new URL(".", import.meta.url)), "..");
 const entries = readdirSync(root, { withFileTypes: true });
 const documentationRoots = entries.filter((entry) => entry.isDirectory() && ["docs", ".docs"].includes(entry.name)).map((entry) => entry.name);
-const allowedRootFiles = new Set([".gitignore", "AGENTS.md", "README.md", "index.html", "package-lock.json", "package.json", "tsconfig.json", "vite.config.ts"]);
+const allowedRootFiles = new Set([".git", ".gitattributes", ".gitignore", "AGENTS.md", "README.md", "index.html", "package-lock.json", "package.json", "tsconfig.json", "vite.config.ts"]);
 const allowedRootDirectories = new Set([".git", ".github", "docs", "dist", "node_modules", "public", "scripts", "src", "coverage", ".vite"]);
 const allowedDocsFiles = new Set(["README.md", "Omni_3.32.0.md", "Omnevum-MPES-v0.12.0-converged.md"]);
 const allowedDocsDirectories = new Set(["control", "evidence"]);
