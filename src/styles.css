@@ -119,6 +119,11 @@ select[multiple] { min-height: 9rem; }
 .danger-button { background: transparent; border-color: color-mix(in srgb, var(--danger) 55%, var(--line)); color: var(--danger); }
 .danger-button:hover { background: color-mix(in srgb, var(--danger) 12%, transparent); }
 .empty-state { margin: 0; color: var(--muted); }
+dialog { width: min(34rem, calc(100% - 2rem)); border: 1px solid var(--line); border-radius: 18px; background: var(--surface); color: var(--text); box-shadow: var(--shadow); padding: 1.25rem; }
+dialog::backdrop { background: rgba(10, 18, 30, 0.58); }
+dialog h2 { margin-bottom: 0.5rem; }
+dialog p { overflow-wrap: anywhere; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1rem; }
 input[type="file"] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .file-button { display: inline-flex; align-items: center; }
 footer { display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid var(--line); padding: 1rem 0 2rem; color: var(--muted); font-size: 0.78rem; }
@@ -127,4 +132,4 @@ footer { display: flex; justify-content: space-between; gap: 1rem; border-top: 1
 [data-density="compact"] button, [data-density="compact"] .file-button { min-height: 38px; padding: 0.5rem 0.75rem; }
 [data-density="compact"] .summary-item, [data-density="compact"] .record-item { padding: 0.6rem; }
 [data-density="compact"] .domain-grid { gap: 0.65rem; }
-@media (max-width: 560px) { .topbar, .status-card, .form-row, .section-heading, .recovery-row, footer { flex-direction: column; align-items: stretch; } .topbar button { align-self: flex-start; } .record-item { flex-direction: column; } }
+@media (max-width: 560px) { .topbar, .status-card, .form-row, .section-heading, .recovery-row, footer, .dialog-actions { flex-direction: column; align-items: stretch; } .topbar button { align-self: flex-start; } .record-item { flex-direction: column; } }

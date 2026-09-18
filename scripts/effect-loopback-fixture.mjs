@@ -14,6 +14,12 @@ const server = createServer(async (request, response) => {
     request.once("end", resolve);
     request.resume();
   });
+  const origin = String(request.headers.origin ?? "");
+  const corsHeaders = /^http:\/\/(?:localhost|127\.0\.0\.1):\d+$/u.test(origin) ? { "access-control-allow-origin": origin, "access-control-allow-headers": "Content-Type, Idempotency-Key", "access-control-allow-methods": "GET, POST, OPTIONS", vary: "Origin" } : {};
+  if (request.method === "OPTIONS" && request.url?.startsWith("/action")) {
+    response.writeHead(204, corsHeaders).end();
+    return;
+  }
   const idempotencyKey = String(request.headers["idempotency-key"] ?? "");
   const requestUrl = new URL(request.url ?? "/", `http://${request.headers.host ?? "localhost"}`);
   if (request.method === "POST" && requestUrl.pathname === "/action") {
@@ -27,7 +33,7 @@ const server = createServer(async (request, response) => {
       return;
     }
     console.log(JSON.stringify({ event: "POST_DUPLICATE", idempotencyKey, remoteIdentity: identities.get(idempotencyKey), posts, created }));
-    response.writeHead(200, { "content-type": "application/json" });
+    response.writeHead(200, { ...corsHeaders, "content-type": "application/json" });
     response.end(JSON.stringify({ outcome: "SUCCEEDED", remoteIdentity: identities.get(idempotencyKey), duplicate: true }));
     return;
   }
@@ -35,16 +41,16 @@ const server = createServer(async (request, response) => {
     const key = requestUrl.searchParams.get("idempotencyKey");
     reconciliations += 1;
     console.log(JSON.stringify({ event: "GET_RECONCILED", idempotencyKey: key, remoteIdentity: identities.get(key), reconciliations }));
-    response.writeHead(200, { "content-type": "application/json" });
+    response.writeHead(200, { ...corsHeaders, "content-type": "application/json" });
     response.end(JSON.stringify({ outcome: "SUCCEEDED", remoteIdentity: identities.get(key) }));
     return;
   }
   if (request.method === "GET" && requestUrl.pathname === "/stats") {
-    response.writeHead(200, { "content-type": "application/json" });
+    response.writeHead(200, { ...corsHeaders, "content-type": "application/json" });
     response.end(JSON.stringify({ posts, created, reconciliations, keys: [...identities.keys()] }));
     return;
   }
-  response.writeHead(404).end();
+  response.writeHead(404, corsHeaders).end();
 });
 
 server.listen(requestedPort, "localhost", () => {

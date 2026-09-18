@@ -584,6 +584,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <p id="recovery-status" class="hint" role="status"></p>
       </section>
     </main>
+    <dialog id="effect-run-dialog" aria-labelledby="effect-run-dialog-title" aria-describedby="effect-run-dialog-message" aria-modal="true">
+      <h2 id="effect-run-dialog-title">${copy.effectRunHeading}</h2>
+      <p id="effect-run-dialog-message"></p>
+      <div class="dialog-actions">
+        <button id="effect-run-dialog-cancel" class="secondary" type="button">${copy.effectRunCancel}</button>
+        <button id="effect-run-dialog-confirm" type="button">${copy.effectRunConfirm}</button>
+      </div>
+    </dialog>
     <footer><span>${copy.footerPhase0}</span><span>${copy.footerOptional}</span></footer>
   `;
 
@@ -753,13 +761,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const effectRunForm = root.querySelector<HTMLFormElement>("#effect-run-form");
   const effectRunEndpoint = root.querySelector<HTMLInputElement>("#effect-run-endpoint");
   const effectRunStatus = root.querySelector<HTMLElement>("#effect-run-status");
+  const effectRunDialog = root.querySelector<HTMLDialogElement>("#effect-run-dialog");
+  const effectRunDialogMessage = root.querySelector<HTMLElement>("#effect-run-dialog-message");
+  const effectRunDialogCancel = root.querySelector<HTMLButtonElement>("#effect-run-dialog-cancel");
+  const effectRunDialogConfirm = root.querySelector<HTMLButtonElement>("#effect-run-dialog-confirm");
   if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
     throw new Error("Omnevum document-finishing controls are missing");
   }
-  if (!effectStageForm || !effectStageDestination || !effectStagePurpose || !effectStagePayload || !effectStageSpace || !effectStageStatus || !effectRunForm || !effectRunEndpoint || !effectRunStatus) {
+  if (!effectStageForm || !effectStageDestination || !effectStagePurpose || !effectStagePayload || !effectStageSpace || !effectStageStatus || !effectRunForm || !effectRunEndpoint || !effectRunStatus || !effectRunDialog || !effectRunDialogMessage || !effectRunDialogCancel || !effectRunDialogConfirm) {
     throw new Error("Omnevum external-effect controls are missing");
   }
 
@@ -774,6 +786,29 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   let stagedCandidates: AcquireCandidate[] = [];
   let activeSpace: SpaceId | undefined;
   const spaceLabels = new Map<SpaceId, string>(Object.entries(SPACE_LABELS));
+  const requestEffectRunConfirmation = (endpoint: string): Promise<boolean> => new Promise((resolve) => {
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    effectRunDialogMessage.textContent = `${copy.effectRunConfirmation} ${endpoint}?`;
+    let settled = false;
+    const finish = (confirmed: boolean): void => {
+      if (settled) return;
+      settled = true;
+      effectRunDialog.removeEventListener("cancel", onCancel);
+      effectRunDialogCancel.removeEventListener("click", cancel);
+      effectRunDialogConfirm.removeEventListener("click", confirm);
+      if (effectRunDialog.open) effectRunDialog.close();
+      previousFocus?.focus();
+      resolve(confirmed);
+    };
+    const cancel = (): void => finish(false);
+    const confirm = (): void => finish(true);
+    const onCancel = (event: Event): void => { event.preventDefault(); cancel(); };
+    effectRunDialog.addEventListener("cancel", onCancel);
+    effectRunDialogCancel.addEventListener("click", cancel);
+    effectRunDialogConfirm.addEventListener("click", confirm);
+    effectRunDialog.showModal();
+    effectRunDialogConfirm.focus();
+  });
 
   const sectionLabel = (id: PresentationSectionId): string => {
     switch (id) {
@@ -1668,7 +1703,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   effectRunForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const endpoint = effectRunEndpoint.value.trim();
-    if (!window.confirm(`${copy.effectRunConfirmation} ${endpoint}?`)) return;
+    if (!await requestEffectRunConfirmation(endpoint)) return;
     try {
       const results = await new EffectRunner(store, new JsonEndpointEffectExecutor(endpoint), createEffectRevalidationGuard({
         authority: "local-user",
