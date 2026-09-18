@@ -966,6 +966,7 @@
         "src/core/effect.ts",
         "src/core/effect-runner.ts",
         "src/core/effect-runner.test.ts",
+        "src/core/effect-runner.test.ts#recovers-interrupted-operations-on-startup-without-an-external-adapter",
         "src/core/effect-runner.test.ts#claims-a-pending-operation-atomically-so-concurrent-runners-execute-it-once",
         "src/core/storage.test.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-effectoutbox-and-credential-boundary-follow-up",
@@ -973,9 +974,10 @@
         "src/core/remote.ts",
         "src/core/remote.test.ts#executes-one-typed-idempotent-request-through-the-credential-broker-without-exposing-the-secret-in-the-payload",
         "src/core/remote.test.ts#converts-an-ambiguous-request-failure-to-reconcile-instead-of-blindly-replaying-it",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-provider-neutral-effectoutbox-endpoint-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-provider-neutral-effectoutbox-endpoint-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-effectoutbox-startup-recovery-follow-up"
       ],
-      "notes": "The platform runner plus the provider-neutral JsonEndpointEffectExecutor prove crash recovery through OUTCOME_UNKNOWN/RECONCILE, no-blind-replay behavior, persisted exponential backoff, maxAttempts terminal exhaustion, expiry, guard denial, bounded effect storage, idempotency headers, secret-free payloads, brokered authorization, bounded HTTP classification, and an IndexedDB status compare-and-set that prevents concurrent runners from executing one pending operation twice. The shipped Recovery ledger now exposes secret-free material effect status with safe cancellation and retryable requeue controls. A real offline connector, browser/process restart, external duplicate-outcome qualification, shipped authority/Space/destination revalidation, and target evidence remain open."
+      "notes": "The platform runner plus the provider-neutral JsonEndpointEffectExecutor prove crash recovery through OUTCOME_UNKNOWN/RECONCILE, no-blind-replay behavior, persisted exponential backoff, maxAttempts terminal exhaustion, expiry, guard denial, bounded effect storage, idempotency headers, secret-free payloads, brokered authorization, bounded HTTP classification, and an IndexedDB status compare-and-set that prevents concurrent runners from executing one pending operation twice. The shipped app now recovers persisted IN_FLIGHT operations to visible RECONCILE state on startup without an adapter, and the Recovery ledger exposes secret-free status with safe cancellation and retryable requeue controls. A real offline connector, browser/process restart with a live adapter, external duplicate-outcome qualification, shipped authority/Space/destination revalidation, and target evidence remain open."
     },
     {
       "id": "OMN-ACC-068",
