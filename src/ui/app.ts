@@ -749,6 +749,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     root.dataset.iconography = presentation.iconography;
     document.documentElement.dataset.theme = presentation.theme;
     document.documentElement.dataset.typeface = presentation.typeface;
+    document.title = `${presentation.productName} - ${copy.productHeading}`;
+    const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    if (themeColor) themeColor.content = presentation.theme === "dark" ? "#000000" : "#f7f8fa";
     productLabel.textContent = `${presentation.productName} ${copy.foundation}`;
     productTagline.textContent = presentation.tagline || copy.lede;
     productName.value = presentation.productName;
