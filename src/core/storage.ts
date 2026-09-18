@@ -364,6 +364,7 @@ export class CanonicalStore {
     if (!isRecoverySnapshot(input)) throw new Error("Recovery snapshot is invalid");
     const snapshot = input;
     const records = snapshot.records.filter(isCanonicalRecord);
+    if (snapshot.records.length > 0 && records.length === 0) throw new Error("Recovery snapshot contains no valid canonical records");
     const recordIds = new Set(records.map((record) => record.id));
     const history = snapshot.history.filter(isHistoryEntry).filter((entry) => recordIds.has(entry.recordId));
     const artifacts: Array<{ id: string; blob: Blob }> = [];
@@ -688,7 +689,8 @@ function isRecoveryArtifact(value: unknown): value is VaultArtifact {
     && typeof (value as { mimeType?: unknown }).mimeType === "string"
     && (value as { mimeType: string }).mimeType.length > 0
     && (value as { mimeType: string }).mimeType.length <= 255
-    && typeof (value as { dataBase64?: unknown }).dataBase64 === "string";
+    && typeof (value as { dataBase64?: unknown }).dataBase64 === "string"
+    && (value as { dataBase64: string }).dataBase64.length <= Math.ceil(MAX_PORTABLE_ARTIFACT_BYTES / 3) * 4 + 4;
 }
 
 function importDisposition(record: CanonicalRecord, current: CanonicalRecord | undefined): "IMPORT" | "SKIP" | "CONFLICT" {

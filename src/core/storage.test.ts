@@ -207,6 +207,7 @@ describe("CanonicalStore", () => {
 
     const retainedState = await store.exportRetainedState();
     if (retainedState.format !== "OMNEVUM_RECOVERY_SNAPSHOT") throw new Error("Expected a recovery snapshot");
+    await expect(store.repairFromRecoverySnapshot({ ...retainedState, records: [{ invalid: true }] })).rejects.toThrow("no valid canonical records");
     await expect(store.repairFromRecoverySnapshot({ ...retainedState, records: [...retainedState.records, { invalid: true }] })).resolves.toMatchObject({ retainedRecords: 1, removedRecords: 2 });
     expect(await store.list()).toEqual([original]);
     await expect(store.exportVault()).resolves.toMatchObject({ records: [original] });
