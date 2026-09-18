@@ -182,7 +182,7 @@ This extends current-artifact Chromium-family local evidence to Edge desktop onl
 
 ## Current built-artifact recovery-repair follow-up
 
-The current `npm run ci` build at source revision `23aa425` has artifact digest `9cca977b3a803065f820d964a03e5a97228f0e1511130bcc7c772daecdd03075` and worker cache `omnevum-shell-8d4f1ab32826c9d5`. The recovery surface now offers an explicit `Repair from retained snapshot` action. The repair regression injects a malformed canonical row, obtains the read-only recovery snapshot, accepts only valid records/history/artifact payloads, removes malformed canonical rows only through the explicit repair method, marks search derived state for rebuild, and confirms the valid record exports as a normal Vault afterward. This is code/test evidence; browser interaction, native corruption/quota behavior, and production deployment remain open.
+The current `npm run ci` build at source revision `4eb1436` has artifact digest `26010d2645ae2c9b0c7e774230d841bf6dece25898710858a0cba5d434babea7` and worker cache `omnevum-shell-1c98da786a5d0ffe`. The recovery surface now offers an explicit `Repair from retained snapshot` action. The repair regression injects a malformed canonical row, obtains the read-only recovery snapshot, rejects a snapshot containing no valid canonical record, accepts only valid records/history/artifact payloads, removes malformed canonical rows only through the explicit repair method, marks search derived state for rebuild, and confirms the valid record exports as a normal Vault afterward. This is code/test evidence; browser interaction, native corruption/quota behavior, and production deployment remain open.
 
 ## Isolated-origin Vault transfer follow-up
 
