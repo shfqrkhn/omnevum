@@ -36,13 +36,14 @@
     "persisted Compose/View dashboard projects accessible list, table, chart, and capture boundaries",
     "production preview service worker is activated and controls the page; stamped cache identity, offline reload/mutation, 390x844 labelled keyboard focus, and no browser warnings are evidenced",
     "Device/Input broker mediates bounded file and clipboard Acquire staging through the existing preview and canonical command path",
+    "local service-worker update/rollback rehearsal precaches the new generation, retains the prior cache, and serves an offline rollback capture",
     "106 unit tests pass across 40 test files after the bounded file/clipboard Acquire increment"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad decision beyond the recorded harvest-reference route",
     "SelfStore/remoteStorage storage decision beyond the recorded contract spike",
     "production static-host, browser-version, responsive, and assistive-technology evidence",
-    "service-worker update/rollback proof beyond the local offline reload",
+    "production static-host service-worker update/rollback and cross-origin deployment proof",
     "full Phase 0 acceptance gate and fault injection",
     "security/untrusted-content/credential boundary evidence",
     "static-host deployment, smoke, and rollback proof",

@@ -15,6 +15,19 @@ if (failures.length === 0) {
   if (JSON.parse(manifest).start_url !== "./") failures.push("manifest start_url is not relative");
   if ((serviceWorker.match(/self\.addEventListener\("fetch"/g) ?? []).length !== 1) failures.push("service worker fetch owner is not unique");
   if (!/const CACHE_PREFIX = "omnevum-shell-";/.test(serviceWorker) || !/const CACHE_NAME = "omnevum-shell-[a-f0-9]{16}";/.test(serviceWorker)) failures.push("service worker is missing the stamped owned cache identity");
+  const precacheMatch = serviceWorker.match(/const PRECACHE_URLS = (\[[^\n]+\]);/);
+  if (!precacheMatch) failures.push("service worker is missing the stamped precache manifest");
+  else {
+    try {
+      const precache = JSON.parse(precacheMatch[1]);
+      if (!Array.isArray(precache) || precache[0] !== "./") failures.push("service worker precache manifest is invalid");
+      const actualFiles = readdirSync(dist, { withFileTypes: true }).flatMap((entry) => entry.isDirectory() ? readdirSync(join(dist, entry.name)).map((name) => `./${entry.name}/${name}`) : [`./${entry.name}`]).filter((path) => path !== "./sw.js").sort();
+      const precachedFiles = precache.filter((path) => path !== "./").sort();
+      if (JSON.stringify(actualFiles) !== JSON.stringify(precachedFiles)) failures.push("service worker precache manifest does not cover the built artifact");
+    } catch {
+      failures.push("service worker precache manifest is not JSON");
+    }
+  }
   const files = readdirSync(dist, { withFileTypes: true }).flatMap((entry) => entry.isDirectory() ? readdirSync(join(dist, entry.name)) : [entry.name]);
   if (!files.some((name) => name.endsWith(".js"))) failures.push("missing built JavaScript");
 }

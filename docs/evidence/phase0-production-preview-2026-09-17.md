@@ -44,6 +44,12 @@ After the bounded Device/Input integration build (`npm run build`, cache identit
 
 The Device/Input broker now bounds clipboard text and file blobs at 5 MiB before Acquire sees them; the unit suite covers the boundary. This proves only the local Chromium static-preview fallback routes. It does not qualify share-target delivery, other browser families, permissions, camera/microphone/location, parser breadth, or production deployment.
 
+## Service-worker update/rollback rehearsal
+
+The tracked local harness `node scripts/service-worker-rehearsal-server.mjs --old-ref 5ca1f9c --port 4177` served the prior worker and current built assets on a fresh origin. After one controlled reload primed the old `omnevum-shell-v1` root/CSS/JavaScript cache, switching the harness to `new` and calling the registration update activated `omnevum-shell-6de4daa99184cc32`. The new worker precached all seven built entries and wrote history `["omnevum-shell-6de4daa99184cc32", "omnevum-shell-v1"]`.
+
+Switching the harness back to `old` and updating again reactivated `v1`, removed the newer shell cache, and left the old root/CSS/JavaScript entries usable. With the network emulated offline, the rolled-back shell reloaded, accepted `script rollback offline capture`, and retained it after network restoration. Browser error/warning inspection remained empty. This is a local static Chromium lifecycle rehearsal; it does not prove a GitHub Pages rollout/rollback, browser-family support, release promotion, or human acceptance.
+
 ## Limits
 
 This receipt establishes only a local production-preview activation/offline-reload smoke at one Chromium-based browser surface and one mobile viewport. It does not establish GitHub Pages routing, service-worker update/rollback, browser-family support, responsive/accessibility conformance, core offline mutations/degradation, or release readiness. Those remain open in the support, risk, and completion registers.

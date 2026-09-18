@@ -1,20 +1,44 @@
 const CACHE_PREFIX = "omnevum-shell-";
 const CACHE_NAME = "omnevum-shell-v1";
+const PRECACHE_URLS = ["./"];
+const CACHE_HISTORY_NAME = "omnevum-history";
+const CACHE_HISTORY_URL = "./__omnevum-cache-history__";
+const RETAINED_GENERATIONS = 2;
+
+async function activeCache() {
+  return caches.open(CACHE_NAME);
+}
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.add(new URL("./", self.registration.scope).href))
+      .then((cache) => cache.addAll(PRECACHE_URLS.map((path) => new URL(path, self.registration.scope).href)))
       .then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((keys) => Promise.all(keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map((key) => caches.delete(key))))
+    Promise.all([caches.keys(), caches.open(CACHE_HISTORY_NAME)])
+      .then(async ([keys, historyCache]) => {
+        const historyResponse = await historyCache.match(new URL(CACHE_HISTORY_URL, self.registration.scope).href);
+        let history = [];
+        if (historyResponse) {
+          try {
+            const parsed = await historyResponse.json();
+            if (Array.isArray(parsed)) history = parsed.filter((value) => typeof value === "string");
+          } catch {
+            history = [];
+          }
+        }
+        const existingSet = new Set(keys);
+        history = history.filter((name) => name === CACHE_NAME || existingSet.has(name));
+        const existingGenerations = keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME);
+        const generations = [...new Set([CACHE_NAME, ...history, ...existingGenerations])].slice(0, RETAINED_GENERATIONS);
+        await Promise.all(keys.filter((key) => key.startsWith(CACHE_PREFIX) && !generations.includes(key)).map((key) => caches.delete(key)));
+        await historyCache.put(new URL(CACHE_HISTORY_URL, self.registration.scope).href, new Response(JSON.stringify(generations), { headers: { "content-type": "application/json" } }));
+      })
       .then(() => self.clients.claim())
   );
 });
@@ -31,24 +55,19 @@ self.addEventListener("fetch", (event) => {
       fetch(request)
         .then((response) => {
           if (response.ok) {
-            const copy = response.clone();
-            void caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+            void activeCache().then((cache) => cache.put(request, response.clone()));
           }
           return response;
         })
-        .catch(() => caches.match(request).then((cached) => cached ?? caches.match(new URL("./", self.registration.scope).href)))
+        .catch(() => activeCache().then((cache) => cache.match(request).then((cached) => cached ?? cache.match(new URL("./", self.registration.scope).href))))
     );
     return;
   }
 
   event.respondWith(
-    caches.match(request).then((cached) =>
-      cached ??
-      fetch(request).then((response) => {
-        if (response.ok) {
-          const copy = response.clone();
-          void caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
-        }
+    activeCache().then((cache) => cache.match(request)).then((cached) =>
+      cached ?? fetch(request).then((response) => {
+        if (response.ok) void activeCache().then((cache) => cache.put(request, response.clone()));
         return response;
       })
     )
