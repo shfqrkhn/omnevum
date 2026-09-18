@@ -132,7 +132,8 @@
         "src/core/presentation.test.ts#uses-a-known-good-safe-profile-without-rewriting-malformed-presentation-or-canonical-data",
         "docs/evidence/phase0-production-preview-2026-09-17.md#safe-presentation-mode-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-safe-presentation-recovery-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-touch-profile-recovery-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-touch-profile-recovery-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-stamped-service-worker-activation-and-rollback-follow-up"
       ],
       "notes": "Deterministic core/storage evidence and built Chromium interaction prove malformed presentation and canonical data are preserved while a known-good Safe Presentation profile is selected for the session; the current 390x844 touch-capable profile also retained the sentinel and Recovery surface across the Safe Presentation reload; broader browser/accessibility/visual qualification and production deployment remain open."
     },
