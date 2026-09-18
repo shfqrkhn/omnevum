@@ -1015,9 +1015,10 @@
         "src/core/commands.ts",
         "src/core/commands.test.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-bounded-acquire-cleanup-and-reconciliation-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-cleanup-review-and-receipt-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-cleanup-review-and-receipt-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-exact-duplicate-archive-follow-up"
       ],
-      "notes": "The current source/unit and built-artifact receipt cover previewed TRIM_TEXT and NORMALIZE_WHITESPACE transforms, source grouping, deterministic exact-duplicate clustering, stable-key conflicting-entity review, revision-fenced explicit decisions, chunked durable recipe/history records, replay reconstruction, and rejection of ambiguous/fuzzy or whole-cluster archival. The current Codex In-app Browser run applied only a transform and review marker; exact-duplicate archival was covered by the command regression but not exercised in the browser. Large-dataset qualification, richer identity/entity adapters, broader target/accessibility coverage, and human acceptance remain open."
+      "notes": "The current source/unit and built-artifact receipts cover previewed TRIM_TEXT and NORMALIZE_WHITESPACE transforms, source grouping, deterministic exact-duplicate clustering, stable-key conflicting-entity review, revision-fenced explicit decisions, chunked durable recipe/history records, replay reconstruction, and rejection of ambiguous/fuzzy or whole-cluster archival. The exact-duplicate browser receipt now selects one of two duplicate records, archives one but not all, retains the source for Restore, and preserves the receipt/fingerprint after reload. Large-dataset qualification, richer identity/entity adapters, broader target/accessibility coverage, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-062",
