@@ -837,11 +837,12 @@
       "evidence": [
         "src/core/acquire.test.ts",
         "src/core/domain.test.ts#preserves-explicit-triage-states-and-defaults-malformed-values-to-the-inbox",
+        "src/core/commands.test.ts#links-a-triage-item-idempotently-and-closes-it-without-copying-the-source",
         "src/ui/app.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-triage-follow-up"
       ],
-      "notes": "Explicit review, defer, clarify, reference, and archive actions now use the revision-checked canonical CommandBus path, with localized status labels, unit coverage, and current-artifact local Chromium interaction evidence. Split/link/route breadth, defer scheduling semantics, broader accessibility/target qualification, and complete triage UX remain open."
+      "notes": "Explicit review, defer, clarify, reference, archive, and idempotent link actions now use the revision-checked canonical CommandBus path, with localized status labels and unit coverage. Split/route breadth, defer scheduling semantics, broader accessibility/target qualification, and complete triage UX remain open."
     },
     {
       "id": "OMN-ACC-066",

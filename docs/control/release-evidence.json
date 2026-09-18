@@ -3,16 +3,16 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "4be73f18fd2b04e5c33a4a64c96374f4621fa3e270a0e7148b83920954e554c2", "sourceRevision": "3a24a21"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "bf6e4bf8266ff276d7fc6180085c280ed6b2d53358c916fe6f74353722e6e1ab", "sourceRevision": "780c2a6"},
   "artifactDigestMethod": "SHA-256 of sorted UTF-8 lines formatted as relativePath|fileSHA256|byteLength; captured after the full npm run ci build on 2026-09-17.",
   "artifactFiles": [
     {"path": "dist/assets/index-CGPxwsDX.css", "sha256": "b864efd4810664fcf4c086b25f0ffd907984316d1f4af272a07e83387a48cd92", "bytes": 6295},
-    {"path": "dist/assets/index-DWJcOtMb.js.map", "sha256": "4bd8c891f28645114dea64bf9afdf88793a941e238eb25ced9efcb68c05ddcba", "bytes": 482946},
-    {"path": "dist/assets/index-DWJcOtMb.js", "sha256": "3e34fbf47ab9849e630018bee20ffa7b18ba26e37d3580cb84cc31d05b01ca40", "bytes": 157574},
+    {"path": "dist/assets/index-C-1w94wr.js.map", "sha256": "2dc9efdce26c235605c442f5b8c5d37ce2fae61f6a0fdc470b102a59d95afa98", "bytes": 486761},
+    {"path": "dist/assets/index-C-1w94wr.js", "sha256": "a73cf40ce9fca9a3d4a92ba1be1e7f310d7de514aaaf6c808aa862104069eeda", "bytes": 158808},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "f2ea32f276e04d0a53facccdfa029c158a77c9c942a0a611009a7c415742d919", "bytes": 888},
+    {"path": "dist/index.html", "sha256": "e5ba3c89cc08c23b0779af8b6609d9c84972108b43bbc85e21ad5e3191f7ea97", "bytes": 888},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
-    {"path": "dist/sw.js", "sha256": "f03b1f14e500d55b3ba6af55cb7dbed6ce46c2039d70abc2a914648ea8eadbd8", "bytes": 3036}
+    {"path": "dist/sw.js", "sha256": "adf4a694405e15f0662162235ec8783add3bd5caf4112f003cb69e9a83b0a259", "bytes": 3036}
   ],
   "requiredEvidence": [
     "control-generation-and-drift",
