@@ -379,6 +379,7 @@
       "text": "The engineering run is interrupted mid-project and a fresh agent resumes from repository/control state without the original conversation or repeated owner questions.",
       "status": "PASS",
       "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-agent-reconstruction-refresh-after-search-and-recovery-receipts",
         "docs/control/recovery-bundle.json",
         "scripts/recovery-audit.mjs",
         "scripts/fresh-agent-resume-benchmark.mjs",
