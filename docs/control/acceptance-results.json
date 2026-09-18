@@ -781,9 +781,10 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/space.test.ts",
-        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#observed-in-the-production-preview"
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#observed-in-the-production-preview",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-user-defined-space-follow-up"
       ],
-      "notes": "Local membership overlays and filtering preserve one canonical owner; user-defined Space lifecycle, sharing disclosure, and deletion semantics remain open."
+      "notes": "The current artifact creates a user-defined Trip 2026 Space, exposes it in membership/filter/Compose/share selectors, assigns one canonical record through a platform.space overlay, and bounds Search to one result without duplication. Source/unit regression proves removal archives only the Space definition and deactivates memberships while retaining the underlying canonical record. Multi-user permission/share disclosure, Home/Assistant scoping, and broader target qualification remain open."
     },
     {
       "id": "OMN-ACC-056",

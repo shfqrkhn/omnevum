@@ -91,6 +91,7 @@
     "historical receipt-bound Chromium preview exposed History/Version diffs and a visible Revert to revision action that restored prior task state through a new canonical revision, then returned to a clean scoped origin; source 393a324",
     "current receipt-bound Chromium preview stages and accepts a bounded GPX fixture, routes its waypoint and track point to platform.place/platform.time with preserved coordinates/timestamp/source identity, and returns to a clean scoped origin; source f55f1d6",
     "current receipt-bound Chromium preview hands manifest GET share-target title/text/url query values into Acquire, stages and accepts one IMPORT-provenanced canonical note, and returns to a clean scoped origin; source f55f1d6",
+    "current receipt-bound Chromium preview creates user-defined Trip 2026, exposes dynamic Space selectors, assigns one canonical record through a platform.space overlay, bounds Search, and returns to a clean scoped origin; source d04efcc",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [
