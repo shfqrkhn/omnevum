@@ -49,7 +49,8 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-current-artifact-capture-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-capture-receipt-refresh",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-exact-build-persistence-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-current-artifact-capture-reload-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-current-artifact-capture-reload-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-narrow-profile-responsive-and-offline-follow-up"
       ],
       "notes": "Fresh local static Chromium and exact-current-artifact Edge evidence cover the core no-account create/reload path, including a current-artifact Chromium refresh; GitHub Pages, clean-origin, supported mobile rows, and full onboarding qualification remain open."
     },
@@ -68,7 +69,8 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-release-offline-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-offline-receipt-refresh",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-offline-network-capability-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-offline-network-capability-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-narrow-profile-responsive-and-offline-follow-up"
       ],
       "notes": "Fresh local static origins reloaded the cached shell offline, created canonical notes offline, and preserved them after network restoration; the historical receipt-bound Edge artifact repeated offline mutation/reload with a healthy derived index and empty app-origin diagnostics, while the historical Chromium artifact reported Failed to fetch for offline sync and kept local capture usable. GitHub Pages, Safari/Firefox, assistive technology, native fault behavior, and external provider qualification still require qualification."
     },
@@ -98,7 +100,8 @@
         "docs/evidence/phase0-browser-smoke-2026-09-17.md",
         "docs/evidence/phase0-production-preview-2026-09-17.md#phase-0-follow-up-run",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-target-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-responsive-and-keyboard-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-responsive-and-keyboard-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-narrow-profile-responsive-and-offline-follow-up"
       ],
       "notes": "Theme switching was observed in development smoke; current built Edge evidence records the labelled presentation control, 390x844 no-overflow metrics, visible labels, and a sequential keyboard path. WCAG conformance and all target rows remain unverified."
     },
