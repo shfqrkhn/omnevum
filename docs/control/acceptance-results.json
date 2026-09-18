@@ -969,6 +969,9 @@
         "src/core/effect-runner.test.ts#recovers-interrupted-operations-on-startup-without-an-external-adapter",
         "src/core/effect-runner.test.ts#claims-a-pending-operation-atomically-so-concurrent-runners-execute-it-once",
         "src/core/effect-runner.test.ts#moves-an-ambiguous-execution-into-reconciliation-without-replaying-it",
+        "src/core/effect-guard.ts",
+        "src/core/effect-guard.test.ts",
+        "src/core/effect-runner.test.ts#cancels-a-pending-operation-when-its-persisted-space-is-revoked-before-replay",
         "src/core/storage.test.ts",
         "src/core/effect-service.ts",
         "src/core/effect-service.test.ts",
@@ -981,7 +984,7 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-provider-neutral-effectoutbox-endpoint-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-effectoutbox-startup-recovery-follow-up"
       ],
-      "notes": "The platform runner plus the provider-neutral JsonEndpointEffectExecutor prove crash recovery through OUTCOME_UNKNOWN/RECONCILE, no-blind-replay behavior, persisted exponential backoff, maxAttempts terminal exhaustion, expiry, guard denial, bounded effect storage, idempotency headers, secret-free payloads, brokered authorization, bounded HTTP classification, and an IndexedDB status compare-and-set that prevents concurrent runners from executing one pending operation twice. The shipped app now lets a user stage one typed external action locally, preserves it across reload without automatic network execution, routes explicit runs only to the exact persisted destination, and visibly promotes an ambiguous attempt to RECONCILE. A real remote success/duplicate-outcome receipt, browser/process restart with a live adapter, current authority/credential/Space revalidation, and broader target evidence remain open."
+      "notes": "The platform runner plus the provider-neutral JsonEndpointEffectExecutor prove crash recovery through OUTCOME_UNKNOWN/RECONCILE, no-blind-replay behavior, persisted exponential backoff, maxAttempts terminal exhaustion, expiry, guard denial, bounded effect storage, idempotency headers, secret-free payloads, brokered authorization, bounded HTTP classification, and an IndexedDB status compare-and-set that prevents concurrent runners from executing one pending operation twice. The shipped app now lets a user stage one typed external action locally with persisted authority/permission/Space/disclosure/schema context, preserves it across reload without automatic network execution, routes explicit runs only to the exact persisted destination, revalidates the current context before executor use, and visibly promotes an ambiguous attempt to RECONCILE. A browser-side post-revocation receipt, real remote success/duplicate-outcome receipt, browser/process restart with a live adapter, credentialed shipped connector integration, and broader target evidence remain open."
     },
     {
       "id": "OMN-ACC-068",
@@ -1018,13 +1021,15 @@
         "src/core/credential.ts",
         "src/core/credential.test.ts",
         "src/core/effect-runner.test.ts#cancels-a-pending-brokered-operation-after-the-credential-is-revoked",
+        "src/core/effect-guard.test.ts",
+        "src/core/effect-runner.test.ts#cancels-a-pending-operation-when-its-persisted-space-is-revoked-before-replay",
         "src/core/sync-routes.test.ts",
         "src/core/security-contracts.test.ts",
         "docs/control/credential-key-policy.json",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-effectoutbox-and-credential-boundary-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-effectoutbox-recovery-ledger-follow-up"
       ],
-      "notes": "The session-only broker exposes secret-free metadata, bounds secret callbacks, rejects raw credential fields in effect payloads, exposes the canonical EffectRunner authorization seam, and cancels a pending brokered operation after revocation before executor use. The shipped Recovery ledger displays effect status, destination, retry budget, and action state without rendering payloads or credential handles. Persisted connector integration, diagnostics/Vault/AI-context exclusion, shipped authority/Space/destination revalidation, and target qualification remain open."
+      "notes": "The session-only broker exposes secret-free metadata, bounds secret callbacks, rejects raw credential fields in effect payloads, exposes the canonical EffectRunner authorization seam, and cancels a pending brokered operation after revocation before executor use. The shipped Recovery ledger displays effect status, destination, retry budget, Space context, and action state without rendering payloads or credential handles; the new revalidation guard also delegates credential validity to the broker. Persisted connector integration, diagnostics/Vault/AI-context exclusion, browser-side post-revocation proof, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-071",

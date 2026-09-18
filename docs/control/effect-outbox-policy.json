@@ -1,10 +1,12 @@
 {
   "schemaVersion": 1,
   "kind": "effect-outbox-policy",
-  "status": "IMPLEMENTED_INITIAL_RUNNER_RECONCILE_RETRY_UI_STAGING",
+  "status": "IMPLEMENTED_INITIAL_RUNNER_RECONCILE_RETRY_UI_CONTEXT",
   "authority": "MPES Section 5.26",
   "states": ["PENDING", "IN_FLIGHT", "SUCCEEDED", "FAILED_RETRYABLE", "FAILED_TERMINAL", "CANCELLED", "EXPIRED", "OUTCOME_UNKNOWN", "RECONCILE"],
   "requiredFields": ["operationId", "owner", "originatingCommand", "purpose", "destination", "payloadOrReference", "idempotencyKey", "createdAt", "expiresAt", "status", "retryPolicy", "credentialHandle", "remoteIdentity", "evidence"],
+  "newEffectRequiredFields": ["authorization"],
+  "authorizationFields": ["authority", "permission", "space", "disclosureClass", "schema"],
   "rules": [
     "One platform-owned operation identity and queue; modules may not create incompatible generic retry queues.",
     "Revalidate purpose, authority, scope, disclosure, destination, credential state, and schema before replay.",
@@ -16,7 +18,9 @@
     "RECONCILE uses a distinct adapter port; without one, the operation remains visibly RECONCILE and is never silently replayed.",
     "FAILED_RETRYABLE outcomes persist bounded exponential backoff and retryCount; reaching maxAttempts becomes FAILED_TERMINAL with explicit evidence.",
     "The shipped Recovery staging path performs no network request; explicit execution may consider only the exact persisted destination selected by the configured adapter.",
-    "An executor OUTCOME_UNKNOWN is persisted and promoted to RECONCILE before any subsequent reconciliation attempt; it is never converted into a blind second execution."
+    "An executor OUTCOME_UNKNOWN is persisted and promoted to RECONCILE before any subsequent reconciliation attempt; it is never converted into a blind second execution.",
+    "New user-created effects persist authority, permission, optional Space, disclosure class, and payload schema; explicit replay revalidates that context and cancels before executor use when it is no longer current.",
+    "Contextless pre-contract operations remain readable for compatibility but are not evidence of fully revalidated replay and require explicit migration or requeue before qualification."
   ],
   "qualification": "State-machine, crash, revocation, duplicate, expiry, and reconciliation tests required before any external effect ships."
 }

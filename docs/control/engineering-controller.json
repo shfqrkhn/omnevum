@@ -109,8 +109,8 @@
     "current receipt-bound Edge preview on the exact 655f0fb artifact accepts a synthetic canonical capture, retains it after reload, and returns to a clean scoped origin; source 655f0fb",
     "current receipt-bound Edge preview on the exact 655f0fb artifact detects a malformed canonical row, exports retained state, repairs explicitly, preserves the valid row, and returns to a clean scoped origin; source 655f0fb",
     "the selected MiniSearch owner has a repeatable 10,000-record multilingual host benchmark with an explicit p95 guardrail; mobile/browser target qualification remains open; source search.test.ts",
-    "the shipped Recovery surface stages typed external actions locally, persists them across reload without automatic execution, runs only exact configured destinations, and visibly enters RECONCILE after an ambiguous attempt; source 1717294",
-    "current release receipt is refreshed and independently hash-verified for source 1717294, artifact digest e9810a68be36163a2b588efceb1aa68dbeebd59e79d2e0a0dc83cea61b65de9b, and service-worker cache omnevum-shell-f1770a77eb73975d",
+    "the shipped Recovery surface stages typed external actions locally with persisted authority/permission/Space/disclosure/schema context, persists it across reload without automatic execution, runs only exact configured destinations, and guards replay against current authority, permission, Space, disclosure, schema, and credential state; source 4f92365",
+    "current release receipt is refreshed and independently hash-verified for source 4f92365, artifact digest da8eb13c100dcdf23f8aad73439e09d6be097a2a8ee8bb17a9b29aa60bad8ede, and service-worker cache omnevum-shell-e2d32f7b492db6aa",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [
@@ -131,6 +131,6 @@
     "built-artifact browser receipt and qualified broader document/office adapter evidence for local document finishing",
     "MVP release and later phases"
   ],
-  "nextAction": "No Git remote is configured in this workspace, so Pages deployment proof is blocked until the owner supplies/configures the intended remote. Until then, run the Phase 0 support/accessibility/offline/update and native fault-injection matrix locally, including failed-open repair and recovery-snapshot handling; qualify MiniSearch on target memory/latency and complete current authority/credential/Space revalidation plus a live external duplicate-outcome receipt, remaining permission/projection/recovery and human-acceptance evidence. The shipped Effect/Outbox path is now explicit and receipt-bound for local staging and ambiguity handling; do not treat workflow configuration or local preview as deployment proof.",
+  "nextAction": "No Git remote is configured in this workspace, so Pages deployment proof is blocked until the owner supplies/configures the intended remote. Until then, run the Phase 0 support/accessibility/offline/update and native fault-injection matrix locally, including failed-open repair and recovery-snapshot handling; qualify MiniSearch on target memory/latency, browser-side post-revocation of the persisted authorization context, a live external duplicate-outcome receipt, remaining permission/projection/recovery and human-acceptance evidence. The shipped Effect/Outbox path is now explicit and receipt-bound for local staging, context revalidation, and ambiguity handling; do not treat workflow configuration or local preview as deployment proof.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }
