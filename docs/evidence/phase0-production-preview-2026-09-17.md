@@ -954,7 +954,7 @@ Every query returned at least `2,500` matches. Query latency was `p50=34.9ms`, `
 
 ## Current built-artifact bilingual onboarding and dismissal follow-up
 
-On 2026-09-18, the exact built artifact at source revision `ec723451cccd93ed4cc0fb2419caabb8338bbe71` (artifact digest `9b8bd10cf888576219bc6074bc296d9fe12b57bb60cef0b9b41f271ffab034ce`, service-worker cache `omnevum-shell-caa7a0f6981d03a8`) was served with `npm run preview -- --host 127.0.0.1 --port 4288` in the Codex In-app Browser Chromium surface.
+On 2026-09-18, the exact built artifact at source revision `ec723451cccd93ed4cc0fb2419caabb8338bbe71` (artifact digest `33c308ebb75afd87466914486ecfc37d654f229d1a4e672a00749e6fa0228538`, service-worker cache `omnevum-shell-caa7a0f6981d03a8`) was served with `npm run preview -- --host 127.0.0.1 --port 4288` in the Codex In-app Browser Chromium surface.
 
 On fresh origin `http://127.0.0.1:4288/?onboarding-receipt=2026-09-18`, the accessibility tree exposed the labelled `Start with a small step` guide, a no-account/local-first/Vault-recovery hint, three ordered steps, `Go to Capture`, and `Dismiss guide`. Clicking the dismiss action hid the panel; a full reload kept it hidden. On separate fresh origin `http://localhost:4288/?onboarding-fr=1`, saving `fr-CA` remounted the visible guide with `Commencez par un petit pas`, `Aucun compte n'est requis`, and `Masquer le guide`; the app-origin warning/error log was empty.
 
