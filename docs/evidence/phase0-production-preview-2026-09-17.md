@@ -1053,3 +1053,13 @@ This refreshes clean-source reproducibility after the exact-duplicate archive br
 On 2026-09-18, the finite static-core profile was made explicit in decision `OMN-DEC-005`: declarative data-only extensions remain admitted through platform contracts, while executable third-party packages remain disabled until a real isolation model passes the MPES threat model. `src/core/extension-policy.test.ts` proves both branches, and `docs/control/capability-catalogue.json` records `extensions` as `DISABLED_UNQUALIFIED` rather than implying sandbox support.
 
 This resolves the fallback branch of OMN-ACC-082 for the accepted finite profile. It does not claim executable extension support, sandbox security, or Phase 8 candidate qualification; those remain parked until independently qualified.
+
+## Current built-artifact multilingual search target follow-up
+
+On 2026-09-18, the current `npm run build` output at checked-out source `8cde57d` (a descendant of the release receipt source `b0842ed`) retained artifact digest `49d1c5cc1ab707ae1fca278d84b79c5c15ed2b338f92e7a2da5281c40c69f52c` and service-worker cache `omnevum-shell-248737aa0e685d1e`.
+
+In a fresh Codex In-app Browser Chromium origin at `http://localhost:4297/?search-benchmark=1`, two canonical Note captures were entered with English/French text containing accented terms: `École santé café — multilingual search sentinel` and `Français résumé — santé et école`. Searching the unaccented query `sante` returned `2 result(s); derived index healthy.` A full reload retained both canonical records and the healthy index; repeating the same query again returned both records.
+
+The same exact artifact was served in Microsoft Edge at `http://localhost:4297/?search-edge-receipt=1`. The two-record fixture, unaccented `sante` search, full reload, and post-reload two-result search repeated successfully in Edge. The accessibility tree exposed labelled Capture, Search, result, Recovery, Device/Input, and degraded-storage/Vault guidance controls in both runs.
+
+This adds current target behavioral evidence for accent normalization, multilingual source preservation, canonical reload persistence, and derived-index ownership across the available Chromium and Edge surfaces. It does not measure mobile memory/latency, qualify a mobile viewport or physical device, prove full-Vault workload behavior, qualify a second search engine on target, or establish production deployment, WCAG conformance, assistive technology, or human acceptance; OMN-ACC-057 remains `PARTIAL`.

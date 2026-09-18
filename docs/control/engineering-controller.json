@@ -164,7 +164,8 @@
     "current receipt-bound Chromium two-client smoke on the exact 11abbef artifact captures a canonical note in each client and proves bidirectional same-origin view refresh without reload through metadata-only invalidation; permission, vector/analytical, target, deployment, and human evidence remain open",
     "current receipt-bound Chromium accessibility-tree smoke on the exact 11abbef artifact exposes labelled semantic controls, records the first twelve keyboard stops, captures/searches/reloads one canonical note, and retains a healthy derived index; WCAG, screen-reader, target, deployment, and human evidence remain open",
     "current built-artifact Chromium onboarding receipt on source ec72345 exposes localized en-CA/fr-CA first-run guidance, no-account/local-first/Vault recovery messaging, Capture navigation, and a dismiss action whose local preference persists across reload without canonical mutation; deployment, mobile, WCAG, and human acceptance remain open",
-    "current built-artifact Chromium sync receipt on source 75c1016 proves the shipped CSP permits only explicit HTTPS/loopback connector origins, imports a bounded local replica, preserves two local tombstones against stale remote resurrection, reports three merge conflicts, and retains the local merge after a synthetic HTTP 503 push failure; provider, offline-rejoin, deployment, broader-target, and human qualification remain open"
+    "current built-artifact Chromium sync receipt on source 75c1016 proves the shipped CSP permits only explicit HTTPS/loopback connector origins, imports a bounded local replica, preserves two local tombstones against stale remote resurrection, reports three local merge conflicts, and retains the local merge after a synthetic HTTP 503 push failure; provider, offline-rejoin, deployment, broader-target, and human qualification remain open",
+    "current built-artifact Chromium and Edge multilingual search receipt on descendant source 8cde57d with artifact digest 49d1c5cc1ab707ae1fca278d84b79c5c15ed2b338f92e7a2da5281c40c69f52c and worker cache omnevum-shell-248737aa0e685d1e captures English/French accented records, returns two results for unaccented sante, retains both records through full reload, and repeats the healthy search; mobile performance, second-engine target qualification, deployment, and human acceptance remain open"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final target/support qualification beyond the recorded harvest-reference decision",
@@ -176,6 +177,7 @@
     "broader security/untrusted-content/credential, active-content, egress, and production boundary evidence",
     "static-host deployment, smoke, and rollback proof",
     "richer Time/Track/Compose capability contracts and target qualification",
+    "MiniSearch mobile memory/latency, full-Vault workload, permission-invalidation, ranking-breadth, and second-engine target qualification beyond the current Chromium/Edge behavioral receipt",
     "heterogeneous Acquire import, GPX/timeline Place reuse, external Web-document preservation, and spatial-analysis qualification",
     "remote share delivery/effect use, provider ACL interaction, stale-share reconciliation, and cross-target disclosure qualification",
     "mixed-language Vault import/summary and AI/tool language-neutral semantic-ID qualification",
