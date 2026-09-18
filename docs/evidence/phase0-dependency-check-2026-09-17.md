@@ -8,6 +8,7 @@ Status: INITIAL_PASS_WITH_REVIEW_OPEN; package metadata and advisory scan are no
 - Node: `v24.19.0`; npm: `11.17.0`.
 - `npm install` completed from the declared manifest and produced the committed `package-lock.json`.
 - `npm audit --audit-level=high` reported `found 0 vulnerabilities` for the current installed graph.
+- `npm run audit:security` now runs the same high-severity advisory gate in the normal CI sequence; the current run reports `found 0 vulnerabilities`.
 - The generated dependency inventory contains the exact lockfile source hash and package integrity/resolution metadata for the installed graph.
 - Package-lock license metadata is recorded where present; the license/provenance register remains open for exact notice, source-obligation, distribution-profile, and currentness review.
 

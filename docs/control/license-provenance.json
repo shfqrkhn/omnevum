@@ -11,6 +11,6 @@
     "Copyleft or ambiguous obligations require isolation/compliance evidence or explicit rejection before release.",
     "Automated ORT, ScanCode, REUSE/SPDX, or equivalent results are reviewed rather than treated as legal truth."
   ],
-  "automatedGate": {"command": "npm run audit:licenses", "status": "PASS", "scope": "all node_modules entries in package-lock.json", "evidence": "scripts/license-audit.mjs; docs/evidence/phase0-dependency-check-2026-09-17.md"},
+  "automatedGate": {"command": "npm run audit:licenses; npm run audit:security", "status": "PASS", "scope": "all node_modules entries in package-lock.json plus current high-severity npm advisory data", "evidence": "scripts/license-audit.mjs; npm audit --audit-level=high; docs/evidence/phase0-dependency-check-2026-09-17.md"},
   "releaseBlockers": ["unreviewed-license", "missing-notice", "missing-corresponding-source-where-required", "unresolved-provenance"]
 }
