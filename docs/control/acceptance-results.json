@@ -337,9 +337,10 @@
       "evidence": [
         "src/core/factory.ts",
         "src/core/factory-preview.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-receipt-bound-edge-factory-qualification-follow-up"
+        "src/core/factory-interruption.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-state-vault-recovery-and-factory-interruption-follow-up"
       ],
-      "notes": "The current browser receipt proves a nontrivial stateful declarative app can be created through the public factory contract and canonical command path. It does not prove independent fresh-AI creation or interrupted-agent resumption; those remain open."
+      "notes": "The current browser receipt proves a nontrivial stateful declarative app can be created through the public factory contract and canonical command path; the two-process benchmark proves interrupted app resumption. Independent fresh-AI authorship, touch/mobile breadth, engine substitution, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-020",
@@ -373,10 +374,9 @@
         "scripts/factory-interruption-benchmark.mjs",
         "src/core/factory-interruption.test.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-integrity-manifested-engineering-recovery-bundle-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-checkout-fresh-agent-resume-benchmark-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-receipt-bound-edge-factory-qualification-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-state-vault-recovery-and-factory-interruption-follow-up"
       ],
-      "notes": "The generated integrity-manifested Recovery bundle references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths. At exact detached revision 80066db, the clean-checkout benchmark reported FRESH_AGENT_NPM_CI_PASS, RECOVERY_AUDIT_PASS files=166, FRESH_AGENT_CI_PASS, FACTORY_INTERRUPTION_EXPECTED_STOP_PASS, FACTORY_INTERRUPTION_RESUME_PASS, FRESH_AGENT_FACTORY_INTERRUPTION_PASS, and clean-clone=true original-conversation=false after verifying canonical IDs/status plus game seed/state. The worktree is removed after the complete CI and interruption/resume gates."
+      "notes": "The generated integrity-manifested Recovery bundle references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths. At exact detached revision f92fa4a, the clean-checkout benchmark reported FRESH_AGENT_NPM_CI_PASS, RECOVERY_AUDIT_PASS files=166, FRESH_AGENT_CI_PASS, FACTORY_INTERRUPTION_EXPECTED_STOP_PASS, FACTORY_INTERRUPTION_RESUME_PASS, FRESH_AGENT_FACTORY_INTERRUPTION_PASS, and clean-clone=true original-conversation=false after verifying canonical IDs/status plus package-state game seed/state. The worktree is removed after the complete CI and interruption/resume gates."
     },
     {
       "id": "OMN-ACC-022",
@@ -1176,7 +1176,7 @@
       "text": "The engineering factory completes the same representative stateful work item under two materially different qualified agent hosts, with at least one current FOSS/open host when practical and at least one current subscription-backed official agent when the owner has that entitlement. The durable controller/evidence lets work resume after switching hosts without replaying owner decisions from chat.",
       "status": "UNKNOWN",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-fresh-agent-resume-benchmark-after-deviceinput-safety-increment"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-state-vault-recovery-and-factory-interruption-follow-up"
       ],
       "notes": "The current clean-checkout benchmark proves durable controller/evidence reconstruction and interruption/resume without original conversation state on one qualified host. A materially different second agent host, including the owner-entitled subscription-backed route where applicable, remains unqualified."
     },
