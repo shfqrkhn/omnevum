@@ -66,9 +66,9 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-release-offline-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-offline-receipt-refresh",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-offline-network-capability-follow-up"
+      "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-offline-network-capability-follow-up"
       ],
-      "notes": "Fresh local static origins reloaded the cached shell offline, created canonical notes offline, and preserved them after network restoration; the current receipt-bound Edge artifact repeats offline mutation/reload with a healthy derived index and empty app-origin diagnostics, while the current Chromium artifact reports Failed to fetch for offline sync and keeps local capture usable. GitHub Pages, Safari/Firefox, assistive technology, native fault behavior, and external provider qualification still require qualification."
+      "notes": "Fresh local static origins reloaded the cached shell offline, created canonical notes offline, and preserved them after network restoration; the historical receipt-bound Edge artifact repeated offline mutation/reload with a healthy derived index and empty app-origin diagnostics, while the historical Chromium artifact reported Failed to fetch for offline sync and kept local capture usable. GitHub Pages, Safari/Firefox, assistive technology, native fault behavior, and external provider qualification still require qualification."
     },
     {
       "id": "OMN-ACC-003",
@@ -111,9 +111,9 @@
       "evidence": [
         "src/core/presentation.test.ts#uses-a-known-good-safe-profile-without-rewriting-malformed-presentation-or-canonical-data",
         "docs/evidence/phase0-production-preview-2026-09-17.md#safe-presentation-mode-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-safe-presentation-recovery-follow-up"
+      "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-safe-presentation-recovery-follow-up"
       ],
-      "notes": "Deterministic core/storage evidence and current built Chromium interaction prove malformed presentation and canonical data are preserved while a known-good Safe Presentation profile is selected for the session; broader browser/accessibility/visual qualification and production deployment remain open."
+      "notes": "Deterministic core/storage evidence and historical built Chromium interaction prove malformed presentation and canonical data are preserved while a known-good Safe Presentation profile is selected for the session; broader browser/accessibility/visual qualification and production deployment remain open."
     },
     {
       "id": "OMN-ACC-006",
@@ -362,9 +362,9 @@
         "src/core/presentation.test.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-personalization-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-metadata-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-profile-portability-follow-up"
+      "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-presentation-profile-portability-follow-up"
       ],
-      "notes": "The current built preview proves bounded declarative branding, terminology, navigation visibility/order controls, Home composition, typeface, icon treatment, density, theme contract, document metadata binding, standalone profile export/import, reload persistence, Recovery reachability, and unchanged canonical counts. Target accessibility/browser breadth, icon/logo assets, installed-host metadata, profile migration across future schemas, and release qualification remain open."
+      "notes": "The historical built preview proves bounded declarative branding, terminology, navigation visibility/order controls, Home composition, typeface, icon treatment, density, theme contract, document metadata binding, standalone profile export/import, reload persistence, Recovery reachability, and unchanged canonical counts. Target accessibility/browser breadth, icon/logo assets, installed-host metadata, profile migration across future schemas, and release qualification remain open."
     },
     {
       "id": "OMN-ACC-024",
@@ -486,9 +486,9 @@
         "src/core/commands.ts",
         "src/core/storage.test.ts#preserves-a-bounded-artifact-payload-through-vault-export-and-restore",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-artifact-multi-reference-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-artifact-attachment-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-artifact-attachment-follow-up"
       ],
-      "notes": "Source/unit evidence proves one canonical Artifact payload can be referenced by two relationship records and survive derived search-index rebuild plus Vault payload round-trip. The current Chromium artifact also accepts a 46-byte fixture through the visible file chooser, retains one platform.artifact payload, exposes the same record through shared selectors, and returns to a clean scoped origin. Preview/OCR adapters, heavy-work cancellation/resource bounds, hostile rendering, and target qualification remain open."
+      "notes": "Source/unit evidence proves one canonical Artifact payload can be referenced by two relationship records and survive derived search-index rebuild plus Vault payload round-trip. The historical Chromium artifact also accepts a 46-byte fixture through the visible file chooser, retains one platform.artifact payload, exposes the same record through shared selectors, and returns to a clean scoped origin. Preview/OCR adapters, heavy-work cancellation/resource bounds, hostile rendering, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-033",
@@ -669,9 +669,10 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/history.test.ts",
-        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#observed-in-the-production-preview"
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#observed-in-the-production-preview",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-historyversion-revert-follow-up"
       ],
-      "notes": "Local history/diff and command-path undo are covered; domain retention policy, richer multi-revision UX, and target qualification remain open."
+      "notes": "Local history/diff and command-path undo are covered; the current Chromium artifact now exposes a visible Revert to revision action that creates a new canonical revision and restores the prior task state. Domain retention policy, richer multi-revision UX, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-048",
