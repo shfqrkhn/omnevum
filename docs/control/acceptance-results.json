@@ -376,7 +376,7 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-integrity-manifested-engineering-recovery-bundle-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-state-vault-recovery-and-factory-interruption-follow-up"
       ],
-      "notes": "The generated integrity-manifested Recovery bundle references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths. At exact detached revision f92fa4a, the clean-checkout benchmark reported FRESH_AGENT_NPM_CI_PASS, RECOVERY_AUDIT_PASS files=166, FRESH_AGENT_CI_PASS, FACTORY_INTERRUPTION_EXPECTED_STOP_PASS, FACTORY_INTERRUPTION_RESUME_PASS, FRESH_AGENT_FACTORY_INTERRUPTION_PASS, and clean-clone=true original-conversation=false after verifying canonical IDs/status plus package-state game seed/state. The worktree is removed after the complete CI and interruption/resume gates."
+      "notes": "The generated integrity-manifested Recovery bundle references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths. At exact detached revision ca7d4a5, the clean-checkout benchmark reported FRESH_AGENT_NPM_CI_PASS, RECOVERY_AUDIT_PASS files=166, FRESH_AGENT_CI_PASS, FACTORY_INTERRUPTION_EXPECTED_STOP_PASS, FACTORY_INTERRUPTION_RESUME_PASS, FRESH_AGENT_FACTORY_INTERRUPTION_PASS, and clean-clone=true original-conversation=false after verifying canonical IDs/status plus package-state game seed/state. The worktree is removed after the complete CI and interruption/resume gates."
     },
     {
       "id": "OMN-ACC-022",
