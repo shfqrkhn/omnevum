@@ -78,6 +78,9 @@ select, input[type="search"], input[type="text"], input[type="number"] { width: 
 .record-list { display: grid; gap: 0.65rem; list-style: none; margin: 0; padding: 0; }
 .record-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; border: 1px solid var(--line); border-radius: 12px; padding: 0.9rem; }
 .record-item p { margin: 0.35rem 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.history-details { margin-top: 0.6rem; color: var(--muted); font-size: 0.82rem; }
+.history-details summary { cursor: pointer; color: var(--accent); font-weight: 700; }
+.history-details ol { margin: 0.45rem 0 0; padding-left: 1.25rem; }
 .icon-button { min-height: 36px; padding: 0.45rem 0.7rem; background: transparent; border-color: var(--line); color: var(--danger); font-size: 0.82rem; }
 .icon-button:hover { background: var(--surface-muted); }
 .complete-button { color: var(--accent); }

@@ -31,7 +31,9 @@
     "multilingual derived Search is selected behind the rebuildable index owner",
     "Space membership/filter UI preserves one canonical record across multiple scopes",
     "capability startup/runtime failures are isolated behind the platform runtime",
-    "103 unit tests pass across 40 test files after the Space and capability-isolation increment"
+    "History UI exposes field-level revision snapshots without creating a second writable copy",
+    "Safe Presentation Mode is reversible and preserves the stored presentation profile",
+    "103 unit tests pass across 40 test files after the Space, capability-isolation, history, and Safe Presentation increment"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad decision beyond the recorded harvest-reference route",

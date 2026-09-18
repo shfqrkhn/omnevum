@@ -3,7 +3,7 @@ import { acceptCandidates, stageText, stageUrl, type AcquireCandidate } from "..
 import { isCompletedTask, recordSpace, recordText, recordTriageStatus, type SpaceId } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
-import { isPresentationProfile, parsePresentationProfile, type PresentationProfile } from "../core/presentation";
+import { DEFAULT_PRESENTATION, isPresentationProfile, parsePresentationProfile, type PresentationProfile } from "../core/presentation";
 import { TrackService } from "../core/track";
 import { makeReminderData, reconcileReminders } from "../core/time";
 import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/crypto";
@@ -14,10 +14,12 @@ import { projectDataset } from "../core/data";
 import { countRecords, groupCounts } from "../core/analysis";
 import type { CapabilityRuntime } from "../core/capability-runtime";
 import { SpaceService } from "../core/space";
+import { historyWithDiffs } from "../core/history";
 
 export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
-  let presentation: PresentationProfile = parsePresentationProfile(rawPresentation);
+  const safePresentationMode = readSafePresentationMode();
+  let presentation: PresentationProfile = safePresentationMode ? { ...DEFAULT_PRESENTATION } : parsePresentationProfile(rawPresentation);
   const copy = getUiCopy(presentation.locale);
   const recoveryCopy = getRecoveryCopy(presentation.locale);
   const timeCopy = getTimeCopy(presentation.locale);
@@ -306,9 +308,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <div class="form-row recovery-row">
           <button id="export-vault" class="secondary" type="button">${copy.exportVault}</button>
           <button id="export-encrypted" class="secondary" type="button">${recoveryCopy.exportEncrypted}</button>
-          <button id="export-diagnostics" class="secondary" type="button">${copy.exportDiagnostics}</button>
-          <button id="repair-search" class="secondary" type="button">${copy.repairSearch}</button>
-          <button id="clear-canonical" class="danger-button" type="button">${recoveryCopy.clearCanonical}</button>
+           <button id="export-diagnostics" class="secondary" type="button">${copy.exportDiagnostics}</button>
+           <button id="repair-search" class="secondary" type="button">${copy.repairSearch}</button>
+           <button id="safe-presentation" class="secondary" type="button">${safePresentationMode ? recoveryCopy.safePresentationActive : recoveryCopy.safePresentation}</button>
+           <button id="clear-canonical" class="danger-button" type="button">${recoveryCopy.clearCanonical}</button>
           <label class="file-button secondary" for="import-vault">${copy.importVault}</label>
           <input id="import-vault" type="file" accept="application/json,.json" />
           <label class="file-button secondary" for="artifact-input">${copy.attachArtifact}</label>
@@ -402,10 +405,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const vaultPassword = root.querySelector<HTMLInputElement>("#vault-password");
   const diagnosticsButton = root.querySelector<HTMLButtonElement>("#export-diagnostics");
   const repairSearchButton = root.querySelector<HTMLButtonElement>("#repair-search");
+  const safePresentationButton = root.querySelector<HTMLButtonElement>("#safe-presentation");
   const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
 
@@ -431,7 +435,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   productLabel.textContent = `${presentation.productName} ${copy.foundation}`;
   productName.value = presentation.productName;
   localeInput.value = presentation.locale;
-  presentationStatus.textContent = rawPresentation === undefined || isPresentationProfile(rawPresentation) ? copy.presentationHint : `Safe presentation fallback is active. ${copy.presentationHint}`;
+  presentationStatus.textContent = safePresentationMode ? recoveryCopy.safePresentationHint : rawPresentation === undefined || isPresentationProfile(rawPresentation) ? copy.presentationHint : `Safe presentation fallback is active. ${copy.presentationHint}`;
   themeToggle.textContent = presentation.theme === "dark" ? copy.themeLight : copy.themeDark;
   themeToggle.setAttribute("aria-pressed", String(presentation.theme === "dark"));
 
@@ -590,6 +594,25 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
   };
 
+  const renderHistory = async (record: Awaited<ReturnType<CanonicalStore["get"]>>): Promise<HTMLDetailsElement | undefined> => {
+    if (!record) return undefined;
+    const entries = await historyWithDiffs(store, record.id);
+    if (entries.length <= 1) return undefined;
+    const details = document.createElement("details");
+    details.className = "history-details";
+    const summary = document.createElement("summary");
+    summary.textContent = `${copy.historyHeading} (${entries.length})`;
+    const list = document.createElement("ol");
+    for (const entry of entries) {
+      const changes = entry.changesFromPrevious.length > 0 ? entry.changesFromPrevious.map((change) => change.path) : ["initial"];
+      const item = document.createElement("li");
+      item.textContent = copy.historyEntry(entry.revision, formatDateTime(presentation.locale, entry.recordedAt), changes.join(", "));
+      list.append(item);
+    }
+    details.append(summary, list);
+    return details;
+  };
+
   const renderRecords = async (query = ""): Promise<void> => {
     const candidateRecords = query.trim() ? await store.search(query) : await store.list();
     const records = activeSpace ? (await spaceService.project(candidateRecords, activeSpace)).filter((record) => record.owner !== "platform.space") : candidateRecords.filter((record) => record.owner !== "platform.space");
@@ -609,6 +632,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const meta = document.createElement("small");
       meta.textContent = `${record.owner} - revision ${record.revision}`;
       content.append(title, text, meta);
+      const history = await renderHistory(record);
+      if (history) content.append(history);
       if (record.recordType === "task" && !isCompletedTask(record)) {
         const complete = document.createElement("button");
         complete.type = "button";
@@ -889,6 +914,16 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
   });
 
+  safePresentationButton.addEventListener("click", () => {
+    try {
+      if (safePresentationMode) window.sessionStorage.removeItem("omnevum-safe-presentation");
+      else window.sessionStorage.setItem("omnevum-safe-presentation", "1");
+      window.location.reload();
+    } catch (error) {
+      recoveryStatus.textContent = describeError(error, "Safe Presentation Mode could not be changed; the stored profile was preserved.");
+    }
+  });
+
   presentationForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const nextName = productName.value.trim().slice(0, 80);
@@ -1027,4 +1062,12 @@ function recordTypeForCaptureKind(kind: CaptureKind): "note" | "task" | "observa
 
 function describeError(error: unknown, fallback: string): string {
   return error instanceof Error && error.message ? error.message : fallback;
+}
+
+function readSafePresentationMode(): boolean {
+  try {
+    return window.sessionStorage.getItem("omnevum-safe-presentation") === "1";
+  } catch {
+    return false;
+  }
 }

@@ -18,6 +18,8 @@ Status: PARTIAL; vertical smoke only and not an MVP release claim
 - The durable Effect/Outbox runner persists `IN_FLIGHT`, recovers it as `OUTCOME_UNKNOWN`/`RECONCILE`, and only then invokes the executor; tests cover both idempotent reconciliation and retryable failure persistence.
 - Track/Observe now accepts a bounded numeric metric, unit, and Space through `platform.track`; the Home Visualize/Analyze surface derives open/completed tasks, focus minutes, and relationship counts without a second writable owner.
 - The Space surface can add an explicit membership overlay and filter Home, Triage, Search results, and archived records without copying or re-owning the canonical record.
+- Revisioned records expose an expandable field-level history summary in the canonical-record surface; reverting remains a normal command-path operation.
+- Safe Presentation Mode was enabled and exited in the production preview; the known-good profile rendered while the stored French presentation remained available after exit, and canonical counts remained unchanged.
 - The startup capability runtime records READY/DEGRADED states and contains a failing optional module without preventing core Home/Recovery startup; the current regression run is 103 passing tests across 40 files.
 - The same regression run covers bounded Acquire/Ingest, source-linked Evidence and Annotation, Place/Geo, derived Data/Analyze, declarative Compose/Automation, package/game lifecycle contracts, Device/Input detection, optional AI/credential/effect boundaries, multilingual derived Search, migration, sharing, sync routes, exact Money/Quantity, and recovery validation.
 
