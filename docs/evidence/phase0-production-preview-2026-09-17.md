@@ -154,6 +154,12 @@ The current exact `npm run ci` artifact at source revision `aa5a8e4` (artifact d
 
 The unit regression in `src/core/sync.test.ts` covers the same partial-merge contract. This proves truthful local state handling for a failed remote push only; it does not qualify durable Effect/Outbox retry, authentication, provider migration, offline rejoin, or external transport security.
 
+## Current built-artifact release offline follow-up
+
+The same current artifact at source revision `aa5a8e4` (digest `e7c96a631ead1cf288f1f22909eb27bac0520a4d7bccff06c2cda1ba4883f8a1`, worker cache `omnevum-shell-ef6a4afc50ad3df7`) was reloaded on `http://localhost:4214/` after the partial-sync receipt. The browser reported controller `http://localhost:4214/sw.js` in `activated` state; CDP network emulation was set offline, the shell reloaded, the imported `Partial sync sentinel` remained visible, and health reported `1 active, 0 archived, 0 revision snapshot(s), 0 artifact payload(s); search index healthy.` Network emulation was restored afterward and no localhost app-origin warning/error entries were returned.
+
+This binds offline reload evidence to the current release artifact only. GitHub Pages, other browser families, assistive technology, native quota/corruption/migration interruption, and explicit degradation of network-dependent optional capabilities remain open.
+
 ## Current built-artifact offline follow-up
 
 The same exact artifact at source revision `b1ffa19` (digest `4dcdb2d8414248de3e128c2db29da3952633b18ab134c2644d01121016dc26a6`, worker cache `omnevum-shell-60930e9e8eb3697c`) was exercised on the fresh `http://localhost:4213/` origin. After the shell loaded, CDP network emulation was set offline; the browser created `Offline receipt note`, reloaded, retained two active canonical records, and reported a healthy derived search index. Network emulation was then restored. The browser returned no warning/error console entries.
