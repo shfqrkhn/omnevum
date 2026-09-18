@@ -4,6 +4,7 @@ import { projectForAuthorizedShare, projectForShare } from "./share";
 import { createShareGrant, revokeShareGrant } from "./sharing";
 import { CommandBus } from "./commands";
 import { CanonicalStore } from "./storage";
+import { SpaceService } from "./space";
 
 function record(id: string, sensitivity: "PRIVATE" | "SHARED", data: Record<string, unknown>): CanonicalRecord {
   const now = new Date().toISOString();
@@ -35,6 +36,21 @@ describe("bounded share projection", () => {
     expect(projectForAuthorizedShare(grant, [source], [source.id], true).records).toHaveLength(1);
     const revoked = await revokeShareGrant(commands, grant.id);
     expect(() => projectForAuthorizedShare(revoked, [source], [source.id], true)).toThrow(/inactive|expired|authorize/);
+    store.close();
+  });
+
+  it("enforces the grant Space, including explicit Space membership overlays", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-authorized-share-space`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const spaces = new SpaceService(store, commands);
+    const source = await commands.create({ recordType: "note", owner: "core.capture", data: { text: "space-bound" } });
+    const grant = await createShareGrant(commands, { grantedTo: "person:reviewer", purpose: "review", space: "household", recordIds: [source.id] });
+    const initial = await store.list();
+    expect(() => projectForAuthorizedShare(grant, initial, [source.id], true, initial)).toThrow(/Space/);
+    await spaces.add(source.id, "household");
+    const withMembership = await store.list();
+    expect(projectForAuthorizedShare(grant, withMembership, [source.id], true, withMembership).records).toHaveLength(1);
     store.close();
   });
 });

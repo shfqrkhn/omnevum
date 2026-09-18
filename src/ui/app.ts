@@ -1374,6 +1374,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
     const space = shareSpace.value === "household" || shareSpace.value === "work" ? shareSpace.value : "personal";
     try {
+      const scopedIds = new Set((await spaceService.project(await store.list(), space)).map((record) => record.id));
+      if (recordIds.some((id) => !scopedIds.has(id))) {
+        shareStatus.textContent = copy.grantSpaceMismatch;
+        return;
+      }
       const grant = await createShareGrant(commands, { grantedTo: shareRecipient.value, purpose: sharePurpose.value, space, recordIds, ...(shareExpiry.value ? { expiresAt: new Date(shareExpiry.value).toISOString() } : {}) });
       shareStatus.textContent = copy.grantSaved;
       shareRecipient.value = "";
@@ -1400,7 +1405,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         updateShareActions();
         return;
       }
-      const projection = projectForAuthorizedShare(grant, await store.list(), recordIds, shareIncludePrivate.checked);
+      const allRecords = await store.list();
+      const projection = projectForAuthorizedShare(grant, allRecords, recordIds, shareIncludePrivate.checked, allRecords);
       downloadJson("omnevum-share-projection.json", projection);
       shareStatus.textContent = copy.projectionSaved(projection.records.length, projection.omittedRecordCount);
     } catch (error) {

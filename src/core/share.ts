@@ -1,6 +1,7 @@
 import type { CanonicalRecord, RecordProvenance } from "./model";
 import { scrubSensitiveValue } from "./safety";
 import { canUseShareGrant } from "./sharing";
+import { projectRecordsInSpace } from "./space";
 
 export interface ShareProjection {
   format: "OMNEVUM_SHARE_PROJECTION";
@@ -22,9 +23,12 @@ export function projectForShare(records: CanonicalRecord[], selectedIds: Iterabl
   return { format: "OMNEVUM_SHARE_PROJECTION", version: 1, exportedAt: new Date().toISOString(), records: projected, omittedRecordCount: records.filter((record) => selected.has(record.id)).length - projected.length };
 }
 
-export function projectForAuthorizedShare(grant: CanonicalRecord, records: CanonicalRecord[], selectedIds: Iterable<string>, includePrivate = false): ShareProjection {
+export function projectForAuthorizedShare(grant: CanonicalRecord, records: CanonicalRecord[], selectedIds: Iterable<string>, includePrivate = false, memberships: CanonicalRecord[] = []): ShareProjection {
   const selected = [...selectedIds];
   if (!canUseShareGrant(grant, selected)) throw new Error("Share grant is inactive, expired, or does not authorize the selected records");
+  if (grant.data.space !== "personal" && grant.data.space !== "household" && grant.data.space !== "work") throw new Error("Share grant space is invalid");
+  const scopedIds = new Set(projectRecordsInSpace(records, memberships, grant.data.space).map((record) => record.id));
+  if (selected.some((id) => !scopedIds.has(id))) throw new Error("Share grant does not authorize the selected records in its declared Space");
   return projectForShare(records, selected, includePrivate);
 }
 
