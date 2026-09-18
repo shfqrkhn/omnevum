@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_PRESENTATION, isPresentationProfile, parsePresentationProfile } from "./presentation";
+import { DEFAULT_PRESENTATION, isPresentationProfile, parsePresentationProfile, resolvePresentationProfile } from "./presentation";
+import { CanonicalStore } from "./storage";
 
 describe("presentation profile", () => {
   it("falls back safely and bounds imported branding", () => {
@@ -28,5 +29,32 @@ describe("presentation profile", () => {
   it("distinguishes a recoverable profile from malformed stored settings", () => {
     expect(isPresentationProfile({ schemaVersion: 1, productName: "JohnOS", theme: "dark", locale: "en-CA" })).toBe(true);
     expect(isPresentationProfile({ productName: "JohnOS", theme: "dark", locale: "en-CA" })).toBe(false);
+  });
+
+  it("uses a known-good safe profile without rewriting malformed presentation or canonical data", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-safe-presentation`);
+    await store.open();
+    const malformed = { schemaVersion: 99, productName: "Broken", theme: "neon", locale: "xx" };
+    const original = {
+      id: "safe-presentation-record",
+      recordType: "note" as const,
+      owner: "core.capture",
+      schemaVersion: 1 as const,
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString(),
+      provenance: { source: "USER_INPUT" as const, capturedAt: new Date().toISOString() },
+      truthClass: "USER_OBSERVATION" as const,
+      sensitivity: "PRIVATE" as const,
+      revision: 1,
+      deleted: false,
+      data: { text: "preserve" }
+    };
+    await store.setSetting("presentation", malformed);
+    await store.put(original);
+
+    expect(resolvePresentationProfile(malformed, true)).toEqual({ profile: DEFAULT_PRESENTATION, safeMode: true, storedProfileValid: false });
+    expect(await store.getSetting("presentation")).toEqual(malformed);
+    expect(await store.get(original.id)).toEqual(original);
+    store.close();
   });
 });

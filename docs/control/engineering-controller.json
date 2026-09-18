@@ -32,7 +32,7 @@
     "Space membership/filter UI preserves one canonical record across multiple scopes",
     "capability startup/runtime failures are isolated behind the platform runtime",
     "History UI exposes field-level revision snapshots without creating a second writable copy",
-    "Safe Presentation Mode is reversible and preserves the stored presentation profile",
+    "Safe Presentation Mode selects a known-good profile without rewriting malformed presentation or canonical records",
     "persisted Compose/View dashboard projects accessible list, table, chart, and capture boundaries",
     "production preview service worker is activated and controls the page; stamped cache identity, offline reload/mutation, 390x844 labelled keyboard focus, and no browser warnings are evidenced",
     "Device/Input broker mediates bounded file and clipboard Acquire staging through the existing preview and canonical command path",
@@ -44,7 +44,7 @@
     "current production preview renders hostile Acquire text literally and completes category diagnostics export",
     "Vault merge preview validates integrity and conflict outcomes without mutation",
     "boot recovery exports a bounded read-only raw-state snapshot when malformed canonical state prevents a portable Vault",
-    "112 unit tests pass across 40 test files after the recovery snapshot increment",
+    "113 unit tests pass across 40 test files after the Safe Presentation Mode increment",
     "current built-artifact Chromium preview completes the integrated MVP workflow, localized rebrand/reload, and confirmed Vault merge"
   ],
   "unverified": [

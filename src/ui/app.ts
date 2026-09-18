@@ -3,7 +3,7 @@ import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate
 import { isCompletedTask, recordSpace, recordText, recordTriageStatus, type SpaceId } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
-import { DEFAULT_PRESENTATION, isPresentationProfile, parsePresentationProfile, type PresentationProfile } from "../core/presentation";
+import { resolvePresentationProfile, type PresentationProfile } from "../core/presentation";
 import { TrackService } from "../core/track";
 import { makeReminderData, reconcileReminders } from "../core/time";
 import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/crypto";
@@ -22,7 +22,8 @@ import { readPath } from "../core/data";
 export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
   const safePresentationMode = readSafePresentationMode();
-  let presentation: PresentationProfile = safePresentationMode ? { ...DEFAULT_PRESENTATION } : parsePresentationProfile(rawPresentation);
+  const presentationResolution = resolvePresentationProfile(rawPresentation, safePresentationMode);
+  let presentation: PresentationProfile = presentationResolution.profile;
   const copy = getUiCopy(presentation.locale);
   const recoveryCopy = getRecoveryCopy(presentation.locale);
   const timeCopy = getTimeCopy(presentation.locale);
@@ -491,7 +492,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   productLabel.textContent = `${presentation.productName} ${copy.foundation}`;
   productName.value = presentation.productName;
   localeInput.value = presentation.locale;
-  presentationStatus.textContent = safePresentationMode ? recoveryCopy.safePresentationHint : rawPresentation === undefined || isPresentationProfile(rawPresentation) ? copy.presentationHint : `Safe presentation fallback is active. ${copy.presentationHint}`;
+  presentationStatus.textContent = safePresentationMode ? recoveryCopy.safePresentationHint : presentationResolution.storedProfileValid ? copy.presentationHint : `Safe presentation fallback is active. ${copy.presentationHint}`;
   themeToggle.textContent = presentation.theme === "dark" ? copy.themeLight : copy.themeDark;
   themeToggle.setAttribute("aria-pressed", String(presentation.theme === "dark"));
 

@@ -96,8 +96,12 @@
         "line": 3398
       },
       "text": "Safe Presentation Mode recovers from a deliberately broken custom presentation profile without deleting that profile or canonical data.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/presentation.test.ts#uses-a-known-good-safe-profile-without-rewriting-malformed-presentation-or-canonical-data",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#safe-presentation-mode-follow-up"
+      ],
+      "notes": "Deterministic core/storage evidence proves malformed presentation and canonical data are preserved while a known-good safe profile is selected; browser interaction, visual recovery, accessibility, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-006",
