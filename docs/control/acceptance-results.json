@@ -681,9 +681,10 @@
       "evidence": [
         "src/core/track.test.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-track-place-and-compose-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-track-place-and-compose-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-track-and-compose-view-browser-follow-up"
       ],
-      "notes": "The historical built preview covers Track capture and derived dashboard rendering; the superseded artifact saved two observations through one reusable definition path and kept them as platform.track records. Mobile/touch qualification, multi-view permission breadth, and specialist-domain mapping remain open."
+      "notes": "The current built preview now saves one reusable Track definition with two platform.track observations and a safe-field form/list/table/chart dashboard that survives reload; physical mobile/touch, multi-view permission breadth, and specialist-domain mapping remain open."
     },
     {
       "id": "OMN-ACC-043",
@@ -768,9 +769,10 @@
       "evidence": [
         "src/core/compose.test.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-track-place-and-compose-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-track-place-and-compose-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-track-and-compose-view-browser-follow-up"
       ],
-      "notes": "Built-preview evidence covers declarative form/list/table/chart projection, localization, and semantic command boundaries; the current artifact also saves a safe-field dashboard over Track and Place records and proves canonical counts remain bounded. Configurable layout breadth, compact/expanded accessibility qualification, update survival, and qualified AI creation remain open."
+      "notes": "The current artifact proves a safe-field declarative form/list/table/chart dashboard over three platform.track records with reload persistence and bounded canonical counts. Configurable layout breadth, compact/expanded accessibility qualification, update survival, and qualified AI creation remain open."
     },
     {
       "id": "OMN-ACC-049",
