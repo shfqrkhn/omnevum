@@ -64,6 +64,10 @@ Acquire now rejects non-HTTP(S), over-4 KiB, and embedded-credential URLs before
 
 The privacy-minimized diagnostics export now reports explicit category states for release identity, storage/database/schema versions and pressure, persistence, backup exportability versus unknown off-origin status, service-worker control/update state when the browser supplies it, package-integrity evidence, connectors, and sync. A test fixture verifies that category diagnostics do not include canonical record content. Runtime placeholders remain `NOT_PROVIDED`, `NONE_ADMITTED`, or `CONTRACT_ONLY`; they are not release evidence.
 
+## Current-build browser follow-up
+
+The current `npm run ci` artifact (`omnevum-shell-30a45ac985e813bc`, source revision `5e6881a`) was served on the local static preview `http://127.0.0.1:4175/`. In the browser, Acquire staged the synthetic payload `<img src=x onerror=alert(1)>` as visible literal text; after acceptance the same literal remained in review, selectors, and the canonical record list, with no active markup surface observed. The Export diagnostics control completed and displayed the privacy-minimized status. This is a local Chromium observation using synthetic data, not sanitizer, assistive-technology, cross-browser, or production-host evidence.
+
 ## Limits
 
 This receipt establishes only a local production-preview activation/offline-reload and update/rollback rehearsal at one Chromium-based browser surface and one mobile viewport, plus deterministic storage fault tests. It does not establish GitHub Pages routing, browser-family support, full responsive/accessibility conformance, native browser quota exhaustion, interrupted canonical migration, or release readiness. Those remain open in the support, risk, and completion registers.

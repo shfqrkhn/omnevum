@@ -41,6 +41,7 @@
     "injected storage pressure reclaims only derived state, exposes persistence status, and preserves canonical records",
     "Acquire rejects embedded-credential and oversized URLs and retains hostile-looking text as inert data",
     "privacy-minimized diagnostics expose category-level runtime states without canonical content",
+    "current production preview renders hostile Acquire text literally and completes category diagnostics export",
     "110 unit tests pass across 40 test files after the diagnostics increment"
   ],
   "unverified": [
