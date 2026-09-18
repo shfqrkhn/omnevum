@@ -59,7 +59,8 @@
     "current receipt-bound Chromium preview splits an ambiguous triage source into bounded canonical note parts, archives the staging source, clears the inbox, preserves source provenance, and exercises task-part output in the command regression",
     "current receipt-bound Chromium preview defers a triage source to an explicit future due time, hides it until due, then re-surfaces a due item on the same origin without claiming background delivery",
     "current receipt-bound Chromium preview keeps default captures in the inbox and, only when the visible Safe direct route checkbox is selected, creates an unambiguous capture as REVIEWED outside the inbox",
-    "triage CommandBus regression records an explicit DELETED disposition before archiving a source for reversible Recovery restore; the built UI exposes the separate Delete action"
+    "triage CommandBus regression records an explicit DELETED disposition before archiving a source for reversible Recovery restore; the built UI exposes the separate Delete action",
+    "current triage link/route/split/delete transitions use one revision-fenced IndexedDB batch with atomicity regression coverage; the release receipt is bound to source 310d278"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",

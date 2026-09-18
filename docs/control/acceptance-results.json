@@ -841,9 +841,10 @@
         "src/core/commands.test.ts#routes-a-triage-item-into-an-explicit-task-owner-while-archiving-the-staging-source",
         "src/ui/app.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-triage-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-triage-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-atomic-triage-transition-follow-up"
       ],
-      "notes": "Explicit review, defer, clarify, reference, archive, idempotent link, and bounded Note/Task route actions now use the revision-checked canonical CommandBus path, with localized controls and unit coverage. Split breadth, defer scheduling semantics, broader accessibility/target qualification, and complete triage UX remain open."
+      "notes": "Explicit review, defer, clarify, reference, archive, idempotent link, bounded Note/Task route, split, safe-direct, and delete actions use the revision-checked canonical CommandBus path; compound link/route/split/delete transitions now commit atomically with storage-level regression coverage. Proposed-action breadth, native fault-injection, broader accessibility/target qualification, and complete triage UX remain open."
     },
     {
       "id": "OMN-ACC-066",
