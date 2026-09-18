@@ -43,7 +43,8 @@
     "privacy-minimized diagnostics expose category-level runtime states without canonical content",
     "current production preview renders hostile Acquire text literally and completes category diagnostics export",
     "Vault merge preview validates integrity and conflict outcomes without mutation",
-    "111 unit tests pass across 40 test files after the Vault preview increment"
+    "111 unit tests pass across 40 test files after the Vault preview increment",
+    "current built-artifact Chromium preview completes the integrated MVP workflow, localized rebrand/reload, and confirmed Vault merge"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad decision beyond the recorded harvest-reference route",
@@ -57,6 +58,6 @@
     "provider-backed sync, credential/key broker, and external-effect replay evidence",
     "MVP release and later phases"
   ],
-  "nextAction": "Run the Phase 0 support/accessibility/offline/update and native fault-injection matrix, then exercise the MVP outcomes in a clean static-host profile before promoting the MVP gate; keep the MiniSearch adapter target qualification open.",
+  "nextAction": "Run the Phase 0 support/accessibility/offline/update and native fault-injection matrix, then exercise the MVP outcomes in a clean static-host profile before promoting the MVP gate; keep the MiniSearch adapter target qualification open and do not treat the current local built-preview evidence as deployment proof.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }

@@ -41,8 +41,12 @@
         "line": 3390
       },
       "text": "A new user opens Omnevum from a GitHub Pages deployment on a supported mobile browser, completes minimal/skippable onboarding, creates canonical records, closes/reopens, and retains data without a mandatory account or backend.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-follow-up"
+      ],
+      "notes": "Fresh local static Chromium evidence covers the core no-account create/reload path; GitHub Pages, supported mobile rows, and full onboarding qualification remain open."
     },
     {
       "id": "OMN-ACC-002",
@@ -65,8 +69,11 @@
         "line": 3394
       },
       "text": "The user changes branding from Omnevum to JohnOS, changes logo/theme/lens labels, upgrades Omnevum, and retains personal branding without changing canonical record identities.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+      ],
+      "notes": "Built-artifact Chromium evidence covers JohnOS in-app branding, theme, and reload persistence without semantic-count loss; logo/lens-label customization and upgrade/installed-host qualification remain open."
     },
     {
       "id": "OMN-ACC-004",
@@ -99,8 +106,12 @@
         "line": 3400
       },
       "text": "The user switches UI locale, number/date formatting, and measurement presentation without altering canonical semantic values or translating user-authored content.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/i18n.test.ts",
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+      ],
+      "notes": "French Canadian formatting/localization and reload persistence are covered locally; full measurement-presentation breadth, long-string/RTL/pseudolocalization, and target-matrix qualification remain open."
     },
     {
       "id": "OMN-ACC-007",
@@ -109,8 +120,13 @@
         "line": 3402
       },
       "text": "A canonical record appears in multiple authorized lenses/projections without creating unsynchronized writable copies.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/compose.test.ts",
+        "src/core/data.test.ts",
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+      ],
+      "notes": "Compose and derived-data projections are exercised locally without a second writable owner; broader authorized-lens and permission-boundary qualification remains open."
     },
     {
       "id": "OMN-ACC-008",
@@ -177,8 +193,12 @@
         "line": 3414
       },
       "text": "All product AI routes are disabled. Core data, Home, Search, visualization/modeling, backup/restore, and Recovery remain usable.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/ai.test.ts",
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+      ],
+      "notes": "The shipped profile keeps AI optional/inactive and the built core path remains usable; provider-removal and broader non-AI qualification are not complete."
     },
     {
       "id": "OMN-ACC-014",
@@ -290,8 +310,12 @@
         "line": 3436
       },
       "text": "The user renames an installed system to JohnOS. All Omnevum-controlled in-app surfaces update immediately; on a target that does not dynamically update installed Home-Screen/OS metadata, Omnevum truthfully reports PLATFORM_LIMITED and provides the supported refresh/reinstall path without corrupting data/install identity.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-follow-up"
+      ],
+      "notes": "Local built-preview evidence covers controlled in-app rebranding and persistence; installed metadata behavior and the explicit PLATFORM_LIMITED path remain open."
     },
     {
       "id": "OMN-ACC-025",
@@ -350,8 +374,13 @@
         "line": 3448
       },
       "text": "The same large provider/export archive is imported twice. Acquire/Ingest recognizes source identity/content overlap, previews the reconciliation, avoids duplicate canonical records, preserves provenance, and reports any ambiguous conflicts instead of silently duplicating or overwriting user meaning.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/acquire.test.ts",
+        "src/core/storage.test.ts",
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+      ],
+      "notes": "Deterministic idempotence/conflict tests and built Vault preview/merge evidence exist; large heterogeneous provider archives and full provenance/conflict UX remain open."
     },
     {
       "id": "OMN-ACC-031",
@@ -470,8 +499,12 @@
         "line": 3472
       },
       "text": "The user creates one generic Track/Observe definition, records observations quickly from mobile, reuses the same canonical definition in multiple views/lenses, charts it through Visualize, and later maps selected observations into a specialist domain without duplicating or silently reclassifying source records.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/track.test.ts",
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+      ],
+      "notes": "The built preview covers mobile-compatible Track capture and derived dashboard rendering; multi-view reuse and specialist-domain mapping remain open."
     },
     {
       "id": "OMN-ACC-043",
@@ -520,8 +553,12 @@
         "line": 3482
       },
       "text": "A material canonical record is edited through several revisions; the user can inspect meaningful history/diff and safely revert an allowed change without using disaster backup. The owning domain's retention/deletion policy governs whether superseded sensitive revisions remain, and History/Version does not create a second writable copy or silently resurrect a deleted record.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/history.test.ts",
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#observed-in-the-production-preview"
+      ],
+      "notes": "Local history/diff and command-path undo are covered; domain retention policy, richer multi-revision UX, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-048",
@@ -530,8 +567,12 @@
         "line": 3484
       },
       "text": "A user or qualified AI creates a declarative Compose/View definition containing a form, table/list, chart, and configurable dashboard arrangement over authorized canonical data. The view works on compact touch and expanded layouts, inherits theme/localization/accessibility, survives an Omnevum update, and every mutation still passes the owning semantic command/validation/permission path.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/compose.test.ts",
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+      ],
+      "notes": "Built-preview evidence covers declarative form/list/table/chart projection, localization, and semantic command boundaries; configurable layout breadth, compact/expanded accessibility qualification, update survival, and qualified AI creation remain open."
     },
     {
       "id": "OMN-ACC-049",
@@ -600,8 +641,12 @@
         "line": 3498
       },
       "text": "The same canonical record participates in two user-defined Spaces/Scopes (for example Personal and Household or Work) without writable duplication. Search/Home/Assistant can be bounded to one Space, sharing one Space does not disclose out-of-scope linked records, and deleting the Space does not silently delete the underlying canonical record.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/space.test.ts",
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#observed-in-the-production-preview"
+      ],
+      "notes": "Local membership overlays and filtering preserve one canonical owner; user-defined Space lifecycle, sharing disclosure, and deletion semantics remain open."
     },
     {
       "id": "OMN-ACC-056",
@@ -703,8 +748,12 @@
         "line": 3518
       },
       "text": "The user captures an ambiguous mixed item into the universal inbox. Triage/Clarify preserves the raw source and provenance, proposes possible owner/type/actions without silently committing them, lets the user split/link/route/defer/reference/delete through admitted commands, and closes the staging item without leaving duplicate writable copies. A separate unambiguous capture can bypass the inbox through an explicit safe route.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/acquire.test.ts",
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+      ],
+      "notes": "Built preview and Acquire tests cover staged untrusted candidates, provenance, review, and explicit acceptance; split/route/defer/delete breadth and complete triage UX remain open."
     },
     {
       "id": "OMN-ACC-066",

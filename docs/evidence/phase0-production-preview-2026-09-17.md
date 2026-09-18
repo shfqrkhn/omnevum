@@ -52,7 +52,7 @@ Switching the harness back to `old` and updating again reactivated `v1`, removed
 
 ## Storage fault/recovery follow-up
 
-The canonical-store fault seam now exercises two bounded Phase 0 failure modes under Vitest/fake-indexeddb. A malformed derived search document is injected while its metadata claims validity; `getSearchHealth()` reports `MALFORMED`, the normal search owner rebuilds the derived index, and the canonical record remains unchanged. A deterministic 90/100 storage estimate is injected; health reports `ELEVATED`, derived search state is reclaimed, canonical records remain readable, persistence state is exposed, and the UI health copy directs the user toward Vault export. The full run passes `40` test files and `108` tests.
+The canonical-store fault seam now exercises two bounded Phase 0 failure modes under Vitest/fake-indexeddb. A malformed derived search document is injected while its metadata claims validity; `getSearchHealth()` reports `MALFORMED`, the normal search owner rebuilds the derived index, and the canonical record remains unchanged. A deterministic 90/100 storage estimate is injected; health reports `ELEVATED`, derived search state is reclaimed, canonical records remain readable, persistence state is exposed, and the UI health copy directs the user toward Vault export. The full run passes `40` test files and `111` tests.
 
 This is deterministic local fault evidence, not a claim that a real browser quota exhaustion or canonical-store corruption was observed. Native browser quota behavior, interrupted canonical migration, cross-browser recovery, and production support remain open.
 
@@ -75,3 +75,9 @@ The current `npm run ci` artifact (`omnevum-shell-30a45ac985e813bc`, source revi
 ## Limits
 
 This receipt establishes only a local production-preview activation/offline-reload and update/rollback rehearsal at one Chromium-based browser surface and one mobile viewport, plus deterministic storage fault tests. It does not establish GitHub Pages routing, browser-family support, full responsive/accessibility conformance, native browser quota exhaustion, interrupted canonical migration, or release readiness. Those remain open in the support, risk, and completion registers.
+
+## Current built-artifact integrated follow-up
+
+The current built artifact at source revision `11ebcac` (artifact digest `b77e0d9e82c110736c0da2e4e742af5b066d8f3ad6029c7fcd778d00fbee02a1`, worker cache `omnevum-shell-864f5f5b6e7567d4`) was served at `http://127.0.0.1:4179/` with `npm run preview` and exercised from a fresh Chromium origin. The run completed capture, bounded URL Acquire, Track, finance, health, Compose list/table/chart, Relate, derived Search, AMOLED Dark, `JohnOS` in-app branding, French (Canada), reload persistence, and Vault import preview/confirmation. The confirmed local Vault merge reported `11` imported and `0` skipped. No canonical content or credential was sent to a remote service.
+
+This strengthens the local built-artifact MVP evidence only. It remains one Chromium surface and one local static origin; it does not change the open GitHub Pages, browser-family, WCAG, native-quota, cross-origin, provider, dependency/SBOM, deployment, or human-acceptance rows.
