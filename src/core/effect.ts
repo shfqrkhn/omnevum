@@ -2,6 +2,16 @@ import { containsSensitiveKey } from "./safety";
 
 export const EFFECT_STATUSES = ["PENDING", "IN_FLIGHT", "SUCCEEDED", "FAILED_RETRYABLE", "FAILED_TERMINAL", "CANCELLED", "EXPIRED", "OUTCOME_UNKNOWN", "RECONCILE"] as const;
 export type EffectStatus = (typeof EFFECT_STATUSES)[number];
+export const EFFECT_DISCLOSURE_CLASSES = ["PRIVATE", "SHARED", "PUBLIC"] as const;
+export type EffectDisclosureClass = (typeof EFFECT_DISCLOSURE_CLASSES)[number];
+
+export interface EffectAuthorization {
+  authority: string;
+  permission: string;
+  space?: string;
+  disclosureClass: EffectDisclosureClass;
+  schema: string;
+}
 
 export interface EffectOperation {
   operationId: string;
@@ -18,6 +28,7 @@ export interface EffectOperation {
   retryPolicy: { maxAttempts: number; backoffSeconds: number };
   nextAttemptAt?: string;
   credentialHandle?: string;
+  authorization?: EffectAuthorization;
   remoteIdentity?: string;
   evidence: string[];
 }
@@ -54,6 +65,7 @@ export function assertEffectOperation(operation: unknown): asserts operation is 
   if (!isRetryPolicy(operation.retryPolicy)) throw new Error("Invalid effect retry policy");
   if (!isTimestamp(operation.createdAt) || !optionalTimestamp(operation.expiresAt) || !optionalTimestamp(operation.nextAttemptAt)) throw new Error("Invalid effect timestamp");
   if (operation.credentialHandle !== undefined && !isBoundedText(operation.credentialHandle)) throw new Error("Invalid effect credential handle");
+  if (operation.authorization !== undefined && !isEffectAuthorization(operation.authorization)) throw new Error("Invalid effect authorization context");
   if (operation.remoteIdentity !== undefined && !isBoundedText(operation.remoteIdentity)) throw new Error("Invalid effect remote identity");
   if (typeof operation.payloadOrReference !== "string" && !isObject(operation.payloadOrReference)) throw new Error("Effect payload must be a bounded reference or object");
   if (typeof operation.payloadOrReference === "string" && operation.payloadOrReference.length > MAX_EFFECT_TEXT) throw new Error("Effect payload reference is too large");
@@ -92,6 +104,12 @@ function optionalTimestamp(value: unknown): boolean {
 function isRetryPolicy(value: unknown): value is EffectOperation["retryPolicy"] {
   if (!isObject(value)) return false;
   return Number.isSafeInteger(value.maxAttempts) && (value.maxAttempts as number) >= 0 && (value.maxAttempts as number) <= 1000 && Number.isFinite(value.backoffSeconds) && (value.backoffSeconds as number) >= 0 && (value.backoffSeconds as number) <= 31_536_000;
+}
+
+function isEffectAuthorization(value: unknown): value is EffectAuthorization {
+  if (!isObject(value) || !isBoundedText(value.authority) || !isBoundedText(value.permission) || !isBoundedText(value.schema)) return false;
+  if (value.space !== undefined && !isBoundedText(value.space)) return false;
+  return EFFECT_DISCLOSURE_CLASSES.includes(value.disclosureClass as EffectDisclosureClass);
 }
 
 function isBoundedPayload(value: Record<string, unknown>, depth = 0): boolean {

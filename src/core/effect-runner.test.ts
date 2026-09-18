@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { EffectOperation } from "./effect";
 import { EffectRunner } from "./effect-runner";
+import { createEffectRevalidationGuard } from "./effect-guard";
 import { CanonicalStore } from "./storage";
 import { CredentialKeyBroker } from "./credential";
+import { CommandBus } from "./commands";
+import { SpaceService } from "./space";
 
 function effect(status: EffectOperation["status"] = "PENDING"): EffectOperation {
   return {
@@ -163,6 +166,27 @@ describe("EffectRunner", () => {
     broker.revoke(metadata.handleId);
     let executions = 0;
     const runner = new EffectRunner(store, { execute: async () => { executions += 1; return { outcome: "SUCCEEDED" as const }; } }, { authorize: async (operation) => broker.authorizeEffect(operation) });
+    await expect(runner.runAvailable()).resolves.toMatchObject([{ status: "CANCELLED" }]);
+    expect(executions).toBe(0);
+    expect(await store.getEffect("runner-effect")).toMatchObject({ status: "CANCELLED", evidence: ["effect-guard-denied"] });
+    store.close();
+  });
+
+  it("cancels a pending operation when its persisted Space is revoked before replay", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-effect-space-revocation`);
+    await store.open();
+    const spaces = new SpaceService(store, new CommandBus(store));
+    const trip = await spaces.create("Trip");
+    await store.enqueueEffect({ ...effect(), authorization: { authority: "local-user", permission: "effect.execute", space: trip.id, disclosureClass: "PRIVATE", schema: "effect-json-v1" } });
+    await spaces.removeSpace(trip.id);
+    let executions = 0;
+    const runner = new EffectRunner(store, { execute: async () => { executions += 1; return { outcome: "SUCCEEDED" as const }; } }, createEffectRevalidationGuard({
+      authority: "local-user",
+      allowedPermissions: ["effect.execute"],
+      availableSpaces: async () => new Set((await spaces.listSpaces()).map((space) => space.id)),
+      allowedDisclosureClasses: ["PRIVATE"],
+      supportedSchemas: ["effect-json-v1"]
+    }));
     await expect(runner.runAvailable()).resolves.toMatchObject([{ status: "CANCELLED" }]);
     expect(executions).toBe(0);
     expect(await store.getEffect("runner-effect")).toMatchObject({ status: "CANCELLED", evidence: ["effect-guard-denied"] });

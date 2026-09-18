@@ -29,4 +29,10 @@ describe("Effect/Outbox contract", () => {
   it("rejects raw credential-shaped payload fields", () => {
     expect(() => assertEffectOperation({ ...operation(), payloadOrReference: { accessToken: "never" } })).toThrow("Raw credential");
   });
+
+  it("validates the persisted authority, Space, disclosure, and schema context", () => {
+    const authorized = { ...operation(), authorization: { authority: "local-user", permission: "effect.execute", space: "personal", disclosureClass: "PRIVATE", schema: "effect-json-v1" } };
+    expect(() => assertEffectOperation(authorized)).not.toThrow();
+    expect(() => assertEffectOperation({ ...authorized, authorization: { ...authorized.authorization, disclosureClass: "UNKNOWN" } })).toThrow("authorization context");
+  });
 });

@@ -1,4 +1,4 @@
-import { assertEffectOperation, type EffectOperation } from "./effect";
+import { assertEffectOperation, type EffectAuthorization, type EffectOperation } from "./effect";
 import { createOpaqueId } from "./id";
 import { parseRemoteEndpoint } from "./remote";
 
@@ -9,6 +9,7 @@ export interface ExternalEffectRequest {
   purpose: string;
   payloadOrReference: Record<string, unknown> | string;
   expiresAt?: string;
+  authorization?: EffectAuthorization;
 }
 
 export function createExternalEffect(input: ExternalEffectRequest, now = new Date()): EffectOperation {
@@ -26,6 +27,7 @@ export function createExternalEffect(input: ExternalEffectRequest, now = new Dat
     status: "PENDING",
     retryCount: 0,
     retryPolicy: { ...DEFAULT_EXTERNAL_EFFECT_RETRY_POLICY },
+    ...(input.authorization ? { authorization: structuredClone(input.authorization) } : {}),
     evidence: ["staged-by-user"]
   };
   assertEffectOperation(operation);

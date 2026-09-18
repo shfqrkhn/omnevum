@@ -27,6 +27,7 @@ import { projectForAuthorizedShare } from "../core/share";
 import { canUseShareGrant, createShareGrant, revokeShareGrant } from "../core/sharing";
 import { transitionEffect } from "../core/effect";
 import { createExternalEffect } from "../core/effect-service";
+import { createEffectRevalidationGuard } from "../core/effect-guard";
 import { EffectRunner } from "../core/effect-runner";
 import { JsonEndpointEffectExecutor, JsonEndpointTransport } from "../core/remote";
 import { SyncEngine, SyncFailure } from "../core/sync";
@@ -558,6 +559,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <input id="effect-stage-purpose" type="text" maxlength="500" required />
           <label for="effect-stage-payload">${copy.effectPayload}</label>
           <textarea id="effect-stage-payload" rows="4" maxlength="20000" required></textarea>
+          <label for="effect-stage-space">${copy.effectScope}</label>
+          <select id="effect-stage-space" name="space" required></select>
           <p class="hint">${copy.effectStageHint}</p>
           <button type="submit">${copy.effectQueue}</button>
           <p id="effect-stage-status" class="hint" role="status"></p>
@@ -745,6 +748,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const effectStageDestination = root.querySelector<HTMLInputElement>("#effect-stage-destination");
   const effectStagePurpose = root.querySelector<HTMLInputElement>("#effect-stage-purpose");
   const effectStagePayload = root.querySelector<HTMLTextAreaElement>("#effect-stage-payload");
+  const effectStageSpace = root.querySelector<HTMLSelectElement>("#effect-stage-space");
   const effectStageStatus = root.querySelector<HTMLElement>("#effect-stage-status");
   const effectRunForm = root.querySelector<HTMLFormElement>("#effect-run-form");
   const effectRunEndpoint = root.querySelector<HTMLInputElement>("#effect-run-endpoint");
@@ -755,7 +759,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
     throw new Error("Omnevum document-finishing controls are missing");
   }
-  if (!effectStageForm || !effectStageDestination || !effectStagePurpose || !effectStagePayload || !effectStageStatus || !effectRunForm || !effectRunEndpoint || !effectRunStatus) {
+  if (!effectStageForm || !effectStageDestination || !effectStagePurpose || !effectStagePayload || !effectStageSpace || !effectStageStatus || !effectRunForm || !effectRunEndpoint || !effectRunStatus) {
     throw new Error("Omnevum external-effect controls are missing");
   }
 
@@ -960,6 +964,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     fillSpaces(spaceFilter, true);
     fillSpaces(composeSpace, true);
     fillSpaces(shareSpace, false);
+    fillSpaces(effectStageSpace, false);
     spaceList.replaceChildren();
     for (const space of spaces.filter((candidate) => !candidate.builtIn)) {
       const item = document.createElement("li");
@@ -1602,7 +1607,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       destination.textContent = operation.destination;
       const meta = document.createElement("small");
       const retryAt = operation.nextAttemptAt ? `; next ${formatDateTime(presentation.locale, operation.nextAttemptAt)}` : "";
-      meta.textContent = `attempts ${operation.retryCount}/${operation.retryPolicy.maxAttempts}${retryAt}`;
+      const scope = operation.authorization?.space ? `; Space ${spaceLabel(operation.authorization.space)}` : "";
+      meta.textContent = `attempts ${operation.retryCount}/${operation.retryPolicy.maxAttempts}${scope}${retryAt}`;
       content.append(title, destination, meta);
       const canCancel = ["PENDING", "FAILED_RETRYABLE", "OUTCOME_UNKNOWN", "RECONCILE"].includes(operation.status);
       if (canCancel) {
@@ -1648,7 +1654,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   effectStageForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     try {
-      const operation = createExternalEffect({ destination: effectStageDestination.value, purpose: effectStagePurpose.value, payloadOrReference: parseExternalEffectPayload(effectStagePayload.value) });
+      const operation = createExternalEffect({ destination: effectStageDestination.value, purpose: effectStagePurpose.value, payloadOrReference: parseExternalEffectPayload(effectStagePayload.value), authorization: { authority: "local-user", permission: "effect.execute", space: effectStageSpace.value, disclosureClass: "PRIVATE", schema: "effect-json-v1" } });
       await store.enqueueEffect(operation);
       effectStageStatus.textContent = copy.effectQueued;
       effectStagePurpose.value = "";
@@ -1664,7 +1670,13 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const endpoint = effectRunEndpoint.value.trim();
     if (!window.confirm(`${copy.effectRunConfirmation} ${endpoint}?`)) return;
     try {
-      const results = await new EffectRunner(store, new JsonEndpointEffectExecutor(endpoint)).runAvailable();
+      const results = await new EffectRunner(store, new JsonEndpointEffectExecutor(endpoint), createEffectRevalidationGuard({
+        authority: "local-user",
+        allowedPermissions: ["effect.execute"],
+        availableSpaces: async () => new Set((await spaceService.listSpaces()).map((space) => space.id)),
+        allowedDisclosureClasses: ["PRIVATE"],
+        supportedSchemas: ["effect-json-v1"]
+      })).runAvailable();
       const succeeded = results.filter((operation) => operation.status === "SUCCEEDED").length;
       const attention = results.length - succeeded;
       effectRunStatus.textContent = copy.effectRunResult(results.length, succeeded, attention);
