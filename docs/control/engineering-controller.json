@@ -49,7 +49,8 @@
     "current receipt-bound built artifact completes Chromium capture, theme, and reload persistence on a fresh local static origin",
     "115 unit tests pass across 41 test files after the source-meaning workbench increment",
     "current built-artifact Chromium preview completes the integrated MVP workflow, localized rebrand/reload, and confirmed Vault merge",
-    "current receipt-bound Chromium preview completes Evidence link creation, quote-validated source annotation, GeoJSON Point Place capture, reload persistence, and zero console warnings/errors"
+    "current receipt-bound Chromium preview completes Evidence link creation, quote-validated source annotation, GeoJSON Point Place capture, reload persistence, and zero console warnings/errors",
+    "current receipt-bound Chromium preview proves default private-share omission, explicit private inclusion, purpose-bound grant creation/revocation, reload persistence, and zero console warnings/errors"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",
@@ -61,6 +62,7 @@
     "static-host deployment, smoke, and rollback proof",
     "richer Time/Track/Compose capability contracts and target qualification",
     "heterogeneous Acquire import, GPX/timeline Place reuse, external Web-document preservation, and spatial-analysis qualification",
+    "remote share delivery/effect use, provider ACL interaction, stale-share reconciliation, and cross-target disclosure qualification",
     "provider-backed sync, credential/key broker, and external-effect replay evidence",
     "MVP release and later phases"
   ],

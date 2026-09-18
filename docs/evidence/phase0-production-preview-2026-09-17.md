@@ -115,3 +115,14 @@ The exact `npm run ci` artifact at source revision `61f9b69` (artifact digest `c
 - reloaded the clean origin and retained five active records, one evidence link, one active annotation, and one place; the browser returned no warning/error console entries.
 
 This is current local Chromium/static-preview evidence for the source-meaning slice only. It does not qualify heterogeneous provider import, GPX/timeline reuse, external Web-document preservation, spatial analysis, Safari/Firefox, assistive technology, GitHub Pages deployment, or release readiness.
+
+## Current built-artifact sharing follow-up
+
+The exact `npm run ci` artifact at source revision `af1590f` (artifact digest `2907c7794861206127626affde73dd009154894a2632b907c946aecb0fb478a2`, worker cache `omnevum-shell-63c93292ad3f262f`) was served on the clean local static origin `http://127.0.0.1:4203/` in the Codex In-app Browser Chromium surface. With synthetic records, the Share / disclose workbench:
+
+- exported zero records when two private records were selected and the private-inclusion checkbox was off, reporting both omitted records;
+- exported both selected records only after the explicit private-inclusion checkbox was enabled;
+- created a purpose-bound `platform.share` grant for `person:reviewer` and then revoked it through the canonical command path;
+- reloaded with the revoked grant and source records present; no browser warning/error console entries were returned.
+
+This is current local Chromium/static-preview evidence for bounded sharing only. It does not qualify remote delivery/effects, provider ACLs, stale-share reconciliation, cross-target disclosure, GitHub Pages deployment, or release readiness.

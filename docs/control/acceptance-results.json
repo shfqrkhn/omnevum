@@ -441,8 +441,12 @@
         "line": 3456
       },
       "text": "A user shares an explicitly bounded snapshot/projection. Linked private records, credentials, AI authority, attachments outside scope, and unrelated provenance do not transitively leak.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/share.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-sharing-follow-up"
+      ],
+      "notes": "The bounded projection owner scrubs credentials, unrelated links, private records, and provenance by default; the current built preview exercises explicit selection and private-inclusion disclosure. Remote delivery, attachments, and cross-target qualification remain open."
     },
     {
       "id": "OMN-ACC-035",
@@ -992,8 +996,12 @@
         "line": 3556
       },
       "text": "A person-specific sharing/delegation grant is created for a bounded purpose/Space/data set, used for an authorized projection/effect, then revoked. Future share/effect attempts are blocked after revalidation, stale derived/share state is reconciled as required, and neither household/contact membership nor provider ACLs silently recreate the grant.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/sharing.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-sharing-follow-up"
+      ],
+      "notes": "The current local workbench creates a purpose/Space/record-bound grant and revokes it through the canonical command path with persistence; external effect use, provider ACL interaction, stale share reconciliation, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-085",
