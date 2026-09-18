@@ -173,8 +173,13 @@
         "line": 3408
       },
       "text": "A coherent Vault backup is exported on one major browser/platform family and restored on a materially different supported family with semantic IDs/revisions/provenance preserved.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/storage.test.ts#round-trips-a-portable-vault-while-preserving-identity-and-provenance",
+        "src/core/storage.test.ts#preserves-a-bounded-artifact-payload-through-vault-export-and-restore",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#isolated-origin-vault-transfer-follow-up"
+      ],
+      "notes": "Integrity-protected Vault transfer preserves IDs/provenance across isolated local stores and bounded artifact restore; a real materially different browser-family/origin run and large-Vault qualification remain open."
     },
     {
       "id": "OMN-ACC-011",
@@ -282,8 +287,12 @@
         "line": 3424
       },
       "text": "A user moves the static distribution from one HTTPS origin to another using Vault backup/sync rather than depending on browser-private origin storage migration.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/storage.test.ts#round-trips-a-portable-vault-while-preserving-identity-and-provenance",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#isolated-origin-vault-transfer-follow-up"
+      ],
+      "notes": "The user-mediated Vault path is proven across separate local stores and does not depend on browser-private origin migration; real HTTPS-origin handoff, UI file transfer, and deployment qualification remain open."
     },
     {
       "id": "OMN-ACC-019",

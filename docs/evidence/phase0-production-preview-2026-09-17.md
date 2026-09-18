@@ -183,3 +183,7 @@ This extends current-artifact Chromium-family local evidence to Edge desktop onl
 ## Current built-artifact recovery-repair follow-up
 
 The current `npm run ci` build at source revision `23aa425` has artifact digest `9cca977b3a803065f820d964a03e5a97228f0e1511130bcc7c772daecdd03075` and worker cache `omnevum-shell-8d4f1ab32826c9d5`. The recovery surface now offers an explicit `Repair from retained snapshot` action. The repair regression injects a malformed canonical row, obtains the read-only recovery snapshot, accepts only valid records/history/artifact payloads, removes malformed canonical rows only through the explicit repair method, marks search derived state for rebuild, and confirms the valid record exports as a normal Vault afterward. This is code/test evidence; browser interaction, native corruption/quota behavior, and production deployment remain open.
+
+## Isolated-origin Vault transfer follow-up
+
+The portable baseline is exercised by `src/core/storage.test.ts#round-trips-a-portable-vault-while-preserving-identity-and-provenance`: separate source and destination `CanonicalStore` databases model isolated browser-private storage, and an integrity-protected `OMNEVUM_VAULT` transfer preserves the canonical ID and provenance without a backend. The current built-artifact MVP receipt also confirms Vault preview/confirmation through the UI. This establishes the core user-mediated transfer contract only; a real two-HTTPS-origin run, materially different browser-family restore, large-Vault limits, and production deployment remain open.
