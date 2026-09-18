@@ -360,7 +360,7 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-checkout-fresh-agent-resume-benchmark-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-receipt-bound-edge-factory-qualification-follow-up"
       ],
-      "notes": "The generated integrity-manifested Recovery bundle references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths. The clean-checkout benchmark now runs the two-process factory interruption fixture: a nontrivial app and deterministic game persist a Vault/game checkpoint, stop at the explicit interruption marker, then resume from repository/control state in a fresh process and verify canonical IDs/status plus game seed/state. The worktree is removed after the complete CI and interruption/resume gates."
+      "notes": "The generated integrity-manifested Recovery bundle references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths. At detached revision cc2b5b6, the clean-checkout benchmark reported RECOVERY_AUDIT_PASS files=166, FRESH_AGENT_CI_PASS, FACTORY_INTERRUPTION_EXPECTED_STOP_PASS, FACTORY_INTERRUPTION_RESUME_PASS, FRESH_AGENT_FACTORY_INTERRUPTION_PASS, and clean-clone=true original-conversation=false after verifying canonical IDs/status plus game seed/state. The worktree is removed after the complete CI and interruption/resume gates."
     },
     {
       "id": "OMN-ACC-022",
