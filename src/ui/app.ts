@@ -1,6 +1,6 @@
 import type { CommandBus } from "../core/commands";
 import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate, type AcquirePreview } from "../core/acquire";
-import { isCompletedTask, recordSpace, recordText, recordTriageStatus, type SpaceId } from "../core/domain";
+import { isCompletedTask, recordSpace, recordText, recordTriageStatus, type SpaceId, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
 import { resolvePresentationProfile, type PresentationProfile } from "../core/presentation";
@@ -807,7 +807,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   };
 
   const renderReview = async (): Promise<void> => {
-    const records = (await scopedRecords()).filter((record) => recordTriageStatus(record) === "INBOX");
+    const records = (await scopedRecords()).filter((record) => recordTriageStatus(record) !== "REVIEWED");
     reviewList.replaceChildren();
     reviewCount.textContent = formatNumber(presentation.locale, records.length);
     reviewEmpty.hidden = records.length > 0;
@@ -815,20 +815,42 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const item = document.createElement("li");
       item.className = "record-item";
       const text = document.createElement("p");
-      text.textContent = `${typeLabel(record.recordType)}: ${recordText(record)}`;
-      const review = document.createElement("button");
-      review.type = "button";
-      review.className = "icon-button complete-button";
-      review.textContent = copy.markReviewed;
-      review.addEventListener("click", async () => {
+      const triageStatus = recordTriageStatus(record);
+      text.textContent = `${typeLabel(record.recordType)}: ${recordText(record)} (${copy.triageStatus(triageStatus)})`;
+      const actions = document.createElement("div");
+      actions.className = "triage-actions";
+      const updateTriage = (status: TriageStatus, label: string): void => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "icon-button";
+        button.textContent = label;
+        button.addEventListener("click", async () => {
+          try {
+            await commands.update(record.id, { ...record.data, triageStatus: status }, record.revision);
+            await renderRecords(searchQuery.value);
+          } catch (error) {
+            relateStatus.textContent = describeError(error, "Triage update failed; canonical data was not changed.");
+          }
+        });
+        actions.append(button);
+      };
+      updateTriage("REVIEWED", copy.markReviewed);
+      updateTriage("DEFERRED", copy.defer);
+      updateTriage("CLARIFY", copy.clarify);
+      const archive = document.createElement("button");
+      archive.type = "button";
+      archive.className = "icon-button";
+      archive.textContent = copy.archive;
+      archive.addEventListener("click", async () => {
         try {
-          await commands.update(record.id, { ...record.data, triageStatus: "REVIEWED" });
+          await commands.archive(record.id);
           await renderRecords(searchQuery.value);
         } catch (error) {
-          relateStatus.textContent = describeError(error, "Review update failed");
+          relateStatus.textContent = describeError(error, "Triage archive failed; canonical data was not changed.");
         }
       });
-      item.append(text, review);
+      actions.append(archive);
+      item.append(text, actions);
       reviewList.append(item);
     }
   };

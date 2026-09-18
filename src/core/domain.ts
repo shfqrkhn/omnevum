@@ -6,7 +6,7 @@ export const SPACE_LABELS: Record<SpaceId, string> = {
   household: "Household",
   work: "Work"
 };
-export type TriageStatus = "INBOX" | "REVIEWED";
+export type TriageStatus = "INBOX" | "REVIEWED" | "DEFERRED" | "CLARIFY";
 
 export function recordText(record: CanonicalRecord): string {
   if (record.recordType === "relationship" && typeof record.data.sourceId === "string" && typeof record.data.targetId === "string") {
@@ -21,7 +21,7 @@ export function recordSpace(record: CanonicalRecord): SpaceId {
 }
 
 export function recordTriageStatus(record: CanonicalRecord): TriageStatus {
-  return record.data.triageStatus === "REVIEWED" ? "REVIEWED" : "INBOX";
+  return record.data.triageStatus === "REVIEWED" || record.data.triageStatus === "DEFERRED" || record.data.triageStatus === "CLARIFY" ? record.data.triageStatus : "INBOX";
 }
 
 export function isCompletedTask(record: CanonicalRecord): boolean {
