@@ -5,6 +5,25 @@ import { fileURLToPath } from "node:url";
 const root = join(fileURLToPath(new URL(".", import.meta.url)), "..");
 const dist = join(root, "dist");
 const failures = [];
+const pagesWorkflowPath = join(root, ".github", "workflows", "pages.yml");
+if (!existsSync(pagesWorkflowPath)) failures.push("missing GitHub Pages deployment workflow");
+else {
+  const pagesWorkflow = readFileSync(pagesWorkflowPath, "utf8");
+  const requiredWorkflowSnippets = [
+    "actions/checkout@v6",
+    "actions/setup-node@v4",
+    "run: npm run ci",
+    "actions/configure-pages@v5",
+    "actions/upload-pages-artifact@v4",
+    "path: ./dist",
+    "pages: write",
+    "id-token: write",
+    "needs: build",
+    "name: github-pages",
+    "actions/deploy-pages@v4"
+  ];
+  for (const snippet of requiredWorkflowSnippets) if (!pagesWorkflow.includes(snippet)) failures.push(`Pages workflow missing ${snippet}`);
+}
 if (!existsSync(dist)) failures.push("missing dist");
 if (failures.length === 0) {
   const index = readFileSync(join(dist, "index.html"), "utf8");
