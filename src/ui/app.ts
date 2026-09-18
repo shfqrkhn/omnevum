@@ -1195,13 +1195,18 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       if (new TextEncoder().encode(text).byteLength > MAX_VAULT_JSON_BYTES) throw new Error("Vault JSON exceeds the bounded 64 MiB import limit");
       const parsed: unknown = JSON.parse(text);
       const vault = isEncryptedVaultEnvelope(parsed) ? await decryptVault(parsed, vaultPassword.value) : parseVault(text);
+      const preview = await store.previewVault(vault);
+      if (!window.confirm(copy.importPreviewMessage(preview.recordCount, preview.historyEntries, preview.artifactPayloads, preview.imported, preview.skipped, preview.conflicts, preview.hasPresentation))) {
+        recoveryStatus.textContent = copy.importCancelled;
+        return;
+      }
       const result = await store.importVault(vault);
       recoveryStatus.textContent = copy.importedMessage(result.imported, result.skipped, result.conflicts);
-      vaultPassword.value = "";
       await renderRecords();
     } catch (error) {
       recoveryStatus.textContent = error instanceof Error ? error.message : "Vault import failed";
     } finally {
+      vaultPassword.value = "";
       importInput.value = "";
     }
   });
