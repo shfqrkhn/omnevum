@@ -9,13 +9,35 @@ Status: PARTIAL; local Vite preview only, not a deployed static-host or cross-br
 - Browser surface: Codex In-app Browser
 - Test data: synthetic observation `static preview smoke`
 
-## Observed
+## Initial observed
 
 - The production-built shell loaded at `/` with the same labelled sections and controls as the development smoke.
 - An observation was created and displayed with owner `core.capture`, revision `1`.
 - Reload preserved the observation in the production preview origin.
 - No warning or error entries were returned by the browser console inspection.
 
+## Phase 0 follow-up run
+
+The same production preview was reloaded through the browser automation surface at an explicit `390x844` viewport. The accessibility tree retained labelled headings, landmark sections, form labels, status content, native controls, and the full core workflow surface. A `Tab` action placed focus on the theme control, confirming keyboard focus reached a labelled interactive element at the mobile viewport.
+
+The live PWA state was inspected before the offline test:
+
+- Service worker: `http://127.0.0.1:4173/sw.js`, scope `http://127.0.0.1:4173/`, state `activated`, page controlled: `true`.
+- Cache (pre-hardening run): `omnevum-shell-v1`; the current preview root, JavaScript asset `index-BKKgSl5J.js`, and CSS asset `index-DId-fK--.css` were present.
+- Browser warnings/errors: none returned by the production-preview console inspection.
+
+Network was then emulated offline, the page was reloaded, and the accessibility tree again exposed the complete shell and core controls. The preserved synthetic state remained `6` active records, `0` archived records, `7` revisions, `1` artifact, and a healthy derived index. Network emulation and the temporary viewport override were reset after the run.
+
+## Fresh-origin offline workflow
+
+To avoid relying on the existing preview profile, the same built `dist/` directory was served on the separate local static origin `http://127.0.0.1:4174/`. The fresh origin registered and activated `sw.js`, then an initial synthetic note was created online. With network emulation disabled, the page reloaded from the cached shell and the note was still visible; a second synthetic note was created while offline. After network restoration and another reload, both notes remained present as canonical records with a healthy search index. No personal data was used.
+
+This is a local static-origin offline mutation/reload receipt. It is not evidence for GitHub Pages, other browser families, service-worker update/rollback, or the full acceptance scenario's explicit degradation behavior.
+
+## Stamped-worker follow-up
+
+After the service-worker cache-identity hardening, `npm run build` produced cache identity `omnevum-shell-e4428b7e0470f612`. On the fresh `4174` origin, the new worker became `activated`, retired the prior `omnevum-shell-v1` cache, and retained the current root, CSS, and JavaScript assets. With network emulation disabled, the shell reloaded and accepted `Stamped worker offline capture`; network restoration and reload preserved three canonical notes and a healthy derived index.
+
 ## Limits
 
-This receipt does not establish GitHub Pages routing, service-worker activation/offline behavior, browser-family support, responsive/accessibility conformance, or release readiness. Those remain open in the support, risk, and completion registers.
+This receipt establishes only a local production-preview activation/offline-reload smoke at one Chromium-based browser surface and one mobile viewport. It does not establish GitHub Pages routing, service-worker update/rollback, browser-family support, responsive/accessibility conformance, core offline mutations/degradation, or release readiness. Those remain open in the support, risk, and completion registers.

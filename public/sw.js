@@ -1,3 +1,4 @@
+const CACHE_PREFIX = "omnevum-shell-";
 const CACHE_NAME = "omnevum-shell-v1";
 
 self.addEventListener("install", (event) => {
@@ -13,7 +14,7 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
+      .then((keys) => Promise.all(keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map((key) => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
@@ -53,4 +54,3 @@ self.addEventListener("fetch", (event) => {
     )
   );
 });
-

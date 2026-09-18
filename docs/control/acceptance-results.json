@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "ee4a2d3922e6a1ad272c3910d15ea4ad744382b327c97e2bd9cbe81df47d9898"
+      "sha256": "dc20ed69ac1bb1d7dff50826f99135c455290b0293ad382ee361adf56878bd22"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -51,8 +51,12 @@
         "line": 3392
       },
       "text": "After the app shell is cached, the user performs core local workflows offline and sees explicit degradation only for capabilities that actually require network access.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#fresh-origin-offline-workflow",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#stamped-worker-follow-up"
+      ],
+      "notes": "A fresh local static origin reloaded the cached shell offline, created a canonical note offline, and preserved both notes after network restoration. GitHub Pages, other browser families, and explicit network-capability degradation still require qualification."
     },
     {
       "id": "OMN-ACC-003",
@@ -71,8 +75,12 @@
         "line": 3396
       },
       "text": "The user switches between accessible Light and AMOLED Dark themes; critical state, focus, text, charts, and interactions remain readable and accessible.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-browser-smoke-2026-09-17.md",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#phase-0-follow-up-run"
+      ],
+      "notes": "Theme switching was observed in the development smoke and the production preview exposed the labelled presentation control and complete mobile accessibility tree at 390x844. WCAG conformance and all target rows remain unverified."
     },
     {
       "id": "OMN-ACC-005",

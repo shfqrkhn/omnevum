@@ -34,13 +34,14 @@
     "History UI exposes field-level revision snapshots without creating a second writable copy",
     "Safe Presentation Mode is reversible and preserves the stored presentation profile",
     "persisted Compose/View dashboard projects accessible list, table, chart, and capture boundaries",
+    "production preview service worker is activated and controls the page; stamped cache identity, offline reload/mutation, 390x844 labelled keyboard focus, and no browser warnings are evidenced",
     "105 unit tests pass across 40 test files after the Compose/View and Vault-overlay increment"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad decision beyond the recorded harvest-reference route",
     "SelfStore/remoteStorage storage decision beyond the recorded contract spike",
     "production static-host, browser-version, responsive, and assistive-technology evidence",
-    "service-worker offline/update/rollback proof",
+    "service-worker update/rollback proof beyond the local offline reload",
     "full Phase 0 acceptance gate and fault injection",
     "security/untrusted-content/credential boundary evidence",
     "static-host deployment, smoke, and rollback proof",
