@@ -261,13 +261,19 @@ export class CanonicalStore {
   }
 
   public async clear(): Promise<void> {
-    const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE, EFFECT_STORE], "readwrite");
+    const settings = await requestResult(this.requireDatabase().transaction(SETTINGS_STORE, "readonly").objectStore(SETTINGS_STORE).getAll());
+    const packageSettingIds = settings
+      .filter((setting) => typeof setting?.id === "string" && setting.id.startsWith(PACKAGE_STATE_PREFIX))
+      .map((setting) => setting.id as string);
+    const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE, EFFECT_STORE, SETTINGS_STORE], "readwrite");
     transaction.objectStore(RECORD_STORE).clear();
     transaction.objectStore(SEARCH_STORE).clear();
     transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: true, rebuiltAt: new Date().toISOString() } satisfies SearchIndexMeta);
     transaction.objectStore(HISTORY_STORE).clear();
     transaction.objectStore(ARTIFACT_STORE).clear();
     transaction.objectStore(EFFECT_STORE).clear();
+    const settingsStore = transaction.objectStore(SETTINGS_STORE);
+    packageSettingIds.forEach((id) => settingsStore.delete(id));
     try {
       await transactionDone(transaction);
     } catch (error) {
