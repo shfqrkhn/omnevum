@@ -297,3 +297,11 @@ The current source revision `50364e9` is bound in `docs/control/release-evidence
 On a fresh built-artifact origin at `http://127.0.0.1:4228/` in the Codex In-app Browser Chromium surface, two same-term records were captured: `Scoped search sentinel allowed` in Personal and `Scoped search sentinel denied` in Work. With View Space set to Personal, searching `Scoped search sentinel` visibly reported `1 result(s); derived index healthy.` and rendered only the Personal record; the Work record was absent from the result list. Health simultaneously reported `2 active, 0 archived, 2 revision snapshot(s), 0 artifact payload(s); search index healthy.`
 
 This closes the current text-search projection boundary at source/unit, UI-owner, and built-preview evidence levels. Vector/analytical caches, cross-tab permission invalidation, external share/search routes, target accessibility, and full release qualification remain open.
+
+## Current shared AI broker boundary follow-up
+
+The current source revision `ec482b0` is bound in `docs/control/release-evidence.json` to the unchanged artifact digest `e4f72246245cd0db810c958e7caa19ddf1c2bd6341099b88f4888708da7d3da1`; its worker cache is `omnevum-shell-e707c9f8716cef20`. The shared `AiRouteRegistry`, `ContextBroker`, and `AiBroker` serve multiple domain workflows without domain-owned provider credentials. `src/core/ai.test.ts#shares-one-credential-free-broker-across-distinct-domain-owners` exercises the same broker/route across `core.capture` and `core.track` with bounded source IDs and DERIVED provenance.
+
+`AiBroker.proposal` now admits only the centralized semantic-command set, rejects authority-shaped controls such as provider, disclosure, permission, credential, network, and scope fields, rejects record/source/target IDs outside the projected context, and always returns a proposal requiring the normal command path. `src/core/ai.test.ts#rejects-malicious-proposal-commands-and-authority-context-widening` proves unadmitted mutation, disclosure widening, and out-of-scope IDs are rejected while an in-scope proposal remains non-committing.
+
+This is source/unit security evidence for the shared broker and proposal boundary. Provider adapters, process/browser isolation, real AI workflow UI, external route currentness/terms, command-path execution integration, and target/release qualification remain open.

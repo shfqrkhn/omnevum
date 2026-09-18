@@ -68,7 +68,8 @@
     "current Effect/Outbox and credential tests prove crash recovery through reconciliation, no-blind-replay, retry/expiry/guard behavior, bounded payloads, secret-free metadata, and revocation; shipped external connector qualification remains open",
     "current Artifact regression proves one canonical payload can serve two relationship references and survive derived search-index rebuild; preview/OCR/target qualification remains open",
     "current package/game/device/extension contract tests prove bounded declarative package and game lifecycle seams, explicit Device/Input access, and executable-extension disablement; browser package/game/device qualification remains open",
-    "scoped CanonicalStore search applies authorized IDs before derived-index tokenization and the UI derives those IDs from Space projection; vector/analytical/external permission invalidation remains open"
+    "scoped CanonicalStore search applies authorized IDs before derived-index tokenization and the UI derives those IDs from Space projection; vector/analytical/external permission invalidation remains open",
+    "shared AI broker tests cover distinct core.capture/core.track workflows without domain-owned credentials and reject unadmitted commands, authority-shaped arguments, and out-of-scope record IDs; provider/process/browser qualification remains open; source ec482b0"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",

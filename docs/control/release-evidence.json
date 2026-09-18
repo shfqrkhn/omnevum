@@ -3,7 +3,7 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "e4f72246245cd0db810c958e7caa19ddf1c2bd6341099b88f4888708da7d3da1", "sourceRevision": "50364e9"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "e4f72246245cd0db810c958e7caa19ddf1c2bd6341099b88f4888708da7d3da1", "sourceRevision": "ec482b0"},
   "artifactDigestMethod": "SHA-256 of sorted UTF-8 lines formatted as relativePath|fileSHA256|byteLength; captured after the full npm run ci build on 2026-09-18.",
   "artifactFiles": [
     {"path": "dist/assets/index-DFwF_1ua.js", "sha256": "74c2f1ed20f50f6276510b97f86ede38e5ad706311aa6369108eebf84ae498cd", "bytes": 168020},
