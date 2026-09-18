@@ -32,6 +32,7 @@
     "multilingual derived Search is selected behind the rebuildable index owner",
     "Space membership/filter UI preserves one canonical record across multiple scopes",
     "capability startup/runtime failures are isolated behind the platform runtime",
+    "startup marks invalid derived search as DEGRADED while preserving core startup and Recovery",
     "History UI exposes field-level revision snapshots without creating a second writable copy",
     "Safe Presentation Mode selects a known-good profile without rewriting malformed presentation or canonical records",
     "persisted Compose/View dashboard projects accessible list, table, chart, and capture boundaries",

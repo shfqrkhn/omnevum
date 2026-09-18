@@ -190,9 +190,11 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/storage.test.ts#detects-malformed-derived-search-state",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#storage-faultrecovery-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#storage-faultrecovery-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-startup-search-degradation-follow-up",
+        "src/main.ts"
       ],
-      "notes": "Deterministic fake-indexeddb injection is covered; native browser corruption and full target qualification remain open."
+      "notes": "Deterministic fake-indexeddb injection is covered and startup now exposes invalid derived search as DEGRADED while preserving the canonical/Recovery path; native browser corruption and full target qualification remain open."
     },
     {
       "id": "OMN-ACC-009",
@@ -310,9 +312,11 @@
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-failed-open-recovery-follow-up",
         "src/core/capability-runtime.test.ts",
-        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-startup-search-degradation-follow-up",
+        "src/main.ts"
       ],
-      "notes": "The capability runtime isolates a failing optional module while core startup remains usable in deterministic tests and the current built preview. Native failure matrices and broader target qualification remain open."
+      "notes": "The capability runtime isolates a failing optional module, and the current startup owner marks invalid derived search DEGRADED while core startup and Recovery remain usable. Native failure matrices, direct browser fault injection, and broader target qualification remain open."
     },
     {
       "id": "OMN-ACC-017",
