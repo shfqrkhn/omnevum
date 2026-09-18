@@ -60,9 +60,10 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-local-origin-capture-search-reload-and-keyboard-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-accessibility-tree-and-keyboard-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-exact-current-artifact-offline-capturesearchreload-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-exact-current-artifact-offline-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-exact-current-artifact-offline-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-bilingual-onboarding-and-dismissal-follow-up"
       ],
-      "notes": "Fresh local static Chromium, current-artifact in-app-browser, and exact-current-artifact Edge evidence cover the core no-account create/search/reload path plus two current-artifact domain owners; GitHub Pages, supported mobile rows, and full onboarding qualification remain open."
+      "notes": "Fresh current-artifact Chromium evidence now covers a localized, no-account, skippable onboarding guide with Capture and Vault/Recovery guidance plus persisted dismissal; GitHub Pages, supported mobile rows, and full human/accessibility qualification remain open."
     },
     {
       "id": "OMN-ACC-002",
@@ -156,9 +157,10 @@
       "evidence": [
         "src/core/i18n.test.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-presentation-and-locale-profile-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-presentation-and-locale-profile-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-bilingual-onboarding-and-dismissal-follow-up"
       ],
-      "notes": "French Canadian formatting/localization and reload persistence are covered locally; full measurement-presentation breadth, long-string/RTL/pseudolocalization, and target-matrix qualification remain open."
+      "notes": "French Canadian formatting/localization, localized onboarding copy, and reload persistence are covered locally; full measurement-presentation breadth, long-string/RTL/pseudolocalization, and target-matrix qualification remain open."
     },
     {
       "id": "OMN-ACC-007",
