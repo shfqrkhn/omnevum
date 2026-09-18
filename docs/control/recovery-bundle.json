@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "17bee739ed8ec04881a32b4ba1c1a5cb3ea04e3fef4bdb3c1f1de19312452502"
+      "sha256": "3a4c99eda86e722d3830555dfe528075f007ab8c8371211b7ceeebad7eb15e8a"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -88,6 +88,11 @@
     ],
     "files": [
       {
+        "path": ".gitattributes",
+        "sha256": "d60f352d0db1404c70afb4bb8b2ca3fd1c610572aa40720e8a0b7baa7885418c",
+        "bytes": 19
+      },
+      {
         "path": ".github/workflows/ci.yml",
         "sha256": "b8a0e8ca52b7c07f312e7c0d2ad79e04707f89163fa422a8cba47536259c918c",
         "bytes": 458
@@ -129,12 +134,12 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "a6506a10a38429266994ed975141be285de3b02bd04bd839d0861ecb9a339442",
+        "sha256": "f309a4406cc165984e17567fe68d903fcc0fcb429d02f02da4d64867c3ae17fd",
         "bytes": 93766
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
-        "sha256": "3008d3035350a80acca53a2aff57ab85121051e06a2792e404b094d57aa385c0",
+        "sha256": "ac729926d42caefaab0c4610bbdc371f828486c10d974507cce9a85f53e86e30",
         "bytes": 48979
       },
       {
@@ -174,7 +179,7 @@
       },
       {
         "path": "docs/control/dependency-sbom.json",
-        "sha256": "6b5e373d1802da2a0cf575aefb652af25aa9721918b5afa887f77efa72f78368",
+        "sha256": "e49ce11644fdc27527e541d0bcd159046eb1552a7ff24fe39c76baef20a3f3ed",
         "bytes": 35282
       },
       {
@@ -229,7 +234,7 @@
       },
       {
         "path": "docs/control/requirements.json",
-        "sha256": "0f24364c88fdfac9cdb5149a3749fb2ff89b3dfeb1b72d782774f6fa089cef94",
+        "sha256": "fd7f8d253852be0744d36e1a4cdf895d624624bdb7be6b4ea84fa17a278e271a",
         "bytes": 262325
       },
       {
@@ -299,8 +304,8 @@
       },
       {
         "path": "package.json",
-        "sha256": "17bee739ed8ec04881a32b4ba1c1a5cb3ea04e3fef4bdb3c1f1de19312452502",
-        "bytes": 1680
+        "sha256": "3a4c99eda86e722d3830555dfe528075f007ab8c8371211b7ceeebad7eb15e8a",
+        "bytes": 1758
       },
       {
         "path": "public/icon.svg",
@@ -341,6 +346,11 @@
         "path": "scripts/effect-loopback-fixture.mjs",
         "sha256": "d7bb2067d52c104b8d4ee53331ec5bec1794bbc38f03eaf56c575ea6234d12aa",
         "bytes": 865
+      },
+      {
+        "path": "scripts/fresh-agent-resume-benchmark.mjs",
+        "sha256": "9e391c1cba0aa342ab338375695c4b3aa58b610e9c99ee345c9876a2a0127e31",
+        "bytes": 2700
       },
       {
         "path": "scripts/generate-control.mjs",
