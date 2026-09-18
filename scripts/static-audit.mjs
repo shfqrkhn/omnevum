@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -49,6 +50,36 @@ if (failures.length === 0) {
   }
   const files = readdirSync(dist, { withFileTypes: true }).flatMap((entry) => entry.isDirectory() ? readdirSync(join(dist, entry.name)) : [entry.name]);
   if (!files.some((name) => name.endsWith(".js"))) failures.push("missing built JavaScript");
+  const releaseEvidencePath = join(root, "docs/control/release-evidence.json");
+  if (!existsSync(releaseEvidencePath)) failures.push("missing release evidence register");
+  else {
+    try {
+      const release = JSON.parse(readFileSync(releaseEvidencePath, "utf8"));
+      const artifactFiles = Array.isArray(release.artifactFiles) ? release.artifactFiles : [];
+      const rows = [];
+      for (const artifact of artifactFiles) {
+        if (typeof artifact?.path !== "string" || !artifact.path.startsWith("dist/") || artifact.path.includes("..") || typeof artifact.sha256 !== "string" || !Number.isSafeInteger(artifact.bytes)) {
+          failures.push("release evidence contains an invalid artifact file entry");
+          continue;
+        }
+        const artifactPath = join(root, artifact.path);
+        if (!existsSync(artifactPath)) {
+          failures.push(`release evidence artifact is missing ${artifact.path}`);
+          continue;
+        }
+        const bytes = readFileSync(artifactPath);
+        const sha256 = createHash("sha256").update(bytes).digest("hex");
+        if (sha256 !== artifact.sha256 || bytes.length !== artifact.bytes) failures.push(`release evidence artifact hash/size mismatch ${artifact.path}`);
+        rows.push(`${artifact.path}|${artifact.sha256}|${artifact.bytes}`);
+      }
+      const digest = createHash("sha256").update(rows.sort().join("\n")).digest("hex");
+      if (release.releaseIdentity?.artifactDigest !== digest) failures.push("release evidence artifact digest is stale");
+      const cache = serviceWorker.match(/const CACHE_NAME = "(omnevum-shell-[a-f0-9]{16})"/u)?.[1];
+      if (release.releaseIdentity?.serviceWorkerCache !== cache) failures.push("release evidence service-worker cache is stale");
+    } catch {
+      failures.push("release evidence register is invalid JSON");
+    }
+  }
 }
 if (failures.length > 0) {
   console.error(`STATIC_AUDIT_FAIL\n- ${failures.join("\n- ")}`);

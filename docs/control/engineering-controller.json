@@ -66,7 +66,7 @@
     "bounded automation evaluator emits only proposal-only actions from the explicit admitted semantic-command set and rejects network.fetch/prototype/budget abuse; source bbc902d",
     "current built-artifact Chromium preview creates a quote-validated text annotation as a separate platform.annotate record and reports one active anchor with no stale/orphaned anchors; source bbc902d",
     "clean CI regenerates a lockfile-bound FOSS attribution/source-obligation receipt and fails the license gate on stale or policy-critical metadata findings; source scripts/generate-control.mjs and scripts/license-audit.mjs",
-    "current Effect/Outbox and credential tests prove crash recovery through reconciliation, no-blind-replay, retry/expiry/guard behavior, bounded payloads, secret-free metadata, and revocation; shipped external connector qualification remains open",
+    "current Effect/Outbox and credential tests prove crash recovery through reconciliation, no-blind-replay, retry/expiry/guard behavior, bounded payloads, secret-free metadata, revocation, and a real localhost response-loss/idempotency reconciliation fixture; shipped external connector qualification remains open",
     "current Artifact regression proves one canonical payload can serve two relationship references and survive derived search-index rebuild; preview/OCR/target qualification remains open",
     "current package/game/device/extension contract tests prove bounded declarative package and game lifecycle seams, explicit Device/Input access, and executable-extension disablement; browser package/game/device qualification remains open",
     "scoped CanonicalStore search applies authorized IDs before derived-index tokenization and the UI derives those IDs from Space projection; vector/analytical/external permission invalidation remains open",
@@ -110,7 +110,7 @@
     "current receipt-bound Edge preview on the exact 655f0fb artifact detects a malformed canonical row, exports retained state, repairs explicitly, preserves the valid row, and returns to a clean scoped origin; source 655f0fb",
     "the selected MiniSearch owner has a repeatable 10,000-record multilingual host benchmark with an explicit p95 guardrail; mobile/browser target qualification remains open; source search.test.ts",
     "the shipped Recovery surface stages typed external actions locally with persisted authority/permission/Space/disclosure/schema context, persists it across reload without automatic execution, runs only exact configured destinations, and guards replay against current authority, permission, Space, disclosure, schema, and credential state; source 4f92365",
-    "current release receipt is refreshed and independently hash-verified for source 4f92365, artifact digest da8eb13c100dcdf23f8aad73439e09d6be097a2a8ee8bb17a9b29aa60bad8ede, and service-worker cache omnevum-shell-e2d32f7b492db6aa",
+    "current release receipt is refreshed and independently hash-verified for source f3786a5, artifact digest 678397a9043ad35ee178c3feaa043a4a506a923cf727fe445fcdae1ba7cc1254, and service-worker cache omnevum-shell-e2d32f7b492db6aa",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [

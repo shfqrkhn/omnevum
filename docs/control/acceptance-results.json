@@ -981,10 +981,11 @@
         "src/core/remote.ts",
         "src/core/remote.test.ts#executes-one-typed-idempotent-request-through-the-credential-broker-without-exposing-the-secret-in-the-payload",
         "src/core/remote.test.ts#converts-an-ambiguous-request-failure-to-reconcile-instead-of-blindly-replaying-it",
+        "src/core/remote.test.ts#reconciles-a-real-localhost-response-loss-without-posting-the-same-idempotency-key-twice",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-provider-neutral-effectoutbox-endpoint-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-effectoutbox-startup-recovery-follow-up"
       ],
-      "notes": "The platform runner plus the provider-neutral JsonEndpointEffectExecutor prove crash recovery through OUTCOME_UNKNOWN/RECONCILE, no-blind-replay behavior, persisted exponential backoff, maxAttempts terminal exhaustion, expiry, guard denial, bounded effect storage, idempotency headers, secret-free payloads, brokered authorization, bounded HTTP classification, and an IndexedDB status compare-and-set that prevents concurrent runners from executing one pending operation twice. The shipped app now lets a user stage one typed external action locally with persisted authority/permission/Space/disclosure/schema context, preserves it across reload without automatic network execution, routes explicit runs only to the exact persisted destination, revalidates the current context before executor use, and visibly promotes an ambiguous attempt to RECONCILE. A browser-side post-revocation receipt, real remote success/duplicate-outcome receipt, browser/process restart with a live adapter, credentialed shipped connector integration, and broader target evidence remain open."
+      "notes": "The platform runner plus the provider-neutral JsonEndpointEffectExecutor prove crash recovery through OUTCOME_UNKNOWN/RECONCILE, no-blind-replay behavior, persisted exponential backoff, maxAttempts terminal exhaustion, expiry, guard denial, bounded effect storage, idempotency headers, secret-free payloads, brokered authorization, bounded HTTP classification, and an IndexedDB status compare-and-set that prevents concurrent runners from executing one pending operation twice. The shipped app now lets a user stage one typed external action locally with persisted authority/permission/Space/disclosure/schema context, preserves it across reload without automatic network execution, routes explicit runs only to the exact persisted destination, revalidates the current context before executor use, and visibly promotes an ambiguous attempt to RECONCILE. A real localhost loopback fixture now proves response loss followed by idempotent reconciliation with one POST and one GET. Browser-side post-revocation, provider/remote success and duplicate-outcome receipts, browser/process restart with a live adapter, credentialed shipped connector integration, and broader target evidence remain open."
     },
     {
       "id": "OMN-ACC-068",
@@ -1023,6 +1024,7 @@
         "src/core/effect-runner.test.ts#cancels-a-pending-brokered-operation-after-the-credential-is-revoked",
         "src/core/effect-guard.test.ts",
         "src/core/effect-runner.test.ts#cancels-a-pending-operation-when-its-persisted-space-is-revoked-before-replay",
+        "src/core/remote.test.ts#reconciles-a-real-localhost-response-loss-without-posting-the-same-idempotency-key-twice",
         "src/core/sync-routes.test.ts",
         "src/core/security-contracts.test.ts",
         "docs/control/credential-key-policy.json",
