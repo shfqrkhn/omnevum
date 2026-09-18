@@ -70,7 +70,8 @@
     "current package/game/device/extension contract tests prove bounded declarative package and game lifecycle seams, explicit Device/Input access, and executable-extension disablement; browser package/game/device qualification remains open",
     "scoped CanonicalStore search applies authorized IDs before derived-index tokenization and the UI derives those IDs from Space projection; vector/analytical/external permission invalidation remains open",
     "shared AI broker tests cover distinct core.capture/core.track workflows without domain-owned credentials and reject unadmitted commands, authority-shaped arguments, and out-of-scope record IDs; provider/process/browser qualification remains open; source 5fc9486",
-    "optional ToolBroker validates changed endpoint schemas, explicit scrubbed context, proposal-only admitted semantic actions, malicious output, and disconnect degradation; source tool-broker.ts"
+    "optional ToolBroker validates changed endpoint schemas, explicit scrubbed context, proposal-only admitted semantic actions, malicious output, and disconnect degradation; source tool-broker.ts",
+    "current Acquire mapping tests retain one heterogeneous source identity and route event/artifact/location-shaped candidates to existing Time/Artifact/Place owners without a universal import store; source db7f8f6"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",
