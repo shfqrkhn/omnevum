@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { CanonicalRecord } from "./model";
-import { projectForShare } from "./share";
+import { projectForAuthorizedShare, projectForShare } from "./share";
+import { createShareGrant, revokeShareGrant } from "./sharing";
+import { CommandBus } from "./commands";
+import { CanonicalStore } from "./storage";
 
 function record(id: string, sensitivity: "PRIVATE" | "SHARED", data: Record<string, unknown>): CanonicalRecord {
   const now = new Date().toISOString();
@@ -21,5 +24,17 @@ describe("bounded share projection", () => {
     const privateRecord = record("private", "PRIVATE", { text: "intentional" });
     expect(projectForShare([privateRecord], [privateRecord.id]).records).toHaveLength(0);
     expect(projectForShare([privateRecord], [privateRecord.id], true).records[0]?.sensitivity).toBe("SHARED");
+  });
+
+  it("requires an active purpose-bound grant for an authorized projection", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-authorized-share`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const source = await commands.create({ recordType: "note", owner: "core.capture", data: { text: "authorized" } });
+    const grant = await createShareGrant(commands, { grantedTo: "person:reviewer", purpose: "review", space: "personal", recordIds: [source.id] });
+    expect(projectForAuthorizedShare(grant, [source], [source.id], true).records).toHaveLength(1);
+    const revoked = await revokeShareGrant(commands, grant.id);
+    expect(() => projectForAuthorizedShare(revoked, [source], [source.id], true)).toThrow(/inactive|expired|authorize/);
+    store.close();
   });
 });

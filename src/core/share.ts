@@ -1,5 +1,6 @@
 import type { CanonicalRecord, RecordProvenance } from "./model";
 import { scrubSensitiveValue } from "./safety";
+import { canUseShareGrant } from "./sharing";
 
 export interface ShareProjection {
   format: "OMNEVUM_SHARE_PROJECTION";
@@ -19,6 +20,12 @@ export function projectForShare(records: CanonicalRecord[], selectedIds: Iterabl
     return { ...record, sensitivity: "SHARED" as const, provenance, data };
   });
   return { format: "OMNEVUM_SHARE_PROJECTION", version: 1, exportedAt: new Date().toISOString(), records: projected, omittedRecordCount: records.filter((record) => selected.has(record.id)).length - projected.length };
+}
+
+export function projectForAuthorizedShare(grant: CanonicalRecord, records: CanonicalRecord[], selectedIds: Iterable<string>, includePrivate = false): ShareProjection {
+  const selected = [...selectedIds];
+  if (!canUseShareGrant(grant, selected)) throw new Error("Share grant is inactive, expired, or does not authorize the selected records");
+  return projectForShare(records, selected, includePrivate);
 }
 
 export function parseShareProjection(value: unknown): ShareProjection {

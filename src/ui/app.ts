@@ -21,8 +21,8 @@ import { readPath } from "../core/data";
 import { assessTextAnchor, createTextAnnotation } from "../core/annotation";
 import { createEvidenceLink, type EvidenceRelation } from "../core/evidence";
 import { makePlaceData, parseGeoJsonPoint } from "../core/place";
-import { projectForShare } from "../core/share";
-import { createShareGrant, revokeShareGrant } from "../core/sharing";
+import { projectForAuthorizedShare } from "../core/share";
+import { canUseShareGrant, createShareGrant, revokeShareGrant } from "../core/sharing";
 
 export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
@@ -360,6 +360,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <option value="household">${copy.household}</option>
             <option value="work">${copy.work}</option>
           </select>
+          <label for="share-grant">${copy.shareGrant}</label>
+          <select id="share-grant" name="grant"><option value="">${copy.selectGrant}</option></select>
           <label for="share-records">${copy.selectRecords}</label>
           <select id="share-records" name="records" multiple size="6"></select>
           <label class="check-row" for="share-include-private"><input id="share-include-private" type="checkbox" /> ${copy.includePrivate}</label>
@@ -528,6 +530,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const sharePurpose = root.querySelector<HTMLInputElement>("#share-purpose");
   const shareExpiry = root.querySelector<HTMLInputElement>("#share-expiry");
   const shareSpace = root.querySelector<HTMLSelectElement>("#share-space");
+  const shareGrant = root.querySelector<HTMLSelectElement>("#share-grant");
   const shareRecords = root.querySelector<HTMLSelectElement>("#share-records");
   const shareIncludePrivate = root.querySelector<HTMLInputElement>("#share-include-private");
   const shareGrantSubmit = root.querySelector<HTMLButtonElement>("#share-grant-submit");
@@ -565,7 +568,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
 
@@ -880,7 +883,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const updateShareActions = (): void => {
     const hasSelection = selectedShareIds().length > 0;
     shareGrantSubmit.disabled = !hasSelection;
-    shareExport.disabled = !hasSelection;
+    shareExport.disabled = !hasSelection || !shareGrant.value;
   };
 
   const renderShareChoices = async (): Promise<void> => {
@@ -899,13 +902,28 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
 
   const renderShareGrants = async (): Promise<void> => {
     const grants = (await store.list()).filter((record) => record.owner === "platform.share" && record.data.kind === "share-grant").sort((left, right) => right.modifiedAt.localeCompare(left.modifiedAt));
+    const selectedGrant = shareGrant.value;
+    shareGrant.replaceChildren();
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = copy.selectGrant;
+    shareGrant.append(placeholder);
     shareGrantList.replaceChildren();
     for (const grant of grants) {
+      const recordIds = Array.isArray(grant.data.recordIds) ? grant.data.recordIds.filter((id): id is string => typeof id === "string") : [];
+      const usable = canUseShareGrant(grant, recordIds);
+      if (usable) {
+        const option = document.createElement("option");
+        option.value = grant.id;
+        option.textContent = `${typeof grant.data.grantedTo === "string" ? grant.data.grantedTo : "recipient"}: ${typeof grant.data.purpose === "string" ? grant.data.purpose : "share"}`;
+        option.selected = grant.id === selectedGrant;
+        shareGrant.append(option);
+      }
       const item = document.createElement("li");
       item.className = "record-item";
       const content = document.createElement("div");
       const title = document.createElement("strong");
-      title.textContent = `${typeof grant.data.grantedTo === "string" ? grant.data.grantedTo : "recipient"} - ${grant.data.status === "ACTIVE" ? "ACTIVE" : "REVOKED"}`;
+      title.textContent = `${typeof grant.data.grantedTo === "string" ? grant.data.grantedTo : "recipient"} - ${grant.data.status === "ACTIVE" ? (usable ? "ACTIVE" : "EXPIRED") : "REVOKED"}`;
       const detail = document.createElement("p");
       detail.textContent = typeof grant.data.purpose === "string" ? grant.data.purpose : recordText(grant);
       const meta = document.createElement("small");
@@ -919,6 +937,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         revoke.addEventListener("click", async () => {
           try {
             await revokeShareGrant(commands, grant.id);
+            if (shareGrant.value === grant.id) shareGrant.value = "";
             shareStatus.textContent = copy.grantRevoked;
             await renderRecords(searchQuery.value);
           } catch (error) {
@@ -1344,6 +1363,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   });
 
   shareRecords.addEventListener("change", updateShareActions);
+  shareGrant.addEventListener("change", updateShareActions);
 
   shareForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -1354,12 +1374,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
     const space = shareSpace.value === "household" || shareSpace.value === "work" ? shareSpace.value : "personal";
     try {
-      await createShareGrant(commands, { grantedTo: shareRecipient.value, purpose: sharePurpose.value, space, recordIds, ...(shareExpiry.value ? { expiresAt: new Date(shareExpiry.value).toISOString() } : {}) });
+      const grant = await createShareGrant(commands, { grantedTo: shareRecipient.value, purpose: sharePurpose.value, space, recordIds, ...(shareExpiry.value ? { expiresAt: new Date(shareExpiry.value).toISOString() } : {}) });
       shareStatus.textContent = copy.grantSaved;
       shareRecipient.value = "";
       sharePurpose.value = "";
       shareExpiry.value = "";
       await renderRecords(searchQuery.value);
+      shareGrant.value = grant.id;
+      updateShareActions();
     } catch (error) {
       shareStatus.textContent = describeError(error, "Share grant was not created; canonical records were not changed.");
     }
@@ -1372,7 +1394,13 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       return;
     }
     try {
-      const projection = projectForShare(await store.list(), recordIds, shareIncludePrivate.checked);
+      const grant = shareGrant.value ? await commands.get(shareGrant.value) : undefined;
+      if (!grant) {
+        shareStatus.textContent = copy.grantRequired;
+        updateShareActions();
+        return;
+      }
+      const projection = projectForAuthorizedShare(grant, await store.list(), recordIds, shareIncludePrivate.checked);
       downloadJson("omnevum-share-projection.json", projection);
       shareStatus.textContent = copy.projectionSaved(projection.records.length, projection.omittedRecordCount);
     } catch (error) {
