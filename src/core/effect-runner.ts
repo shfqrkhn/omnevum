@@ -60,7 +60,7 @@ export class EffectRunner {
         return (await this.store.getEffect(operation.operationId)) ?? operation;
       }
     }
-    const inFlight = transitionEffect(operation, "IN_FLIGHT");
+    const inFlight = transitionEffect(operation, "IN_FLIGHT", { nextAttemptAt: undefined });
     if (!await this.updateIfCurrent(inFlight, operation.status)) return (await this.store.getEffect(operation.operationId)) ?? operation;
     let result: EffectExecutionResult;
     try {
@@ -69,8 +69,17 @@ export class EffectRunner {
       result = { outcome: "FAILED_RETRYABLE", evidence: ["executor-threw"] };
     }
     const evidence = [...inFlight.evidence, ...(result.evidence ?? [])];
-    const patch = { evidence, ...(result.outcome === "SUCCEEDED" && result.remoteIdentity ? { remoteIdentity: result.remoteIdentity } : {}), ...(result.outcome === "FAILED_RETRYABLE" ? { retryCount: inFlight.retryCount + 1 } : {}) };
-    const final = transitionEffect(inFlight, result.outcome, patch);
+    const attemptCount = inFlight.retryCount + 1;
+    const exhausted = result.outcome === "FAILED_RETRYABLE" && attemptCount >= inFlight.retryPolicy.maxAttempts;
+    const nextStatus = exhausted ? "FAILED_TERMINAL" : result.outcome;
+    const retryDelaySeconds = Math.min(inFlight.retryPolicy.backoffSeconds * (2 ** Math.max(0, attemptCount - 1)), 31_536_000);
+    const patch = {
+      evidence: exhausted ? [...evidence, "retry-limit-reached"] : evidence,
+      nextAttemptAt: result.outcome === "FAILED_RETRYABLE" && !exhausted ? new Date(Date.now() + retryDelaySeconds * 1000).toISOString() : undefined,
+      ...(result.outcome === "SUCCEEDED" && result.remoteIdentity ? { remoteIdentity: result.remoteIdentity } : {}),
+      ...(result.outcome === "FAILED_RETRYABLE" ? { retryCount: attemptCount } : {})
+    };
+    const final = transitionEffect(inFlight, nextStatus, patch);
     if (!await this.updateIfCurrent(final, "IN_FLIGHT")) return (await this.store.getEffect(operation.operationId)) ?? inFlight;
     return final;
   }

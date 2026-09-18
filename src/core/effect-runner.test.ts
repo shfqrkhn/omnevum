@@ -50,7 +50,28 @@ describe("EffectRunner", () => {
     const runner = new EffectRunner(store, { execute: async () => ({ outcome: "FAILED_RETRYABLE", evidence: ["offline"] }) });
     const result = await runner.runAvailable();
     expect(result[0]).toMatchObject({ status: "FAILED_RETRYABLE", retryCount: 1 });
+    expect(Date.parse(result[0]?.nextAttemptAt ?? "")).toBeGreaterThan(Date.now());
     expect((await store.listEffects())[0]?.retryCount).toBe(1);
+    store.close();
+  });
+
+  it("honors retry backoff and terminally exhausts the attempt budget", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-effect-retry-policy`);
+    await store.open();
+    await store.enqueueEffect({ ...effect(), retryPolicy: { maxAttempts: 2, backoffSeconds: 60 } });
+    let executions = 0;
+    const runner = new EffectRunner(store, { execute: async () => { executions += 1; return { outcome: "FAILED_RETRYABLE" as const, evidence: ["offline"] }; } });
+
+    const first = await runner.runAvailable();
+    expect(first[0]).toMatchObject({ status: "FAILED_RETRYABLE", retryCount: 1, nextAttemptAt: expect.any(String) });
+    expect(await runner.runAvailable()).toEqual([]);
+    expect(executions).toBe(1);
+    const waiting = await store.getEffect("runner-effect");
+    if (!waiting) throw new Error("Expected persisted retryable effect");
+    await store.updateEffect({ ...waiting, nextAttemptAt: new Date(Date.now() - 1).toISOString() }, "FAILED_RETRYABLE");
+    const second = await runner.runAvailable();
+    expect(second[0]).toMatchObject({ status: "FAILED_TERMINAL", retryCount: 2, nextAttemptAt: undefined, evidence: ["offline", "offline", "retry-limit-reached"] });
+    expect(executions).toBe(2);
     store.close();
   });
 

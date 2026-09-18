@@ -22,6 +22,8 @@ export interface EffectOperation {
   evidence: string[];
 }
 
+type EffectPatch = { [K in keyof EffectOperation]?: EffectOperation[K] | undefined };
+
 const transitions: Record<EffectStatus, readonly EffectStatus[]> = {
   PENDING: ["IN_FLIGHT", "CANCELLED", "EXPIRED"],
   IN_FLIGHT: ["SUCCEEDED", "FAILED_RETRYABLE", "FAILED_TERMINAL", "OUTCOME_UNKNOWN"],
@@ -64,7 +66,7 @@ export function canTransitionEffect(from: EffectStatus, to: EffectStatus): boole
   return transitions[from].includes(to);
 }
 
-export function transitionEffect(operation: EffectOperation, status: EffectStatus, patch: Partial<EffectOperation> = {}): EffectOperation {
+export function transitionEffect(operation: EffectOperation, status: EffectStatus, patch: EffectPatch = {}): EffectOperation {
   if (!canTransitionEffect(operation.status, status)) throw new Error(`Invalid effect transition ${operation.status} -> ${status}`);
   const next = { ...operation, ...patch, status };
   assertEffectOperation(next);
