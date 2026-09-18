@@ -6,6 +6,7 @@ if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error("Por
 let putCount = 0;
 let lastPutBytes = 0;
 let lastPutRecords = 0;
+let lastPut = [];
 
 function headers(origin = "*") {
   return {
@@ -60,7 +61,7 @@ const server = createServer(async (request, response) => {
     return;
   }
   if (requestUrl.pathname === "/__state" && request.method === "GET") {
-    writeJson(response, 200, { putCount, lastPutBytes, lastPutRecords }, origin);
+    writeJson(response, 200, { putCount, lastPutBytes, lastPutRecords, deletedIds: lastPut.filter((item) => item?.deleted === true).map((item) => item.id) }, origin);
     return;
   }
   if (requestUrl.pathname !== "/replica") {
@@ -72,9 +73,8 @@ const server = createServer(async (request, response) => {
     return;
   }
   if (request.method === "GET") {
-    const staleId = requestUrl.searchParams.get("recordId");
     const records = [record("remote-sync-current-sentinel", "Remote sync sentinel")];
-    if (staleId && /^[a-zA-Z0-9._:-]{1,160}$/.test(staleId)) records.push(record(staleId, "Stale remote resurrection", 1));
+    for (const deleted of lastPut.filter((item) => item?.deleted === true && typeof item.id === "string")) records.push(record(deleted.id, "Stale remote resurrection", Math.max(1, Number(deleted.revision) - 1)));
     writeJson(response, 200, { format: "OMNEVUM_REPLICA", version: 1, records }, origin);
     return;
   }
@@ -85,6 +85,7 @@ const server = createServer(async (request, response) => {
       putCount += 1;
       lastPutBytes = Buffer.byteLength(JSON.stringify(body));
       lastPutRecords = records.length;
+      lastPut = records;
       console.log(`SYNC_FIXTURE_PUT count=${putCount} bytes=${lastPutBytes} records=${lastPutRecords}`);
       response.writeHead(204, headers(origin));
       response.end();
