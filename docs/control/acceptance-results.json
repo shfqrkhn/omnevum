@@ -596,7 +596,8 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/share.test.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-sharing-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-sharing-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-built-artifact-sharing-and-delegation-follow-up"
       ],
       "notes": "The bounded projection owner scrubs credentials, unrelated links, private records, and provenance by default; the current built preview exercises active-grant authorization, explicit private-inclusion disclosure, and bounded export. Remote delivery, attachments, and cross-target qualification remain open."
     },
@@ -1313,7 +1314,8 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/sharing.test.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-sharing-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-sharing-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-built-artifact-sharing-and-delegation-follow-up"
       ],
       "notes": "The current local workbench creates a purpose/Space/record-bound grant, enforces the declared Space including membership overlays, requires the grant for projection, disables export after canonical revocation, and persists the revoked state; external effect use, provider ACL interaction, stale share reconciliation, and target qualification remain open."
     },
