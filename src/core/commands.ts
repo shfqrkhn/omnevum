@@ -72,6 +72,10 @@ export class CommandBus {
     return this.store.get(id, includeDeleted);
   }
 
+  public async list(includeDeleted = false): Promise<CanonicalRecord[]> {
+    return this.store.list(includeDeleted);
+  }
+
   public async findBySourceId(sourceId: string): Promise<CanonicalRecord[]> {
     return this.store.findByProvenance(sourceId);
   }
