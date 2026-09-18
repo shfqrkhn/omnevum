@@ -18,6 +18,9 @@ import { SpaceService } from "../core/space";
 import { historyWithDiffs } from "../core/history";
 import { makeUserDashboard, projectView, ViewRegistry } from "../core/compose";
 import { readPath } from "../core/data";
+import { assessTextAnchor, createTextAnnotation } from "../core/annotation";
+import { createEvidenceLink, type EvidenceRelation } from "../core/evidence";
+import { makePlaceData, parseGeoJsonPoint } from "../core/place";
 
 export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
@@ -287,6 +290,58 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </form>
       </section>
 
+      <section id="knowledge" class="panel" aria-labelledby="knowledge-heading">
+        <p class="eyebrow">${copy.sources}</p>
+        <h2 id="knowledge-heading">${copy.sourcesHeading}</h2>
+        <div class="domain-grid">
+          <form id="evidence-form" class="domain-form">
+            <h3>${copy.evidenceHeading}</h3>
+            <label for="evidence-subject">${copy.subjectRecord}</label>
+            <select id="evidence-subject" name="subject"></select>
+            <label for="evidence-source">${copy.sourceRecord}</label>
+            <select id="evidence-source" name="source"></select>
+            <label for="evidence-relation">${copy.evidenceRelation}</label>
+            <select id="evidence-relation" name="relation">
+              <option value="SUPPORTS">${copy.supports}</option>
+              <option value="CONTRADICTS">${copy.contradicts}</option>
+              <option value="QUALIFIES">${copy.qualifies}</option>
+              <option value="DERIVES_FROM">${copy.derivesFrom}</option>
+            </select>
+            <label for="evidence-claim">${copy.claim}</label>
+            <textarea id="evidence-claim" name="claim" rows="3" maxlength="1000" required></textarea>
+            <label for="evidence-uncertainty">${copy.uncertainty}</label>
+            <input id="evidence-uncertainty" name="uncertainty" type="text" maxlength="500" />
+            <button id="evidence-submit" type="submit">${copy.createEvidence}</button>
+            <p id="evidence-status" class="hint" role="status"></p>
+          </form>
+          <form id="annotation-form" class="domain-form">
+            <h3>${copy.annotationHeading}</h3>
+            <label for="annotation-source">${copy.sourceRecord}</label>
+            <select id="annotation-source" name="source"></select>
+            <label for="annotation-quote">${copy.annotationQuote}</label>
+            <textarea id="annotation-quote" name="quote" rows="3" maxlength="1000" required></textarea>
+            <label for="annotation-note">${copy.annotationNote}</label>
+            <textarea id="annotation-note" name="note" rows="3" maxlength="5000" required></textarea>
+            <button id="annotation-submit" type="submit">${copy.createAnnotation}</button>
+            <p id="annotation-status" class="hint" role="status"></p>
+          </form>
+          <form id="place-form" class="domain-form">
+            <h3>${copy.placeHeading}</h3>
+            <label for="place-label">${copy.placeLabel}</label>
+            <input id="place-label" name="label" type="text" maxlength="240" required />
+            <label for="place-latitude">${copy.latitude}</label>
+            <input id="place-latitude" name="latitude" type="number" inputmode="decimal" step="any" />
+            <label for="place-longitude">${copy.longitude}</label>
+            <input id="place-longitude" name="longitude" type="number" inputmode="decimal" step="any" />
+            <label for="place-geojson">${copy.optionalGeoJson}</label>
+            <textarea id="place-geojson" name="geojson" rows="2" placeholder='{"type":"Point","coordinates":[-79.3832,43.6532]}'></textarea>
+            <button type="submit">${copy.savePlace}</button>
+            <p id="place-status" class="hint" role="status"></p>
+          </form>
+        </div>
+        <p id="knowledge-status" class="hint" role="status"></p>
+      </section>
+
       <section id="focus" class="panel" aria-labelledby="focus-heading">
         <p class="eyebrow">${copy.timeObserve}</p>
         <h2 id="focus-heading">${copy.focusHeading}</h2>
@@ -416,6 +471,27 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const relateLabel = root.querySelector<HTMLInputElement>("#relate-label");
   const relateSubmit = root.querySelector<HTMLButtonElement>("#relate-submit");
   const relateStatus = root.querySelector<HTMLElement>("#relate-status");
+  const evidenceForm = root.querySelector<HTMLFormElement>("#evidence-form");
+  const evidenceSubject = root.querySelector<HTMLSelectElement>("#evidence-subject");
+  const evidenceSource = root.querySelector<HTMLSelectElement>("#evidence-source");
+  const evidenceRelation = root.querySelector<HTMLSelectElement>("#evidence-relation");
+  const evidenceClaim = root.querySelector<HTMLTextAreaElement>("#evidence-claim");
+  const evidenceUncertainty = root.querySelector<HTMLInputElement>("#evidence-uncertainty");
+  const evidenceSubmit = root.querySelector<HTMLButtonElement>("#evidence-submit");
+  const evidenceStatus = root.querySelector<HTMLElement>("#evidence-status");
+  const annotationForm = root.querySelector<HTMLFormElement>("#annotation-form");
+  const annotationSource = root.querySelector<HTMLSelectElement>("#annotation-source");
+  const annotationQuote = root.querySelector<HTMLTextAreaElement>("#annotation-quote");
+  const annotationNote = root.querySelector<HTMLTextAreaElement>("#annotation-note");
+  const annotationSubmit = root.querySelector<HTMLButtonElement>("#annotation-submit");
+  const annotationStatus = root.querySelector<HTMLElement>("#annotation-status");
+  const placeForm = root.querySelector<HTMLFormElement>("#place-form");
+  const placeLabel = root.querySelector<HTMLInputElement>("#place-label");
+  const placeLatitude = root.querySelector<HTMLInputElement>("#place-latitude");
+  const placeLongitude = root.querySelector<HTMLInputElement>("#place-longitude");
+  const placeGeoJson = root.querySelector<HTMLTextAreaElement>("#place-geojson");
+  const placeStatus = root.querySelector<HTMLElement>("#place-status");
+  const knowledgeStatus = root.querySelector<HTMLElement>("#knowledge-status");
   const focusToggle = root.querySelector<HTMLButtonElement>("#focus-toggle");
   const focusStatus = root.querySelector<HTMLElement>("#focus-status");
   const reminderForm = root.querySelector<HTMLFormElement>("#reminder-form");
@@ -447,7 +523,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
 
@@ -712,6 +788,51 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     if (records.length < 2) relateStatus.textContent = copy.atLeastTwo;
   };
 
+  const renderKnowledgeChoices = async (): Promise<void> => {
+    const records = (await store.list()).filter((record) => record.owner !== "platform.space");
+    const fill = (select: HTMLSelectElement, previous: string): void => {
+      select.replaceChildren();
+      for (const record of records) {
+        const option = document.createElement("option");
+        option.value = record.id;
+        option.textContent = `${typeLabel(record.recordType)}: ${recordText(record).slice(0, 70)} (r${record.revision})`;
+        select.append(option);
+      }
+      if (records.some((record) => record.id === previous)) select.value = previous;
+    };
+    const previousSubject = evidenceSubject.value;
+    const previousSource = evidenceSource.value;
+    const previousAnnotation = annotationSource.value;
+    fill(evidenceSubject, previousSubject);
+    fill(evidenceSource, previousSource);
+    fill(annotationSource, previousAnnotation);
+    evidenceSubmit.disabled = records.length < 2;
+    annotationSubmit.disabled = records.length === 0;
+  };
+
+  const renderKnowledgeStatus = async (): Promise<void> => {
+    const records = await store.list();
+    let evidence = 0;
+    let annotations = 0;
+    let active = 0;
+    let stale = 0;
+    let orphaned = 0;
+    let places = 0;
+    for (const record of records) {
+      if (record.owner === "platform.evidence") evidence += 1;
+      if (record.owner === "platform.place") places += 1;
+      if (record.owner !== "platform.annotate") continue;
+      annotations += 1;
+      const sourceId = typeof record.data.sourceId === "string" ? record.data.sourceId : "";
+      const source = sourceId ? await store.get(sourceId) : undefined;
+      const state = source ? assessTextAnchor(record, recordText(source), source.revision) : "ORPHANED";
+      if (state === "ACTIVE") active += 1;
+      else if (state === "STALE") stale += 1;
+      else orphaned += 1;
+    }
+    knowledgeStatus.textContent = copy.knowledgeStatus(evidence, annotations, active, stale, orphaned, places);
+  };
+
   const renderArchived = async (): Promise<void> => {
     const records = (await scopedRecords(true)).filter((record) => record.deleted).sort((left, right) => right.modifiedAt.localeCompare(left.modifiedAt));
     archiveList.replaceChildren();
@@ -834,6 +955,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     await renderSpaceChoices();
     await renderComposeView();
     await renderRelationshipChoices();
+    await renderKnowledgeChoices();
+    await renderKnowledgeStatus();
     const healthBefore = await store.health();
     if (!healthBefore.searchIndexValid) await store.rebuildSearchIndex();
     const healthAfter = await store.health();
@@ -1055,6 +1178,67 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       await renderRecords(searchQuery.value);
     } catch (error) {
       relateStatus.textContent = describeError(error, "Relationship was not created");
+    }
+  });
+
+  evidenceForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!evidenceSubject.value || !evidenceSource.value || evidenceSubject.value === evidenceSource.value) {
+      evidenceStatus.textContent = copy.atLeastTwo;
+      return;
+    }
+    const relations: EvidenceRelation[] = ["SUPPORTS", "CONTRADICTS", "QUALIFIES", "DERIVES_FROM"];
+    const relation = relations.includes(evidenceRelation.value as EvidenceRelation) ? evidenceRelation.value as EvidenceRelation : "SUPPORTS";
+    try {
+      await createEvidenceLink(commands, { subjectId: evidenceSubject.value, sourceId: evidenceSource.value, relation, claim: evidenceClaim.value, uncertainty: evidenceUncertainty.value });
+      evidenceClaim.value = "";
+      evidenceUncertainty.value = "";
+      evidenceStatus.textContent = copy.evidenceSaved;
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      evidenceStatus.textContent = describeError(error, "Evidence link was not created; canonical records were not changed.");
+    }
+  });
+
+  annotationForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const source = await commands.get(annotationSource.value);
+    if (!source) {
+      annotationStatus.textContent = copy.sourceRequired;
+      return;
+    }
+    const quote = annotationQuote.value.trim();
+    const sourceText = recordText(source);
+    const start = sourceText.indexOf(quote);
+    if (!quote || start < 0) {
+      annotationStatus.textContent = copy.quoteMissing;
+      return;
+    }
+    try {
+      await createTextAnnotation(commands, { sourceId: source.id, sourceRevision: source.revision, quote, note: annotationNote.value, start, end: start + quote.length });
+      annotationQuote.value = "";
+      annotationNote.value = "";
+      annotationStatus.textContent = copy.annotationSaved;
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      annotationStatus.textContent = describeError(error, "Annotation was not created; canonical records were not changed.");
+    }
+  });
+
+  placeForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const label = placeLabel.value.trim();
+    if (!label) return;
+    try {
+      const geoJson = placeGeoJson.value.trim();
+      const coordinates = geoJson ? parseGeoJsonPoint(JSON.parse(geoJson) as unknown) : { latitude: Number(placeLatitude.value), longitude: Number(placeLongitude.value) };
+      const place = makePlaceData(label, coordinates);
+      await commands.create({ recordType: "observation", owner: "platform.place", truthClass: "USER_OBSERVATION", data: { ...place, text: place.label, space: "personal", triageStatus: "REVIEWED" } });
+      placeForm.reset();
+      placeStatus.textContent = copy.placeSaved(label);
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      placeStatus.textContent = describeError(error, "Place was not saved; canonical records were not changed.");
     }
   });
 
