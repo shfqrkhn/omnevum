@@ -13,11 +13,13 @@ This checkout is the initial Phase 0 implementation foundation. The governing de
 - Acquire/Ingest stages bounded text, JSON, CSV, URL, file, and clipboard input for review before canonical acceptance.
 - Search over a rebuildable derived index with health reporting.
 - Portable unencrypted Vault export/import with revision-aware validation and Artifact payloads.
+- Source / meaning workbench for source-linked Evidence, quote-validated Annotation, and GeoJSON Point Place records.
+- Purpose-bound sharing grants with explicit private disclosure, declared-Space enforcement, revocation, and bounded projections.
 - Platform-owned Effect/Outbox state with secret-field rejection, ready for optional external adapters.
 - One platform service worker for same-origin shell caching.
 - Vitest coverage for canonical persistence, import precedence, provenance, and owner admission.
 
-The stack and storage choices remain provisional until the Phase 0 characterization records close. AI, sync, connectors, and executable extensions are not active in this foundation. The current MVP nucleus is evidence-backed only by local browser smoke; it is not a release claim.
+The stack and storage choices remain provisional until the Phase 0 characterization records close. AI, provider-backed sync, connectors, and executable extensions are not active in this foundation; manual Vault portability and provider-neutral sync contracts remain available behind explicit seams. The current MVP nucleus is evidence-backed only by local browser smoke; it is not a release claim.
 
 ## Development
 
