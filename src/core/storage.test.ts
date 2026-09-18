@@ -154,6 +154,36 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("exports a read-only recovery snapshot when canonical state is malformed", async () => {
+    const databaseName = `omnevum-test-${Date.now()}-recovery-snapshot`;
+    const store = new CanonicalStore(databaseName);
+    await store.open();
+    const original = record("record-recovery-snapshot");
+    await store.put(original);
+
+    const request = indexedDB.open(databaseName, 6);
+    const database = await new Promise<IDBDatabase>((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error ?? new Error("IndexedDB open failed"));
+    });
+    const transaction = database.transaction("records", "readwrite");
+    transaction.objectStore("records").put({ id: "broken-record", recordType: "note" });
+    await new Promise<void>((resolve, reject) => {
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error ?? new Error("IndexedDB corruption injection failed"));
+      transaction.onabort = () => reject(transaction.error ?? new Error("IndexedDB corruption injection aborted"));
+    });
+    database.close();
+
+    await expect(store.exportVault()).rejects.toThrow("Invalid canonical record");
+    const retainedState = await store.exportRetainedState();
+    if (retainedState.format !== "OMNEVUM_RECOVERY_SNAPSHOT") throw new Error("Expected a recovery snapshot");
+    expect(retainedState.summary).toEqual({ recordCount: 2, validRecordCount: 1, invalidRecordCount: 1, historyCount: 1, validHistoryCount: 1, invalidHistoryCount: 0, artifactPayloadCount: 0, skippedArtifactPayloadCount: 0 });
+    expect(retainedState.records).toEqual(expect.arrayContaining([original, { id: "broken-record", recordType: "note" }]));
+    expect(await store.get(original.id)).toEqual(original);
+    store.close();
+  });
+
   it("reclaims only derived state under injected quota pressure and exposes persistence state", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-quota-pressure`, {
       estimateStorage: async () => ({ usageBytes: 90, quotaBytes: 100 }),

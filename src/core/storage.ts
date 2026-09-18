@@ -57,6 +57,26 @@ export interface VaultImportPreview {
   hasPresentation: boolean;
 }
 
+export interface RecoverySnapshot {
+  format: "OMNEVUM_RECOVERY_SNAPSHOT";
+  version: 1;
+  exportedAt: string;
+  records: unknown[];
+  history: unknown[];
+  artifacts: VaultArtifact[];
+  presentation?: unknown;
+  summary: {
+    recordCount: number;
+    validRecordCount: number;
+    invalidRecordCount: number;
+    historyCount: number;
+    validHistoryCount: number;
+    invalidHistoryCount: number;
+    artifactPayloadCount: number;
+    skippedArtifactPayloadCount: number;
+  };
+}
+
 type PersistenceState = "GRANTED" | "DENIED" | "UNAVAILABLE";
 
 export class CanonicalStore {
@@ -311,6 +331,53 @@ export class CanonicalStore {
     });
   }
 
+  public async exportRetainedState(): Promise<VaultDocument | RecoverySnapshot> {
+    try {
+      return await this.exportVault();
+    } catch {
+      return this.exportRecoverySnapshot();
+    }
+  }
+
+  private async exportRecoverySnapshot(): Promise<RecoverySnapshot> {
+    const database = this.requireDatabase();
+    const [records, history] = await Promise.all([
+      requestResult(database.transaction(RECORD_STORE, "readonly").objectStore(RECORD_STORE).getAll()),
+      requestResult(database.transaction(HISTORY_STORE, "readonly").objectStore(HISTORY_STORE).getAll())
+    ]);
+    const artifacts: VaultArtifact[] = [];
+    let skippedArtifactPayloadCount = 0;
+    for (const candidate of records) {
+      if (!isRawArtifactRecord(candidate)) continue;
+      const blob = await this.getArtifact(candidate.id);
+      if (!blob || blob.size > MAX_PORTABLE_ARTIFACT_BYTES) {
+        skippedArtifactPayloadCount += 1;
+        continue;
+      }
+      artifacts.push({ id: candidate.id, mimeType: rawArtifactMimeType(candidate, blob), dataBase64: await blobToBase64(blob) });
+    }
+    const presentation = await this.getSetting<unknown>("presentation");
+    return {
+      format: "OMNEVUM_RECOVERY_SNAPSHOT",
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      records,
+      history,
+      artifacts,
+      ...(presentation === undefined ? {} : { presentation: structuredClone(presentation) }),
+      summary: {
+        recordCount: records.length,
+        validRecordCount: records.filter(isCanonicalRecord).length,
+        invalidRecordCount: records.filter((record) => !isCanonicalRecord(record)).length,
+        historyCount: history.length,
+        validHistoryCount: history.filter(isHistoryEntry).length,
+        invalidHistoryCount: history.filter((entry) => !isHistoryEntry(entry)).length,
+        artifactPayloadCount: artifacts.length,
+        skippedArtifactPayloadCount
+      }
+    };
+  }
+
   public async previewVault(input: unknown): Promise<VaultImportPreview> {
     const vault = await this.validateVaultInput(input);
     const existing = new Map((await this.list(true)).map((record) => [record.id, record]));
@@ -528,6 +595,16 @@ function storageWriteError(error: unknown): Error {
   const name = error && typeof error === "object" && "name" in error ? String((error as { name?: unknown }).name) : "";
   if (name === "QuotaExceededError") return new Error("Storage quota is exhausted. Export a Vault, then retry after replaceable state is reclaimed.");
   return error instanceof Error ? error : new Error("IndexedDB write failed");
+}
+
+function isRawArtifactRecord(value: unknown): value is { id: string; recordType: "artifact"; data?: unknown } {
+  return typeof value === "object" && value !== null && !Array.isArray(value) && typeof (value as { id?: unknown }).id === "string" && (value as { id: string }).id.length > 0 && (value as { id: string }).id.length <= 160 && (value as { recordType?: unknown }).recordType === "artifact";
+}
+
+function rawArtifactMimeType(candidate: { data?: unknown }, blob: Blob): string {
+  const data = candidate.data;
+  const mimeType = data && typeof data === "object" && !Array.isArray(data) ? (data as { mimeType?: unknown }).mimeType : undefined;
+  return typeof mimeType === "string" && mimeType.length > 0 && mimeType.length <= 255 ? mimeType : blob.type || "application/octet-stream";
 }
 
 function importDisposition(record: CanonicalRecord, current: CanonicalRecord | undefined): "IMPORT" | "SKIP" | "CONFLICT" {

@@ -35,6 +35,8 @@ The current `npm run ci` build at source revision `11ebcac` (artifact digest `b7
 
 This is reproducible local Chromium/static-preview evidence for the integrated MVP path only. It does not qualify GitHub Pages, other browser families, WCAG conformance, native quota exhaustion, cross-origin browser-family recovery, external providers, or release readiness.
 
+The current recovery regression also covers the failed-open boundary: malformed raw canonical state cannot be exported as a falsely valid Vault, while the failure shell can offer a bounded read-only recovery snapshot that preserves retained raw records/history for repair. The current run is `112` passing tests across `40` files; browser-native corruption and migration interruption remain open.
+
 ## Still open
 
 Richer Time/Track schemas, cross-domain visualization beyond summary counts, actual provider-backed external effects, durable credential/key brokering, browser/accessibility matrix, native quota/canonical-migration fault injection, and all applicable acceptance scenarios remain unqualified. Artifact ingestion is bounded and Vault-tested, but broader parser/extraction and target qualification remain open. The completion ledger remains `IN_PROGRESS`.

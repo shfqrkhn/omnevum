@@ -227,8 +227,12 @@
         "line": 3420
       },
       "text": "One first-party module fails during startup/runtime; Home/System/Recovery and unrelated modules remain usable.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/capability-runtime.test.ts",
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+      ],
+      "notes": "The capability runtime isolates a failing optional module while core startup remains usable in deterministic tests and the current built preview. Native failure matrices and broader target qualification remain open."
     },
     {
       "id": "OMN-ACC-017",
@@ -239,9 +243,11 @@
       "text": "An update/migration is intentionally interrupted. Omnevum does not silently reset data and offers a tested recovery/repair path.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#service-worker-update-rollback-rehearsal"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#service-worker-update-rollback-rehearsal",
+        "src/core/storage.test.ts#exports-a-read-only-recovery-snapshot-when-canonical-state-is-malformed",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#recovery-snapshot-follow-up"
       ],
-      "notes": "Local static Chromium service-worker update/rollback is rehearsed; canonical migration interruption and production deployment remain open."
+      "notes": "Local static Chromium service-worker update/rollback and malformed-state recovery snapshot are covered; canonical migration interruption, repair tooling, and production deployment remain open."
     },
     {
       "id": "OMN-ACC-018",
