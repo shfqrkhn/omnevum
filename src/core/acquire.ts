@@ -113,7 +113,7 @@ function candidateFromRow(row: unknown, source: AcquireSource, sequence: number)
   const object = typeof row === "object" && row !== null && !Array.isArray(row) ? row as Record<string, unknown> : { value: row };
   const rawType = typeof object.type === "string" ? object.type.toLowerCase() : "";
   const rawKind = typeof object.kind === "string" ? object.kind.toLowerCase() : "";
-  const recordType: RecordType = rawType === "task" || rawKind === "task" ? "task" : rawType === "observation" || rawType === "measurement" || rawKind === "measurement" || rawKind === "workout" || rawKind === "expense" ? "observation" : "note";
+  const recordType: RecordType = rawType === "artifact" || ["file", "image", "source"].includes(rawKind) ? "artifact" : rawType === "task" || rawKind === "task" ? "task" : rawType === "observation" || rawType === "measurement" || ["measurement", "workout", "expense", "event", "place", "location"].includes(rawType) || ["measurement", "workout", "expense", "event", "place", "location"].includes(rawKind) ? "observation" : "note";
   const kind = captureKind(object, recordType);
   const text = firstText(object) ?? JSON.stringify(row) ?? "Imported record";
   const sourceFields = scrubSensitiveValue(Object.fromEntries(Object.entries(object).slice(0, 50))) as Record<string, unknown>;
@@ -131,7 +131,7 @@ function candidateFromRow(row: unknown, source: AcquireSource, sequence: number)
     sourceId: `${source.sourceId}:${sequence}`,
     sequence,
     recordType,
-    owner: ownerForKind(kind),
+    owner: ownerForRow(object, kind),
     kind,
     data,
     confidence: rawType || typeof object.text === "string" ? "HIGH" : "REVIEW",
@@ -152,6 +152,13 @@ function ownerForKind(kind: CaptureKind): string {
   if (kind === "event") return "platform.time";
   if (kind === "file" || kind === "image" || kind === "source") return "platform.artifact";
   return "core.acquire";
+}
+
+function ownerForRow(object: Record<string, unknown>, kind: CaptureKind): string {
+  const declared = [object.type, object.kind].find((value): value is string => typeof value === "string")?.toLowerCase();
+  if (declared === "event") return "platform.time";
+  if (declared === "place" || declared === "location") return "platform.place";
+  return ownerForKind(kind);
 }
 
 function firstText(object: Record<string, unknown>): string | undefined {

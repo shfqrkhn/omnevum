@@ -13,6 +13,23 @@ describe("Acquire/Ingest", () => {
     expect(preview.candidates[0]?.data.sourceFields).toBeDefined();
   });
 
+  it("routes heterogeneous event, artifact, and location candidates to existing owners", async () => {
+    const preview = await stageText(JSON.stringify([
+      { type: "event", title: "Trip start", start: "2026-09-18T09:00:00Z" },
+      { type: "artifact", name: "receipt.pdf", mimeType: "application/pdf" },
+      { type: "location", name: "Home", latitude: 45.42, longitude: -75.69 },
+      { type: "person", name: "Ada" }
+    ]), { name: "heterogeneous-export.json", mimeType: "application/json" });
+    expect(preview.candidates.map((candidate) => [candidate.recordType, candidate.owner])).toEqual([
+      ["observation", "platform.time"],
+      ["artifact", "platform.artifact"],
+      ["observation", "platform.place"],
+      ["note", "core.acquire"]
+    ]);
+    expect(preview.candidates.every((candidate) => candidate.data.sourceId === preview.source.sourceId)).toBe(true);
+    expect(preview.candidates.map((candidate) => candidate.sequence)).toEqual([1, 2, 3, 4]);
+  });
+
   it("accepts candidates through the command owner and makes repetition idempotent", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-acquire`);
     await store.open();
