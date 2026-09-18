@@ -147,3 +147,9 @@ The exact `npm run ci` artifact at source revision `b1ffa19` (artifact digest `4
 - Browser diagnostics returned no warning/error console entries.
 
 This qualifies the provider-neutral pull/merge/push seam and its localhost development exception only. Production requires HTTPS; consumer-cloud/self-host provider qualification, authentication/key brokering, external security, offline interruption/rejoin behavior, browser-level tombstone reconciliation, and release readiness remain open. No canonical user data or credential was sent to a third party.
+
+## Current built-artifact offline follow-up
+
+The same exact artifact at source revision `b1ffa19` (digest `4dcdb2d8414248de3e128c2db29da3952633b18ab134c2644d01121016dc26a6`, worker cache `omnevum-shell-60930e9e8eb3697c`) was exercised on the fresh `http://localhost:4213/` origin. After the shell loaded, CDP network emulation was set offline; the browser created `Offline receipt note`, reloaded, retained two active canonical records, and reported a healthy derived search index. Network emulation was then restored. The browser returned no warning/error console entries.
+
+This strengthens local Chromium offline mutation/reload evidence only. GitHub Pages execution, other browser families, assistive technology, native quota/corruption/migration interruption, and explicit degradation of network-dependent optional capabilities remain open.

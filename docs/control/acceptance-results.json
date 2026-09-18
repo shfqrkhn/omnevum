@@ -59,9 +59,10 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#fresh-origin-offline-workflow",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#stamped-worker-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#stamped-worker-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-offline-follow-up"
       ],
-      "notes": "A fresh local static origin reloaded the cached shell offline, created a canonical note offline, and preserved both notes after network restoration. GitHub Pages, other browser families, and explicit network-capability degradation still require qualification."
+      "notes": "A fresh local static origin reloaded the cached shell offline, created a canonical note offline, and preserved both notes after network restoration; the current receipt-bound artifact repeats that mutation/reload with a healthy derived index and no browser warning/error logs. GitHub Pages, other browser families, and explicit network-capability degradation still require qualification."
     },
     {
       "id": "OMN-ACC-003",
