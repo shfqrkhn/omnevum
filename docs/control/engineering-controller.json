@@ -100,6 +100,7 @@
     "CanonicalStore emits exact metadata-only cross-tab invalidations for canonical, setting, and effect writes; the UI refreshes external canonical changes and reloads external presentation changes; source ac6f754",
     "current receipt-bound Chromium two-tab preview on the ac6f754 artifact shows canonical capture, user-defined Space creation, membership projection, zero warning/error logs, and clean-origin recovery; source ac6f754",
     "EffectRunner claims pending/reconciliation operations with an IndexedDB status compare-and-set so concurrent runners cannot execute one pending operation twice; source 3b4a11b",
+    "CredentialKeyBroker.authorizeEffect is the canonical guard for credential-bound EffectRunner operations, and revocation cancels a pending operation before executor use; source 7986327",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [

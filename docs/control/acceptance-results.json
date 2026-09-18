@@ -1005,12 +1005,13 @@
       "evidence": [
         "src/core/credential.ts",
         "src/core/credential.test.ts",
+        "src/core/effect-runner.test.ts#cancels-a-pending-brokered-operation-after-the-credential-is-revoked",
         "src/core/sync-routes.test.ts",
         "src/core/security-contracts.test.ts",
         "docs/control/credential-key-policy.json",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-effectoutbox-and-credential-boundary-follow-up"
       ],
-      "notes": "The session-only broker exposes secret-free metadata, bounds secret callbacks, rejects raw credential fields in effect payloads, and revokes/clears handles. Persisted connector integration, diagnostics/Vault/AI-context exclusion, pending-effect invalidation after revocation, and target qualification remain open."
+      "notes": "The session-only broker exposes secret-free metadata, bounds secret callbacks, rejects raw credential fields in effect payloads, exposes the canonical EffectRunner authorization seam, and cancels a pending brokered operation after revocation before executor use. Persisted connector integration, diagnostics/Vault/AI-context exclusion, shipped authority/Space/destination revalidation, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-071",
