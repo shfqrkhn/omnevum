@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "4408ac329277aa9db97e202dc1f58ced5c8b772750139ed87c5336f3fd997acc"
+      "sha256": "0062e5b4d0e78105948f4be0ffa9aad21c0495c973eac8533d030d2e64d070f8"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -349,16 +349,18 @@
         "line": 3430
       },
       "text": "The engineering run is interrupted mid-project and a fresh agent resumes from repository/control state without the original conversation or repeated owner questions.",
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/control/recovery-bundle.json",
         "scripts/recovery-audit.mjs",
         "scripts/fresh-agent-resume-benchmark.mjs",
+        "scripts/factory-interruption-benchmark.mjs",
+        "src/core/factory-interruption.test.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-integrity-manifested-engineering-recovery-bundle-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-checkout-fresh-agent-resume-benchmark-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-receipt-bound-edge-factory-qualification-follow-up"
       ],
-      "notes": "The generated integrity-manifested Recovery bundle references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths. The fresh-agent benchmark creates a detached clean worktree, runs npm ci, recovery audit, and the complete CI gate without conversation state, and verifies cleanup; the manifest verifies current file hashes plus an exact retained Git revision. The browser factory surface is now receipt-bound, but the intentionally interrupted nontrivial app/game benchmark remains open."
+      "notes": "The generated integrity-manifested Recovery bundle references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths. The clean-checkout benchmark now runs the two-process factory interruption fixture: a nontrivial app and deterministic game persist a Vault/game checkpoint, stop at the explicit interruption marker, then resume from repository/control state in a fresh process and verify canonical IDs/status plus game seed/state. The worktree is removed after the complete CI and interruption/resume gates."
     },
     {
       "id": "OMN-ACC-022",
