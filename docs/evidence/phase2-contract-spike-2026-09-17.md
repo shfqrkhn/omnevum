@@ -7,7 +7,7 @@ Status: CONTRACT_SPIKE; no provider, target, release, or human-acceptance claim
 
 - Command: `npm run typecheck`
 - Command: `npm test -- --reporter=verbose`
-- Result: PASS; 38 test files and 99 tests passed in the local repository environment.
+- Result: PASS; 39 test files and 100 tests passed in the local repository environment.
 - The suite includes `src/core/crypto.test.ts`, `src/core/remote.test.ts`, `src/core/sync.test.ts`, `src/core/sync-routes.test.ts`, `src/core/effect-runner.test.ts`, `src/core/credential.test.ts`, `src/core/ai.test.ts`, `src/core/migration.test.ts`, `src/core/package-contract.test.ts`, `src/core/game.test.ts`, `src/core/automation.test.ts`, and `src/core/extension-policy.test.ts`.
 
 ## Established by the spike

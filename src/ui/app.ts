@@ -12,8 +12,10 @@ import type { CanonicalStore } from "../core/storage";
 import { captureExpense, captureHealthMeasurement } from "../core/workflows";
 import { projectDataset } from "../core/data";
 import { countRecords, groupCounts } from "../core/analysis";
+import type { CapabilityRuntime } from "../core/capability-runtime";
+import { SpaceService } from "../core/space";
 
-export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus): Promise<void> {
+export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
   let presentation: PresentationProfile = parsePresentationProfile(rawPresentation);
   const copy = getUiCopy(presentation.locale);
@@ -39,7 +41,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <h2 id="status-heading">${copy.ready}</h2>
         <p id="health-status" role="status">${copy.healthInitial}</p>
         </div>
-        <span class="status-pill">${copy.local}</span>
+         <span id="capability-status" class="status-pill">${copy.local}</span>
       </section>
 
       <section id="home-summary" class="panel" aria-labelledby="summary-heading">
@@ -202,6 +204,30 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </form>
       </section>
 
+      <section id="spaces" class="panel" aria-labelledby="spaces-heading">
+        <p class="eyebrow">${copy.space}</p>
+        <h2 id="spaces-heading">${copy.scopeWithoutCopying}</h2>
+        <form id="space-form" class="relationship-form">
+          <label for="space-record">${copy.assignToSpace}</label>
+          <select id="space-record" name="record"></select>
+          <label for="space-membership">${copy.addMembership}</label>
+          <select id="space-membership" name="space">
+            <option value="personal">${copy.personal}</option>
+            <option value="household">${copy.household}</option>
+            <option value="work">${copy.work}</option>
+          </select>
+          <button id="space-submit" type="submit">${copy.addMembership}</button>
+          <p id="space-status" class="hint" role="status"></p>
+        </form>
+        <label for="space-filter">${copy.filterSpace}</label>
+        <select id="space-filter" name="filter">
+          <option value="">${copy.allSpaces}</option>
+          <option value="personal">${copy.personal}</option>
+          <option value="household">${copy.household}</option>
+          <option value="work">${copy.work}</option>
+        </select>
+      </section>
+
       <section id="review" class="panel" aria-labelledby="review-heading">
         <div class="section-heading">
           <div>
@@ -330,6 +356,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const searchQuery = root.querySelector<HTMLInputElement>("#search-query");
   const clearSearch = root.querySelector<HTMLButtonElement>("#clear-search");
   const searchStatus = root.querySelector<HTMLElement>("#search-status");
+  const spaceForm = root.querySelector<HTMLFormElement>("#space-form");
+  const spaceRecord = root.querySelector<HTMLSelectElement>("#space-record");
+  const spaceMembership = root.querySelector<HTMLSelectElement>("#space-membership");
+  const spaceFilter = root.querySelector<HTMLSelectElement>("#space-filter");
+  const spaceStatus = root.querySelector<HTMLElement>("#space-status");
   const summaryTotal = root.querySelector<HTMLElement>("#summary-total");
   const analysisStatus = root.querySelector<HTMLElement>("#analysis-status");
   const summaryGrid = root.querySelector<HTMLElement>("#summary-grid");
@@ -364,6 +395,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const archiveEmpty = root.querySelector<HTMLParagraphElement>("#archive-empty");
   const recoveryStatus = root.querySelector<HTMLElement>("#recovery-status");
   const healthStatus = root.querySelector<HTMLElement>("#health-status");
+  const capabilityStatus = root.querySelector<HTMLElement>("#capability-status");
   const themeToggle = root.querySelector<HTMLButtonElement>("#theme-toggle");
   const exportButton = root.querySelector<HTMLButtonElement>("#export-vault");
   const encryptedExportButton = root.querySelector<HTMLButtonElement>("#export-encrypted");
@@ -373,7 +405,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
 
@@ -382,7 +414,19 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (sharedInput) acquireText.value = sharedInput.slice(0, 5 * 1024 * 1024);
 
   const trackService = new TrackService(store, commands);
+  const spaceService = new SpaceService(store, commands);
   let stagedCandidates: AcquireCandidate[] = [];
+  let activeSpace: SpaceId | undefined;
+
+  const scopedRecords = async (includeDeleted = false): Promise<Awaited<ReturnType<CanonicalStore["list"]>>> => {
+    const records = await store.list(includeDeleted);
+    const visible = activeSpace ? await spaceService.project(records, activeSpace) : records;
+    return visible.filter((record) => record.owner !== "platform.space");
+  };
+
+  const degradedCapabilities = (capabilityRuntime?.snapshot() ?? []).filter((status) => status.state === "DEGRADED");
+  capabilityStatus.textContent = degradedCapabilities.length === 0 ? copy.local : `${copy.local} - ${degradedCapabilities.length} degraded`;
+  capabilityStatus.title = degradedCapabilities.length === 0 ? "Core capabilities are ready." : degradedCapabilities.map((status) => `${status.id}: ${status.reason ?? "degraded"}`).join("; ");
 
   productLabel.textContent = `${presentation.productName} ${copy.foundation}`;
   productName.value = presentation.productName;
@@ -394,8 +438,22 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const typeLabel = (recordType: string): string => recordType === "task" ? copy.task : recordType === "observation" ? copy.observation : recordType === "artifact" ? copy.attachArtifact : recordType === "relationship" ? copy.relationship : copy.note;
   const spaceLabel = (space: SpaceId): string => space === "household" ? copy.household : space === "work" ? copy.work : copy.personal;
 
+  const renderSpaceChoices = async (): Promise<void> => {
+    const records = (await store.list()).filter((record) => record.owner !== "platform.space");
+    const previous = spaceRecord.value;
+    spaceRecord.replaceChildren();
+    for (const record of records) {
+      const option = document.createElement("option");
+      option.value = record.id;
+      option.textContent = `${typeLabel(record.recordType)}: ${recordText(record).slice(0, 70)}`;
+      spaceRecord.append(option);
+    }
+    if (records.some((record) => record.id === previous)) spaceRecord.value = previous;
+    spaceForm.querySelector("button[type=submit]")?.toggleAttribute("disabled", records.length === 0);
+  };
+
   const renderSummary = async (): Promise<void> => {
-    const records = await store.list();
+    const records = await scopedRecords();
     summaryTotal.textContent = formatNumber(presentation.locale, records.length);
     const count = countRecords(records);
     const dataset = projectDataset(records, ["recordType", "owner", "modifiedAt"]);
@@ -457,7 +515,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   };
 
   const renderReview = async (): Promise<void> => {
-    const records = (await store.list()).filter((record) => recordTriageStatus(record) === "INBOX");
+    const records = (await scopedRecords()).filter((record) => recordTriageStatus(record) === "INBOX");
     reviewList.replaceChildren();
     reviewCount.textContent = formatNumber(presentation.locale, records.length);
     reviewEmpty.hidden = records.length > 0;
@@ -501,7 +559,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   };
 
   const renderArchived = async (): Promise<void> => {
-    const records = (await store.list(true)).filter((record) => record.deleted).sort((left, right) => right.modifiedAt.localeCompare(left.modifiedAt));
+    const records = (await scopedRecords(true)).filter((record) => record.deleted).sort((left, right) => right.modifiedAt.localeCompare(left.modifiedAt));
     archiveList.replaceChildren();
     archiveEmpty.hidden = records.length > 0;
     for (const record of records) {
@@ -533,7 +591,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   };
 
   const renderRecords = async (query = ""): Promise<void> => {
-    const records = query.trim() ? await store.search(query) : await store.list();
+    const candidateRecords = query.trim() ? await store.search(query) : await store.list();
+    const records = activeSpace ? (await spaceService.project(candidateRecords, activeSpace)).filter((record) => record.owner !== "platform.space") : candidateRecords.filter((record) => record.owner !== "platform.space");
     recordList.replaceChildren();
     recordCount.textContent = formatNumber(presentation.locale, records.length);
     emptyState.hidden = records.length > 0;
@@ -597,6 +656,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
     await renderSummary();
     await renderReview();
+    await renderSpaceChoices();
     await renderRelationshipChoices();
     const healthBefore = await store.health();
     if (!healthBefore.searchIndexValid) await store.rebuildSearchIndex();
@@ -751,6 +811,30 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     } catch (error) {
       searchStatus.textContent = describeError(error, "Search failed; canonical data was not changed.");
     }
+  });
+
+  spaceForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const selectedSpace = spaceMembership.value === "household" || spaceMembership.value === "work" ? spaceMembership.value : "personal";
+    if (!spaceRecord.value) {
+      spaceStatus.textContent = copy.capturePicture;
+      return;
+    }
+    try {
+      await spaceService.add(spaceRecord.value, selectedSpace);
+      spaceStatus.textContent = copy.membershipCreated(spaceLabel(selectedSpace));
+      activeSpace = selectedSpace;
+      spaceFilter.value = selectedSpace;
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      spaceStatus.textContent = describeError(error, "Space membership was not created; canonical records were not changed.");
+    }
+  });
+
+  spaceFilter.addEventListener("change", async () => {
+    activeSpace = spaceFilter.value === "household" || spaceFilter.value === "work" ? spaceFilter.value : spaceFilter.value === "personal" ? "personal" : undefined;
+    spaceStatus.textContent = activeSpace ? `Showing ${spaceLabel(activeSpace)} records.` : copy.showingAll;
+    await renderRecords(searchQuery.value);
   });
 
   relateForm.addEventListener("submit", async (event) => {

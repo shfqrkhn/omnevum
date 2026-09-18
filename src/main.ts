@@ -1,6 +1,7 @@
 import "./styles.css";
 import { CommandBus } from "./core/commands";
 import { CanonicalStore } from "./core/storage";
+import { CapabilityRuntime } from "./core/capability-runtime";
 import { mountApp } from "./ui/app";
 
 const root = document.querySelector<HTMLElement>("#app");
@@ -10,7 +11,13 @@ const store = new CanonicalStore();
 try {
   await store.open();
   const commands = new CommandBus(store);
-  await mountApp(root, store, commands);
+  const capabilityRuntime = new CapabilityRuntime([
+    { id: "core.canonical", critical: true, start: async () => { await store.health(); } },
+    { id: "core.search", start: async () => { await store.getSearchHealth(); } },
+    { id: "core.recovery", critical: true, start: async () => { await store.exportDiagnostics(); } }
+  ]);
+  await capabilityRuntime.start(undefined);
+  await mountApp(root, store, commands, capabilityRuntime);
 
   if ("serviceWorker" in navigator) {
     void navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(() => {

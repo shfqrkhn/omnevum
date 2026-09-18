@@ -28,7 +28,10 @@
     "equal-revision semantic Vault conflicts are detected and reported",
     "durable Effect/Outbox runner recovers interrupted operations through explicit reconciliation",
     "bounded quantitative Track/Observe capture and derived Home signals are implemented",
-    "99 unit tests pass across 38 test files after the recovery/localization/effect/contract hardening increment"
+    "multilingual derived Search is selected behind the rebuildable index owner",
+    "Space membership/filter UI preserves one canonical record across multiple scopes",
+    "capability startup/runtime failures are isolated behind the platform runtime",
+    "103 unit tests pass across 40 test files after the Space and capability-isolation increment"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad decision beyond the recorded harvest-reference route",
