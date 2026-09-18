@@ -46,6 +46,7 @@
     "current exact-artifact Chromium offline profile captures, searches, reloads, and retains a canonical record with a healthy derived index and empty browser warning/error log",
     "current exact-artifact Edge offline profile captures, searches, reloads, and retains a canonical record with a healthy derived index and empty app-origin warning/error log",
     "current clean-agent benchmark at d1cc1ea passes npm ci, Recovery audit, full CI, and two-process factory interruption/resume with no original conversation",
+    "current Chromium source-module MiniSearch benchmark covers 10,000 multilingual documents with p95 40.9 ms and minimum 2,500 matches",
     "Vault merge preview validates integrity and conflict outcomes without mutation",
     "boot recovery exports a bounded read-only raw-state snapshot when malformed canonical state prevents a portable Vault",
     "boot recovery offers an explicit repair-from-snapshot path that retains valid canonical records and marks derived search state for rebuild",
