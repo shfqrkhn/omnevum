@@ -22,7 +22,7 @@
     {"id": "compose-view", "phase": 1, "owner": "platform.compose", "status": "IMPLEMENTED_PERSISTED_NATIVE_DASHBOARD"},
     {"id": "effect-outbox", "phase": 1, "owner": "platform.effect-outbox", "status": "IMPLEMENTED_INITIAL_RUNNER"},
     {"id": "device-input", "phase": 1, "owner": "platform.device-input", "status": "IMPLEMENTED_FILE_CLIPBOARD_BOUNDED"},
-    {"id": "presentation-i18n", "phase": 1, "owner": "platform.presentation", "status": "IMPLEMENTED_SAFE_MODE"},
+    {"id": "presentation-i18n", "phase": 1, "owner": "platform.presentation", "status": "IMPLEMENTED_PERSONALIZABLE_PROFILE_SAFE_MODE"},
     {"id": "capability-runtime", "phase": 0, "owner": "platform.runtime", "status": "IMPLEMENTED_FAILURE_ISOLATION"},
     {"id": "vault-recovery", "phase": 1, "owner": "platform.vault", "status": "IMPLEMENTED_INITIAL"},
     {"id": "sync", "phase": 2, "owner": "platform.sync", "status": "CONTRACT_SPIKE_IMPLEMENTED_PROVIDER_NEUTRAL"},

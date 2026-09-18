@@ -71,7 +71,8 @@
     "scoped CanonicalStore search applies authorized IDs before derived-index tokenization and the UI derives those IDs from Space projection; vector/analytical/external permission invalidation remains open",
     "shared AI broker tests cover distinct core.capture/core.track workflows without domain-owned credentials and reject unadmitted commands, authority-shaped arguments, and out-of-scope record IDs; provider/process/browser qualification remains open; source 5fc9486",
     "optional ToolBroker validates changed endpoint schemas, explicit scrubbed context, proposal-only admitted semantic actions, malicious output, and disconnect degradation; source tool-broker.ts",
-    "current Acquire mapping tests retain one heterogeneous source identity and route event/artifact/location-shaped candidates to existing Time/Artifact/Place owners without a universal import store; source db7f8f6"
+    "current Acquire mapping tests retain one heterogeneous source identity and route event/artifact/location-shaped candidates to existing Time/Artifact/Place owners without a universal import store; source db7f8f6",
+    "current built-artifact Chromium preview proves bounded declarative presentation personalization for branding, terminology, navigation visibility/order controls, Home composition, density, typeface, icon treatment, reload persistence, Recovery reachability, and unchanged canonical counts; source 307470e"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",
@@ -86,6 +87,7 @@
     "remote share delivery/effect use, provider ACL interaction, stale-share reconciliation, and cross-target disclosure qualification",
     "mixed-language Vault import/summary and AI/tool language-neutral semantic-ID qualification",
     "provider-backed or consumer-cloud sync, transport authentication/credential-key brokering, offline rejoin UI, and external-effect replay evidence",
+    "presentation target/accessibility breadth, icon/logo assets, installed-host metadata behavior, and profile import/export compatibility",
     "MVP release and later phases"
   ],
   "nextAction": "No Git remote is configured in this workspace, so Pages deployment proof is blocked until the owner supplies/configures the intended remote. Until then, run the Phase 0 support/accessibility/offline/update and native fault-injection matrix locally, including failed-open repair and recovery-snapshot handling; keep MiniSearch adapter qualification open and do not treat workflow configuration or local preview as deployment proof.",
