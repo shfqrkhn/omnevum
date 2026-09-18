@@ -241,3 +241,11 @@ The current `npm run ci` artifact at source revision `310d278` is bound in `docs
 The regression `src/core/storage.test.ts#commits-a-canonical-write-batch-atomically-when-a-later-revision-check-fails` proves a candidate record and stale source update leave neither new canonical data nor history after the batch aborts. The existing triage command regressions continue to prove idempotent link/split behavior, source provenance, archived staging state, and explicit delete disposition; the full CI gate passed with `41` test files and `130` tests.
 
 This establishes the bounded local IndexedDB atomicity and revision-fencing contract. It does not qualify native storage-engine fault injection, quota/corruption interruption during a compound transaction, cross-tab concurrency beyond the revision fence, deployment, broader target qualification, or release readiness.
+
+## Current built-artifact proposal-only triage follow-up
+
+The current `npm run ci` artifact at source revision `0aaa935` is bound in `docs/control/release-evidence.json` by artifact digest `97c65727fe2863352de6409771626e6c82d66a75a147844ae96286b9f21109bd`; its stamped service-worker cache is `omnevum-shell-bad679538cfe033d`. The universal inbox now renders a deterministic proposal projection from the raw canonical source: possible owner(s), possible type(s), and admitted action(s). The projection is explicitly non-committing and is not an AI or canonical-write path.
+
+On a fresh origin at `http://127.0.0.1:4226/` in the Codex In-app Browser Chromium surface, an `Ambiguous proposal sentinel: note this and follow up` capture remained a single active revision-1 inbox record. The review surface visibly reported: `Proposal only - possible owner(s): core.capture; type(s): Note, Task; action(s): Mark reviewed, Clarify, Defer, Keep as reference, Create link, Route, Split, Delete. No canonical state changed.` Health reported `1 active, 0 archived, 1 revision snapshot(s), 0 artifact payload(s); search index healthy.`
+
+This binds the proposal-only guidance and no-silent-commit boundary to the current built artifact. It does not qualify AI classification, richer owner/domain inference, batch triage, broader accessibility/target coverage, or release readiness.
