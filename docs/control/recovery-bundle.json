@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "0c6230f7ed79bdfb8c6d092c3c7c9200c6b47354e0876a7a3c3bc42af044feba"
+      "sha256": "17bee739ed8ec04881a32b4ba1c1a5cb3ea04e3fef4bdb3c1f1de19312452502"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -129,12 +129,12 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "5809504657c277d4b785ae583d43906f4f85f7c6ac17e38508187fdc3d351a2f",
-        "bytes": 93631
+        "sha256": "a6506a10a38429266994ed975141be285de3b02bd04bd839d0861ecb9a339442",
+        "bytes": 93766
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
-        "sha256": "098c946ace0b93321e6ee975079c971899a4aec0c43250a287621e9bc55f1352",
+        "sha256": "3008d3035350a80acca53a2aff57ab85121051e06a2792e404b094d57aa385c0",
         "bytes": 48979
       },
       {
@@ -154,8 +154,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "bfab7ae0a383eab3df808d64d430585d5e1d7a82dd858f6cf590932a72f46dc8",
-        "bytes": 2237
+        "sha256": "8e68edd05f5eb04f59f18fc883430bd85c1cc2707fb775c0fa66d70449dc0a0f",
+        "bytes": 2264
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -174,7 +174,7 @@
       },
       {
         "path": "docs/control/dependency-sbom.json",
-        "sha256": "2532d68ff82a7e1a1d6191a0091e429bcc87b5e0051e5a35eb1d199ea0486dd9",
+        "sha256": "6b5e373d1802da2a0cf575aefb652af25aa9721918b5afa887f77efa72f78368",
         "bytes": 35282
       },
       {
@@ -184,8 +184,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "d2732d603bd123454e0d385192ba1f3beb2f61fae636d08e63fd4c37cb5c4afa",
-        "bytes": 21421
+        "sha256": "4f0de2383dbc12fd773e733459ceacf308dbe9615319a34f4169fc9d531aa9e9",
+        "bytes": 21673
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/requirements.json",
-        "sha256": "e9446cf7ae6f72c008765950f8cf0238f72fc7651d4a0b90c0b2adc7b39fcc1e",
+        "sha256": "0f24364c88fdfac9cdb5149a3749fb2ff89b3dfeb1b72d782774f6fa089cef94",
         "bytes": 262325
       },
       {
@@ -264,8 +264,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "d79223e245c89b6a975cb4124912a2807a6254eaa72ec27a0783600a0c50cfef",
-        "bytes": 111324
+        "sha256": "fdc182a82f729c904ceebf8c0631c8404e3785bbb0e765295d0eb8a0189185d4",
+        "bytes": 113532
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -299,8 +299,8 @@
       },
       {
         "path": "package.json",
-        "sha256": "0c6230f7ed79bdfb8c6d092c3c7c9200c6b47354e0876a7a3c3bc42af044feba",
-        "bytes": 1607
+        "sha256": "17bee739ed8ec04881a32b4ba1c1a5cb3ea04e3fef4bdb3c1f1de19312452502",
+        "bytes": 1680
       },
       {
         "path": "public/icon.svg",
@@ -328,9 +328,19 @@
         "bytes": 2446
       },
       {
+        "path": "scripts/effect-loopback-core.d.mts",
+        "sha256": "8777062e5739cc7b0737160b272e41a261e6be2b6058c97656082e19d2ab354e",
+        "bytes": 471
+      },
+      {
+        "path": "scripts/effect-loopback-core.mjs",
+        "sha256": "03bdce70a713b44e5b1f10527fd4bcab88b996a681ed08a86c7722e1d553cb23",
+        "bytes": 3310
+      },
+      {
         "path": "scripts/effect-loopback-fixture.mjs",
-        "sha256": "1478efcc52fb3fbc2ef3be98b070904c0bc4e840eb0f7bb997b6c81fb1fcfce5",
-        "bytes": 3256
+        "sha256": "d7bb2067d52c104b8d4ee53331ec5bec1794bbc38f03eaf56c575ea6234d12aa",
+        "bytes": 865
       },
       {
         "path": "scripts/generate-control.mjs",
@@ -341,6 +351,11 @@
         "path": "scripts/license-audit.mjs",
         "sha256": "be9fb5c6978f33a44e99386811cf62aa19a47937a8334976d3c72ee4fc6797c9",
         "bytes": 3401
+      },
+      {
+        "path": "scripts/preview-effect-fixture.mjs",
+        "sha256": "a9e5aab9d3267fe8f89b44bfeb85da5ba9cb370b9e84796f7ed8365f6ee5c260",
+        "bytes": 981
       },
       {
         "path": "scripts/recovery-audit.mjs",
@@ -864,8 +879,8 @@
       },
       {
         "path": "vite.config.ts",
-        "sha256": "83ac80174fc459f926f5dd2fbf03a1fd26ed73f0d0c4ea99e22ee6d9478ae141",
-        "bytes": 287
+        "sha256": "f6a94cc26b5571d6bae118c61f27ed38d77215f2eb263061b9201823f0cad1bc",
+        "bytes": 1192
       }
     ]
   }

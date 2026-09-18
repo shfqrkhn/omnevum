@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "0c6230f7ed79bdfb8c6d092c3c7c9200c6b47354e0876a7a3c3bc42af044feba"
+      "sha256": "17bee739ed8ec04881a32b4ba1c1a5cb3ea04e3fef4bdb3c1f1de19312452502"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -991,9 +991,10 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-provider-neutral-effectoutbox-endpoint-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-effectoutbox-startup-recovery-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-repository-owned-effectoutbox-loopback-fixture-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-accessible-effect-confirmation-and-browser-network-boundary-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-accessible-effect-confirmation-and-browser-network-boundary-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-same-origin-browser-effectoutbox-reconciliation-follow-up"
       ],
-      "notes": "The platform runner plus the provider-neutral JsonEndpointEffectExecutor prove crash recovery through OUTCOME_UNKNOWN/RECONCILE, no-blind-replay behavior, persisted exponential backoff, maxAttempts terminal exhaustion, expiry, guard denial, bounded effect storage, idempotency headers, secret-free payloads, brokered authorization, bounded HTTP classification, and an IndexedDB status compare-and-set that prevents concurrent runners from executing one pending operation twice. The shipped app now lets a user stage one typed external action locally with persisted authority/permission/Space/disclosure/schema context, preserves it across reload without automatic network execution, routes explicit runs only to the exact persisted destination, revalidates the current context before executor use, and visibly promotes an ambiguous attempt to RECONCILE. The accessible app-owned confirmation dialog and CORS-capable loopback fixture are now receipt-bound, while the browser bridge still reaches neither local fixture port. A real localhost loopback fixture proves response loss followed by idempotent reconciliation with one POST and one GET. Browser-side post-revocation, provider/remote success and duplicate-outcome receipts, browser/process restart with a live adapter, credentialed shipped connector integration, and broader target evidence remain open."
+      "notes": "The platform runner plus the provider-neutral JsonEndpointEffectExecutor prove crash recovery through OUTCOME_UNKNOWN/RECONCILE, no-blind-replay behavior, persisted exponential backoff, maxAttempts terminal exhaustion, expiry, guard denial, bounded effect storage, idempotency headers, secret-free payloads, brokered authorization, bounded HTTP classification, and an IndexedDB status compare-and-set that prevents concurrent runners from executing one pending operation twice. The shipped app now lets a user stage one typed external action locally with persisted authority/permission/Space/disclosure/schema context, preserves it across reload without automatic network execution, routes explicit runs only to the exact persisted destination, revalidates the current context before executor use, and visibly promotes an ambiguous attempt to RECONCILE. The accessible app-owned confirmation dialog and CORS-capable loopback fixture are receipt-bound. A same-origin Edge preview now reaches the opt-in fixture and proves one response-lost POST followed by one idempotency-key reconciliation with one POST, one creation, and no duplicate creation. Browser-side post-revocation, provider/remote success and duplicate-outcome receipts, browser/process restart with a live adapter, credentialed shipped connector integration, and broader target evidence remain open."
     },
     {
       "id": "OMN-ACC-068",
