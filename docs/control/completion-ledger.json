@@ -15,5 +15,5 @@
     {"id": "COMPOSABLE_WORKFLOWS_READY", "phase": 7, "status": "NOT_STARTED", "blockers": ["bounded automation security evidence"]},
     {"id": "EXTENSIBLE_ECOSYSTEM_READY", "phase": 8, "status": "NOT_STARTED", "blockers": ["real isolation qualification"]}
   ],
-  "next": "Close Phase 0 using the now-shipped explicit Effect/Outbox staging path and persisted authorization-context guard plus exact candidate characterization, frozen support/MVP profiles, and reproducible browser/security/recovery evidence; next qualify browser-side post-revocation, credentialed connector and live duplicate-outcome fixtures, native/browser accessibility and offline matrices, and deployment before starting the Phase 1 daily vertical slice."
+  "next": "Close Phase 0 using the now-shipped explicit Effect/Outbox staging path, persisted authorization-context guard, repository-owned loopback fixture, exact candidate characterization, frozen support/MVP profiles, and reproducible browser/security/recovery evidence; next qualify browser-side post-revocation, complete the native confirmation path for a live duplicate-outcome fixture, credentialed connector integration, native/browser accessibility and offline matrices, and deployment before starting the Phase 1 daily vertical slice."
 }
