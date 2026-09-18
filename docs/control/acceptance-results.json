@@ -487,9 +487,10 @@
         "src/core/storage.test.ts#preserves-a-bounded-artifact-payload-through-vault-export-and-restore",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-artifact-multi-reference-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-artifact-attachment-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-artifact-attachment-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-artifact-attachment-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-bounded-artifact-adapter-and-acquire-inspection-follow-up"
       ],
-      "notes": "Source/unit evidence proves one canonical Artifact payload can be referenced by two relationship records and survive derived search-index rebuild plus Vault payload round-trip. The current Chromium artifact accepts a 37-byte fixture through the visible file chooser, retains one platform.artifact record plus one payload, exposes the same record through shared selectors, and returns to a clean scoped origin. Preview/OCR/PDF/image adapters, heavy-work cancellation/resource bounds, hostile rendering, and target qualification remain open."
+      "notes": "Source/unit evidence proves one canonical Artifact payload can be referenced by two relationship records, survive derived search-index rebuild plus Vault payload round-trip, and now retain bounded PDF/image/HTML adapter metadata and DERIVED inert text where available. The current Chromium artifact accepts a 37-byte fixture through the visible file chooser, retains one platform.artifact record plus one payload, exposes the same record through shared selectors, and returns to a clean scoped origin. Real preview/OCR/thumbnail adapters, heavy-work cancellation under browser pressure, hostile rendering, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-033",
@@ -631,9 +632,10 @@
       "evidence": [
         "src/core/annotation.test.ts",
         "src/core/artifact.test.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-source-meaning-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-source-meaning-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-bounded-artifact-adapter-and-acquire-inspection-follow-up"
       ],
-      "notes": "Artifact provenance and separate source-linked annotation records are exercised locally, including active-anchor status; external Web/document preservation, derived extraction rebuild, and target qualification remain open."
+      "notes": "Artifact provenance and separate source-linked annotation records are exercised locally, including active-anchor status; bounded inert HTML extraction now exists without active-content execution. External Web/document preservation, standard/portable snapshot policy, derived extraction/thumbnail rebuild, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-045",
@@ -713,8 +715,16 @@
         "line": 3488
       },
       "text": "Artifact/Acquire processes representative PDF, CSV, image metadata, and OCR-capable inputs through qualified browser-native adapters. Large/heavy work is cancellable/resource-bounded, original source identity/provenance is preserved, derived output is marked DERIVED, and hostile extracted/HTML content cannot execute active behavior.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/artifact.ts",
+        "src/core/artifact.test.ts#inspects-PDF-metadata-without-executing-active-actions-and-keeps-OCR-explicitly-unavailable",
+        "src/core/artifact.test.ts#extracts-bounded-image-metadata-and-inert-HTML-text-without-decoding-pixels-or-executing-markup",
+        "src/core/artifact.test.ts#honors-cancellation-before-inspection-work-begins",
+        "src/core/acquire.test.ts#stages-a-PDF-as-one-source-preserving-Artifact-candidate-and-retains-its-payload-on-acceptance",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-bounded-artifact-adapter-and-acquire-inspection-follow-up"
+      ],
+      "notes": "Source/unit evidence now proves bounded PDF metadata/action rejection, PNG dimensions without pixel decoding, inert HTML extraction with DERIVED text, explicit OCR NOT_CONFIGURED state, cancellation before inspection, source digest/provenance, payload retention, and idempotent PDF Acquire acceptance. Qualified browser-native OCR, PDF text/layout extraction, image OCR/thumbnail generation, large-file streaming, full cancellation/resource qualification, broader hostile-content and target evidence remain open."
     },
     {
       "id": "OMN-ACC-051",
