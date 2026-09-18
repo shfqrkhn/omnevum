@@ -21,3 +21,9 @@ This is an automated metadata/provenance guard, not legal advice or proof of not
 ## Limits
 
 The result is a point-in-time local scan. It does not establish absence of undisclosed vulnerabilities, legal compatibility, upstream availability, workflow supply-chain safety, reproducible builds, signing/attestation, or release readiness. Those gates remain explicit in `docs/control/release-evidence.json` and `docs/control/license-provenance.json`.
+
+## Current declared-dependency currentness follow-up
+
+On 2026-09-18, `npm outdated --json` was run against the committed `package.json`/`package-lock.json` graph and returned `{}`. The result is recorded in `docs/control/currentness-radar.json` as `RADAR-006` with no candidate available for promotion; the installed graph remains bound to the exact lockfile hash and the normal license/security gates still pass.
+
+This qualifies current registry detection for the declared npm graph only. It does not simulate a future major release, a new FOSS entrant, upstream removal, vulnerability response, license obligation review, browser-standard currentness, or provider-terms review; those remain open and release-visible.

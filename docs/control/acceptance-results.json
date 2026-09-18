@@ -379,8 +379,12 @@
         "line": 3432
       },
       "text": "Upstream dependency change is detected, evaluated as a candidate, and either adopted, adapted, deferred, or rejected without silently breaking the released Omnevum contract.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-dependency-check-2026-09-17.md#current-declared-dependency-currentness-follow-up",
+        "docs/control/currentness-radar.json#RADAR-006"
+      ],
+      "notes": "The current declared npm graph was checked with npm outdated and returned no candidate packages, with the exact lockfile, license, security, and control gates still passing. A future changed dependency candidate and isolated adopt/adapt/defer/reject contract run remain open."
     },
     {
       "id": "OMN-ACC-023",
