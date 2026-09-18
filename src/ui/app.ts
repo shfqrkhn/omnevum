@@ -2200,6 +2200,19 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
   });
 
+  const unsubscribeExternalChanges = store.subscribe((change) => {
+    if (change.kind === "SETTING_CHANGED") {
+      if (change.settingId === "presentation") window.location.reload();
+      return;
+    }
+    if (change.kind === "CANONICAL_CHANGED" || change.kind === "STORE_CLEARED") {
+      void renderRecords(searchQuery.value).catch((error) => {
+        recoveryStatus.textContent = describeError(error, "The view could not refresh after an external change.");
+      });
+    }
+  });
+  window.addEventListener("pagehide", unsubscribeExternalChanges, { once: true });
+
   await renderRecords();
 }
 

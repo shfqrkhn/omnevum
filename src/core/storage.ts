@@ -30,6 +30,22 @@ function transactionDone(transaction: IDBTransaction): Promise<void> {
   });
 }
 
+function parseCanonicalStoreChange(value: unknown): CanonicalStoreChange | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const candidate = value as Record<string, unknown>;
+  if (candidate.kind === "STORE_CLEARED" && Object.keys(candidate).length === 1) return { kind: "STORE_CLEARED" };
+  if (candidate.kind === "CANONICAL_CHANGED" && Object.keys(candidate).length === 2 && Array.isArray(candidate.recordIds) && candidate.recordIds.length <= 200 && candidate.recordIds.every((id) => typeof id === "string" && id.length > 0 && id.length <= 200)) {
+    return { kind: "CANONICAL_CHANGED", recordIds: [...candidate.recordIds] as string[] };
+  }
+  if (candidate.kind === "SETTING_CHANGED" && Object.keys(candidate).length === 2 && typeof candidate.settingId === "string" && candidate.settingId.length > 0 && candidate.settingId.length <= 120) {
+    return { kind: "SETTING_CHANGED", settingId: candidate.settingId };
+  }
+  if (candidate.kind === "EFFECT_CHANGED" && Object.keys(candidate).length === 2 && typeof candidate.operationId === "string" && candidate.operationId.length > 0 && candidate.operationId.length <= 200) {
+    return { kind: "EFFECT_CHANGED", operationId: candidate.operationId };
+  }
+  return undefined;
+}
+
 export interface StorageEstimateResult {
   usageBytes: number;
   quotaBytes: number;
@@ -40,6 +56,12 @@ export interface CanonicalStoreOptions {
   estimateStorage?: () => Promise<StorageEstimateResult | undefined>;
   requestPersistentStorage?: () => Promise<boolean | undefined>;
 }
+
+export type CanonicalStoreChange =
+  | { kind: "CANONICAL_CHANGED"; recordIds: string[] }
+  | { kind: "STORE_CLEARED" }
+  | { kind: "SETTING_CHANGED"; settingId: string }
+  | { kind: "EFFECT_CHANGED"; operationId: string };
 
 export interface CanonicalWrite {
   record: CanonicalRecord;
@@ -97,6 +119,8 @@ type PersistenceState = "GRANTED" | "DENIED" | "UNAVAILABLE";
 export class CanonicalStore {
   private database: IDBDatabase | null = null;
   private persistence: PersistenceState = "UNAVAILABLE";
+  private changeChannel: BroadcastChannel | null = null;
+  private readonly changeListeners = new Set<(change: CanonicalStoreChange) => void>();
 
   public constructor(private readonly databaseName = "omnevum-canonical-v1", private readonly options: CanonicalStoreOptions = {}) {}
 
@@ -140,15 +164,25 @@ export class CanonicalStore {
       if (this.database === database) {
         this.database = null;
         this.persistence = "UNAVAILABLE";
+        this.changeChannel?.close();
+        this.changeChannel = null;
       }
     };
     this.database = database;
     this.persistence = await this.requestPersistentStorage();
+    this.openChangeChannel();
   }
 
   public close(): void {
     this.database?.close();
     this.database = null;
+    this.changeChannel?.close();
+    this.changeChannel = null;
+  }
+
+  public subscribe(listener: (change: CanonicalStoreChange) => void): () => void {
+    this.changeListeners.add(listener);
+    return () => this.changeListeners.delete(listener);
   }
 
   public async get(id: string, includeDeleted = false): Promise<CanonicalRecord | undefined> {
@@ -211,6 +245,7 @@ export class CanonicalStore {
       if (revisionConflict) throw new Error("Canonical revision conflict");
       throw storageWriteError(error);
     }
+    this.publishChange({ kind: "CANONICAL_CHANGED", recordIds: writes.map(({ record }) => record.id) });
   }
 
   public async clear(): Promise<void> {
@@ -226,6 +261,7 @@ export class CanonicalStore {
     } catch (error) {
       throw storageWriteError(error);
     }
+    this.publishChange({ kind: "STORE_CLEARED" });
   }
 
   public async history(recordId?: string): Promise<HistoryEntry[]> {
@@ -249,6 +285,7 @@ export class CanonicalStore {
     } catch (error) {
       throw storageWriteError(error);
     }
+    this.publishChange({ kind: "SETTING_CHANGED", settingId: id });
   }
 
   public async getArtifact(id: string): Promise<Blob | undefined> {
@@ -266,6 +303,7 @@ export class CanonicalStore {
     } catch (error) {
       throw storageWriteError(error);
     }
+    this.publishChange({ kind: "EFFECT_CHANGED", operationId: operation.operationId });
   }
 
   public async getEffect(operationId: string): Promise<EffectOperation | undefined> {
@@ -284,6 +322,7 @@ export class CanonicalStore {
     } catch (error) {
       throw storageWriteError(error);
     }
+    this.publishChange({ kind: "EFFECT_CHANGED", operationId: operation.operationId });
   }
 
   public async listEffects(status?: EffectOperation["status"]): Promise<EffectOperation[]> {
@@ -617,6 +656,30 @@ export class CanonicalStore {
     documents.forEach((document) => searchStore.put(document));
     transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: true, rebuiltAt: new Date().toISOString() } satisfies SearchIndexMeta);
     await transactionDone(transaction);
+  }
+
+  private openChangeChannel(): void {
+    if (typeof globalThis.BroadcastChannel !== "function") return;
+    try {
+      const channel = new globalThis.BroadcastChannel(`${this.databaseName}:changes`);
+      channel.onmessage = (event: MessageEvent<unknown>) => {
+        const change = parseCanonicalStoreChange(event.data);
+        if (!change) return;
+        for (const listener of this.changeListeners) listener(change);
+      };
+      this.changeChannel = channel;
+    } catch {
+      // Cross-tab invalidation is optional; canonical persistence remains authoritative.
+      this.changeChannel = null;
+    }
+  }
+
+  private publishChange(change: CanonicalStoreChange): void {
+    try {
+      this.changeChannel?.postMessage(change);
+    } catch {
+      // Cross-tab invalidation is optional; canonical persistence remains authoritative.
+    }
   }
 
   private requireDatabase(): IDBDatabase {

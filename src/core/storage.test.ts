@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { CanonicalRecord } from "./model";
 import type { EffectOperation } from "./effect";
 import { transitionEffect } from "./effect";
-import { CanonicalStore } from "./storage";
+import { CanonicalStore, type CanonicalStoreChange } from "./storage";
 
 function record(id: string, revision = 1): CanonicalRecord {
   const now = new Date().toISOString();
@@ -23,6 +23,28 @@ function record(id: string, revision = 1): CanonicalRecord {
 }
 
 describe("CanonicalStore", () => {
+  it("broadcasts metadata-only canonical changes to another open store without exposing record data", async () => {
+    const databaseName = `omnevum-test-${Date.now()}-changes`;
+    const writer = new CanonicalStore(databaseName);
+    const reader = new CanonicalStore(databaseName);
+    await writer.open();
+    await reader.open();
+    const original = record("record-change");
+    const received = new Promise<CanonicalStoreChange>((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error("Cross-tab change was not received")), 1_000);
+      reader.subscribe((change) => {
+        clearTimeout(timeout);
+        resolve(change);
+      });
+    });
+
+    await writer.put(original);
+    await expect(received).resolves.toEqual({ kind: "CANONICAL_CHANGED", recordIds: [original.id] });
+    await expect(reader.get(original.id)).resolves.toEqual(original);
+    writer.close();
+    reader.close();
+  });
+
   it("persists records and hides tombstones from the visible list", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-visible`);
     await store.open();
