@@ -745,3 +745,9 @@ The storage regressions round-trip `preview.constellation` state through Vault e
 The finalized detached fresh-agent run at source revision `f92fa4ae84aea930be1713c26828897c36c9c8b1` repeated `npm ci`, the Recovery audit, full CI, and the interruption/resume benchmark without the original conversation, reporting `FRESH_AGENT_NPM_CI_PASS`, `FRESH_AGENT_CI_PASS`, `FRESH_AGENT_FACTORY_INTERRUPTION_PASS`, and `FRESH_AGENT_RESUME_PASS` with `clean-clone=true` and `original-conversation=false`.
 
 This qualifies local package-state Recovery integration and interrupted app/game resumption for the shipped deterministic preview. It does not qualify independent fresh-AI creation, physical touch/mobile targets, assistive technology, FOSS engine substitution, native on-device Recovery interaction, deployment, or human acceptance; OMN-ACC-020 remains `PARTIAL`.
+
+## Current package-state lifecycle cleanup follow-up
+
+Source revisions `9eb3c3182a0876c237e0d7130deb4626ddd35882` and `ab78721647c2d801c62b9b34fbad24b39ac4022d` close a lifecycle/privacy regression found after package-state Recovery was added: the user-visible clear-canonical operation now removes package-owned save state together with canonical records, history, artifacts, and effects while intentionally preserving presentation settings, and the confirmation copy names package saves in both claimed locales. `src/core/storage.test.ts` proves the package state is absent after clear and the presentation profile remains.
+
+The exact rebuilt artifact is bound by artifact digest `b7a0f13a18d471ab53e0b5c98a0c4aab21991fe279f07c27fbd4aef04aa67b17` and service-worker cache `omnevum-shell-d5e488ec4d1f56f8`. This is a local lifecycle regression receipt; it does not change the outstanding target, deployment, provider, engine, legal, or human-acceptance gates.
