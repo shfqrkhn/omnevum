@@ -836,9 +836,12 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/acquire.test.ts",
-        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+        "src/core/domain.test.ts#preserves-explicit-triage-states-and-defaults-malformed-values-to-the-inbox",
+        "src/ui/app.ts",
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-triage-follow-up"
       ],
-      "notes": "Built preview and Acquire tests cover staged untrusted candidates, provenance, review, and explicit acceptance; split/route/defer/delete breadth and complete triage UX remain open."
+      "notes": "Explicit review, defer, clarify, and archive actions now use the revision-checked canonical CommandBus path, with localized status labels and unit coverage. Split/link/route/reference breadth, defer scheduling semantics, browser interaction, and complete triage UX remain open."
     },
     {
       "id": "OMN-ACC-066",

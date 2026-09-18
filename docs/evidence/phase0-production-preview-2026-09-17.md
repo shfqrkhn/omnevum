@@ -187,3 +187,9 @@ The current `npm run ci` build at source revision `4eb1436` has artifact digest 
 ## Isolated-origin Vault transfer follow-up
 
 The portable baseline is exercised by `src/core/storage.test.ts#round-trips-a-portable-vault-while-preserving-identity-and-provenance`: separate source and destination `CanonicalStore` databases model isolated browser-private storage, and an integrity-protected `OMNEVUM_VAULT` transfer preserves the canonical ID and provenance without a backend. The current built-artifact MVP receipt also confirms Vault preview/confirmation through the UI. This establishes the core user-mediated transfer contract only; a real two-HTTPS-origin run, materially different browser-family restore, large-Vault limits, and production deployment remain open.
+
+## Current built-artifact triage follow-up
+
+The current `npm run ci` build at source revision `6f604ad` is bound in `docs/control/release-evidence.json` by artifact digest `9cfb201f2fac5419ab1826123df775ffbb3c67f742b5cf81c3ce9eb6ba3ada4d`; its stamped service-worker cache is `omnevum-shell-f88e8dd214dae5cc`. The daily MVP triage surface now presents localized Review, Defer, Clarify, and Archive actions. Review/defer/clarify updates carry the record's expected revision through the canonical CommandBus update path; archive uses the canonical archive command, and failures report that no state change was confirmed. `src/core/domain.test.ts` covers preservation of explicit triage states and fail-safe defaulting of malformed values to the inbox.
+
+This is bounded source/unit and current-artifact evidence only. Browser interaction, split/link/route/reference breadth, defer scheduling semantics, accessibility, and complete triage acceptance remain open.
