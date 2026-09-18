@@ -23,12 +23,13 @@ describe("factory interruption/resume benchmark", () => {
       game.dispatch("move.right");
       game.dispatch("move.right");
       game.dispatch("collect");
-      writeFileSync(checkpointPath, JSON.stringify({ vault: await store.exportVault(), appIds: [first.id, second.id], completedId: completed.id, gameSave: game.save() }), "utf8");
+      await store.setPackageState({ packageId: FACTORY_PREVIEW_GAME.manifest.packageId, schemaVersion: FACTORY_PREVIEW_GAME.manifest.saveSchemaVersion, state: JSON.parse(game.save()) as Record<string, unknown> });
+      writeFileSync(checkpointPath, JSON.stringify({ vault: await store.exportVault(), appIds: [first.id, second.id], completedId: completed.id }), "utf8");
       store.close();
       throw new Error("FACTORY_INTENTIONAL_INTERRUPTION");
     }
     if (phase !== "resume") throw new Error(`Unknown factory benchmark phase: ${phase}`);
-    const checkpoint = JSON.parse(readFileSync(checkpointPath, "utf8")) as { vault: Parameters<CanonicalStore["importVault"]>[0]; appIds: string[]; completedId: string; gameSave: string };
+    const checkpoint = JSON.parse(readFileSync(checkpointPath, "utf8")) as { vault: Parameters<CanonicalStore["importVault"]>[0]; appIds: string[]; completedId: string };
     const definition = createRecordAppDefinition({ manifest: FACTORY_PREVIEW_MANIFEST, title: FACTORY_PREVIEW_APP_TITLE, fields: FACTORY_PREVIEW_FIELDS });
     const store = new CanonicalStore(`omnevum-interruption-resumed-${Date.now()}`);
     await store.open();
@@ -37,7 +38,9 @@ describe("factory interruption/resume benchmark", () => {
     expect(new Set(records.map((record) => record.id))).toEqual(new Set(checkpoint.appIds));
     expect(records.find((record) => record.id === checkpoint.completedId)?.data.status).toBe("DONE");
     const game = FACTORY_PREVIEW_GAME.createSession(factoryPreviewGameAdapter, 999);
-    game.load(checkpoint.gameSave);
+    const packageState = await store.getPackageState(FACTORY_PREVIEW_GAME.manifest.packageId);
+    expect(packageState).toBeDefined();
+    game.load(JSON.stringify(packageState!.state));
     expect(game.snapshot().payload).toMatchObject({ position: 2, stars: 1 });
     expect(game.snapshot().seed).toBe(42);
     store.close();

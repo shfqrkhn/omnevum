@@ -69,6 +69,12 @@ export interface VaultArtifact {
   dataBase64: string;
 }
 
+export interface VaultPackageState {
+  packageId: string;
+  schemaVersion: number;
+  state: Record<string, unknown>;
+}
+
 export interface VaultDocument {
   format: "OMNEVUM_VAULT";
   version: typeof VAULT_FORMAT_VERSION;
@@ -76,6 +82,7 @@ export interface VaultDocument {
   records: CanonicalRecord[];
   history?: HistoryEntry[];
   artifacts?: VaultArtifact[];
+  packageStates?: VaultPackageState[];
   integrity?: { algorithm: "SHA-256"; digest: string };
   presentation?: Record<string, unknown>;
 }

@@ -1,10 +1,10 @@
-import type { CanonicalRecord, HistoryEntry, VaultArtifact, VaultDocument } from "./model";
+import type { CanonicalRecord, HistoryEntry, VaultArtifact, VaultDocument, VaultPackageState } from "./model";
 import { MAX_PORTABLE_ARTIFACT_BYTES } from "./artifact";
 import { VAULT_FORMAT_VERSION } from "./model";
 import { isSearchDocument, makeSearchDocument, SEARCH_INDEX_VERSION, searchDocuments, type SearchDocument, type SearchIndexMeta } from "./search";
 import { assertEffectOperation, type EffectOperation } from "./effect";
 import { withVaultIntegrity, verifyVaultIntegrity } from "./vault";
-import { assertCanonicalRecord, assertVaultDocument, isCanonicalRecord, isHistoryEntry } from "./validation";
+import { assertCanonicalRecord, assertVaultDocument, assertVaultPackageState, isCanonicalRecord, isHistoryEntry, isVaultPackageState, MAX_VAULT_PACKAGE_STATES } from "./validation";
 import { isViewDefinition, VIEW_SETTING } from "./compose";
 
 const RECORD_STORE = "records";
@@ -14,6 +14,7 @@ const HISTORY_STORE = "history";
 const SETTINGS_STORE = "settings";
 const ARTIFACT_STORE = "artifactBlobs";
 const EFFECT_STORE = "effects";
+const PACKAGE_STATE_PREFIX = "packageState:";
 
 function requestResult<T>(request: IDBRequest<T>): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -90,6 +91,7 @@ export interface VaultImportPreview {
   skipped: number;
   conflicts: number;
   hasPresentation: boolean;
+  packageStates: number;
 }
 
 export interface RecoverySnapshot {
@@ -99,6 +101,7 @@ export interface RecoverySnapshot {
   records: unknown[];
   history: unknown[];
   artifacts: VaultArtifact[];
+  packageStates?: VaultPackageState[];
   presentation?: unknown;
   summary: {
     recordCount: number;
@@ -119,6 +122,8 @@ export interface RecoveryRepairResult {
   removedHistory: number;
   retainedArtifactPayloads: number;
   skippedArtifactPayloads: number;
+  retainedPackageStates: number;
+  skippedPackageStates: number;
 }
 
 type PersistenceState = "GRANTED" | "DENIED" | "UNAVAILABLE";
@@ -295,6 +300,24 @@ export class CanonicalStore {
     this.publishChange({ kind: "SETTING_CHANGED", settingId: id });
   }
 
+  public async getPackageState(packageId: string): Promise<VaultPackageState | undefined> {
+    const value = await this.getSetting<unknown>(packageStateSettingId(packageId));
+    return isVaultPackageState(value) ? structuredClone(value) : undefined;
+  }
+
+  public async setPackageState(state: VaultPackageState): Promise<void> {
+    assertVaultPackageState(state);
+    await this.setSetting(packageStateSettingId(state.packageId), structuredClone(state));
+  }
+
+  public async listPackageStates(): Promise<VaultPackageState[]> {
+    const settings = await requestResult(this.requireDatabase().transaction(SETTINGS_STORE, "readonly").objectStore(SETTINGS_STORE).getAll());
+    return settings
+      .filter((setting) => typeof setting?.id === "string" && setting.id.startsWith(PACKAGE_STATE_PREFIX) && isVaultPackageState(setting.value))
+      .map((setting) => structuredClone(setting.value as VaultPackageState))
+      .sort((left, right) => left.packageId.localeCompare(right.packageId));
+  }
+
   public async getArtifact(id: string): Promise<Blob | undefined> {
     const value = await requestResult(this.requireDatabase().transaction(ARTIFACT_STORE, "readonly").objectStore(ARTIFACT_STORE).get(id));
     if (!value || typeof value !== "object" || !("blob" in value) || !(value.blob instanceof Blob)) return undefined;
@@ -420,6 +443,7 @@ export class CanonicalStore {
       artifacts.push({ id: record.id, mimeType, dataBase64: await blobToBase64(blob) });
     }
     const presentation = await this.getSetting<unknown>("presentation");
+    const packageStates = await this.listPackageStates();
     const composeViews = await this.getSetting<unknown>(VIEW_SETTING);
     const presentationOverlay = presentation && typeof presentation === "object" && !Array.isArray(presentation) ? { ...(presentation as Record<string, unknown>) } : {};
     if (Array.isArray(composeViews) && composeViews.length <= 40 && composeViews.every(isViewDefinition)) presentationOverlay.composeViews = structuredClone(composeViews);
@@ -430,6 +454,7 @@ export class CanonicalStore {
       records: await this.list(true),
       history: await this.history(),
       artifacts,
+      ...(packageStates.length > 0 ? { packageStates } : {}),
       ...(Object.keys(presentationOverlay).length > 0 ? { presentation: presentationOverlay } : {})
     });
   }
@@ -465,15 +490,34 @@ export class CanonicalStore {
       }
     }
 
-    const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE], "readwrite");
+    const existingSettings = await requestResult(this.requireDatabase().transaction(SETTINGS_STORE, "readonly").objectStore(SETTINGS_STORE).getAll());
+    const packageSettingIds = existingSettings
+      .filter((setting) => typeof setting?.id === "string" && setting.id.startsWith(PACKAGE_STATE_PREFIX))
+      .map((setting) => setting.id as string);
+    const packageStates: VaultPackageState[] = [];
+    const packageIds = new Set<string>();
+    let skippedPackageStates = 0;
+    for (const candidate of snapshot.packageStates ?? []) {
+      if (!isVaultPackageState(candidate) || packageIds.has(candidate.packageId)) {
+        skippedPackageStates += 1;
+        continue;
+      }
+      packageIds.add(candidate.packageId);
+      packageStates.push(structuredClone(candidate));
+    }
+
+    const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE, SETTINGS_STORE], "readwrite");
     transaction.objectStore(RECORD_STORE).clear();
     transaction.objectStore(SEARCH_STORE).clear();
     transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false, invalidReason: "RECOVERY_REPAIR" } satisfies SearchIndexMeta);
     transaction.objectStore(HISTORY_STORE).clear();
     transaction.objectStore(ARTIFACT_STORE).clear();
+    const settingsStore = transaction.objectStore(SETTINGS_STORE);
+    packageSettingIds.forEach((id) => settingsStore.delete(id));
     records.forEach((record) => transaction.objectStore(RECORD_STORE).put(record));
     history.forEach((entry) => transaction.objectStore(HISTORY_STORE).put(entry));
     artifacts.forEach((artifact) => transaction.objectStore(ARTIFACT_STORE).put(artifact));
+    packageStates.forEach((state) => settingsStore.put({ id: packageStateSettingId(state.packageId), value: state, modifiedAt: new Date().toISOString() }));
     await transactionDone(transaction);
 
     return {
@@ -482,7 +526,9 @@ export class CanonicalStore {
       retainedHistory: history.length,
       removedHistory: snapshot.history.length - history.length,
       retainedArtifactPayloads: artifacts.length,
-      skippedArtifactPayloads
+      skippedArtifactPayloads,
+      retainedPackageStates: packageStates.length,
+      skippedPackageStates
     };
   }
 
@@ -504,6 +550,7 @@ export class CanonicalStore {
       artifacts.push({ id: candidate.id, mimeType: rawArtifactMimeType(candidate, blob), dataBase64: await blobToBase64(blob) });
     }
     const presentation = await this.getSetting<unknown>("presentation");
+    const packageStates = await this.listPackageStates();
     return {
       format: "OMNEVUM_RECOVERY_SNAPSHOT",
       version: 1,
@@ -511,6 +558,7 @@ export class CanonicalStore {
       records,
       history,
       artifacts,
+      ...(packageStates.length > 0 ? { packageStates } : {}),
       ...(presentation === undefined ? {} : { presentation: structuredClone(presentation) }),
       summary: {
         recordCount: records.length,
@@ -537,7 +585,7 @@ export class CanonicalStore {
       else if (disposition === "CONFLICT") conflicts += 1;
       else skipped += 1;
     }
-    return { recordCount: vault.records.length, historyEntries: vault.history?.length ?? 0, artifactPayloads: vault.artifacts?.length ?? 0, imported, skipped, conflicts, hasPresentation: vault.presentation !== undefined };
+    return { recordCount: vault.records.length, historyEntries: vault.history?.length ?? 0, artifactPayloads: vault.artifacts?.length ?? 0, imported, skipped, conflicts, hasPresentation: vault.presentation !== undefined, packageStates: vault.packageStates?.length ?? 0 };
   }
 
   public async importVault(input: unknown): Promise<{ imported: number; skipped: number; conflicts: number }> {
@@ -586,6 +634,9 @@ export class CanonicalStore {
       if (composeViews !== undefined) {
         settingsStore.put({ id: VIEW_SETTING, value: structuredClone(composeViews), modifiedAt: new Date().toISOString() });
       }
+    }
+    for (const state of vault.packageStates ?? []) {
+      settingsStore.put({ id: packageStateSettingId(state.packageId), value: structuredClone(state), modifiedAt: new Date().toISOString() });
     }
     searchMetaStore.put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
     try {
@@ -779,12 +830,14 @@ function rawArtifactMimeType(candidate: { data?: unknown }, blob: Blob): string 
 }
 
 function isRecoverySnapshot(value: unknown): value is RecoverySnapshot {
-  return typeof value === "object" && value !== null && !Array.isArray(value)
-    && (value as { format?: unknown }).format === "OMNEVUM_RECOVERY_SNAPSHOT"
-    && (value as { version?: unknown }).version === 1
-    && Array.isArray((value as { records?: unknown }).records)
-    && Array.isArray((value as { history?: unknown }).history)
-    && Array.isArray((value as { artifacts?: unknown }).artifacts);
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+  const candidate = value as { format?: unknown; version?: unknown; records?: unknown; history?: unknown; artifacts?: unknown; packageStates?: unknown };
+  return candidate.format === "OMNEVUM_RECOVERY_SNAPSHOT"
+    && candidate.version === 1
+    && Array.isArray(candidate.records)
+    && Array.isArray(candidate.history)
+    && Array.isArray(candidate.artifacts)
+    && (candidate.packageStates === undefined || (Array.isArray(candidate.packageStates) && candidate.packageStates.length <= MAX_VAULT_PACKAGE_STATES));
 }
 
 function isRecoveryArtifact(value: unknown): value is VaultArtifact {
@@ -797,6 +850,10 @@ function isRecoveryArtifact(value: unknown): value is VaultArtifact {
     && (value as { mimeType: string }).mimeType.length <= 255
     && typeof (value as { dataBase64?: unknown }).dataBase64 === "string"
     && (value as { dataBase64: string }).dataBase64.length <= Math.ceil(MAX_PORTABLE_ARTIFACT_BYTES / 3) * 4 + 4;
+}
+
+function packageStateSettingId(packageId: string): string {
+  return `${PACKAGE_STATE_PREFIX}${packageId}`;
 }
 
 function importDisposition(record: CanonicalRecord, current: CanonicalRecord | undefined): "IMPORT" | "SKIP" | "CONFLICT" {

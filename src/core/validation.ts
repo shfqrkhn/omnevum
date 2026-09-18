@@ -1,4 +1,4 @@
-import type { CanonicalRecord, HistoryEntry, VaultArtifact, VaultDocument } from "./model";
+import type { CanonicalRecord, HistoryEntry, VaultArtifact, VaultDocument, VaultPackageState } from "./model";
 import { CURRENT_SCHEMA_VERSION, VAULT_FORMAT_VERSION } from "./model";
 
 const recordTypes = new Set(["note", "task", "observation", "relationship", "artifact"]);
@@ -21,6 +21,7 @@ export const MAX_CANONICAL_DATA_KEYS = 200;
 export const MAX_VAULT_RECORDS = 50_000;
 export const MAX_VAULT_HISTORY_ENTRIES = 100_000;
 export const MAX_VAULT_ARTIFACT_TOTAL_BYTES = 50 * 1024 * 1024;
+export const MAX_VAULT_PACKAGE_STATES = 100;
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -110,10 +111,20 @@ export function isVaultArtifact(value: unknown): value is VaultArtifact {
   );
 }
 
+export function isVaultPackageState(value: unknown): value is VaultPackageState {
+  if (!isObject(value)) return false;
+  return typeof value.packageId === "string" && /^[a-z][a-z0-9._-]{1,80}$/.test(value.packageId) && typeof value.schemaVersion === "number" && Number.isSafeInteger(value.schemaVersion) && value.schemaVersion > 0 && isObject(value.state) && isBoundedData(value.state);
+}
+
+export function assertVaultPackageState(value: unknown): asserts value is VaultPackageState {
+  if (!isVaultPackageState(value)) throw new Error("Invalid Vault package state");
+}
+
 export function isVaultDocument(value: unknown): value is VaultDocument {
   if (!isObject(value) || value.format !== "OMNEVUM_VAULT" || value.version !== VAULT_FORMAT_VERSION) return false;
   if (!isTimestamp(value.exportedAt) || !Array.isArray(value.records) || value.records.length > MAX_VAULT_RECORDS || !value.records.every(isCanonicalRecord)) return false;
   if (value.presentation !== undefined && !isObject(value.presentation)) return false;
+  if (value.packageStates !== undefined && (!Array.isArray(value.packageStates) || value.packageStates.length > MAX_VAULT_PACKAGE_STATES || !value.packageStates.every(isVaultPackageState) || new Set(value.packageStates.map((state) => state.packageId)).size !== value.packageStates.length)) return false;
   if (value.integrity !== undefined && (!isObject(value.integrity) || value.integrity.algorithm !== "SHA-256" || typeof value.integrity.digest !== "string" || !/^[a-f0-9]{64}$/i.test(value.integrity.digest))) return false;
   const records = value.records as CanonicalRecord[];
   if (new Set(records.map((record) => record.id)).size !== records.length) return false;

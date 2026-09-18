@@ -1018,17 +1018,27 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       renderFactoryGame();
     });
     factoryGameSave.addEventListener("click", async () => {
-      await store.setSetting("factory.preview.game.save", factoryGameSession.save());
-      factoryGameStatus.textContent = copy.factoryGameSaved;
+      try {
+        const state = JSON.parse(factoryGameSession.save()) as Record<string, unknown>;
+        await store.setPackageState({ packageId: FACTORY_PREVIEW_GAME.manifest.packageId, schemaVersion: FACTORY_PREVIEW_GAME.manifest.saveSchemaVersion, state });
+        factoryGameStatus.textContent = copy.factoryGameSaved;
+      } catch (error) {
+        factoryGameStatus.textContent = describeError(error, "The generated game save was not retained; current state was not changed.");
+      }
     });
     factoryGameLoad.addEventListener("click", async () => {
-      const save = await store.getSetting<string>("factory.preview.game.save");
+      const packageState = await store.getPackageState(FACTORY_PREVIEW_GAME.manifest.packageId);
+      const legacySave = packageState ? undefined : await store.getSetting<string>("factory.preview.game.save");
+      const save = packageState ? JSON.stringify(packageState.state) : legacySave;
       if (!save) {
         factoryGameStatus.textContent = copy.factoryGameLoaded;
         return;
       }
       try {
         factoryGameSession.load(save);
+        if (!packageState && legacySave) {
+          await store.setPackageState({ packageId: FACTORY_PREVIEW_GAME.manifest.packageId, schemaVersion: FACTORY_PREVIEW_GAME.manifest.saveSchemaVersion, state: JSON.parse(legacySave) as Record<string, unknown> });
+        }
         factoryGameStatus.textContent = copy.factoryGameLoaded;
         renderFactoryGame();
       } catch (error) {
@@ -2744,7 +2754,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const parsed: unknown = JSON.parse(text);
       const vault = isEncryptedVaultEnvelope(parsed) ? await decryptVault(parsed, vaultPassword.value) : parseVault(text);
       const preview = await store.previewVault(vault);
-      if (!await requestConfirmation(copy.importPreviewMessage(preview.recordCount, preview.historyEntries, preview.artifactPayloads, preview.imported, preview.skipped, preview.conflicts, preview.hasPresentation), copy.importVault)) {
+      if (!await requestConfirmation(copy.importPreviewMessage(preview.recordCount, preview.historyEntries, preview.artifactPayloads, preview.imported, preview.skipped, preview.conflicts, preview.hasPresentation, preview.packageStates), copy.importVault)) {
         recoveryStatus.textContent = copy.importCancelled;
         return;
       }

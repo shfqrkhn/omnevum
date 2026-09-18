@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isCanonicalRecord, isVaultDocument } from "./validation";
+import { isCanonicalRecord, isVaultDocument, isVaultPackageState } from "./validation";
 import type { CanonicalRecord } from "./model";
 
 function record(overrides: Partial<CanonicalRecord> = {}): CanonicalRecord {
@@ -35,5 +35,12 @@ describe("bounded untrusted record validation", () => {
   it("rejects duplicate record identities in a Vault", () => {
     const first = record();
     expect(isVaultDocument({ format: "OMNEVUM_VAULT", version: 1, exportedAt: new Date().toISOString(), records: [first, { ...first, modifiedAt: new Date().toISOString() }], artifacts: [] })).toBe(false);
+  });
+
+  it("bounds package state identity and payloads", () => {
+    const valid = { packageId: "preview.constellation", schemaVersion: 1, state: { tick: 3, payload: { stars: 1 } } };
+    expect(isVaultPackageState(valid)).toBe(true);
+    expect(isVaultPackageState({ ...valid, packageId: "Bad Package" })).toBe(false);
+    expect(isVaultDocument({ format: "OMNEVUM_VAULT", version: 1, exportedAt: new Date().toISOString(), records: [], packageStates: [valid, valid], artifacts: [] })).toBe(false);
   });
 });

@@ -241,6 +241,8 @@ describe("CanonicalStore", () => {
     await store.open();
     const original = record("record-recovery-repair");
     await store.put(original);
+    const packageState = { packageId: "preview.constellation", schemaVersion: 1, state: { schemaVersion: 1, seed: 42, tick: 3, paused: false, payload: { position: 2, stars: 1 } } };
+    await store.setPackageState(packageState);
 
     const request = indexedDB.open(databaseName, 6);
     const database = await new Promise<IDBDatabase>((resolve, reject) => {
@@ -259,8 +261,9 @@ describe("CanonicalStore", () => {
     const retainedState = await store.exportRetainedState();
     if (retainedState.format !== "OMNEVUM_RECOVERY_SNAPSHOT") throw new Error("Expected a recovery snapshot");
     await expect(store.repairFromRecoverySnapshot({ ...retainedState, records: [{ invalid: true }] })).rejects.toThrow("no valid canonical records");
-    await expect(store.repairFromRecoverySnapshot({ ...retainedState, records: [...retainedState.records, { invalid: true }] })).resolves.toMatchObject({ retainedRecords: 1, removedRecords: 2 });
+    await expect(store.repairFromRecoverySnapshot({ ...retainedState, records: [...retainedState.records, { invalid: true }] })).resolves.toMatchObject({ retainedRecords: 1, removedRecords: 2, retainedPackageStates: 1, skippedPackageStates: 0 });
     expect(await store.list()).toEqual([original]);
+    expect(await store.getPackageState(packageState.packageId)).toEqual(packageState);
     await expect(store.exportVault()).resolves.toMatchObject({ records: [original] });
     store.close();
   });
@@ -372,6 +375,23 @@ describe("CanonicalStore", () => {
     expect(vault.presentation).toEqual({ schemaVersion: 1, productName: "JohnOS", theme: "dark", locale: "en-CA" });
     await destination.importVault(vault);
     expect(await destination.getSetting("presentation")).toEqual(vault.presentation);
+    source.close();
+    destination.close();
+  });
+
+  it("round-trips package state through Vault Recovery", async () => {
+    const source = new CanonicalStore(`omnevum-test-${Date.now()}-package-state-source`);
+    const destination = new CanonicalStore(`omnevum-test-${Date.now()}-package-state-destination`);
+    await source.open();
+    await destination.open();
+    const state = { packageId: "preview.constellation", schemaVersion: 1, state: { schemaVersion: 1, seed: 42, tick: 3, paused: false, payload: { position: 2, stars: 1 } } };
+    await source.setPackageState(state);
+    const vault = await source.exportVault();
+    expect(vault.packageStates).toEqual([state]);
+    expect((await source.previewVault(vault)).packageStates).toBe(1);
+    await destination.importVault(vault);
+    expect(await destination.getPackageState(state.packageId)).toEqual(state);
+    expect(await destination.listPackageStates()).toEqual([state]);
     source.close();
     destination.close();
   });
