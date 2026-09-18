@@ -1158,7 +1158,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
 
   diagnosticsButton.addEventListener("click", async () => {
     try {
-      const diagnostics = await store.exportDiagnostics();
+      const diagnostics = await store.exportDiagnostics({ serviceWorker: await readServiceWorkerDiagnostics() });
       downloadJson("omnevum-diagnostics.json", diagnostics);
       recoveryStatus.textContent = copy.diagnosticsMessage;
     } catch (error) {
@@ -1221,6 +1221,16 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   });
 
   await renderRecords();
+}
+
+async function readServiceWorkerDiagnostics(): Promise<NonNullable<NonNullable<Parameters<CanonicalStore["exportDiagnostics"]>[0]>["serviceWorker"]>> {
+  if (!("serviceWorker" in navigator)) return { status: "UNAVAILABLE", controlled: false, updateWaiting: false };
+  try {
+    const registration = await navigator.serviceWorker.getRegistration("./");
+    return { status: "AVAILABLE", controlled: Boolean(navigator.serviceWorker.controller), ...(registration?.active?.state ? { activeState: registration.active.state } : {}), updateWaiting: Boolean(registration?.waiting) };
+  } catch {
+    return { status: "AVAILABLE", controlled: Boolean(navigator.serviceWorker.controller), updateWaiting: false };
+  }
 }
 
 function downloadJson(fileName: string, value: unknown): void {

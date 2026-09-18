@@ -40,7 +40,8 @@
     "derived-search corruption is detected and rebuilt without changing canonical records",
     "injected storage pressure reclaims only derived state, exposes persistence status, and preserves canonical records",
     "Acquire rejects embedded-credential and oversized URLs and retains hostile-looking text as inert data",
-    "109 unit tests pass across 40 test files after the Acquire security-boundary increment"
+    "privacy-minimized diagnostics expose category-level runtime states without canonical content",
+    "110 unit tests pass across 40 test files after the diagnostics increment"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad decision beyond the recorded harvest-reference route",

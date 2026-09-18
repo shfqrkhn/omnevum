@@ -223,6 +223,29 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("exports category-level diagnostics without canonical content", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-diagnostics`);
+    await store.open();
+    await store.put(record("record-diagnostics"));
+    const diagnostics = await store.exportDiagnostics({
+      release: { status: "IDENTIFIED", version: "test", sourceRevision: "fixture" },
+      serviceWorker: { status: "AVAILABLE", controlled: true, activeState: "activated", updateWaiting: false },
+      packageIntegrity: { status: "VERIFIED", artifactDigest: "digest" }
+    });
+    expect(diagnostics).toMatchObject({
+      format: "OMNEVUM_DIAGNOSTICS",
+      release: { status: "IDENTIFIED", version: "test" },
+      storage: { databaseVersion: 6, recordSchemaVersion: 1, vaultFormatVersion: 1 },
+      backup: { vaultExportable: true, offOriginStatus: "UNKNOWN" },
+      serviceWorker: { status: "AVAILABLE", controlled: true },
+      packageIntegrity: { status: "VERIFIED" },
+      connectors: { status: "NONE_ADMITTED" },
+      sync: { status: "CONTRACT_ONLY" }
+    });
+    expect(JSON.stringify(diagnostics)).not.toContain("record-diagnostics");
+    store.close();
+  });
+
   it("reclaims only the derived search state", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-reclaim`);
     await store.open();

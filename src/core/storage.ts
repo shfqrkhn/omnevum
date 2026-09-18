@@ -41,6 +41,12 @@ export interface CanonicalStoreOptions {
   requestPersistentStorage?: () => Promise<boolean | undefined>;
 }
 
+export interface DiagnosticsRuntimeState {
+  release?: { status: "NOT_PROVIDED" | "IDENTIFIED"; version?: string; sourceRevision?: string; artifactDigest?: string };
+  serviceWorker?: { status: "NOT_PROVIDED" | "AVAILABLE" | "UNAVAILABLE"; controlled: boolean; activeState?: string; updateWaiting: boolean };
+  packageIntegrity?: { status: "NOT_PROVIDED" | "VERIFIED" | "UNVERIFIED"; artifactDigest?: string };
+}
+
 type PersistenceState = "GRANTED" | "DENIED" | "UNAVAILABLE";
 
 export class CanonicalStore {
@@ -372,18 +378,47 @@ export class CanonicalStore {
     return true;
   }
 
-  public async exportDiagnostics(): Promise<{
+  public async exportDiagnostics(runtime: DiagnosticsRuntimeState = {}): Promise<{
     format: "OMNEVUM_DIAGNOSTICS";
     version: 1;
     exportedAt: string;
+    release: NonNullable<DiagnosticsRuntimeState["release"]>;
+    storage: { databaseVersion: 6; recordSchemaVersion: 1; vaultFormatVersion: 1; pressure: "NORMAL" | "ELEVATED" | "UNKNOWN"; persistence: PersistenceState; reclaimedDerivedState: boolean };
+    backup: { vaultExportable: boolean; offOriginStatus: "UNKNOWN" };
+    serviceWorker: NonNullable<DiagnosticsRuntimeState["serviceWorker"]>;
+    packageIntegrity: NonNullable<DiagnosticsRuntimeState["packageIntegrity"]>;
+    connectors: { status: "NONE_ADMITTED" };
+    sync: { status: "CONTRACT_ONLY" };
     health: StoreHealth;
     search: SearchIndexMeta;
   }> {
+    const health = await this.health();
+    let vaultExportable = false;
+    try {
+      await this.exportVault();
+      vaultExportable = true;
+    } catch {
+      vaultExportable = false;
+    }
     return {
       format: "OMNEVUM_DIAGNOSTICS",
       version: 1,
       exportedAt: new Date().toISOString(),
-      health: await this.health(),
+      release: runtime.release ?? { status: "NOT_PROVIDED" },
+      storage: {
+        databaseVersion: 6,
+        recordSchemaVersion: 1,
+        vaultFormatVersion: 1,
+        pressure: health.storage?.pressure ?? "UNKNOWN",
+        persistence: health.storage?.persistence ?? "UNAVAILABLE",
+        reclaimedDerivedState: health.storage?.reclaimedDerivedState ?? false
+      },
+      backup: { vaultExportable, offOriginStatus: "UNKNOWN" },
+      serviceWorker: runtime.serviceWorker ?? { status: "NOT_PROVIDED", controlled: false, updateWaiting: false },
+      packageIntegrity: runtime.packageIntegrity ?? { status: "NOT_PROVIDED" },
+      connectors: { status: "NONE_ADMITTED" },
+      sync: { status: "CONTRACT_ONLY" },
+      health,
       search: await this.getSearchHealth()
     };
   }

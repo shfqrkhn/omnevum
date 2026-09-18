@@ -60,6 +60,10 @@ This is deterministic local fault evidence, not a claim that a real browser quot
 
 Acquire now rejects non-HTTP(S), over-4 KiB, and embedded-credential URLs before staging. The unit path also feeds HTML-looking text plus an `accessToken` field through JSON staging and verifies that the text remains data while the secret-shaped field is removed from retained source fields. This proves the bounded Acquire/parser boundary only; broader sanitizer/active-content, artifact-rendering, external-egress, dependency, and production security qualification remain open.
 
+## Diagnostics follow-up
+
+The privacy-minimized diagnostics export now reports explicit category states for release identity, storage/database/schema versions and pressure, persistence, backup exportability versus unknown off-origin status, service-worker control/update state when the browser supplies it, package-integrity evidence, connectors, and sync. A test fixture verifies that category diagnostics do not include canonical record content. Runtime placeholders remain `NOT_PROVIDED`, `NONE_ADMITTED`, or `CONTRACT_ONLY`; they are not release evidence.
+
 ## Limits
 
 This receipt establishes only a local production-preview activation/offline-reload and update/rollback rehearsal at one Chromium-based browser surface and one mobile viewport, plus deterministic storage fault tests. It does not establish GitHub Pages routing, browser-family support, full responsive/accessibility conformance, native browser quota exhaustion, interrupted canonical migration, or release readiness. Those remain open in the support, risk, and completion registers.
