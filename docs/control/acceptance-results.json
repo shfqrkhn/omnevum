@@ -359,9 +359,10 @@
       "evidence": [
         "src/core/presentation.test.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-personalization-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-metadata-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-metadata-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-profile-portability-follow-up"
       ],
-      "notes": "The current built preview proves bounded declarative branding, terminology, navigation visibility/order controls, Home composition, typeface, icon treatment, density, theme contract, document metadata binding, reload persistence, Recovery reachability, and unchanged canonical counts. Target accessibility/browser breadth, icon/logo assets, installed-host metadata, profile import/export compatibility, and release qualification remain open."
+      "notes": "The current built preview proves bounded declarative branding, terminology, navigation visibility/order controls, Home composition, typeface, icon treatment, density, theme contract, document metadata binding, standalone profile export/import, reload persistence, Recovery reachability, and unchanged canonical counts. Target accessibility/browser breadth, icon/logo assets, installed-host metadata, profile migration across future schemas, and release qualification remain open."
     },
     {
       "id": "OMN-ACC-024",
