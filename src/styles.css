@@ -63,6 +63,9 @@ main > * { min-width: 0; }
 .panel#home-summary { display: grid; gap: 1rem; }
 .panel#home-summary > [data-home-widget] { display: grid; gap: 0.65rem; min-width: 0; }
 .panel#home-summary > [data-home-widget][hidden] { display: none; }
+.onboarding-panel { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.onboarding-steps { display: grid; gap: 0.45rem; margin: 0 0 1rem; padding-left: 1.35rem; }
+.onboarding-start { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
 .panel, .status-card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); padding: 1.25rem; }
 .status-card { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
 .status-card p:last-child { margin-bottom: 0; color: var(--muted); }
