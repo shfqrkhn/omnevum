@@ -410,9 +410,10 @@
       "evidence": [
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-presentation-and-locale-profile-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-presentation-and-locale-profile-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-installed-host-metadata-boundary-follow-up"
       ],
-      "notes": "Local built-preview evidence covers controlled in-app rebranding and persistence; installed metadata behavior and the explicit PLATFORM_LIMITED path remain open."
+      "notes": "Local built-preview evidence covers controlled in-app rebranding, persistence, and the explicit PLATFORM_LIMITED report with a host refresh/re-add/reinstall path; actual installed-host refresh behavior, host breadth, and release qualification remain open."
     },
     {
       "id": "OMN-ACC-025",
