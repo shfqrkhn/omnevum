@@ -35,7 +35,7 @@ The current `npm run ci` build at source revision `11ebcac` (artifact digest `b7
 
 This is reproducible local Chromium/static-preview evidence for the integrated MVP path only. It does not qualify GitHub Pages, other browser families, WCAG conformance, native quota exhaustion, cross-origin browser-family recovery, external providers, or release readiness.
 
-The current artifact also exercises bounded sharing: selected private records remain omitted unless explicit disclosure is enabled, while a purpose-bound share grant can be created, revoked, and retained as revoked after reload. This remains local Chromium evidence; remote delivery/effects, provider ACLs, stale-share reconciliation, and cross-target disclosure are unqualified.
+The current artifact also exercises grant-bound sharing: selected private records remain omitted unless explicit disclosure is enabled, a purpose-bound grant authorizes the projection, revocation disables future export, and the revoked state remains after reload. This remains local Chromium evidence; remote delivery/effects, provider ACLs, stale-share reconciliation, and cross-target disclosure are unqualified.
 
 The current recovery regression also covers the failed-open boundary: malformed raw canonical state cannot be exported as a falsely valid Vault, while the failure shell can offer a bounded read-only recovery snapshot that preserves retained raw records/history for repair. Safe Presentation Mode also selects a known-good profile without rewriting malformed presentation or canonical data, and a stale IndexedDB client is fenced after a version upgrade. The current run is `115` passing tests across `41` files; browser-native corruption and migration interruption remain open.
 

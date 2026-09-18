@@ -118,11 +118,12 @@ This is current local Chromium/static-preview evidence for the source-meaning sl
 
 ## Current built-artifact sharing follow-up
 
-The exact `npm run ci` artifact at source revision `af1590f` (artifact digest `2907c7794861206127626affde73dd009154894a2632b907c946aecb0fb478a2`, worker cache `omnevum-shell-63c93292ad3f262f`) was served on the clean local static origin `http://127.0.0.1:4203/` in the Codex In-app Browser Chromium surface. With synthetic records, the Share / disclose workbench:
+The exact `npm run ci` artifact at source revision `9cf2c13` (artifact digest `f1ec23bd07fede41deb9fd13da9fb8477e8f274a22fee8f582f0485c323dec88`, worker cache `omnevum-shell-fc6bc769dfc8a123`) was served on the clean local static origin `http://127.0.0.1:4206/` in the Codex In-app Browser Chromium surface. With synthetic records, the Share / disclose workbench:
 
 - exported zero records when two private records were selected and the private-inclusion checkbox was off, reporting both omitted records;
 - exported both selected records only after the explicit private-inclusion checkbox was enabled;
-- created a purpose-bound `platform.share` grant for `person:reviewer` and then revoked it through the canonical command path;
-- reloaded with the revoked grant and source records present; no browser warning/error console entries were returned.
+- created a purpose-bound `platform.share` grant for `person:reviewer` covering both selected records;
+- exported zero records until explicit private inclusion was enabled, then exported both records through the selected active grant;
+- revoked the grant through the canonical command path, which disabled future export, then reloaded with the revoked grant and source records present; no browser warning/error console entries were returned.
 
 This is current local Chromium/static-preview evidence for bounded sharing only. It does not qualify remote delivery/effects, provider ACLs, stale-share reconciliation, cross-target disclosure, GitHub Pages deployment, or release readiness.
