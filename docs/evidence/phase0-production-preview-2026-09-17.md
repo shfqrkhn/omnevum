@@ -1047,3 +1047,9 @@ This qualifies current-artifact browser exercise of the exact-duplicate archive 
 At exact detached source revision `7cd1165f8b80921c82a1402985d5240aa779a8c4` on 2026-09-18, `npm run benchmark:fresh-agent` created and removed a clean temporary worktree without the original conversation. It completed `npm ci`, `npm run audit:recovery`, the complete `npm run ci`, and the two-process factory interruption/resume benchmark. The run reported `FRESH_AGENT_NPM_CI_PASS`, `FRESH_AGENT_RECOVERY_AUDIT_PASS`, `FRESH_AGENT_CI_PASS`, `FACTORY_INTERRUPTION_EXPECTED_STOP_PASS`, `FACTORY_INTERRUPTION_RESUME_PASS`, `FRESH_AGENT_FACTORY_INTERRUPTION_PASS`, and `FRESH_AGENT_RESUME_PASS` with `clean-clone=true` and `original-conversation=false`; the clean suite passed with `47` test files, `190` tests passed, and `1` skipped.
 
 This refreshes clean-source reproducibility after the exact-duplicate archive browser receipt. It does not qualify independent fresh-AI authorship, a materially different second agent host, physical touch/mobile hardware, engine substitution, native Recovery-on-device interaction, deployment, or human acceptance; OMN-ACC-019, OMN-ACC-020, and OMN-ACC-077 remain `PARTIAL`/`UNKNOWN` as applicable.
+
+## Current finite extension boundary follow-up
+
+On 2026-09-18, the finite static-core profile was made explicit in decision `OMN-DEC-005`: declarative data-only extensions remain admitted through platform contracts, while executable third-party packages remain disabled until a real isolation model passes the MPES threat model. `src/core/extension-policy.test.ts` proves both branches, and `docs/control/capability-catalogue.json` records `extensions` as `DISABLED_UNQUALIFIED` rather than implying sandbox support.
+
+This resolves the fallback branch of OMN-ACC-082 for the accepted finite profile. It does not claim executable extension support, sandbox security, or Phase 8 candidate qualification; those remain parked until independently qualified.

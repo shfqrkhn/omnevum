@@ -1338,14 +1338,16 @@
         "line": 3552
       },
       "text": "If executable third-party extension support is claimed, a qualified isolation substrate passes adversarial tests for global/prototype escape, network/storage access, CPU/memory abuse, message validation, update revocation and capability leakage. If it does not, the release still supports declarative extensions but truthfully leaves executable third-party packages disabled.",
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "src/core/extension-policy.ts",
         "src/core/extension-policy.test.ts",
         "src/core/package-contract.test.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-finite-extension-boundary-follow-up",
+        "docs/control/decision-log.json"
       ],
-      "notes": "The accepted baseline admits declarative extensions and explicitly disables unqualified executable third-party packages. No executable isolation substrate is claimed; adversarial sandbox, update-revocation, and target qualification remain open if that profile changes."
+      "notes": "The finite accepted profile admits declarative data-only extensions and explicitly disables executable third-party packages. This satisfies the MPES fallback branch without claiming an isolation substrate; executable isolation remains a parked Phase 8 capability and must not be enabled without the separate threat-model evidence in OMN-DEC-005."
     },
     {
       "id": "OMN-ACC-083",

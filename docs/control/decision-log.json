@@ -41,6 +41,16 @@
       "alternatives": ["ambient device APIs in each domain module", "private camera/location database", "new universal device-import subsystem"],
       "revisitWhen": "Permission-denial, hardware capture routing, target breadth, assistive-technology, and human acceptance evidence expose a contract gap.",
       "evidence": ["src/core/device.ts", "src/core/device.test.ts", "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-deviceinput-boundary-follow-up", "docs/evidence/phase0-production-preview-2026-09-17.md#current-in-app-browser-deviceinput-boundary-follow-up"]
+    },
+    {
+      "id": "OMN-DEC-005",
+      "title": "Finite extension boundary",
+      "status": "DECIDED_FOR_PHASE0",
+      "decision": "Admit declarative data-only extensions behind platform contracts; do not claim executable third-party extension support in the finite static-core profile, and keep executable packages disabled until a real isolation model passes the MPES threat model.",
+      "why": "The governing baseline explicitly keeps arbitrary remote trusted code and same-origin untrusted plugins out of scope unless isolation proves authority, resource, update, and revocation boundaries. The implemented policy preserves the safe declarative path without inventing sandbox evidence.",
+      "alternatives": ["claim executable extensions without isolation proof", "disable all extensions", "admit a qualified isolated executable runtime"],
+      "revisitWhen": "A Phase 8 candidate supplies current source/license/provenance and passes adversarial authority-leakage, resource-abuse, message-validation, update-revocation, and target tests.",
+      "evidence": ["src/core/extension-policy.ts", "src/core/extension-policy.test.ts", "docs/control/capability-catalogue.json", "docs/evidence/phase0-production-preview-2026-09-17.md#current-finite-extension-boundary-follow-up"]
     }
   ]
 }
