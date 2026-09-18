@@ -1,5 +1,5 @@
 import { createOpaqueId } from "./id";
-import { MAX_PORTABLE_ARTIFACT_BYTES, sha256Hex, type ArtifactInput } from "./artifact";
+import { MAX_PORTABLE_ARTIFACT_BYTES, sha256Hex, type ArtifactInput, type ArtifactAdapter, type DerivedArtifactText } from "./artifact";
 import type { CanonicalRecord, RecordType } from "./model";
 import { CURRENT_SCHEMA_VERSION } from "./model";
 import { CanonicalStore } from "./storage";
@@ -22,6 +22,9 @@ export interface DerivedArtifactInput {
   mimeType: string;
   blob: Blob;
   space?: string;
+  adapter?: ArtifactAdapter;
+  metadata?: Record<string, unknown>;
+  derivedText?: DerivedArtifactText;
 }
 
 export type TriageRouteTarget = "note" | "task";
@@ -133,7 +136,21 @@ export class CommandBus {
       sensitivity: source.sensitivity,
       revision: 1,
       deleted: false,
-      data: { text: input.fileName, fileName: input.fileName, mimeType: input.mimeType || "application/octet-stream", size: input.blob.size, sha256: await sha256Hex(input.blob), blobRef: id, derivedFrom: { recordId: source.id, revision: source.revision }, operation: input.operation.trim().slice(0, 240), space: input.space ?? source.data.space ?? "personal", triageStatus: "REVIEWED" }
+      data: {
+        text: input.fileName,
+        fileName: input.fileName,
+        mimeType: input.mimeType || "application/octet-stream",
+        size: input.blob.size,
+        sha256: await sha256Hex(input.blob),
+        blobRef: id,
+        derivedFrom: { recordId: source.id, revision: source.revision },
+        operation: input.operation.trim().slice(0, 240),
+        space: input.space ?? source.data.space ?? "personal",
+        triageStatus: "REVIEWED",
+        ...(input.adapter ? { adapter: input.adapter } : {}),
+        ...(input.metadata ? { adapterMetadata: scrubSensitiveValue(input.metadata) } : {}),
+        ...(input.derivedText ? { derivedText: input.derivedText } : {})
+      }
     };
     await this.store.put(record, input.blob);
     return record;

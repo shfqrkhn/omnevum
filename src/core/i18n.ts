@@ -24,7 +24,7 @@ export interface UiCopy {
   taskDone: string; complete: string; undo: string; revertToRevision: (revision: number) => string; archive: string; archivedRecords: string; showArchived: string;
   hideArchived: string; noArchived: string; restore: string; recovery: string; keepPortable: string;
   recoveryHint: string; exportVault: string; exportDiagnostics: string; repairSearch: string; importVault: string;
-  attachArtifact: string; footerPhase0: string; footerOptional: string; themeLight: string; themeDark: string;
+  attachArtifact: string; documentFinishHeading: string; documentFinishSource: string; documentFinishTerms: string; documentFinishReplacement: string; documentFinishSubmit: string; documentFinishHint: string; documentFinishSaved: (name: string, count: number) => string; footerPhase0: string; footerOptional: string; themeLight: string; themeDark: string;
   capturePicture: string; atLeastTwo: string; linkCreated: string; showingAll: string; exportMessage: (count: number) => string;
   diagnosticsMessage: string; searchRepairMessage: string; savedName: (name: string) => string;
   importedMessage: (imported: number, skipped: number, conflicts: number) => string;
@@ -36,6 +36,13 @@ export interface UiCopy {
 }
 
 const english: UiCopy = {
+  documentFinishHeading: "Finish a text Artifact locally",
+  documentFinishSource: "Source Artifact",
+  documentFinishTerms: "Terms to redact (comma-separated)",
+  documentFinishReplacement: "Replacement",
+  documentFinishSubmit: "Create redacted Artifact",
+  documentFinishHint: "Bounded text/inert HTML only. The source payload stays unchanged; this is not a legal or cryptographic signature.",
+  documentFinishSaved: (name, count) => `Created ${name}; redacted ${count} occurrence(s) as a derived Artifact.`,
   revertToRevision: (revision) => `Revert to revision ${revision}`,
   safeDirectRoute: "Safe direct route (explicit)", safeDirectRouteHint: "Use only when this capture is unambiguous; checked records bypass the inbox.", delete: "Delete",
   sources: "Sources / meaning", sourcesHeading: "Keep claims, annotations, and places linked", evidenceHeading: "Link evidence to a claim", subjectRecord: "Claim or subject record", evidenceRelation: "Evidence relation", supports: "Supports", contradicts: "Contradicts", qualifies: "Qualifies", derivesFrom: "Derived from", claim: "Claim", uncertainty: "Uncertainty (optional)", createEvidence: "Save evidence link", evidenceSaved: "Evidence link saved.", annotationHeading: "Annotate a source", annotationQuote: "Quoted source text", annotationNote: "Annotation", createAnnotation: "Save annotation", annotationSaved: "Annotation saved.", quoteMissing: "The quoted text must be present in the selected source.", placeHeading: "Capture a place", placeLabel: "Place label", latitude: "Latitude", longitude: "Longitude", optionalGeoJson: "GeoJSON Point (optional)", savePlace: "Save place", placeSaved: (label) => `Saved ${label} as a place.`, knowledgeStatus: (evidence, annotations, active, stale, orphaned, places) => `${evidence} evidence link(s), ${annotations} annotation(s), ${places} place(s); anchors: ${active} active, ${stale} stale, ${orphaned} orphaned.`, sourceRequired: "Choose a source record.",
@@ -59,6 +66,13 @@ const english: UiCopy = {
 
 const french: UiCopy = {
   ...english,
+  documentFinishHeading: "Finaliser localement un artefact texte",
+  documentFinishSource: "Artefact source",
+  documentFinishTerms: "Termes a redacter (separes par des virgules)",
+  documentFinishReplacement: "Remplacement",
+  documentFinishSubmit: "Creer l artefact redige",
+  documentFinishHint: "Texte/HTML inerte limite seulement. Le payload source reste inchange; ce n est pas une signature legale ou cryptographique.",
+  documentFinishSaved: (name, count) => `${name} cree; ${count} occurrence(s) redactee(s) dans un artefact derive.`,
   revertToRevision: (revision) => `Revenir a la revision ${revision}`,
   exportPresentationProfile: "Exporter le profil", importPresentationProfile: "Importer le profil", presentationProfileExported: "Profil de presentation exporte.", presentationProfileImported: "Profil de presentation importe; les donnees canoniques n'ont pas change.",
   safeDirectRoute: "Route directe sure (explicite)", safeDirectRouteHint: "Utilisez-la seulement si la capture est non ambigue; une capture cochee contourne la boite.", delete: "Supprimer",

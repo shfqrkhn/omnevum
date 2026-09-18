@@ -1,6 +1,7 @@
 import type { CommandBus, TriageRouteTarget, TriageSplitPart } from "../core/commands";
 import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate, type AcquirePreview } from "../core/acquire";
 import { inspectArtifact } from "../core/artifact";
+import { redactTextArtifact } from "../core/document";
 import { isCompletedTask, isSpaceId, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, SPACE_LABELS, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
@@ -517,6 +518,18 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <label class="file-button secondary" for="artifact-input">${copy.attachArtifact}</label>
           <input id="artifact-input" type="file" />
         </div>
+        <form id="document-finish-form" class="relationship-form">
+          <h3>${copy.documentFinishHeading}</h3>
+          <label for="document-finish-source">${copy.documentFinishSource}</label>
+          <select id="document-finish-source" required><option value="">${copy.documentFinishSource}</option></select>
+          <label for="document-finish-terms">${copy.documentFinishTerms}</label>
+          <input id="document-finish-terms" type="text" maxlength="1000" required />
+          <label for="document-finish-replacement">${copy.documentFinishReplacement}</label>
+          <input id="document-finish-replacement" type="text" maxlength="80" value="[REDACTED]" required />
+          <p class="hint">${copy.documentFinishHint}</p>
+          <button type="submit">${copy.documentFinishSubmit}</button>
+          <p id="document-finish-status" class="hint" role="status"></p>
+        </form>
         <label for="vault-password">${recoveryCopy.password}</label>
         <input id="vault-password" type="password" minlength="8" autocomplete="new-password" />
         <p class="hint">${recoveryCopy.passwordHint}</p>
@@ -676,8 +689,16 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
+  const documentFinishForm = root.querySelector<HTMLFormElement>("#document-finish-form");
+  const documentFinishSource = root.querySelector<HTMLSelectElement>("#document-finish-source");
+  const documentFinishTerms = root.querySelector<HTMLInputElement>("#document-finish-terms");
+  const documentFinishReplacement = root.querySelector<HTMLInputElement>("#document-finish-replacement");
+  const documentFinishStatus = root.querySelector<HTMLElement>("#document-finish-status");
   if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
+  }
+  if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
+    throw new Error("Omnevum document-finishing controls are missing");
   }
 
   const sharedParameters = new URLSearchParams(window.location.search);
@@ -918,6 +939,29 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
     if (records.some((record) => record.id === previous)) spaceRecord.value = previous;
     spaceForm.querySelector("button[type=submit]")?.toggleAttribute("disabled", records.length === 0);
+  };
+
+  const renderDocumentFinishChoices = async (): Promise<void> => {
+    const previous = documentFinishSource.value;
+    const artifacts = (await store.list()).filter((record) => {
+      if (record.deleted || record.recordType !== "artifact") return false;
+      const adapter = record.data.adapter;
+      const mimeType = typeof record.data.mimeType === "string" ? record.data.mimeType : "";
+      return adapter === "TEXT" || adapter === "HTML" || (!adapter && mimeType.startsWith("text/"));
+    });
+    documentFinishSource.replaceChildren();
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = copy.documentFinishSource;
+    documentFinishSource.append(placeholder);
+    for (const record of artifacts) {
+      const option = document.createElement("option");
+      option.value = record.id;
+      option.textContent = `${String(record.data.fileName ?? record.id)} (revision ${record.revision})`;
+      documentFinishSource.append(option);
+    }
+    if (artifacts.some((record) => record.id === previous)) documentFinishSource.value = previous;
+    documentFinishForm.querySelector("button[type=submit]")?.toggleAttribute("disabled", artifacts.length === 0);
   };
 
   const renderComposeView = async (): Promise<void> => {
@@ -1523,6 +1567,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       recordList.append(item);
     }
     await renderSpaceChoices();
+    await renderDocumentFinishChoices();
     await renderSummary();
     await renderReview();
     await renderComposeView();
@@ -2121,6 +2166,37 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       recoveryStatus.textContent = error instanceof Error ? error.message : "Artifact intake failed";
     } finally {
       artifactInput.value = "";
+    }
+  });
+
+  documentFinishForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const source = await commands.get(documentFinishSource.value);
+    if (!source || source.recordType !== "artifact" || source.deleted) {
+      documentFinishStatus.textContent = copy.documentFinishSource;
+      return;
+    }
+    try {
+      const payload = await store.getArtifact(source.id);
+      if (!payload) throw new Error("The selected source Artifact payload is unavailable");
+      const result = await redactTextArtifact(payload, String(source.data.fileName ?? "artifact"), String(source.data.mimeType ?? "text/plain"), documentFinishTerms.value.split(","), documentFinishReplacement.value);
+      const derivedText = await result.blob.text();
+      const derived = await commands.createDerivedArtifact({
+        sourceId: source.id,
+        operation: "document-redact-text",
+        fileName: result.fileName,
+        mimeType: result.mimeType,
+        blob: result.blob,
+        ...(typeof source.data.space === "string" ? { space: source.data.space } : {}),
+        adapter: "TEXT",
+        metadata: { sourceAdapter: result.sourceAdapter, sourceSha256: result.sourceSha256, redactedCount: result.redactedCount },
+        derivedText: { truthClass: "DERIVED", operation: "safe-text-extraction", text: derivedText, truncated: false }
+      });
+      documentFinishStatus.textContent = copy.documentFinishSaved(String(derived.data.fileName), result.redactedCount);
+      documentFinishTerms.value = "";
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      documentFinishStatus.textContent = describeError(error, "Document finishing failed; the source Artifact was not changed.");
     }
   });
 
