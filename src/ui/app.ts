@@ -950,6 +950,19 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       });
       splitControls.append(splitType, splitParts, split);
       actions.append(splitControls);
+      const deleteTriage = document.createElement("button");
+      deleteTriage.type = "button";
+      deleteTriage.className = "icon-button danger-button";
+      deleteTriage.textContent = copy.delete;
+      deleteTriage.addEventListener("click", async () => {
+        try {
+          await commands.deleteTriage(record.id, record.revision);
+          await renderRecords(searchQuery.value);
+        } catch (error) {
+          triageStatusMessage.textContent = describeError(error, "Triage delete failed; canonical data was not changed.");
+        }
+      });
+      actions.append(deleteTriage);
       const archive = document.createElement("button");
       archive.type = "button";
       archive.className = "icon-button";

@@ -249,6 +249,14 @@ export class CommandBus {
     return this.update(sourceId, { ...sourceData, triageStatus: "DEFERRED", triageDeferredUntil: new Date(parsed).toISOString() }, expectedRevision ?? source.revision);
   }
 
+  public async deleteTriage(sourceId: string, expectedRevision?: number): Promise<void> {
+    const source = await this.store.get(sourceId, true);
+    if (!source || source.deleted) throw new Error("The triage source must be an active canonical record");
+    if (expectedRevision !== undefined && source.revision !== expectedRevision) throw new RevisionConflictError();
+    const updated = await this.update(sourceId, { ...source.data, triageStatus: "REVIEWED", triageDisposition: "DELETED" }, expectedRevision ?? source.revision);
+    await this.archive(updated.id);
+  }
+
   public async undo(id: string): Promise<CanonicalRecord> {
     const current = await this.store.get(id, true);
     if (!current) throw new Error("Canonical record not found");

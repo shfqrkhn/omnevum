@@ -117,4 +117,17 @@ describe("CommandBus", () => {
     await expect(commands.deferTriage(source.id, "invalid", deferred.revision)).rejects.toThrow("defer time");
     store.close();
   });
+
+  it("records an explicit triage delete disposition before archiving the source for recovery", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-triage-delete`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const source = await commands.create({ recordType: "note", owner: "core.capture", data: { text: "discard me", triageStatus: "INBOX" } });
+    await commands.deleteTriage(source.id, source.revision);
+    const deleted = await store.get(source.id, true);
+    expect(deleted?.deleted).toBe(true);
+    expect(deleted?.data).toMatchObject({ triageStatus: "REVIEWED", triageDisposition: "DELETED" });
+    expect(await store.list()).toEqual([]);
+    store.close();
+  });
 });

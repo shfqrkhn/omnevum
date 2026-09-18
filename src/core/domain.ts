@@ -7,7 +7,7 @@ export const SPACE_LABELS: Record<SpaceId, string> = {
   work: "Work"
 };
 export type TriageStatus = "INBOX" | "REVIEWED" | "DEFERRED" | "CLARIFY";
-export type TriageDisposition = "REFERENCE" | "LINKED" | "ROUTED" | "SPLIT";
+export type TriageDisposition = "REFERENCE" | "LINKED" | "ROUTED" | "SPLIT" | "DELETED";
 
 export function recordText(record: CanonicalRecord): string {
   if (record.recordType === "relationship" && typeof record.data.sourceId === "string" && typeof record.data.targetId === "string") {
@@ -26,7 +26,7 @@ export function recordTriageStatus(record: CanonicalRecord): TriageStatus {
 }
 
 export function recordTriageDisposition(record: CanonicalRecord): TriageDisposition | undefined {
-  return record.data.triageDisposition === "REFERENCE" || record.data.triageDisposition === "LINKED" || record.data.triageDisposition === "ROUTED" || record.data.triageDisposition === "SPLIT" ? record.data.triageDisposition : undefined;
+  return record.data.triageDisposition === "REFERENCE" || record.data.triageDisposition === "LINKED" || record.data.triageDisposition === "ROUTED" || record.data.triageDisposition === "SPLIT" || record.data.triageDisposition === "DELETED" ? record.data.triageDisposition : undefined;
 }
 
 export function recordTriageDeferredUntil(record: CanonicalRecord): string | undefined {

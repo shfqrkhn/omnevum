@@ -22,6 +22,7 @@ describe("domain record projections", () => {
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "LINKED" } })).toBe("LINKED");
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "ROUTED" } })).toBe("ROUTED");
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "SPLIT" } })).toBe("SPLIT");
+    expect(recordTriageDisposition({ ...base, data: { triageDisposition: "DELETED" } })).toBe("DELETED");
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "ROUTE" } })).toBeUndefined();
     expect(recordTriageDeferredUntil({ ...base, data: { triageDeferredUntil: "2030-01-01T00:00:00.000Z" } })).toBe("2030-01-01T00:00:00.000Z");
     expect(recordTriageDeferredUntil({ ...base, data: { triageDeferredUntil: "not-a-time" } })).toBeUndefined();
