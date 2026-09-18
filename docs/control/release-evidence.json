@@ -3,14 +3,14 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "86ed5f9b7b41d712e6a1e2cac69aa7045e4b84ee5aff5f1eed4d01cfeda26a3a", "sourceRevision": "b39aa84"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "79ebb854ce297870be9b8b616785945115c947d372f5b8ee521925449bf82b5c", "sourceRevision": "13c5732"},
   "artifactDigestMethod": "SHA-256 of sorted UTF-8 lines containing each dist relative path, file SHA-256, and byte length; captured after the full npm run ci build on 2026-09-17.",
   "artifactFiles": [
     {"path": "dist/assets/index-DAXu5oS_.css", "sha256": "ae894fbc505f442e1677d67086c158146152bfb6e7101b56f3909ee895311558", "bytes": 5379},
-    {"path": "dist/assets/index-hSPt0T3Z.js", "sha256": "4f559176c4afc56b6b4ed193d01177baa6da9397af20708bb7ce5649f78b928a", "bytes": 81915},
-    {"path": "dist/assets/index-hSPt0T3Z.js.map", "sha256": "473bd1ea9cdff5bc5a49b1327e9440d246a63ce9e3010cfd653516abd458f1fd", "bytes": 220605},
+    {"path": "dist/assets/index-C6qMbURV.js", "sha256": "c7a97aea02d933dcfb67781a4cce5f9be498ca4f8b4f48d9df548b356bdfc812", "bytes": 106101},
+    {"path": "dist/assets/index-C6qMbURV.js.map", "sha256": "15a14dde5e229f527fc7f16d2b96b6724c2a0c520a648e250cc25a1c55fb71ac", "bytes": 342467},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "09fddfe6f29cc0c73b4063433f31dd479c3af46e0c1f50e922a08e6987bb1345", "bytes": 888},
+    {"path": "dist/index.html", "sha256": "fd183ae96a8172b0c1601742c7e6201e7fd8ff90b84f11a532fc639f3171513b", "bytes": 888},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
     {"path": "dist/sw.js", "sha256": "9d850afa056b4791c038e048338e02e226bb61bb8991af43c46047e9eac6202d", "bytes": 1527}
   ],
