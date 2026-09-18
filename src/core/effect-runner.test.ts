@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { EffectOperation } from "./effect";
 import { EffectRunner } from "./effect-runner";
 import { CanonicalStore } from "./storage";
+import { CredentialKeyBroker } from "./credential";
 
 function effect(status: EffectOperation["status"] = "PENDING"): EffectOperation {
   return {
@@ -76,6 +77,21 @@ describe("EffectRunner", () => {
     const results = await runner.runAvailable();
     expect(executions).toBe(0);
     expect(results.map((result) => result.status)).toEqual(["EXPIRED", "CANCELLED"]);
+    store.close();
+  });
+
+  it("cancels a pending brokered operation after the credential is revoked", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-effect-revocation`);
+    await store.open();
+    const broker = new CredentialKeyBroker();
+    const metadata = broker.issue("secret-never-used", { provider: "test", scope: ["write"], audience: "remote" });
+    await store.enqueueEffect({ ...effect(), credentialHandle: metadata.handleId });
+    broker.revoke(metadata.handleId);
+    let executions = 0;
+    const runner = new EffectRunner(store, { execute: async () => { executions += 1; return { outcome: "SUCCEEDED" as const }; } }, { authorize: async (operation) => broker.authorizeEffect(operation) });
+    await expect(runner.runAvailable()).resolves.toMatchObject([{ status: "CANCELLED" }]);
+    expect(executions).toBe(0);
+    expect(await store.getEffect("runner-effect")).toMatchObject({ status: "CANCELLED", evidence: ["effect-guard-denied"] });
     store.close();
   });
 

@@ -1,4 +1,5 @@
 import { createOpaqueId } from "./id";
+import type { EffectOperation } from "./effect";
 
 export interface CredentialMetadata {
   handleId: string;
@@ -34,6 +35,13 @@ export class CredentialKeyBroker {
     const entry = this.secrets.get(handleId);
     if (!entry || entry.metadata.revokedAt) throw new Error("Credential handle is unavailable");
     return callback(entry.secret);
+  }
+
+  public authorizeEffect(operation: Pick<EffectOperation, "credentialHandle" | "purpose" | "destination">): void {
+    if (!operation.credentialHandle) return;
+    const metadata = this.metadata(operation.credentialHandle);
+    if (!metadata || metadata.revokedAt || (metadata.expiresAt !== undefined && Date.parse(metadata.expiresAt) <= Date.now())) throw new Error("Credential handle is revoked, expired, or unavailable");
+    if (!operation.purpose.trim() || !operation.destination.trim()) throw new Error("Credential-bound effect purpose and destination are required");
   }
 
   public revoke(handleId: string): void {
