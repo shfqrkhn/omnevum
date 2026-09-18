@@ -841,7 +841,7 @@
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-triage-follow-up"
       ],
-      "notes": "Explicit review, defer, clarify, and archive actions now use the revision-checked canonical CommandBus path, with localized status labels, unit coverage, and a current-artifact local Chromium interaction receipt. Split/link/route/reference breadth, defer scheduling semantics, broader accessibility/target qualification, and complete triage UX remain open."
+      "notes": "Explicit review, defer, clarify, reference, and archive actions now use the revision-checked canonical CommandBus path, with localized status labels, unit coverage, and current-artifact local Chromium interaction evidence. Split/link/route breadth, defer scheduling semantics, broader accessibility/target qualification, and complete triage UX remain open."
     },
     {
       "id": "OMN-ACC-066",
