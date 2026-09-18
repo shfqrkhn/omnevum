@@ -86,6 +86,7 @@
     "current receipt-bound Chromium preview accepts a synthetic capture, retains it after reload with a healthy derived index, reports no app-origin warnings/errors, and returns to a clean scoped origin; source bd9e242",
     "current receipt-bound Chromium preview activates Safe Presentation Mode after a malformed stored profile, preserves that profile and the canonical record, exposes the exit path, and returns to a clean scoped origin; source c548ccf",
     "current receipt-bound Chromium preview reports Failed to fetch for offline network-dependent sync while retaining local capture/health, then restores network and cleans the scoped origin; source c548ccf",
+    "current receipt-bound Chromium preview attaches a 46-byte fixture through the visible Artifact file chooser, retains one platform.artifact payload, exposes it through shared selectors, and returns to a clean scoped origin; source c548ccf",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [
