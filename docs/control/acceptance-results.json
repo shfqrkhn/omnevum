@@ -45,9 +45,10 @@
       "evidence": [
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-target-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-target-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-current-artifact-capture-follow-up"
       ],
-      "notes": "Fresh local static Chromium evidence covers the core no-account create/reload path; GitHub Pages, supported mobile rows, and full onboarding qualification remain open."
+      "notes": "Fresh local static Chromium and current-artifact Edge evidence cover the core no-account create/reload path; GitHub Pages, supported mobile rows, and full onboarding qualification remain open."
     },
     {
       "id": "OMN-ACC-002",
@@ -65,7 +66,7 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-offline-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-release-offline-follow-up"
       ],
-      "notes": "Fresh local static origins reloaded the cached shell offline, created canonical notes offline, and preserved them after network restoration; current receipt-bound artifacts repeat offline reload in Chromium and Edge with healthy derived indexes and no app-origin warning/error logs, including a current-artifact Edge offline mutation/reload receipt. GitHub Pages, Safari/Firefox, assistive technology, native fault behavior, and explicit network-capability degradation still require qualification."
+      "notes": "Fresh local static origins reloaded the cached shell offline, created canonical notes offline, and preserved them after network restoration; current receipt-bound artifacts repeat offline reload in Chromium and Edge with healthy derived indexes and no app-origin warning/error logs, including current-artifact Edge capture/reload evidence. GitHub Pages, Safari/Firefox, assistive technology, native fault behavior, and explicit network-capability degradation still require qualification."
     },
     {
       "id": "OMN-ACC-003",
@@ -92,9 +93,10 @@
       "evidence": [
         "docs/evidence/phase0-browser-smoke-2026-09-17.md",
         "docs/evidence/phase0-production-preview-2026-09-17.md#phase-0-follow-up-run",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-target-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-target-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-responsive-and-keyboard-follow-up"
       ],
-      "notes": "Theme switching was observed in the development smoke and the production preview exposed the labelled presentation control and complete mobile accessibility tree at 390x844. WCAG conformance and all target rows remain unverified."
+      "notes": "Theme switching was observed in development smoke; current built Edge evidence records the labelled presentation control, 390x844 no-overflow metrics, visible labels, and a sequential keyboard path. WCAG conformance and all target rows remain unverified."
     },
     {
       "id": "OMN-ACC-005",
@@ -354,9 +356,10 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/presentation.test.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-personalization-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-personalization-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-metadata-follow-up"
       ],
-      "notes": "The current built Chromium preview proves bounded declarative branding, terminology, navigation visibility/order controls, Home composition, typeface, icon treatment, density, theme contract, reload persistence, Recovery reachability, and unchanged canonical counts. Target accessibility/browser breadth, icon/logo assets, installed-host metadata, profile import/export compatibility, and release qualification remain open."
+      "notes": "The current built preview proves bounded declarative branding, terminology, navigation visibility/order controls, Home composition, typeface, icon treatment, density, theme contract, document metadata binding, reload persistence, Recovery reachability, and unchanged canonical counts. Target accessibility/browser breadth, icon/logo assets, installed-host metadata, profile import/export compatibility, and release qualification remain open."
     },
     {
       "id": "OMN-ACC-024",
