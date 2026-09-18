@@ -352,9 +352,11 @@
       "evidence": [
         "src/core/factory.ts",
         "src/core/factory-preview.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-receipt-bound-edge-factory-qualification-follow-up"
+        "src/core/storage.ts",
+        "src/core/factory-interruption.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-state-vault-recovery-and-factory-interruption-follow-up"
       ],
-      "notes": "The current browser receipt proves the public game contract, semantic controls, save/load, and desktop rendering. It does not prove independent fresh-AI creation, touch hardware, mobile targets, Recovery integration, or interrupted-agent resumption; those remain open."
+      "notes": "The current browser receipt proves the public game contract, semantic controls, save/load, and desktop rendering; automated storage regressions and the two-process benchmark now prove package-state Vault export/import, Recovery repair retention, and interrupted resumption. Independent fresh-AI creation, touch hardware, mobile targets, engine substitution, native on-device Recovery interaction, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-021",
