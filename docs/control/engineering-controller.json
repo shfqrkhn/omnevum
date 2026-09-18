@@ -47,8 +47,9 @@
     "stale IndexedDB clients are fenced after a version upgrade rather than continuing unsafe reads/writes",
     "GitHub Pages deployment workflow runs the locked CI/build gate and uploads only the built dist artifact; live deployment remains unverified",
     "current receipt-bound built artifact completes Chromium capture, theme, and reload persistence on a fresh local static origin",
-    "114 unit tests pass across 40 test files after the stale-client storage increment",
-    "current built-artifact Chromium preview completes the integrated MVP workflow, localized rebrand/reload, and confirmed Vault merge"
+    "115 unit tests pass across 41 test files after the source-meaning workbench increment",
+    "current built-artifact Chromium preview completes the integrated MVP workflow, localized rebrand/reload, and confirmed Vault merge",
+    "current receipt-bound Chromium preview completes Evidence link creation, quote-validated source annotation, GeoJSON Point Place capture, reload persistence, and zero console warnings/errors"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",
@@ -59,6 +60,7 @@
     "broader security/untrusted-content/credential, active-content, egress, and production boundary evidence",
     "static-host deployment, smoke, and rollback proof",
     "richer Time/Track/Compose capability contracts and target qualification",
+    "heterogeneous Acquire import, GPX/timeline Place reuse, external Web-document preservation, and spatial-analysis qualification",
     "provider-backed sync, credential/key broker, and external-effect replay evidence",
     "MVP release and later phases"
   ],

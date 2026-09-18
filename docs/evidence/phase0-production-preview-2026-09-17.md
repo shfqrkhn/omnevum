@@ -103,3 +103,15 @@ The repository now contains `.github/workflows/pages.yml`, which uses the offici
 ## Current built-artifact target follow-up
 
 The artifact bound by `docs/control/release-evidence.json` (`sourceRevision: 4f0eed0`, digest `4c357ff2ed4efb6fc2602f7708652e548c89b0eac4f50fb9c1160e02f35c5515`, worker cache `omnevum-shell-979360cae1e7c0b4`) was served from `dist/` at `http://127.0.0.1:4201/` in the Codex In-app Browser Chromium surface. A fresh origin loaded the current shell, accepted a synthetic capture, switched the presentation theme, and retained the canonical record and presentation state after reload. This extends local current-artifact evidence only; it does not qualify GitHub Pages, Safari/WebKit, Firefox, assistive technology, native quota, or deployment rollback.
+
+## Current built-artifact source-meaning follow-up
+
+The exact `npm run ci` artifact at source revision `61f9b69` (artifact digest `cd25e878ff7f13d213741fe1857ba8e60fe40415e1c0950f372fde6db9fe63ce`, worker cache `omnevum-shell-e697b98dc82d8ec0`) was served on the clean local static origin `http://127.0.0.1:4202/` in the Codex In-app Browser Chromium surface. With synthetic data, the Source / meaning workbench:
+
+- created two canonical source/subject notes;
+- created an Evidence link through `platform.evidence` without copying either record;
+- rejected an annotation whose quote was absent from the selected source, then created an active source-revision-bound annotation through `platform.annotate`;
+- accepted a GeoJSON `Point`, validated WGS84 coordinates through `platform.place`, and stored one canonical place observation;
+- reloaded the clean origin and retained five active records, one evidence link, one active annotation, and one place; the browser returned no warning/error console entries.
+
+This is current local Chromium/static-preview evidence for the source-meaning slice only. It does not qualify heterogeneous provider import, GPX/timeline reuse, external Web-document preservation, spatial analysis, Safari/Firefox, assistive technology, GitHub Pages deployment, or release readiness.

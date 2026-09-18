@@ -427,8 +427,12 @@
         "line": 3454
       },
       "text": "A location/GPX/GeoJSON import is used by travel/timeline and another domain through shared Place/Geo semantics; disabling location tracking does not remove imported historical data or require continuous surveillance.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/place.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-source-meaning-follow-up"
+      ],
+      "notes": "The current built preview captures a validated GeoJSON Point through the shared Place/Geo owner and preserves it as a canonical observation; GPX/timeline reuse, location-tracking policy, and broader import/target qualification remain open."
     },
     {
       "id": "OMN-ACC-034",
@@ -545,8 +549,13 @@
         "line": 3476
       },
       "text": "Omnevum preserves an external Web/document source as an Artifact with provenance plus a bounded standard/portable snapshot where allowed; derived extraction/thumbnail/index data can be rebuilt while user highlights/annotations remain separate canonical meaning linked to the source.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/annotation.test.ts",
+        "src/core/artifact.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-source-meaning-follow-up"
+      ],
+      "notes": "Artifact provenance and separate source-linked annotation records are exercised locally, including active-anchor status; external Web/document preservation, derived extraction rebuild, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-045",
