@@ -244,8 +244,8 @@
       },
       {
         "path": "docs/control/support-matrix.json",
-        "sha256": "df313d1d528903325f408ec837bda862f4365ab5cf745964f2300f7825641246",
-        "bytes": 2571
+        "sha256": "14b437cda079440f2c99683d40911410edebc806c37b03d6258376cd43910955",
+        "bytes": 2555
       },
       {
         "path": "docs/control/upstream.json",

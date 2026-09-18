@@ -29,7 +29,7 @@
     {"id": "safari-mobile", "family": "Safari/WebKit", "versionPolicy": "supported-current-row-to-freeze", "status": "NOT_RUN"},
     {"id": "firefox-mobile", "family": "Firefox", "versionPolicy": "supported-current-row-to-freeze", "status": "NOT_RUN"},
     {"id": "chromium-desktop", "family": "Chromium desktop", "versionPolicy": "supported-current-row-to-freeze", "status": "PARTIAL_LOCAL_STATIC_PREVIEW", "evidence": "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-narrow-profile-responsive-and-offline-follow-up"},
-    {"id": "edge-desktop", "family": "Microsoft Edge desktop (Chromium)", "versionPolicy": "supported-current-row-to-freeze", "status": "PARTIAL_LOCAL_STATIC_PREVIEW", "evidence": "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-narrow-profile-responsive-and-offline-follow-up"}
+    {"id": "edge-desktop", "family": "Microsoft Edge desktop (Chromium)", "versionPolicy": "supported-current-row-to-freeze", "status": "PARTIAL_LOCAL_STATIC_PREVIEW", "evidence": "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-built-artifact-target-follow-up"}
   ],
   "capabilityColumns": [
     "base-path-routing",
