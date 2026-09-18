@@ -22,6 +22,21 @@ function effect(status: EffectOperation["status"] = "PENDING"): EffectOperation 
 }
 
 describe("EffectRunner", () => {
+  it("recovers interrupted operations on startup without an external adapter", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-startup-recovery`);
+    await store.open();
+    const interrupted = effect("IN_FLIGHT");
+    await store.enqueueEffect(interrupted);
+
+    const recovered = await new EffectRunner(store).recoverInterrupted();
+
+    expect(recovered).toHaveLength(1);
+    expect(recovered[0]?.status).toBe("RECONCILE");
+    expect(recovered[0]?.evidence).toContain("runner-recovered-in-flight");
+    await expect(store.getEffect(interrupted.operationId)).resolves.toMatchObject({ status: "RECONCILE" });
+    store.close();
+  });
+
   it("recovers an interrupted in-flight operation and completes only through reconciliation", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-effect-runner`);
     await store.open();

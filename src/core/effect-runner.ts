@@ -19,7 +19,16 @@ export interface EffectExecutionGuard {
 const runnableStatuses = new Set<EffectOperation["status"]>(["PENDING", "FAILED_RETRYABLE", "RECONCILE"]);
 
 export class EffectRunner {
-  public constructor(private readonly store: CanonicalStore, private readonly executor: EffectExecutor, private readonly guard?: EffectExecutionGuard) {}
+  public constructor(private readonly store: CanonicalStore, private readonly executor?: EffectExecutor, private readonly guard?: EffectExecutionGuard) {}
+
+  public async recoverInterrupted(): Promise<EffectOperation[]> {
+    const recovered: EffectOperation[] = [];
+    for (const operation of await this.store.listEffects("IN_FLIGHT")) {
+      const next = await this.recoverInterruptedOperation(operation);
+      if (next) recovered.push(next);
+    }
+    return recovered;
+  }
 
   public async runAvailable(): Promise<EffectOperation[]> {
     const operations = await this.store.listEffects();
@@ -27,11 +36,9 @@ export class EffectRunner {
     for (const operation of operations) {
       let candidate = operation;
       if (candidate.status === "IN_FLIGHT") {
-        candidate = transitionEffect(candidate, "OUTCOME_UNKNOWN", { evidence: [...candidate.evidence, "runner-recovered-in-flight"] });
-        if (!await this.updateIfCurrent(candidate, "IN_FLIGHT")) continue;
-        candidate = transitionEffect(candidate, "RECONCILE");
-        if (!await this.updateIfCurrent(candidate, "OUTCOME_UNKNOWN")) continue;
-        recovered.push(await this.reconcileOnce(candidate));
+        const interrupted = await this.recoverInterruptedOperation(candidate);
+        if (!interrupted) continue;
+        recovered.push(await this.reconcileOnce(interrupted));
         continue;
       }
       if (candidate.expiresAt && Date.parse(candidate.expiresAt) <= Date.now() && (candidate.status === "PENDING" || candidate.status === "FAILED_RETRYABLE" || candidate.status === "RECONCILE")) {
@@ -42,15 +49,30 @@ export class EffectRunner {
       if (candidate.nextAttemptAt && Date.parse(candidate.nextAttemptAt) > Date.now()) continue;
       if (!runnableStatuses.has(candidate.status)) continue;
       if (candidate.status === "RECONCILE") {
+        if (!this.executor?.reconcile) {
+          recovered.push(candidate);
+          continue;
+        }
         recovered.push(await this.reconcileOnce(candidate));
         continue;
       }
+      if (!this.executor) continue;
       recovered.push(await this.executeOnce(candidate));
     }
     return recovered;
   }
 
+  private async recoverInterruptedOperation(operation: EffectOperation): Promise<EffectOperation | undefined> {
+    let candidate = transitionEffect(operation, "OUTCOME_UNKNOWN", { evidence: [...operation.evidence, "runner-recovered-in-flight"] });
+    if (!await this.updateIfCurrent(candidate, "IN_FLIGHT")) return undefined;
+    candidate = transitionEffect(candidate, "RECONCILE");
+    if (!await this.updateIfCurrent(candidate, "OUTCOME_UNKNOWN")) return undefined;
+    return candidate;
+  }
+
   private async executeOnce(operation: EffectOperation): Promise<EffectOperation> {
+    const executor = this.executor;
+    if (!executor) return operation;
     if (this.guard) {
       try {
         await this.guard.authorize(operation);
@@ -64,7 +86,7 @@ export class EffectRunner {
     if (!await this.updateIfCurrent(inFlight, operation.status)) return (await this.store.getEffect(operation.operationId)) ?? operation;
     let result: EffectExecutionResult;
     try {
-      result = await this.executor.execute(inFlight);
+      result = await executor.execute(inFlight);
     } catch {
       result = { outcome: "FAILED_RETRYABLE", evidence: ["executor-threw"] };
     }
@@ -85,7 +107,8 @@ export class EffectRunner {
   }
 
   private async reconcileOnce(operation: EffectOperation): Promise<EffectOperation> {
-    if (!this.executor.reconcile) return operation;
+    const executor = this.executor;
+    if (!executor?.reconcile) return operation;
     if (this.guard) {
       try {
         await this.guard.authorize(operation);
@@ -99,7 +122,7 @@ export class EffectRunner {
     if (!await this.updateIfCurrent(inFlight, operation.status)) return (await this.store.getEffect(operation.operationId)) ?? operation;
     let result: EffectExecutionResult;
     try {
-      result = await this.executor.reconcile(inFlight);
+      result = await executor.reconcile(inFlight);
     } catch {
       const waiting = transitionEffect(inFlight, "OUTCOME_UNKNOWN", { evidence: [...inFlight.evidence, "reconcile-threw"] });
       if (!await this.updateIfCurrent(waiting, "IN_FLIGHT")) return (await this.store.getEffect(operation.operationId)) ?? inFlight;

@@ -2,6 +2,7 @@ import "./styles.css";
 import { CommandBus } from "./core/commands";
 import { CanonicalStore } from "./core/storage";
 import { CapabilityRuntime } from "./core/capability-runtime";
+import { EffectRunner } from "./core/effect-runner";
 import { mountApp } from "./ui/app";
 
 const root = document.querySelector<HTMLElement>("#app");
@@ -10,6 +11,7 @@ if (!root) throw new Error("Omnevum app root is missing");
 const store = new CanonicalStore();
 try {
   await store.open();
+  await new EffectRunner(store).recoverInterrupted();
   const commands = new CommandBus(store);
   const capabilityRuntime = new CapabilityRuntime([
     { id: "core.canonical", critical: true, start: async () => { await store.health(); } },
