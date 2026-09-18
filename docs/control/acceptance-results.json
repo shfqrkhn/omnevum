@@ -872,8 +872,11 @@
         "line": 3524
       },
       "text": "A reminder becomes due while Omnevum is closed on a target without qualified exact background scheduling. Omnevum does not falsely claim it notified at the due time; on next open/resume it deterministically surfaces the missed/overdue reminder. On a separately qualified external-calendar or ntfy/Gotify-class companion profile, stronger delivery may occur without making that companion a core dependency.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-reminder-resume-follow-up"
+      ],
+      "notes": "Fresh local Chromium tab-close/reopen evidence proves canonical persistence and truthful Due on resume surfacing; exact background scheduling, native process-close behavior, companion delivery, and broader target qualification remain open."
     },
     {
       "id": "OMN-ACC-069",
