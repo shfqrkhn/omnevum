@@ -20,6 +20,7 @@ const required = [
   "docs/control/acceptance-scenarios.json",
   "docs/control/acceptance-results.json",
   "docs/control/dependency-sbom.json",
+  "docs/control/foss-compliance.json",
   "docs/control/phase0-acceptance.json",
   "docs/control/mvp-acceptance.json",
   "docs/control/support-matrix.json",
@@ -44,7 +45,7 @@ const failures = [];
 if (documentationRoots.length !== 1 || documentationRoots[0] !== "docs") failures.push(`documentation roots=${documentationRoots.join(",") || "none"}`);
 for (const path of required) if (!existsSync(join(root, path))) failures.push(`missing ${path}`);
 
-for (const path of ["docs/control/control-manifest.json", "docs/control/requirements.json", "docs/control/acceptance-scenarios.json", "docs/control/acceptance-results.json"]) {
+for (const path of ["docs/control/control-manifest.json", "docs/control/requirements.json", "docs/control/acceptance-scenarios.json", "docs/control/acceptance-results.json", "docs/control/dependency-sbom.json", "docs/control/foss-compliance.json"]) {
   if (!existsSync(join(root, path))) continue;
   const value = JSON.parse(readFileSync(join(root, path), "utf8"));
   if (value.generatedBy !== "scripts/generate-control.mjs") failures.push(`unidentified generated file ${path}`);

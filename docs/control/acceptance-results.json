@@ -1024,8 +1024,16 @@
         "line": 3550
       },
       "text": "The first release containing adopted/copied FOSS runs an automated compliance pipeline that generates dependency/source/license inventory, notices/attribution and SBOM data, identifies applicable source/corresponding-source obligations, and fails closed on unresolved policy-critical findings instead of relying on a manually maintained notice list.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "scripts/generate-control.mjs",
+        "scripts/license-audit.mjs",
+        "docs/control/dependency-sbom.json",
+        "docs/control/foss-compliance.json",
+        "docs/control/license-provenance.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-automated-foss-compliance-pipeline-follow-up"
+      ],
+      "notes": "The clean CI path now regenerates the dependency SBOM and a lockfile-bound attribution/source-obligation receipt, and the license audit fails closed on missing package metadata, stale receipts, incomplete attribution coverage, or policy-critical findings. Exact copyright/notice rights, corresponding-source fulfillment, and legal distribution review remain open."
     },
     {
       "id": "OMN-ACC-082",

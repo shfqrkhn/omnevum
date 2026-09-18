@@ -115,6 +115,19 @@ const lockedPackages = Object.entries(lock.packages ?? {})
     licenseSource: value.license ? "package-lock metadata" : "missing"
   }))
   .sort((left, right) => left.name.localeCompare(right.name));
+const sourceObligationLicenses = new Set(["MPL-2.0", "GPL-2.0-only", "GPL-2.0-or-later", "GPL-3.0-only", "GPL-3.0-or-later", "AGPL-3.0-only", "AGPL-3.0-or-later"]);
+const policyCriticalFindings = lockedPackages.flatMap((pkg) => [
+  ...(pkg.version === "UNKNOWN" ? [`${pkg.name}: missing version`] : []),
+  ...(pkg.resolved === null ? [`${pkg.name}: missing resolved source`] : []),
+  ...(pkg.integrity === null ? [`${pkg.name}: missing integrity`] : []),
+  ...(pkg.license === "UNVERIFIED_NPM_METADATA" ? [`${pkg.name}: missing exact license metadata`] : [])
+]);
+const sourceObligationReview = lockedPackages.filter((pkg) => sourceObligationLicenses.has(pkg.license)).map((pkg) => ({
+  package: `${pkg.name}@${pkg.version}`,
+  license: pkg.license,
+  status: "REVIEW_REQUIRED",
+  reason: "Exact notice, source-availability, and distribution obligations require release-profile review."
+}));
 writeJson("dependency-sbom.json", {
   schemaVersion: 1,
   kind: "dependency-sbom",
@@ -131,7 +144,31 @@ writeJson("dependency-sbom.json", {
   ]
 });
 
-const generatedFiles = ["requirements.json", "acceptance-scenarios.json", "acceptance-results.json", "dependency-sbom.json", "control-manifest.json"];
+writeJson("foss-compliance.json", {
+  schemaVersion: 1,
+  kind: "foss-compliance-receipt",
+  generatedBy,
+  authority: "automated release-plane projection; not legal advice or a substitute for rights review",
+  package: { name: packageJson.name, version: packageJson.version },
+  source: { lockfile: source.lockfile },
+  status: policyCriticalFindings.length > 0 ? "FAIL" : sourceObligationReview.length > 0 ? "PASS_WITH_REVIEW_LIMITATIONS" : "PASS",
+  policyCriticalFindings,
+  sourceObligationReview,
+  attributionInventory: lockedPackages.map((pkg) => ({
+    package: `${pkg.name}@${pkg.version}`,
+    license: pkg.license,
+    source: pkg.resolved,
+    attribution: `${pkg.name}@${pkg.version} — ${pkg.license}`
+  })),
+  generatedOutputs: ["docs/control/dependency-sbom.json", "docs/control/foss-compliance.json"],
+  policy: [
+    "Every locked package must have exact version, resolved source, integrity, and license metadata.",
+    "Attribution inventory and source-obligation review are regenerated from package-lock.json; they are not hand-maintained copies.",
+    "Policy-critical metadata findings fail the release gate; legal/source-obligation review remains release-visible until resolved."
+  ]
+});
+
+const generatedFiles = ["requirements.json", "acceptance-scenarios.json", "acceptance-results.json", "dependency-sbom.json", "foss-compliance.json", "control-manifest.json"];
 writeJson("control-manifest.json", {
   schemaVersion: 1,
   kind: "control-manifest",

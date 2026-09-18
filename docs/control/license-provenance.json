@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "license-provenance-state",
-  "status": "AUTOMATED_METADATA_GATE_PASS_REVIEW_OPEN",
+  "status": "AUTOMATED_COMPLIANCE_PIPELINE_PASS_REVIEW_OPEN",
   "authority": "MPES Sections 13.5 and 22.7; tool output is evidence, not legal truth",
   "canonicalInputs": ["docs/control/upstream.json", "docs/control/dependency-sbom.json", "package.json", "package-lock.json"],
   "requiredEvidence": ["exact-source-identity", "license-text-or-legal-reference", "copyright-notices", "source-obligations", "distribution-policy", "security-currentness"],
@@ -11,6 +11,6 @@
     "Copyleft or ambiguous obligations require isolation/compliance evidence or explicit rejection before release.",
     "Automated ORT, ScanCode, REUSE/SPDX, or equivalent results are reviewed rather than treated as legal truth."
   ],
-  "automatedGate": {"command": "npm run audit:licenses; npm run audit:security", "status": "PASS", "scope": "all node_modules entries in package-lock.json plus current high-severity npm advisory data", "evidence": "scripts/license-audit.mjs; npm audit --audit-level=high; docs/evidence/phase0-dependency-check-2026-09-17.md"},
+  "automatedGate": {"command": "npm run audit:licenses; npm run audit:security", "status": "PASS_WITH_REVIEW_LIMITATIONS", "scope": "all node_modules entries in package-lock.json plus generated attribution/source-obligation receipt and current high-severity npm advisory data", "evidence": "scripts/license-audit.mjs; docs/control/foss-compliance.json; docs/control/dependency-sbom.json; npm audit --audit-level=high; docs/evidence/phase0-dependency-check-2026-09-17.md"},
   "releaseBlockers": ["unreviewed-license", "missing-notice", "missing-corresponding-source-where-required", "unresolved-provenance"]
 }

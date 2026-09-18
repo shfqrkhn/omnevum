@@ -26,6 +26,7 @@
     "acceptance-scenarios.json",
     "acceptance-results.json",
     "dependency-sbom.json",
+    "foss-compliance.json",
     "control-manifest.json"
   ],
   "maintainedRegisters": [

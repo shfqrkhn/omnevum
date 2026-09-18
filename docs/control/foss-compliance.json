@@ -1,0 +1,625 @@
+{
+  "schemaVersion": 1,
+  "kind": "foss-compliance-receipt",
+  "generatedBy": "scripts/generate-control.mjs",
+  "authority": "automated release-plane projection; not legal advice or a substitute for rights review",
+  "package": {
+    "name": "omnevum",
+    "version": "0.1.0"
+  },
+  "source": {
+    "lockfile": {
+      "path": "package-lock.json",
+      "sha256": "2209213b8c2ac98ae99979dfdd4fc1837124b88543fcac2dfc8f3dcde81212af"
+    }
+  },
+  "status": "PASS_WITH_REVIEW_LIMITATIONS",
+  "policyCriticalFindings": [],
+  "sourceObligationReview": [
+    {
+      "package": "lightningcss@1.33.0",
+      "license": "MPL-2.0",
+      "status": "REVIEW_REQUIRED",
+      "reason": "Exact notice, source-availability, and distribution obligations require release-profile review."
+    },
+    {
+      "package": "lightningcss-android-arm64@1.33.0",
+      "license": "MPL-2.0",
+      "status": "REVIEW_REQUIRED",
+      "reason": "Exact notice, source-availability, and distribution obligations require release-profile review."
+    },
+    {
+      "package": "lightningcss-darwin-arm64@1.33.0",
+      "license": "MPL-2.0",
+      "status": "REVIEW_REQUIRED",
+      "reason": "Exact notice, source-availability, and distribution obligations require release-profile review."
+    },
+    {
+      "package": "lightningcss-darwin-x64@1.33.0",
+      "license": "MPL-2.0",
+      "status": "REVIEW_REQUIRED",
+      "reason": "Exact notice, source-availability, and distribution obligations require release-profile review."
+    },
+    {
+      "package": "lightningcss-freebsd-x64@1.33.0",
+      "license": "MPL-2.0",
+      "status": "REVIEW_REQUIRED",
+      "reason": "Exact notice, source-availability, and distribution obligations require release-profile review."
+    },
+    {
+      "package": "lightningcss-linux-arm-gnueabihf@1.33.0",
+      "license": "MPL-2.0",
+      "status": "REVIEW_REQUIRED",
+      "reason": "Exact notice, source-availability, and distribution obligations require release-profile review."
+    },
+    {
+      "package": "lightningcss-linux-arm64-gnu@1.33.0",
+      "license": "MPL-2.0",
+      "status": "REVIEW_REQUIRED",
+      "reason": "Exact notice, source-availability, and distribution obligations require release-profile review."
+    },
+    {
+      "package": "lightningcss-linux-arm64-musl@1.33.0",
+      "license": "MPL-2.0",
+      "status": "REVIEW_REQUIRED",
+      "reason": "Exact notice, source-availability, and distribution obligations require release-profile review."
+    },
+    {
+      "package": "lightningcss-linux-x64-gnu@1.33.0",
+      "license": "MPL-2.0",
+      "status": "REVIEW_REQUIRED",
+      "reason": "Exact notice, source-availability, and distribution obligations require release-profile review."
+    },
+    {
+      "package": "lightningcss-linux-x64-musl@1.33.0",
+      "license": "MPL-2.0",
+      "status": "REVIEW_REQUIRED",
+      "reason": "Exact notice, source-availability, and distribution obligations require release-profile review."
+    },
+    {
+      "package": "lightningcss-win32-arm64-msvc@1.33.0",
+      "license": "MPL-2.0",
+      "status": "REVIEW_REQUIRED",
+      "reason": "Exact notice, source-availability, and distribution obligations require release-profile review."
+    },
+    {
+      "package": "lightningcss-win32-x64-msvc@1.33.0",
+      "license": "MPL-2.0",
+      "status": "REVIEW_REQUIRED",
+      "reason": "Exact notice, source-availability, and distribution obligations require release-profile review."
+    }
+  ],
+  "attributionInventory": [
+    {
+      "package": "@jridgewell/resolve-uri@3.1.2",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@jridgewell/resolve-uri/-/resolve-uri-3.1.2.tgz",
+      "attribution": "@jridgewell/resolve-uri@3.1.2 — MIT"
+    },
+    {
+      "package": "@jridgewell/sourcemap-codec@1.6.0",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.6.0.tgz",
+      "attribution": "@jridgewell/sourcemap-codec@1.6.0 — MIT"
+    },
+    {
+      "package": "@jridgewell/trace-mapping@0.3.31",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.31.tgz",
+      "attribution": "@jridgewell/trace-mapping@0.3.31 — MIT"
+    },
+    {
+      "package": "@oxc-project/types@0.150.0",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@oxc-project/types/-/types-0.150.0.tgz",
+      "attribution": "@oxc-project/types@0.150.0 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-android-arm-eabi@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-android-arm-eabi/-/binding-android-arm-eabi-1.2.9.tgz",
+      "attribution": "@rolldown/binding-android-arm-eabi@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-android-arm64@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-android-arm64/-/binding-android-arm64-1.2.9.tgz",
+      "attribution": "@rolldown/binding-android-arm64@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-darwin-arm64@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-darwin-arm64/-/binding-darwin-arm64-1.2.9.tgz",
+      "attribution": "@rolldown/binding-darwin-arm64@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-darwin-x64@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-darwin-x64/-/binding-darwin-x64-1.2.9.tgz",
+      "attribution": "@rolldown/binding-darwin-x64@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-freebsd-x64@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-freebsd-x64/-/binding-freebsd-x64-1.2.9.tgz",
+      "attribution": "@rolldown/binding-freebsd-x64@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-linux-arm-gnueabihf@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-linux-arm-gnueabihf/-/binding-linux-arm-gnueabihf-1.2.9.tgz",
+      "attribution": "@rolldown/binding-linux-arm-gnueabihf@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-linux-arm64-gnu@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-1.2.9.tgz",
+      "attribution": "@rolldown/binding-linux-arm64-gnu@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-linux-arm64-musl@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-linux-arm64-musl/-/binding-linux-arm64-musl-1.2.9.tgz",
+      "attribution": "@rolldown/binding-linux-arm64-musl@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-linux-ppc64-gnu@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-linux-ppc64-gnu/-/binding-linux-ppc64-gnu-1.2.9.tgz",
+      "attribution": "@rolldown/binding-linux-ppc64-gnu@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-linux-s390x-gnu@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-linux-s390x-gnu/-/binding-linux-s390x-gnu-1.2.9.tgz",
+      "attribution": "@rolldown/binding-linux-s390x-gnu@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-linux-x64-gnu@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-linux-x64-gnu/-/binding-linux-x64-gnu-1.2.9.tgz",
+      "attribution": "@rolldown/binding-linux-x64-gnu@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-linux-x64-musl@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-linux-x64-musl/-/binding-linux-x64-musl-1.2.9.tgz",
+      "attribution": "@rolldown/binding-linux-x64-musl@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-openharmony-arm64@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-openharmony-arm64/-/binding-openharmony-arm64-1.2.9.tgz",
+      "attribution": "@rolldown/binding-openharmony-arm64@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-win32-arm64-msvc@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-win32-arm64-msvc/-/binding-win32-arm64-msvc-1.2.9.tgz",
+      "attribution": "@rolldown/binding-win32-arm64-msvc@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/binding-win32-x64-msvc@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/binding-win32-x64-msvc/-/binding-win32-x64-msvc-1.2.9.tgz",
+      "attribution": "@rolldown/binding-win32-x64-msvc@1.2.9 — MIT"
+    },
+    {
+      "package": "@rolldown/pluginutils@1.0.1",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@rolldown/pluginutils/-/pluginutils-1.0.1.tgz",
+      "attribution": "@rolldown/pluginutils@1.0.1 — MIT"
+    },
+    {
+      "package": "@types/chai@5.2.3",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@types/chai/-/chai-5.2.3.tgz",
+      "attribution": "@types/chai@5.2.3 — MIT"
+    },
+    {
+      "package": "@types/deep-eql@4.0.2",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@types/deep-eql/-/deep-eql-4.0.2.tgz",
+      "attribution": "@types/deep-eql@4.0.2 — MIT"
+    },
+    {
+      "package": "@types/estree@1.0.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@types/estree/-/estree-1.0.9.tgz",
+      "attribution": "@types/estree@1.0.9 — MIT"
+    },
+    {
+      "package": "@types/node@26.6.1",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@types/node/-/node-26.6.1.tgz",
+      "attribution": "@types/node@26.6.1 — MIT"
+    },
+    {
+      "package": "@typescript/typescript-aix-ppc64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-aix-ppc64/-/typescript-aix-ppc64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-aix-ppc64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-darwin-arm64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-darwin-arm64/-/typescript-darwin-arm64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-darwin-arm64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-darwin-x64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-darwin-x64/-/typescript-darwin-x64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-darwin-x64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-freebsd-arm64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-freebsd-arm64/-/typescript-freebsd-arm64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-freebsd-arm64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-freebsd-x64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-freebsd-x64/-/typescript-freebsd-x64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-freebsd-x64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-linux-arm@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-linux-arm/-/typescript-linux-arm-7.0.2.tgz",
+      "attribution": "@typescript/typescript-linux-arm@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-linux-arm64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-linux-arm64/-/typescript-linux-arm64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-linux-arm64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-linux-loong64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-linux-loong64/-/typescript-linux-loong64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-linux-loong64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-linux-mips64el@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-linux-mips64el/-/typescript-linux-mips64el-7.0.2.tgz",
+      "attribution": "@typescript/typescript-linux-mips64el@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-linux-ppc64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-linux-ppc64/-/typescript-linux-ppc64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-linux-ppc64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-linux-riscv64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-linux-riscv64/-/typescript-linux-riscv64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-linux-riscv64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-linux-s390x@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-linux-s390x/-/typescript-linux-s390x-7.0.2.tgz",
+      "attribution": "@typescript/typescript-linux-s390x@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-linux-x64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-linux-x64/-/typescript-linux-x64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-linux-x64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-netbsd-arm64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-netbsd-arm64/-/typescript-netbsd-arm64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-netbsd-arm64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-netbsd-x64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-netbsd-x64/-/typescript-netbsd-x64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-netbsd-x64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-openbsd-arm64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-openbsd-arm64/-/typescript-openbsd-arm64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-openbsd-arm64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-openbsd-x64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-openbsd-x64/-/typescript-openbsd-x64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-openbsd-x64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-sunos-x64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-sunos-x64/-/typescript-sunos-x64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-sunos-x64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-win32-arm64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-win32-arm64/-/typescript-win32-arm64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-win32-arm64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@typescript/typescript-win32-x64@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@typescript/typescript-win32-x64/-/typescript-win32-x64-7.0.2.tgz",
+      "attribution": "@typescript/typescript-win32-x64@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "@vitest/mocker@5.0.1",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@vitest/mocker/-/mocker-5.0.1.tgz",
+      "attribution": "@vitest/mocker@5.0.1 — MIT"
+    },
+    {
+      "package": "@vitest/spy@5.0.1",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/@vitest/spy/-/spy-5.0.1.tgz",
+      "attribution": "@vitest/spy@5.0.1 — MIT"
+    },
+    {
+      "package": "assertion-error@2.0.1",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/assertion-error/-/assertion-error-2.0.1.tgz",
+      "attribution": "assertion-error@2.0.1 — MIT"
+    },
+    {
+      "package": "chai@6.2.2",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/chai/-/chai-6.2.2.tgz",
+      "attribution": "chai@6.2.2 — MIT"
+    },
+    {
+      "package": "detect-libc@2.1.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/detect-libc/-/detect-libc-2.1.2.tgz",
+      "attribution": "detect-libc@2.1.2 — Apache-2.0"
+    },
+    {
+      "package": "es-module-lexer@2.3.2",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/es-module-lexer/-/es-module-lexer-2.3.2.tgz",
+      "attribution": "es-module-lexer@2.3.2 — MIT"
+    },
+    {
+      "package": "estree-walker@3.0.3",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/estree-walker/-/estree-walker-3.0.3.tgz",
+      "attribution": "estree-walker@3.0.3 — MIT"
+    },
+    {
+      "package": "expect-type@1.4.0",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/expect-type/-/expect-type-1.4.0.tgz",
+      "attribution": "expect-type@1.4.0 — Apache-2.0"
+    },
+    {
+      "package": "fake-indexeddb@6.2.5",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/fake-indexeddb/-/fake-indexeddb-6.2.5.tgz",
+      "attribution": "fake-indexeddb@6.2.5 — Apache-2.0"
+    },
+    {
+      "package": "fdir@6.5.0",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/fdir/-/fdir-6.5.0.tgz",
+      "attribution": "fdir@6.5.0 — MIT"
+    },
+    {
+      "package": "fsevents@2.3.3",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz",
+      "attribution": "fsevents@2.3.3 — MIT"
+    },
+    {
+      "package": "lightningcss@1.33.0",
+      "license": "MPL-2.0",
+      "source": "https://registry.npmjs.org/lightningcss/-/lightningcss-1.33.0.tgz",
+      "attribution": "lightningcss@1.33.0 — MPL-2.0"
+    },
+    {
+      "package": "lightningcss-android-arm64@1.33.0",
+      "license": "MPL-2.0",
+      "source": "https://registry.npmjs.org/lightningcss-android-arm64/-/lightningcss-android-arm64-1.33.0.tgz",
+      "attribution": "lightningcss-android-arm64@1.33.0 — MPL-2.0"
+    },
+    {
+      "package": "lightningcss-darwin-arm64@1.33.0",
+      "license": "MPL-2.0",
+      "source": "https://registry.npmjs.org/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.33.0.tgz",
+      "attribution": "lightningcss-darwin-arm64@1.33.0 — MPL-2.0"
+    },
+    {
+      "package": "lightningcss-darwin-x64@1.33.0",
+      "license": "MPL-2.0",
+      "source": "https://registry.npmjs.org/lightningcss-darwin-x64/-/lightningcss-darwin-x64-1.33.0.tgz",
+      "attribution": "lightningcss-darwin-x64@1.33.0 — MPL-2.0"
+    },
+    {
+      "package": "lightningcss-freebsd-x64@1.33.0",
+      "license": "MPL-2.0",
+      "source": "https://registry.npmjs.org/lightningcss-freebsd-x64/-/lightningcss-freebsd-x64-1.33.0.tgz",
+      "attribution": "lightningcss-freebsd-x64@1.33.0 — MPL-2.0"
+    },
+    {
+      "package": "lightningcss-linux-arm-gnueabihf@1.33.0",
+      "license": "MPL-2.0",
+      "source": "https://registry.npmjs.org/lightningcss-linux-arm-gnueabihf/-/lightningcss-linux-arm-gnueabihf-1.33.0.tgz",
+      "attribution": "lightningcss-linux-arm-gnueabihf@1.33.0 — MPL-2.0"
+    },
+    {
+      "package": "lightningcss-linux-arm64-gnu@1.33.0",
+      "license": "MPL-2.0",
+      "source": "https://registry.npmjs.org/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.33.0.tgz",
+      "attribution": "lightningcss-linux-arm64-gnu@1.33.0 — MPL-2.0"
+    },
+    {
+      "package": "lightningcss-linux-arm64-musl@1.33.0",
+      "license": "MPL-2.0",
+      "source": "https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.33.0.tgz",
+      "attribution": "lightningcss-linux-arm64-musl@1.33.0 — MPL-2.0"
+    },
+    {
+      "package": "lightningcss-linux-x64-gnu@1.33.0",
+      "license": "MPL-2.0",
+      "source": "https://registry.npmjs.org/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.33.0.tgz",
+      "attribution": "lightningcss-linux-x64-gnu@1.33.0 — MPL-2.0"
+    },
+    {
+      "package": "lightningcss-linux-x64-musl@1.33.0",
+      "license": "MPL-2.0",
+      "source": "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.33.0.tgz",
+      "attribution": "lightningcss-linux-x64-musl@1.33.0 — MPL-2.0"
+    },
+    {
+      "package": "lightningcss-win32-arm64-msvc@1.33.0",
+      "license": "MPL-2.0",
+      "source": "https://registry.npmjs.org/lightningcss-win32-arm64-msvc/-/lightningcss-win32-arm64-msvc-1.33.0.tgz",
+      "attribution": "lightningcss-win32-arm64-msvc@1.33.0 — MPL-2.0"
+    },
+    {
+      "package": "lightningcss-win32-x64-msvc@1.33.0",
+      "license": "MPL-2.0",
+      "source": "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.33.0.tgz",
+      "attribution": "lightningcss-win32-x64-msvc@1.33.0 — MPL-2.0"
+    },
+    {
+      "package": "magic-string@1.4.1",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/magic-string/-/magic-string-1.4.1.tgz",
+      "attribution": "magic-string@1.4.1 — MIT"
+    },
+    {
+      "package": "minisearch@7.2.0",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/minisearch/-/minisearch-7.2.0.tgz",
+      "attribution": "minisearch@7.2.0 — MIT"
+    },
+    {
+      "package": "nanoid@3.3.19",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.19.tgz",
+      "attribution": "nanoid@3.3.19 — MIT"
+    },
+    {
+      "package": "obug@2.2.1",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/obug/-/obug-2.2.1.tgz",
+      "attribution": "obug@2.2.1 — MIT"
+    },
+    {
+      "package": "picocolors@1.1.1",
+      "license": "ISC",
+      "source": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
+      "attribution": "picocolors@1.1.1 — ISC"
+    },
+    {
+      "package": "picomatch@4.0.7",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/picomatch/-/picomatch-4.0.7.tgz",
+      "attribution": "picomatch@4.0.7 — MIT"
+    },
+    {
+      "package": "postcss@8.5.28",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/postcss/-/postcss-8.5.28.tgz",
+      "attribution": "postcss@8.5.28 — MIT"
+    },
+    {
+      "package": "rolldown@1.2.9",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/rolldown/-/rolldown-1.2.9.tgz",
+      "attribution": "rolldown@1.2.9 — MIT"
+    },
+    {
+      "package": "siginfo@2.0.0",
+      "license": "ISC",
+      "source": "https://registry.npmjs.org/siginfo/-/siginfo-2.0.0.tgz",
+      "attribution": "siginfo@2.0.0 — ISC"
+    },
+    {
+      "package": "source-map-js@1.2.1",
+      "license": "BSD-3-Clause",
+      "source": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz",
+      "attribution": "source-map-js@1.2.1 — BSD-3-Clause"
+    },
+    {
+      "package": "stackback@0.0.2",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/stackback/-/stackback-0.0.2.tgz",
+      "attribution": "stackback@0.0.2 — MIT"
+    },
+    {
+      "package": "std-env@4.2.0",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/std-env/-/std-env-4.2.0.tgz",
+      "attribution": "std-env@4.2.0 — MIT"
+    },
+    {
+      "package": "tinybench@6.1.4",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/tinybench/-/tinybench-6.1.4.tgz",
+      "attribution": "tinybench@6.1.4 — MIT"
+    },
+    {
+      "package": "tinyexec@1.3.0",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/tinyexec/-/tinyexec-1.3.0.tgz",
+      "attribution": "tinyexec@1.3.0 — MIT"
+    },
+    {
+      "package": "tinyglobby@0.2.17",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/tinyglobby/-/tinyglobby-0.2.17.tgz",
+      "attribution": "tinyglobby@0.2.17 — MIT"
+    },
+    {
+      "package": "typescript@7.0.2",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/typescript/-/typescript-7.0.2.tgz",
+      "attribution": "typescript@7.0.2 — Apache-2.0"
+    },
+    {
+      "package": "undici-types@8.9.0",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/undici-types/-/undici-types-8.9.0.tgz",
+      "attribution": "undici-types@8.9.0 — MIT"
+    },
+    {
+      "package": "vite@8.3.0",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/vite/-/vite-8.3.0.tgz",
+      "attribution": "vite@8.3.0 — MIT"
+    },
+    {
+      "package": "vitest@5.0.1",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/vitest/-/vitest-5.0.1.tgz",
+      "attribution": "vitest@5.0.1 — MIT"
+    },
+    {
+      "package": "why-is-node-running@2.3.0",
+      "license": "MIT",
+      "source": "https://registry.npmjs.org/why-is-node-running/-/why-is-node-running-2.3.0.tgz",
+      "attribution": "why-is-node-running@2.3.0 — MIT"
+    }
+  ],
+  "generatedOutputs": [
+    "docs/control/dependency-sbom.json",
+    "docs/control/foss-compliance.json"
+  ],
+  "policy": [
+    "Every locked package must have exact version, resolved source, integrity, and license metadata.",
+    "Attribution inventory and source-obligation review are regenerated from package-lock.json; they are not hand-maintained copies.",
+    "Policy-critical metadata findings fail the release gate; legal/source-obligation review remains release-visible until resolved."
+  ]
+}
