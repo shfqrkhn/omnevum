@@ -62,6 +62,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const factoryPreviewMode = new URLSearchParams(window.location.search).get("factory-preview") === "1";
   const effectRevocationPreviewMode = new URLSearchParams(window.location.search).get("effect-revocation-preview") === "1";
   const effectCredentialedPreviewMode = new URLSearchParams(window.location.search).get("effect-credentialed-preview") === "1";
+  const effectCredentialedRestartPreviewMode = new URLSearchParams(window.location.search).get("effect-credentialed-restart-preview") === "1";
   root.dataset.theme = presentation.theme;
   root.dataset.density = presentation.density;
   root.dataset.typeface = presentation.typeface;
@@ -2013,6 +2014,75 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     await renderEffects();
   };
 
+  const runEffectCredentialedRestartPreview = async (): Promise<void> => {
+    if (!effectCredentialedRestartPreviewMode) return;
+    const endpointValue = new URLSearchParams(window.location.search).get("effectEndpoint")?.trim();
+    if (!endpointValue) throw new Error("Credentialed restart preview requires effectEndpoint");
+    let endpointUrl: URL;
+    try { endpointUrl = new URL(endpointValue); } catch { throw new Error("Credentialed restart preview endpoint is invalid"); }
+    if (endpointUrl.protocol !== "http:" || !["localhost", "127.0.0.1"].includes(endpointUrl.hostname) || endpointUrl.username || endpointUrl.password || endpointUrl.origin !== window.location.origin || endpointUrl.pathname !== "/__omnevum/effect/action") throw new Error("Credentialed restart preview is restricted to the same-origin repository-owned loopback fixture");
+
+    const endpoint = endpointUrl.href;
+    const phaseSetting = "effect.preview.credentialed.restart.phase";
+    const contextSetting = "effect.preview.credentialed.restart.context";
+    const phase = await store.getSetting<string>(phaseSetting);
+    const fixtureSecret = "qualification-fixture-secret";
+    const metadataInput = { provider: "qualification", scope: ["effect.execute"], audience: "loopback-fixture", recoveryReference: "qualification-restart-reference" };
+
+    if (phase === undefined) {
+      const broker = new CredentialKeyBroker();
+      const metadata = broker.issue(fixtureSecret, metadataInput);
+      const operation = {
+        ...createExternalEffect({
+          destination: endpoint,
+          purpose: "browser credentialed restart qualification",
+          payloadOrReference: { fixture: "credentialed-restart-effect", phase: "before-reload" },
+          authorization: { authority: "local-user", permission: "effect.execute", space: "personal", disclosureClass: "PRIVATE", schema: "effect-json-v1" }
+        }),
+        credentialHandle: metadata.handleId
+      };
+      if (JSON.stringify(operation).includes(fixtureSecret)) throw new Error("Credentialed restart preview leaked secret into the durable operation");
+      await store.enqueueEffect(operation);
+      await store.setSetting(contextSetting, { handleId: metadata.handleId, ...metadataInput, endpoint });
+      await store.setSetting(phaseSetting, "PENDING_AFTER_RESTART");
+      effectStageStatus.textContent = copy.effectQueued;
+      await renderEffects();
+      return;
+    }
+    if (phase !== "PENDING_AFTER_RESTART") return;
+
+    const context = await store.getSetting<unknown>(contextSetting);
+    if (!context || typeof context !== "object") throw new Error("Credentialed restart context is unavailable");
+    const persistedContext = context as Record<string, unknown>;
+    if (persistedContext.endpoint !== endpoint || typeof persistedContext.handleId !== "string" || typeof persistedContext.recoveryReference !== "string" || !Array.isArray(persistedContext.scope)) throw new Error("Credentialed restart context is invalid");
+    const broker = new CredentialKeyBroker();
+    const restored = broker.restoreSession(persistedContext.handleId, fixtureSecret, {
+      provider: String(persistedContext.provider ?? ""),
+      scope: persistedContext.scope.filter((value): value is string => typeof value === "string"),
+      audience: String(persistedContext.audience ?? ""),
+      recoveryReference: persistedContext.recoveryReference
+    });
+    if (restored.storageClass !== "SESSION_MEMORY" || restored.recoveryReference !== persistedContext.recoveryReference) throw new Error("Credentialed restart preview did not restore an opaque session handle");
+
+    const guard = createEffectRevalidationGuard({
+      authority: "local-user",
+      allowedPermissions: ["effect.execute"],
+      availableSpaces: async () => new Set((await spaceService.listSpaces()).map((space) => space.id)),
+      allowedDisclosureClasses: ["PRIVATE"],
+      supportedSchemas: ["effect-json-v1"],
+      credentialBroker: broker
+    });
+    const runner = new EffectRunner(store, new JsonEndpointEffectExecutor(endpoint, undefined, broker), guard);
+    const firstRun = await runner.runAvailable();
+    const reconciliation = await runner.runAvailable();
+    const completed = reconciliation.find((operation) => operation.purpose === "browser credentialed restart qualification");
+    const persistedOperation = completed ? await store.getEffect(completed.operationId) : undefined;
+    if (!firstRun.some((operation) => operation.status === "RECONCILE") || !completed || completed.status !== "SUCCEEDED" || !persistedOperation || JSON.stringify({ persistedContext, persistedOperation, restored }).includes(fixtureSecret)) throw new Error("Credentialed restart preview did not restore, reconcile, and complete without durable secret material");
+    await store.setSetting(phaseSetting, "SUCCEEDED_AFTER_SESSION_RESTORE");
+    effectRunStatus.textContent = "Credentialed connector effect restored after browser restart and reconciled successfully; secret remained in session memory.";
+    await renderEffects();
+  };
+
   effectStageForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     try {
@@ -2837,6 +2907,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   await renderRecords();
   await runEffectRevocationPreview();
   await runEffectCredentialedPreview();
+  await runEffectCredentialedRestartPreview();
 }
 
 async function readServiceWorkerDiagnostics(): Promise<NonNullable<NonNullable<Parameters<CanonicalStore["exportDiagnostics"]>[0]>["serviceWorker"]>> {
