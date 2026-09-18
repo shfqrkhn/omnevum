@@ -192,7 +192,9 @@
         "src/core/storage.test.ts#detects-malformed-derived-search-state",
         "docs/evidence/phase0-production-preview-2026-09-17.md#storage-faultrecovery-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-startup-search-degradation-follow-up",
-        "src/main.ts"
+        "src/main.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-repaired-capability-reactivation-follow-up",
+        "src/core/capability-runtime.test.ts#can-recover-a-degraded-module-after-its-owned-state-is-repaired"
       ],
       "notes": "Deterministic fake-indexeddb injection is covered and startup now exposes invalid derived search as DEGRADED while preserving the canonical/Recovery path; native browser corruption and full target qualification remain open."
     },
@@ -316,7 +318,9 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-startup-search-degradation-follow-up",
         "src/main.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-capability-error-redaction-follow-up",
-        "src/core/capability-runtime.test.ts#redacts-reusable-credential-shaped-details-from-visible-failure-reasons"
+        "src/core/capability-runtime.test.ts#redacts-reusable-credential-shaped-details-from-visible-failure-reasons",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-repaired-capability-reactivation-follow-up",
+        "src/core/capability-runtime.test.ts#can-recover-a-degraded-module-after-its-owned-state-is-repaired"
       ],
       "notes": "The capability runtime isolates a failing optional module, marks invalid derived search DEGRADED while core startup and Recovery remain usable, and redacts credential-shaped failure details before DOM exposure. Native failure matrices, direct browser fault injection, and broader target qualification remain open."
     },
