@@ -367,8 +367,13 @@
         "line": 3440
       },
       "text": "On a supported browser row where OPFS is unavailable or deliberately disabled, ordinary canonical structured records remain usable through the qualified fallback; only features that genuinely require unavailable large-file semantics degrade explicitly.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/storage.test.ts#keeps-canonical-records-on-the-indexeddb-fallback-when-optional-persistence-apis-are-unavailable",
+        "src/core/device.test.ts#retains-manual-file-fallback-when-richer-apis-are-absent",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#optional-opfs-fallback-follow-up"
+      ],
+      "notes": "IndexedDB remains the canonical structured-record fallback when optional persistence/OPFS APIs are unavailable; browser-row behavior, native quota limits, and large-file capability qualification remain open."
     },
     {
       "id": "OMN-ACC-027",

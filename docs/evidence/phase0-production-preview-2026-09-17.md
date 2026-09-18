@@ -100,6 +100,10 @@ CanonicalStore now fences a live client when another client requests an IndexedD
 
 At source revision `9421223`, `src/core/storage.test.ts#preserves-canonical-data-when-an-IndexedDB-migration-transaction-is-interrupted` creates the current schema-6 store, writes a canonical record, closes the client, starts a version-7 upgrade, creates a migration marker, and aborts the upgrade transaction. A fresh `CanonicalStore` then reopens the database and reads the exact original record, proving that the interrupted upgrade does not silently reset retained canonical data and that ordinary reopen is a recovery path. This is deterministic fake-indexeddb evidence only; native browser quota/corruption behavior, repair of malformed canonical rows, cross-browser migration, and production deployment remain open.
 
+## Optional OPFS fallback follow-up
+
+The canonical owner remains IndexedDB even when optional persistence/large-file APIs are unavailable. `src/core/storage.test.ts#keeps-canonical-records-on-the-indexeddb-fallback-when-optional-persistence-apis-are-unavailable` injects an unavailable storage-estimate/persistence surface, writes a canonical record, confirms exact readback, and confirms health does not manufacture a persistence claim. The device capability contract separately reports OPFS as optional. This is deterministic fallback evidence; browser-row qualification and any future OPFS-dependent large-file feature remain open.
+
 ## GitHub Pages deployment path
 
 The repository now contains `.github/workflows/pages.yml`, which uses the official GitHub Pages custom-workflow shape: locked install, full `npm run ci`, top-level `dist/` Pages artifact, protected `github-pages` environment, and `pages:write`/`id-token:write` deployment permissions. This proves the repository deployment path is executable in principle, not that a remote workflow ran. The live Pages URL, routing, clean-origin smoke, rollback, browser matrix, and release promotion remain unverified until the configured remote repository executes the workflow.

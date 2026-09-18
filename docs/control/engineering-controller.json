@@ -46,6 +46,7 @@
     "boot recovery exports a bounded read-only raw-state snapshot when malformed canonical state prevents a portable Vault",
     "stale IndexedDB clients are fenced after a version upgrade rather than continuing unsafe reads/writes",
     "an interrupted IndexedDB upgrade is aborted and a fresh store reopen retains the exact canonical record",
+    "ordinary canonical records remain usable through the IndexedDB fallback when optional persistence/OPFS APIs are unavailable",
     "GitHub Pages deployment workflow runs the locked CI/build gate and uploads only the built dist artifact; live deployment remains unverified",
     "current receipt-bound built artifact completes Chromium capture, theme, and reload persistence on a fresh local static origin",
     "115 unit tests pass across 41 test files after the source-meaning workbench increment",
