@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_PRESENTATION, parsePresentationProfile } from "./presentation";
+import { DEFAULT_PRESENTATION, isPresentationProfile, parsePresentationProfile } from "./presentation";
 
 describe("presentation profile", () => {
   it("falls back safely and bounds imported branding", () => {
@@ -23,5 +23,10 @@ describe("presentation profile", () => {
       theme: "dark",
       locale: "fr-CA"
     });
+  });
+
+  it("distinguishes a recoverable profile from malformed stored settings", () => {
+    expect(isPresentationProfile({ schemaVersion: 1, productName: "JohnOS", theme: "dark", locale: "en-CA" })).toBe(true);
+    expect(isPresentationProfile({ productName: "JohnOS", theme: "dark", locale: "en-CA" })).toBe(false);
   });
 });

@@ -3,6 +3,7 @@ import { MAX_PORTABLE_ARTIFACT_BYTES } from "./artifact";
 import { VAULT_FORMAT_VERSION } from "./model";
 import { isSearchDocument, makeSearchDocument, SEARCH_INDEX_VERSION, searchDocuments, type SearchDocument, type SearchIndexMeta } from "./search";
 import { assertEffectOperation, type EffectOperation } from "./effect";
+import { withVaultIntegrity, verifyVaultIntegrity } from "./vault";
 import { assertCanonicalRecord, assertVaultDocument, isHistoryEntry } from "./validation";
 
 const RECORD_STORE = "records";
@@ -82,14 +83,35 @@ export class CanonicalStore {
     return includeDeleted ? records : records.filter((record) => !record.deleted);
   }
 
-  public async put(record: CanonicalRecord, artifactBlob?: Blob): Promise<void> {
+  public async findByProvenance(sourceId: string): Promise<CanonicalRecord[]> {
+    const records = await this.list(true);
+    return records.filter((record) => record.provenance.sourceId === sourceId);
+  }
+
+  public async put(record: CanonicalRecord, artifactBlob?: Blob, expectedPreviousRevision?: number): Promise<void> {
     assertCanonicalRecord(record);
     const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE], "readwrite");
-    transaction.objectStore(RECORD_STORE).put(record);
-    transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
-    transaction.objectStore(HISTORY_STORE).put({ id: `${record.id}:${record.revision}`, recordId: record.id, revision: record.revision, recordedAt: new Date().toISOString(), record } satisfies HistoryEntry);
-    if (artifactBlob) transaction.objectStore(ARTIFACT_STORE).put({ id: record.id, blob: artifactBlob });
-    await transactionDone(transaction);
+    const recordStore = transaction.objectStore(RECORD_STORE);
+    const currentRequest = recordStore.get(record.id);
+    let revisionConflict = false;
+    currentRequest.onsuccess = () => {
+      const current = currentRequest.result as CanonicalRecord | undefined;
+      if ((expectedPreviousRevision !== undefined && (!current || current.revision !== expectedPreviousRevision)) || (expectedPreviousRevision === undefined && current && record.revision <= current.revision)) {
+        revisionConflict = true;
+        transaction.abort();
+        return;
+      }
+      recordStore.put(record);
+      transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
+      transaction.objectStore(HISTORY_STORE).put({ id: `${record.id}:${record.revision}`, recordId: record.id, revision: record.revision, recordedAt: new Date().toISOString(), record } satisfies HistoryEntry);
+      if (artifactBlob) transaction.objectStore(ARTIFACT_STORE).put({ id: record.id, blob: artifactBlob });
+    };
+    try {
+      await transactionDone(transaction);
+    } catch (error) {
+      if (revisionConflict) throw new Error("Canonical revision conflict");
+      throw error;
+    }
   }
 
   public async clear(): Promise<void> {
@@ -171,12 +193,13 @@ export class CanonicalStore {
   }
 
   public async health(): Promise<StoreHealth> {
-    const [records, history, search, artifacts, effects] = await Promise.all([
+    const [records, history, search, artifacts, effects, storage] = await Promise.all([
       this.list(true),
       this.history(),
       this.getSearchHealth(),
       requestResult(this.requireDatabase().transaction(ARTIFACT_STORE, "readonly").objectStore(ARTIFACT_STORE).getAll()),
-      this.listEffects()
+      this.listEffects(),
+      storageEstimate()
     ]);
     return {
       activeRecords: records.filter((record) => !record.deleted).length,
@@ -184,7 +207,8 @@ export class CanonicalStore {
       historyEntries: history.length,
       artifactPayloads: artifacts.length,
       pendingEffects: effects.filter((effect) => effect.status === "PENDING" || effect.status === "IN_FLIGHT" || effect.status === "FAILED_RETRYABLE" || effect.status === "OUTCOME_UNKNOWN" || effect.status === "RECONCILE").length,
-      searchIndexValid: search.valid
+      searchIndexValid: search.valid,
+      ...(storage ? { storage } : {})
     };
   }
 
@@ -204,24 +228,32 @@ export class CanonicalStore {
       const mimeType = typeof record.data.mimeType === "string" && record.data.mimeType.length > 0 ? record.data.mimeType : blob.type || "application/octet-stream";
       artifacts.push({ id: record.id, mimeType, dataBase64: await blobToBase64(blob) });
     }
-    return {
+    const presentation = await this.getSetting<unknown>("presentation");
+    return withVaultIntegrity({
       format: "OMNEVUM_VAULT",
       version: VAULT_FORMAT_VERSION,
       exportedAt: new Date().toISOString(),
       records: await this.list(true),
       history: await this.history(),
-      artifacts
-    };
+      artifacts,
+      ...(presentation && typeof presentation === "object" && !Array.isArray(presentation) ? { presentation: presentation as Record<string, unknown> } : {})
+    });
   }
 
   public async importVault(input: unknown): Promise<{ imported: number; skipped: number; conflicts: number }> {
     assertVaultDocument(input);
+    await verifyVaultIntegrity(input);
     const existing = new Map((await this.list(true)).map((record) => [record.id, record]));
-    const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE], "readwrite");
+    const existingArtifactIds = new Set<string>();
+    for (const artifact of input.artifacts ?? []) {
+      if (await this.getArtifact(artifact.id)) existingArtifactIds.add(artifact.id);
+    }
+    const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE, SETTINGS_STORE], "readwrite");
     const objectStore = transaction.objectStore(RECORD_STORE);
     const searchMetaStore = transaction.objectStore(SEARCH_META_STORE);
     const historyStore = transaction.objectStore(HISTORY_STORE);
     const artifactStore = transaction.objectStore(ARTIFACT_STORE);
+    const settingsStore = transaction.objectStore(SETTINGS_STORE);
     let imported = 0;
     let skipped = 0;
     let conflicts = 0;
@@ -233,6 +265,9 @@ export class CanonicalStore {
         objectStore.put(record);
         acceptedIds.add(record.id);
         imported += 1;
+      } else if (current.deleted && !record.deleted && record.data.restoreIntent !== "EXPLICIT_USER_RESTORE") {
+        conflicts += 1;
+        skipped += 1;
       } else if (record.revision > current.revision) {
         objectStore.put(record);
         acceptedIds.add(record.id);
@@ -247,8 +282,11 @@ export class CanonicalStore {
 
     for (const entry of input.history ?? []) historyStore.put(entry);
     for (const artifact of input.artifacts ?? []) {
-      if (acceptedIds.has(artifact.id) || !existing.has(artifact.id)) artifactStore.put({ id: artifact.id, blob: base64ToBlob(artifact.dataBase64, artifact.mimeType) });
+      const current = existing.get(artifact.id);
+      const payloadMissing = !existingArtifactIds.has(artifact.id);
+      if (acceptedIds.has(artifact.id) || !current || payloadMissing) artifactStore.put({ id: artifact.id, blob: base64ToBlob(artifact.dataBase64, artifact.mimeType) });
     }
+    if (input.presentation) settingsStore.put({ id: "presentation", value: structuredClone(input.presentation), modifiedAt: new Date().toISOString() });
     searchMetaStore.put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
     await transactionDone(transaction);
     return { imported, skipped, conflicts };
@@ -256,6 +294,13 @@ export class CanonicalStore {
 
   public async rebuildSearchIndex(): Promise<void> {
     await this.rebuildSearchIndexInternal();
+  }
+
+  public async reclaimDerivedState(): Promise<void> {
+    const transaction = this.requireDatabase().transaction([SEARCH_STORE, SEARCH_META_STORE], "readwrite");
+    transaction.objectStore(SEARCH_STORE).clear();
+    transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
+    await transactionDone(transaction);
   }
 
   public async exportDiagnostics(): Promise<{
@@ -311,6 +356,13 @@ export interface StoreHealth {
   artifactPayloads: number;
   pendingEffects: number;
   searchIndexValid: boolean;
+  storage?: { usageBytes: number; quotaBytes: number; pressure: "NORMAL" | "ELEVATED" };
+}
+
+async function storageEstimate(): Promise<StoreHealth["storage"]> {
+  const estimate = typeof globalThis.navigator === "undefined" ? undefined : await globalThis.navigator.storage?.estimate();
+  if (!estimate || typeof estimate.usage !== "number" || typeof estimate.quota !== "number" || estimate.quota <= 0) return undefined;
+  return { usageBytes: estimate.usage, quotaBytes: estimate.quota, pressure: estimate.usage / estimate.quota >= 0.8 ? "ELEVATED" : "NORMAL" };
 }
 
 function stableJson(value: unknown): string {

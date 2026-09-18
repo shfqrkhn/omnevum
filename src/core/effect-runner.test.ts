@@ -15,6 +15,7 @@ function effect(status: EffectOperation["status"] = "PENDING"): EffectOperation 
     createdAt: new Date().toISOString(),
     status,
     retryCount: 0,
+    retryPolicy: { maxAttempts: 3, backoffSeconds: 1 },
     evidence: []
   };
 }
@@ -26,13 +27,16 @@ describe("EffectRunner", () => {
     await store.enqueueEffect(effect("IN_FLIGHT"));
     const seen: EffectOperation["status"][] = [];
     const runner = new EffectRunner(store, {
-      execute: async (operation) => {
+      execute: async () => {
+        throw new Error("ambiguous operation must not be replayed");
+      },
+      reconcile: async (operation) => {
         seen.push(operation.status);
         return { outcome: "SUCCEEDED", evidence: ["reconciled-idempotently"], remoteIdentity: "remote-1" };
       }
     });
     const result = await runner.runAvailable();
-    expect(seen).toEqual(["IN_FLIGHT"]);
+    expect(seen).toEqual(["RECONCILE"]);
     expect(result[0]).toMatchObject({ status: "SUCCEEDED", remoteIdentity: "remote-1" });
     expect(await store.getEffect("runner-effect")).toMatchObject({ status: "SUCCEEDED", idempotencyKey: "runner-effect-idempotency" });
     store.close();
@@ -46,6 +50,32 @@ describe("EffectRunner", () => {
     const result = await runner.runAvailable();
     expect(result[0]).toMatchObject({ status: "FAILED_RETRYABLE", retryCount: 1 });
     expect((await store.listEffects())[0]?.retryCount).toBe(1);
+    store.close();
+  });
+
+  it("leaves an interrupted operation visible when no reconciliation adapter exists", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-effect-no-reconcile`);
+    await store.open();
+    await store.enqueueEffect(effect("IN_FLIGHT"));
+    let executions = 0;
+    const runner = new EffectRunner(store, { execute: async () => { executions += 1; return { outcome: "SUCCEEDED" }; } });
+    const result = await runner.runAvailable();
+    expect(executions).toBe(0);
+    expect(result[0]?.status).toBe("RECONCILE");
+    expect((await store.getEffect("runner-effect"))?.status).toBe("RECONCILE");
+    store.close();
+  });
+
+  it("does not replay an expired or revoked operation", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-effect-guard`);
+    await store.open();
+    await store.enqueueEffect({ ...effect(), operationId: "expired-effect", idempotencyKey: "expired-effect-key", expiresAt: "2020-01-01T00:00:00.000Z" });
+    await store.enqueueEffect({ ...effect(), operationId: "revoked-effect", idempotencyKey: "revoked-effect-key", credentialHandle: "credential:revoked" });
+    let executions = 0;
+    const runner = new EffectRunner(store, { execute: async () => { executions += 1; return { outcome: "SUCCEEDED" }; } }, { authorize: async (operation) => { if (operation.credentialHandle) throw new Error("revoked"); } });
+    const results = await runner.runAvailable();
+    expect(executions).toBe(0);
+    expect(results.map((result) => result.status)).toEqual(["EXPIRED", "CANCELLED"]);
     store.close();
   });
 });

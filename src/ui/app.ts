@@ -1,15 +1,28 @@
 import type { CommandBus } from "../core/commands";
+import { acceptCandidates, stageText, stageUrl, type AcquireCandidate } from "../core/acquire";
 import { isCompletedTask, recordSpace, recordText, recordTriageStatus, type SpaceId } from "../core/domain";
-import { getUiCopy } from "../core/i18n";
-import { parsePresentationProfile, type PresentationProfile } from "../core/presentation";
-import { parseVault } from "../core/vault";
+import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
+import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
+import { isPresentationProfile, parsePresentationProfile, type PresentationProfile } from "../core/presentation";
+import { TrackService } from "../core/track";
+import { makeReminderData, reconcileReminders } from "../core/time";
+import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/crypto";
+import { MAX_VAULT_JSON_BYTES, parseVault } from "../core/vault";
 import type { CanonicalStore } from "../core/storage";
+import { captureExpense, captureHealthMeasurement } from "../core/workflows";
+import { projectDataset } from "../core/data";
+import { countRecords, groupCounts } from "../core/analysis";
 
 export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus): Promise<void> {
-  let presentation: PresentationProfile = parsePresentationProfile(await store.getSetting<unknown>("presentation"));
+  const rawPresentation = await store.getSetting<unknown>("presentation");
+  let presentation: PresentationProfile = parsePresentationProfile(rawPresentation);
   const copy = getUiCopy(presentation.locale);
+  const recoveryCopy = getRecoveryCopy(presentation.locale);
+  const timeCopy = getTimeCopy(presentation.locale);
   root.dataset.theme = presentation.theme;
   document.documentElement.dataset.theme = presentation.theme;
+  document.documentElement.lang = presentation.locale;
+  document.documentElement.dir = localeDirection(presentation.locale);
   root.innerHTML = `
     <header class="topbar">
       <div>
@@ -38,6 +51,21 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <span id="summary-total" class="count" aria-label="${copy.activeRecordCount}">0</span>
         </div>
         <div id="summary-grid" class="summary-grid"></div>
+        <p id="analysis-status" class="hint" role="status"></p>
+        <div class="section-heading insight-heading">
+          <div>
+            <p class="eyebrow">${copy.visualize}</p>
+            <h3>${copy.signals}</h3>
+          </div>
+        </div>
+        <div id="insights-grid" class="summary-grid"></div>
+        <div class="section-heading insight-heading">
+          <div>
+            <p class="eyebrow">${timeCopy.reminders}</p>
+            <h3>${timeCopy.dueOnResume}</h3>
+          </div>
+        </div>
+        <div id="attention-panel" class="attention-panel" role="status"></div>
       </section>
 
       <section id="presentation" class="panel" aria-labelledby="presentation-heading">
@@ -64,9 +92,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <form id="capture-form">
           <label for="capture-type">${copy.kind}</label>
           <select id="capture-type" name="recordType">
-            <option value="note">${copy.note}</option>
-            <option value="task">${copy.task}</option>
-            <option value="observation">${copy.observation}</option>
+            ${CAPTURE_KINDS.map((kind) => `<option value="${kind}">${captureKindLabel(presentation.locale, kind)}</option>`).join("")}
           </select>
           <label for="capture-space">${copy.space}</label>
           <select id="capture-space" name="space">
@@ -81,6 +107,85 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <button type="submit">${copy.saveCapture}</button>
           </div>
         </form>
+      </section>
+
+      <section id="acquire" class="panel" aria-labelledby="acquire-heading">
+        <p class="eyebrow">${copy.capture}</p>
+        <h2 id="acquire-heading">${copy.acquireHeading}</h2>
+        <form id="acquire-form">
+          <label for="acquire-text">${copy.captureContent}</label>
+          <textarea id="acquire-text" name="source" rows="4" maxlength="5242880" placeholder="${copy.acquirePlaceholder}"></textarea>
+          <div class="form-row">
+            <span class="hint">${copy.acquireHint}</span>
+            <button type="submit">${copy.stageImport}</button>
+          </div>
+          <p id="acquire-status" class="hint" role="status"></p>
+          <ul id="acquire-preview" class="record-list"></ul>
+          <button id="accept-staged" class="secondary" type="button" disabled>${copy.acceptStaged}</button>
+        </form>
+      </section>
+
+      <section id="track" class="panel" aria-labelledby="track-heading">
+        <p class="eyebrow">${copy.track}</p>
+        <h2 id="track-heading">${copy.trackHeading}</h2>
+        <form id="track-form">
+          <label for="track-name">${copy.metricName}</label>
+          <input id="track-name" name="metricName" type="text" maxlength="120" required placeholder="${copy.trackPlaceholder}" />
+          <label for="track-value">${copy.value}</label>
+          <input id="track-value" name="value" type="number" inputmode="decimal" step="any" required />
+          <label for="track-unit">${copy.unit}</label>
+          <input id="track-unit" name="unit" type="text" maxlength="40" />
+          <label for="track-space">${copy.space}</label>
+          <select id="track-space" name="space">
+            <option value="personal">${copy.personal}</option>
+            <option value="household">${copy.household}</option>
+            <option value="work">${copy.work}</option>
+          </select>
+          <div class="form-row">
+            <span class="hint">${copy.trackHint}</span>
+            <button type="submit">${copy.saveObservation}</button>
+          </div>
+          <p id="track-status" class="hint" role="status"></p>
+        </form>
+      </section>
+
+      <section id="domains" class="panel" aria-labelledby="domains-heading">
+        <p class="eyebrow">${copy.domains}</p>
+        <h2 id="domains-heading">${copy.domains}</h2>
+        <div class="domain-grid">
+          <form id="expense-form" class="domain-form">
+            <h3>${copy.financeHeading}</h3>
+            <label for="expense-merchant">${copy.merchant}</label>
+            <input id="expense-merchant" name="merchant" type="text" maxlength="160" required />
+            <label for="expense-amount">${copy.value}</label>
+            <input id="expense-amount" name="amount" type="text" inputmode="decimal" maxlength="32" required />
+            <label for="expense-currency">${copy.currency}</label>
+            <select id="expense-currency" name="currency"><option value="CAD">CAD</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="JPY">JPY</option></select>
+            <label for="expense-space">${copy.space}</label>
+            <select id="expense-space" name="space"><option value="personal">${copy.personal}</option><option value="household">${copy.household}</option><option value="work">${copy.work}</option></select>
+            <p class="hint">${copy.financeHint}</p>
+            <button type="submit">${copy.saveExpense}</button>
+            <p id="expense-status" class="hint" role="status"></p>
+          </form>
+          <form id="health-form" class="domain-form">
+            <h3>${copy.healthHeading}</h3>
+            <label for="health-metric">${copy.metricName}</label>
+            <input id="health-metric" name="metric" type="text" maxlength="160" required />
+            <label for="health-value">${copy.value}</label>
+            <input id="health-value" name="value" type="number" inputmode="decimal" step="any" required />
+            <label for="health-unit">${copy.unit}</label>
+            <input id="health-unit" name="unit" type="text" maxlength="40" />
+            <label for="health-subject">${copy.subject}</label>
+            <input id="health-subject" name="subjectId" type="text" maxlength="160" placeholder="person:self" required />
+            <label for="health-note">${copy.optionalNote}</label>
+            <textarea id="health-note" name="note" rows="2" maxlength="1000"></textarea>
+            <label for="health-space">${copy.space}</label>
+            <select id="health-space" name="space"><option value="personal">${copy.personal}</option><option value="household">${copy.household}</option><option value="work">${copy.work}</option></select>
+            <p class="hint">${copy.healthHint}</p>
+            <button type="submit">${copy.saveMeasurement}</button>
+            <p id="health-form-status" class="hint" role="status"></p>
+          </form>
+        </div>
       </section>
 
       <section id="search" class="panel" aria-labelledby="search-heading">
@@ -134,6 +239,20 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </div>
       </section>
 
+      <section id="reminders" class="panel" aria-labelledby="reminder-heading">
+        <p class="eyebrow">${timeCopy.reminders}</p>
+        <h2 id="reminder-heading">${timeCopy.reminderHeading}</h2>
+        <form id="reminder-form">
+          <label for="reminder-title">${timeCopy.reminderTitle}</label>
+          <input id="reminder-title" name="title" type="text" maxlength="240" required />
+          <label for="reminder-due">${timeCopy.reminderDueAt}</label>
+          <input id="reminder-due" name="dueAt" type="datetime-local" required />
+          <p class="hint">${timeCopy.reminderHint}</p>
+          <button type="submit">${timeCopy.saveReminder}</button>
+          <p id="reminder-status" class="hint" role="status"></p>
+        </form>
+      </section>
+
       <section id="records" class="panel" aria-labelledby="records-heading">
         <div class="section-heading">
           <div>
@@ -160,13 +279,18 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <p class="hint">${copy.recoveryHint}</p>
         <div class="form-row recovery-row">
           <button id="export-vault" class="secondary" type="button">${copy.exportVault}</button>
+          <button id="export-encrypted" class="secondary" type="button">${recoveryCopy.exportEncrypted}</button>
           <button id="export-diagnostics" class="secondary" type="button">${copy.exportDiagnostics}</button>
           <button id="repair-search" class="secondary" type="button">${copy.repairSearch}</button>
+          <button id="clear-canonical" class="danger-button" type="button">${recoveryCopy.clearCanonical}</button>
           <label class="file-button secondary" for="import-vault">${copy.importVault}</label>
           <input id="import-vault" type="file" accept="application/json,.json" />
           <label class="file-button secondary" for="artifact-input">${copy.attachArtifact}</label>
           <input id="artifact-input" type="file" />
         </div>
+        <label for="vault-password">${recoveryCopy.password}</label>
+        <input id="vault-password" type="password" minlength="8" autocomplete="new-password" />
+        <p class="hint">${recoveryCopy.passwordHint}</p>
         <p id="recovery-status" class="hint" role="status"></p>
       </section>
     </main>
@@ -177,12 +301,40 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const captureType = root.querySelector<HTMLSelectElement>("#capture-type");
   const captureSpace = root.querySelector<HTMLSelectElement>("#capture-space");
   const captureText = root.querySelector<HTMLTextAreaElement>("#capture-text");
+  const acquireForm = root.querySelector<HTMLFormElement>("#acquire-form");
+  const acquireText = root.querySelector<HTMLTextAreaElement>("#acquire-text");
+  const acquireStatus = root.querySelector<HTMLElement>("#acquire-status");
+  const acquirePreview = root.querySelector<HTMLUListElement>("#acquire-preview");
+  const acceptStaged = root.querySelector<HTMLButtonElement>("#accept-staged");
+  const trackForm = root.querySelector<HTMLFormElement>("#track-form");
+  const trackName = root.querySelector<HTMLInputElement>("#track-name");
+  const trackValue = root.querySelector<HTMLInputElement>("#track-value");
+  const trackUnit = root.querySelector<HTMLInputElement>("#track-unit");
+  const trackSpace = root.querySelector<HTMLSelectElement>("#track-space");
+  const trackStatus = root.querySelector<HTMLElement>("#track-status");
+  const expenseForm = root.querySelector<HTMLFormElement>("#expense-form");
+  const expenseMerchant = root.querySelector<HTMLInputElement>("#expense-merchant");
+  const expenseAmount = root.querySelector<HTMLInputElement>("#expense-amount");
+  const expenseCurrency = root.querySelector<HTMLSelectElement>("#expense-currency");
+  const expenseSpace = root.querySelector<HTMLSelectElement>("#expense-space");
+  const expenseStatus = root.querySelector<HTMLElement>("#expense-status");
+  const healthForm = root.querySelector<HTMLFormElement>("#health-form");
+  const healthMetric = root.querySelector<HTMLInputElement>("#health-metric");
+  const healthValue = root.querySelector<HTMLInputElement>("#health-value");
+  const healthUnit = root.querySelector<HTMLInputElement>("#health-unit");
+  const healthSubject = root.querySelector<HTMLInputElement>("#health-subject");
+  const healthNote = root.querySelector<HTMLTextAreaElement>("#health-note");
+  const healthSpace = root.querySelector<HTMLSelectElement>("#health-space");
+  const healthFormStatus = root.querySelector<HTMLElement>("#health-form-status");
   const searchForm = root.querySelector<HTMLFormElement>("#search-form");
   const searchQuery = root.querySelector<HTMLInputElement>("#search-query");
   const clearSearch = root.querySelector<HTMLButtonElement>("#clear-search");
   const searchStatus = root.querySelector<HTMLElement>("#search-status");
   const summaryTotal = root.querySelector<HTMLElement>("#summary-total");
+  const analysisStatus = root.querySelector<HTMLElement>("#analysis-status");
   const summaryGrid = root.querySelector<HTMLElement>("#summary-grid");
+  const insightsGrid = root.querySelector<HTMLElement>("#insights-grid");
+  const attentionPanel = root.querySelector<HTMLElement>("#attention-panel");
   const reviewList = root.querySelector<HTMLUListElement>("#review-list");
   const reviewCount = root.querySelector<HTMLElement>("#review-count");
   const reviewEmpty = root.querySelector<HTMLElement>("#review-empty");
@@ -194,6 +346,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const relateStatus = root.querySelector<HTMLElement>("#relate-status");
   const focusToggle = root.querySelector<HTMLButtonElement>("#focus-toggle");
   const focusStatus = root.querySelector<HTMLElement>("#focus-status");
+  const reminderForm = root.querySelector<HTMLFormElement>("#reminder-form");
+  const reminderTitle = root.querySelector<HTMLInputElement>("#reminder-title");
+  const reminderDue = root.querySelector<HTMLInputElement>("#reminder-due");
+  const reminderStatus = root.querySelector<HTMLElement>("#reminder-status");
   const productLabel = root.querySelector<HTMLElement>("#product-label");
   const productName = root.querySelector<HTMLInputElement>("#product-name");
   const localeInput = root.querySelector<HTMLSelectElement>("#locale");
@@ -210,17 +366,28 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const healthStatus = root.querySelector<HTMLElement>("#health-status");
   const themeToggle = root.querySelector<HTMLButtonElement>("#theme-toggle");
   const exportButton = root.querySelector<HTMLButtonElement>("#export-vault");
+  const encryptedExportButton = root.querySelector<HTMLButtonElement>("#export-encrypted");
+  const vaultPassword = root.querySelector<HTMLInputElement>("#vault-password");
   const diagnosticsButton = root.querySelector<HTMLButtonElement>("#export-diagnostics");
   const repairSearchButton = root.querySelector<HTMLButtonElement>("#repair-search");
+  const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !searchForm || !searchQuery || !clearSearch || !searchStatus || !summaryTotal || !summaryGrid || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !focusToggle || !focusStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !themeToggle || !exportButton || !diagnosticsButton || !repairSearchButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
+
+  const sharedParameters = new URLSearchParams(window.location.search);
+  const sharedInput = [sharedParameters.get("title"), sharedParameters.get("text"), sharedParameters.get("url")].filter((value): value is string => Boolean(value?.trim())).join("\n").trim();
+  if (sharedInput) acquireText.value = sharedInput.slice(0, 5 * 1024 * 1024);
+
+  const trackService = new TrackService(store, commands);
+  let stagedCandidates: AcquireCandidate[] = [];
 
   productLabel.textContent = `${presentation.productName} ${copy.foundation}`;
   productName.value = presentation.productName;
   localeInput.value = presentation.locale;
+  presentationStatus.textContent = rawPresentation === undefined || isPresentationProfile(rawPresentation) ? copy.presentationHint : `Safe presentation fallback is active. ${copy.presentationHint}`;
   themeToggle.textContent = presentation.theme === "dark" ? copy.themeLight : copy.themeDark;
   themeToggle.setAttribute("aria-pressed", String(presentation.theme === "dark"));
 
@@ -229,7 +396,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
 
   const renderSummary = async (): Promise<void> => {
     const records = await store.list();
-    summaryTotal.textContent = String(records.length);
+    summaryTotal.textContent = formatNumber(presentation.locale, records.length);
+    const count = countRecords(records);
+    const dataset = projectDataset(records, ["recordType", "owner", "modifiedAt"]);
+    const groups = groupCounts(records, "recordType");
+    analysisStatus.textContent = copy.derivedStatus(Number(count.value), dataset.sourceIds.length, Object.keys(groups.value).length);
     summaryGrid.replaceChildren();
     const counts = new Map<string, number>();
     for (const record of records) {
@@ -237,6 +408,35 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       counts.set(key, (counts.get(key) ?? 0) + 1);
     }
     const entries = [...counts.entries()].sort(([left], [right]) => left.localeCompare(right));
+    const openTasks = records.filter((record) => record.recordType === "task" && !isCompletedTask(record)).length;
+    const completedTasks = records.filter((record) => isCompletedTask(record)).length;
+    const focusMinutes = records.filter((record) => record.recordType === "observation" && record.data.kind === "focus-session").reduce((sum, record) => sum + (typeof record.data.durationMinutes === "number" ? record.data.durationMinutes : 0), 0);
+    const relationships = records.filter((record) => record.recordType === "relationship").length;
+    insightsGrid.replaceChildren();
+    for (const [label, value] of [[copy.openTasks, openTasks], [copy.completedTasks, completedTasks], [copy.focusMinutes, focusMinutes], [copy.relationships, relationships]] as const) {
+      const card = document.createElement("div");
+      card.className = "summary-item";
+      const labelElement = document.createElement("span");
+      labelElement.textContent = label;
+      const valueElement = document.createElement("strong");
+      valueElement.textContent = formatNumber(presentation.locale, value);
+      card.append(labelElement, valueElement);
+      insightsGrid.append(card);
+    }
+    const dueReminders = reconcileReminders(records).filter((reminder) => reminder.state === "DUE");
+    attentionPanel.replaceChildren();
+    if (dueReminders.length === 0) {
+      attentionPanel.textContent = timeCopy.noDue;
+    } else {
+      const list = document.createElement("ul");
+      list.className = "attention-list";
+      for (const reminder of dueReminders) {
+        const item = document.createElement("li");
+        item.textContent = `${reminder.recordId} - ${timeCopy.dueOnResume}. ${timeCopy.deliveryLimited}`;
+        list.append(item);
+      }
+      attentionPanel.append(list);
+    }
     if (entries.length === 0) {
       const empty = document.createElement("p");
       empty.className = "hint";
@@ -259,7 +459,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const renderReview = async (): Promise<void> => {
     const records = (await store.list()).filter((record) => recordTriageStatus(record) === "INBOX");
     reviewList.replaceChildren();
-    reviewCount.textContent = String(records.length);
+    reviewCount.textContent = formatNumber(presentation.locale, records.length);
     reviewEmpty.hidden = records.length > 0;
     for (const record of [...records].reverse()) {
       const item = document.createElement("li");
@@ -271,8 +471,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       review.className = "icon-button complete-button";
       review.textContent = copy.markReviewed;
       review.addEventListener("click", async () => {
-        await commands.update(record.id, { ...record.data, triageStatus: "REVIEWED" });
-        await renderRecords(searchQuery.value);
+        try {
+          await commands.update(record.id, { ...record.data, triageStatus: "REVIEWED" });
+          await renderRecords(searchQuery.value);
+        } catch (error) {
+          relateStatus.textContent = describeError(error, "Review update failed");
+        }
       });
       item.append(text, review);
       reviewList.append(item);
@@ -316,8 +520,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       restore.className = "icon-button complete-button";
       restore.textContent = copy.restore;
       restore.addEventListener("click", async () => {
-        await commands.restore(record.id);
-        await renderRecords(searchQuery.value);
+        try {
+          await commands.restore(record.id);
+          await renderRecords(searchQuery.value);
+        } catch (error) {
+          recoveryStatus.textContent = describeError(error, "Restore failed");
+        }
       });
       item.append(content, restore);
       archiveList.append(item);
@@ -327,7 +535,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const renderRecords = async (query = ""): Promise<void> => {
     const records = query.trim() ? await store.search(query) : await store.list();
     recordList.replaceChildren();
-    recordCount.textContent = String(records.length);
+    recordCount.textContent = formatNumber(presentation.locale, records.length);
     emptyState.hidden = records.length > 0;
     emptyState.textContent = query.trim() ? copy.noMatching : copy.nothingCaptured;
 
@@ -348,8 +556,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         complete.className = "icon-button complete-button";
         complete.textContent = copy.complete;
         complete.addEventListener("click", async () => {
-          await commands.update(record.id, { ...record.data, status: "DONE" });
-          await renderRecords(searchQuery.value);
+          try {
+            await commands.update(record.id, { ...record.data, status: "DONE" }, record.revision);
+            await renderRecords(searchQuery.value);
+          } catch (error) {
+            healthStatus.textContent = describeError(error, "Task completion failed; canonical data was not changed.");
+          }
         });
         item.append(complete);
       }
@@ -359,8 +571,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         undo.className = "icon-button complete-button";
         undo.textContent = copy.undo;
         undo.addEventListener("click", async () => {
-          await commands.undo(record.id);
-          await renderRecords(searchQuery.value);
+          try {
+            await commands.undo(record.id);
+            await renderRecords(searchQuery.value);
+          } catch (error) {
+            healthStatus.textContent = describeError(error, "Undo failed; canonical data was not changed.");
+          }
         });
         item.append(undo);
       }
@@ -369,8 +585,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       archive.className = "icon-button";
       archive.textContent = copy.archive;
       archive.addEventListener("click", async () => {
-        await commands.archive(record.id);
-        await renderRecords(searchQuery.value);
+        try {
+          await commands.archive(record.id);
+          await renderRecords(searchQuery.value);
+        } catch (error) {
+          healthStatus.textContent = describeError(error, "Archive failed; canonical data was not changed.");
+        }
       });
       item.append(content, archive);
       recordList.append(item);
@@ -389,12 +609,96 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     event.preventDefault();
     const text = captureText.value.trim();
     if (!text) return;
-    const recordType = captureType.value === "task" || captureType.value === "observation" ? captureType.value : "note";
-    const space = (captureSpace.value === "household" || captureSpace.value === "work" ? captureSpace.value : "personal") satisfies SpaceId;
-    await commands.create({ recordType, owner: "core.capture", data: { text, space, triageStatus: "INBOX", ...(recordType === "task" ? { status: "OPEN" } : {}) } });
-    captureForm.reset();
-    await renderRecords(searchQuery.value);
-    captureText.focus();
+    try {
+      const selectedKind = CAPTURE_KINDS.includes(captureType.value as CaptureKind) ? captureType.value as CaptureKind : "note";
+      const recordType = recordTypeForCaptureKind(selectedKind);
+      const space = (captureSpace.value === "household" || captureSpace.value === "work" ? captureSpace.value : "personal") satisfies SpaceId;
+      await commands.create({ recordType, owner: selectedKind === "event" ? "platform.time" : "core.capture", data: { text, kind: selectedKind, space, triageStatus: "INBOX", ...(recordType === "task" ? { status: "OPEN" } : {}) } });
+      captureForm.reset();
+      await renderRecords(searchQuery.value);
+      captureText.focus();
+    } catch (error) {
+      healthStatus.textContent = describeError(error, "Capture failed; canonical data was not changed by this action.");
+    }
+  });
+
+  acquireForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const source = acquireText.value.trim();
+    if (!source) return;
+    try {
+      const preview = /^https?:\/\//i.test(source) ? await stageUrl(source) : await stageText(source);
+      stagedCandidates = preview.candidates;
+      acquirePreview.replaceChildren();
+      for (const candidate of stagedCandidates.slice(0, 20)) {
+        const item = document.createElement("li");
+        item.textContent = `${candidate.kind} - ${typeof candidate.data.text === "string" ? candidate.data.text : candidate.candidateId} (${candidate.confidence})`;
+        acquirePreview.append(item);
+      }
+      acquireStatus.textContent = copy.stagedMessage(stagedCandidates.length, preview.warnings.length);
+      acceptStaged.disabled = stagedCandidates.length === 0;
+    } catch (error) {
+      acquireStatus.textContent = error instanceof Error ? error.message : "Acquire staging failed";
+    }
+  });
+
+  acceptStaged.addEventListener("click", async () => {
+    if (stagedCandidates.length === 0) return;
+    try {
+      const result = await acceptCandidates(commands, stagedCandidates);
+      acquireStatus.textContent = copy.importedMessage(result.accepted, result.skipped, 0);
+      stagedCandidates = [];
+      acquirePreview.replaceChildren();
+      acceptStaged.disabled = true;
+      acquireText.value = "";
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      acquireStatus.textContent = describeError(error, "Staged records were not accepted");
+    }
+  });
+
+  trackForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const name = trackName.value.trim().slice(0, 120);
+    const value = Number(trackValue.value);
+    if (!name || !Number.isFinite(value)) return;
+    try {
+      const space = (trackSpace.value === "household" || trackSpace.value === "work" ? trackSpace.value : "personal") satisfies SpaceId;
+      const unit = trackUnit.value.trim().slice(0, 40);
+      const definition = await trackService.define({ name, valueType: "NUMBER", ...(unit ? { unit } : {}), space });
+      await trackService.observe(definition, value);
+      trackForm.reset();
+      trackStatus.textContent = copy.trackSaved(name);
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      trackStatus.textContent = describeError(error, "Observation capture failed");
+    }
+  });
+
+  expenseForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      const space = (expenseSpace.value === "household" || expenseSpace.value === "work" ? expenseSpace.value : "personal") satisfies SpaceId;
+      await captureExpense(commands, { merchant: expenseMerchant.value, amount: expenseAmount.value, currency: expenseCurrency.value, space });
+      expenseForm.reset();
+      expenseStatus.textContent = copy.expenseSaved;
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      expenseStatus.textContent = error instanceof Error ? error.message : "Expense capture failed";
+    }
+  });
+
+  healthForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      const space = (healthSpace.value === "household" || healthSpace.value === "work" ? healthSpace.value : "personal") satisfies SpaceId;
+      await captureHealthMeasurement(commands, { metric: healthMetric.value, value: Number(healthValue.value), unit: healthUnit.value, subjectId: healthSubject.value, note: healthNote.value, space });
+      healthForm.reset();
+      healthFormStatus.textContent = copy.measurementSaved;
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      healthFormStatus.textContent = error instanceof Error ? error.message : "Health measurement capture failed";
+    }
   });
 
   let focusStartedAt: string | undefined;
@@ -402,29 +706,51 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     if (!focusStartedAt) {
       focusStartedAt = new Date().toISOString();
       focusToggle.textContent = copy.stopFocus;
-      focusStatus.textContent = copy.startedMessage(new Date(focusStartedAt).toLocaleTimeString(presentation.locale));
+      focusStatus.textContent = copy.startedMessage(formatDateTime(presentation.locale, focusStartedAt));
       return;
     }
     const startedAt = focusStartedAt;
     const endedAt = new Date().toISOString();
     const durationMinutes = Math.max(0, Math.round((Date.parse(endedAt) - Date.parse(startedAt)) / 60000));
-    await commands.create({
-      recordType: "observation",
-      owner: "platform.time",
-      data: { text: "Focus session", kind: "focus-session", startedAt, endedAt, durationMinutes, space: "personal", triageStatus: "REVIEWED" }
-    });
-    focusStartedAt = undefined;
-    focusToggle.textContent = copy.startFocus;
-    focusStatus.textContent = copy.savedFocusMessage(durationMinutes);
-    await renderRecords(searchQuery.value);
+    try {
+      await commands.create({
+        recordType: "observation",
+        owner: "platform.time",
+        data: { text: "Focus session", kind: "focus-session", startedAt, endedAt, durationMinutes, space: "personal", triageStatus: "REVIEWED" }
+      });
+      focusStartedAt = undefined;
+      focusToggle.textContent = copy.startFocus;
+      focusStatus.textContent = copy.savedFocusMessage(durationMinutes);
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      focusStatus.textContent = describeError(error, "Focus session could not be saved; the session remains active.");
+    }
+  });
+
+  reminderForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      const dueAt = new Date(reminderDue.value).toISOString();
+      const data = makeReminderData(reminderTitle.value, dueAt, "IN_APP");
+      await commands.create({ recordType: "observation", owner: "platform.time", data: { ...data, text: data.title, space: "personal", triageStatus: "REVIEWED" } });
+      reminderForm.reset();
+      reminderStatus.textContent = timeCopy.reminderSaved;
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      reminderStatus.textContent = describeError(error, "Reminder was not saved");
+    }
   });
 
   searchForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const query = searchQuery.value.trim();
-    await renderRecords(query);
-    const health = await store.getSearchHealth();
-    searchStatus.textContent = query ? copy.resultMessage((await store.search(query)).length, health.valid ? copy.healthy : copy.degraded) : copy.showingAll;
+    try {
+      await renderRecords(query);
+      const health = await store.getSearchHealth();
+      searchStatus.textContent = query ? copy.resultMessage((await store.search(query)).length, health.valid ? copy.healthy : copy.degraded) : copy.showingAll;
+    } catch (error) {
+      searchStatus.textContent = describeError(error, "Search failed; canonical data was not changed.");
+    }
   });
 
   relateForm.addEventListener("submit", async (event) => {
@@ -434,9 +760,13 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       return;
     }
     const relation = relateLabel.value.trim() || "related";
-    await commands.relate(relateSource.value, relateTarget.value, relation);
-    relateStatus.textContent = copy.linkCreated;
-    await renderRecords(searchQuery.value);
+    try {
+      await commands.relate(relateSource.value, relateTarget.value, relation);
+      relateStatus.textContent = copy.linkCreated;
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      relateStatus.textContent = describeError(error, "Relationship was not created");
+    }
   });
 
   clearSearch.addEventListener("click", async () => {
@@ -451,65 +781,125 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     archivePanel.hidden = !showing;
     toggleArchive.setAttribute("aria-expanded", String(showing));
     toggleArchive.textContent = showing ? copy.hideArchived : copy.showArchived;
-    if (showing) await renderArchived();
+    if (showing) {
+      try {
+        await renderArchived();
+      } catch (error) {
+        recoveryStatus.textContent = describeError(error, "Archived records could not be displayed");
+      }
+    }
   });
 
-  themeToggle.addEventListener("click", () => {
+  themeToggle.addEventListener("click", async () => {
     const dark = root.dataset.theme !== "dark";
-    presentation = { ...presentation, theme: dark ? "dark" : "light" };
-    root.dataset.theme = presentation.theme;
-    document.documentElement.dataset.theme = presentation.theme;
-    themeToggle.textContent = dark ? copy.themeLight : copy.themeDark;
-    themeToggle.setAttribute("aria-pressed", String(dark));
-    void store.setSetting("presentation", presentation);
+    const nextPresentation: PresentationProfile = { ...presentation, theme: dark ? "dark" : "light" };
+    try {
+      await store.setSetting("presentation", nextPresentation);
+      presentation = nextPresentation;
+      root.dataset.theme = presentation.theme;
+      document.documentElement.dataset.theme = presentation.theme;
+      themeToggle.textContent = dark ? copy.themeLight : copy.themeDark;
+      themeToggle.setAttribute("aria-pressed", String(dark));
+    } catch (error) {
+      presentationStatus.textContent = describeError(error, "Theme preference was not saved");
+    }
   });
 
   presentationForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const nextName = productName.value.trim().slice(0, 80);
     if (!nextName) return;
-    const nextLocale = localeInput.value === "fr-CA" ? "fr-CA" : "en-CA";
+    const nextLocale: PresentationProfile["locale"] = localeInput.value === "fr-CA" ? "fr-CA" : "en-CA";
     const localeChanged = nextLocale !== presentation.locale;
-    presentation = { ...presentation, productName: nextName, locale: nextLocale };
-    await store.setSetting("presentation", presentation);
-    if (localeChanged) {
-      await mountApp(root, store, commands);
-      return;
+    try {
+      const nextPresentation: PresentationProfile = { ...presentation, productName: nextName, locale: nextLocale };
+      await store.setSetting("presentation", nextPresentation);
+      presentation = nextPresentation;
+      if (localeChanged) {
+        await mountApp(root, store, commands);
+        return;
+      }
+      productLabel.textContent = `${presentation.productName} ${copy.foundation}`;
+      presentationStatus.textContent = copy.savedName(presentation.productName);
+    } catch (error) {
+      presentationStatus.textContent = describeError(error, "Presentation preference was not saved");
     }
-    productLabel.textContent = `${presentation.productName} ${copy.foundation}`;
-    presentationStatus.textContent = copy.savedName(presentation.productName);
   });
 
   exportButton.addEventListener("click", async () => {
-    const vault = await store.exportVault();
-    const blob = new Blob([JSON.stringify(vault, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "omnevum-vault.json";
-    link.click();
-    window.setTimeout(() => URL.revokeObjectURL(url), 0);
-    recoveryStatus.textContent = copy.exportMessage(vault.records.length);
+    try {
+      const vault = await store.exportVault();
+      const blob = new Blob([JSON.stringify(vault, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "omnevum-vault.json";
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 0);
+      recoveryStatus.textContent = copy.exportMessage(vault.records.length);
+    } catch (error) {
+      recoveryStatus.textContent = describeError(error, "Vault export failed; canonical data was not changed.");
+    }
+  });
+
+  encryptedExportButton.addEventListener("click", async () => {
+    if (vaultPassword.value.length < 8) {
+      recoveryStatus.textContent = recoveryCopy.passwordRequired;
+      vaultPassword.focus();
+      return;
+    }
+    try {
+      const encrypted = await encryptVault(await store.exportVault(), vaultPassword.value);
+      downloadJson("omnevum-vault.encrypted.json", encrypted);
+      vaultPassword.value = "";
+      recoveryStatus.textContent = recoveryCopy.encryptedExported;
+    } catch (error) {
+      recoveryStatus.textContent = describeError(error, "Encrypted Vault export failed; canonical data was not changed.");
+    }
   });
 
   diagnosticsButton.addEventListener("click", async () => {
-    const diagnostics = await store.exportDiagnostics();
-    downloadJson("omnevum-diagnostics.json", diagnostics);
-    recoveryStatus.textContent = copy.diagnosticsMessage;
+    try {
+      const diagnostics = await store.exportDiagnostics();
+      downloadJson("omnevum-diagnostics.json", diagnostics);
+      recoveryStatus.textContent = copy.diagnosticsMessage;
+    } catch (error) {
+      recoveryStatus.textContent = describeError(error, "Diagnostics export failed");
+    }
   });
 
   repairSearchButton.addEventListener("click", async () => {
-    await store.rebuildSearchIndex();
-    recoveryStatus.textContent = copy.searchRepairMessage;
-    await renderRecords(searchQuery.value);
+    try {
+      await store.rebuildSearchIndex();
+      recoveryStatus.textContent = copy.searchRepairMessage;
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      recoveryStatus.textContent = describeError(error, "Search repair failed; canonical data was not changed.");
+    }
+  });
+
+  clearCanonicalButton.addEventListener("click", async () => {
+    if (!window.confirm(recoveryCopy.clearConfirmation)) return;
+    try {
+      await store.clear();
+      recoveryStatus.textContent = recoveryCopy.clearedCanonical;
+      await renderRecords();
+    } catch (error) {
+      recoveryStatus.textContent = describeError(error, "Canonical data was not cleared");
+    }
   });
 
   importInput.addEventListener("change", async () => {
     const file = importInput.files?.[0];
     if (!file) return;
     try {
-      const result = await store.importVault(parseVault(await file.text()));
+      const text = await file.text();
+      if (new TextEncoder().encode(text).byteLength > MAX_VAULT_JSON_BYTES) throw new Error("Vault JSON exceeds the bounded 64 MiB import limit");
+      const parsed: unknown = JSON.parse(text);
+      const vault = isEncryptedVaultEnvelope(parsed) ? await decryptVault(parsed, vaultPassword.value) : parseVault(text);
+      const result = await store.importVault(vault);
       recoveryStatus.textContent = copy.importedMessage(result.imported, result.skipped, result.conflicts);
+      vaultPassword.value = "";
       await renderRecords();
     } catch (error) {
       recoveryStatus.textContent = error instanceof Error ? error.message : "Vault import failed";
@@ -543,4 +933,14 @@ function downloadJson(fileName: string, value: unknown): void {
   link.download = fileName;
   link.click();
   window.setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+function recordTypeForCaptureKind(kind: CaptureKind): "note" | "task" | "observation" {
+  if (kind === "task") return "task";
+  if (kind === "observation" || kind === "expense" || kind === "measurement" || kind === "workout") return "observation";
+  return "note";
+}
+
+function describeError(error: unknown, fallback: string): string {
+  return error instanceof Error && error.message ? error.message : fallback;
 }

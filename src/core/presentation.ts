@@ -26,3 +26,9 @@ export function parsePresentationProfile(value: unknown): PresentationProfile {
     locale: candidate.locale === "fr-CA" ? "fr-CA" : "en-CA"
   };
 }
+
+export function isPresentationProfile(value: unknown): value is PresentationProfile {
+  if (typeof value !== "object" || value === null) return false;
+  const candidate = value as Record<string, unknown>;
+  return candidate.schemaVersion === 1 && typeof candidate.productName === "string" && candidate.productName.trim().length > 0 && candidate.productName.trim().length <= 80 && (candidate.theme === "light" || candidate.theme === "dark") && (candidate.locale === "en-CA" || candidate.locale === "fr-CA");
+}

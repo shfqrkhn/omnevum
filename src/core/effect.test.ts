@@ -13,6 +13,7 @@ function operation(): EffectOperation {
     createdAt: new Date().toISOString(),
     status: "PENDING",
     retryCount: 0,
+    retryPolicy: { maxAttempts: 3, backoffSeconds: 1 },
     evidence: []
   };
 }

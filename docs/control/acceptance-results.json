@@ -1,0 +1,1018 @@
+{
+  "schemaVersion": 1,
+  "kind": "acceptance-result-register",
+  "generatedBy": "scripts/generate-control.mjs",
+  "authority": "maintained status overlay on the generated acceptance-scenario register",
+  "source": {
+    "mpes": {
+      "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+      "sha256": "585e2f178e47ca344c576eec16367585d1f347c2776a3c0c93a7cd4f9be4b6f3"
+    },
+    "omni": {
+      "path": "docs/Omni_3.32.0.md",
+      "sha256": "061a15a918c3713075244ddcd548e7c3c946fd4bcb1e12b6995bdd777adc3d2b"
+    },
+    "package": {
+      "path": "package.json",
+      "sha256": "90c94afe5640483c34e3e45469dbd39ed023ecec1e383881b99739d60936e733"
+    },
+    "lockfile": {
+      "path": "package-lock.json",
+      "sha256": "85518025625e43079f8f14b302f717c123501818e58d5a416bd2bf4f3b502a7f"
+    }
+  },
+  "profile": "mvp",
+  "status": "PARTIAL",
+  "statusValues": [
+    "NOT_STARTED",
+    "IN_PROGRESS",
+    "PASS",
+    "PARTIAL",
+    "FAIL",
+    "NOT_APPLICABLE",
+    "UNKNOWN"
+  ],
+  "evidencePolicy": "PASS requires reproducible evidence; NOT_APPLICABLE requires a bounded profile rationale; UNKNOWN remains release-visible.",
+  "items": [
+    {
+      "id": "OMN-ACC-001",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3390
+      },
+      "text": "A new user opens Omnevum from a GitHub Pages deployment on a supported mobile browser, completes minimal/skippable onboarding, creates canonical records, closes/reopens, and retains data without a mandatory account or backend.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-002",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3392
+      },
+      "text": "After the app shell is cached, the user performs core local workflows offline and sees explicit degradation only for capabilities that actually require network access.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-003",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3394
+      },
+      "text": "The user changes branding from Omnevum to JohnOS, changes logo/theme/lens labels, upgrades Omnevum, and retains personal branding without changing canonical record identities.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-004",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3396
+      },
+      "text": "The user switches between accessible Light and AMOLED Dark themes; critical state, focus, text, charts, and interactions remain readable and accessible.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-005",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3398
+      },
+      "text": "Safe Presentation Mode recovers from a deliberately broken custom presentation profile without deleting that profile or canonical data.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-006",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3400
+      },
+      "text": "The user switches UI locale, number/date formatting, and measurement presentation without altering canonical semantic values or translating user-authored content.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-007",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3402
+      },
+      "text": "A canonical record appears in multiple authorized lenses/projections without creating unsynchronized writable copies.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-008",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3404
+      },
+      "text": "Search index corruption is injected; Omnevum reports degradation, rebuilds the derived index, and canonical data remains intact.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-009",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3406
+      },
+      "text": "Storage quota pressure is injected; replaceable state is reclaimed before canonical data and the user receives explicit storage/backup guidance.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-010",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3408
+      },
+      "text": "A coherent Vault backup is exported on one major browser/platform family and restored on a materially different supported family with semantic IDs/revisions/provenance preserved.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-011",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3410
+      },
+      "text": "The user syncs to at least one consumer cloud route and one zero-required-payment/self-hosted or owner-controlled route; provider migration preserves logical identity.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-012",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3412
+      },
+      "text": "A stale/offline replica reappears after deletion; tombstone/rejoin semantics prevent silent resurrection.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-013",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3414
+      },
+      "text": "All product AI routes are disabled. Core data, Home, Search, visualization/modeling, backup/restore, and Recovery remain usable.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-014",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3416
+      },
+      "text": "The same shared AI broker is used by at least two distinct domain workflows without either domain owning provider credentials.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-015",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3418
+      },
+      "text": "An AI response containing malicious embedded instructions cannot expand context scope, switch provider/disclosure class, modify permissions, or execute a canonical mutation without the normal command/policy path.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-016",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3420
+      },
+      "text": "One first-party module fails during startup/runtime; Home/System/Recovery and unrelated modules remain usable.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-017",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3422
+      },
+      "text": "An update/migration is intentionally interrupted. Omnevum does not silently reset data and offers a tested recovery/repair path.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-018",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3424
+      },
+      "text": "A user moves the static distribution from one HTTPS origin to another using Vault backup/sync rather than depending on browser-private origin storage migration.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-019",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3426
+      },
+      "text": "A fresh AI engineer creates a nontrivial stateful module using only the public Omnevum app contract and normal repository interfaces.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-020",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3428
+      },
+      "text": "A fresh AI engineer creates a nontrivial game using the same package/lifecycle infrastructure and proves save/resume, touch input, responsive behavior, and Recovery.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-021",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3430
+      },
+      "text": "The engineering run is interrupted mid-project and a fresh agent resumes from repository/control state without the original conversation or repeated owner questions.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-022",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3432
+      },
+      "text": "Upstream dependency change is detected, evaluated as a candidate, and either adopted, adapted, deferred, or rejected without silently breaking the released Omnevum contract.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-023",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3434
+      },
+      "text": "The user substantially personalizes navigation, Home composition, terminology, typography/iconography, layout/density, branding, and theme without a source-code fork; the changes are reversible and do not alter canonical semantic IDs or permissions.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-024",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3436
+      },
+      "text": "The user renames an installed system to JohnOS. All Omnevum-controlled in-app surfaces update immediately; on a target that does not dynamically update installed Home-Screen/OS metadata, Omnevum truthfully reports PLATFORM_LIMITED and provides the supported refresh/reinstall path without corrupting data/install identity.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-025",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3438
+      },
+      "text": "The accepted core is deployed on the constrained GitHub Pages profile without custom server response headers/functions. Core security/privacy/durability claims that are made for that profile remain valid; a deliberately header-dependent optional feature is explicitly unavailable/degraded rather than silently assumed safe.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-026",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3440
+      },
+      "text": "On a supported browser row where OPFS is unavailable or deliberately disabled, ordinary canonical structured records remain usable through the qualified fallback; only features that genuinely require unavailable large-file semantics degrade explicitly.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-027",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3442
+      },
+      "text": "A fork/self-host deployment changes origin and configures its own supported Google/Microsoft public-client connector identity without changing canonical data schemas; where provider registration is unavailable, a qualified WebDAV/manual Vault path still permits zero-required-payment backup/portability without an Omnevum backend.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-028",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3444
+      },
+      "text": "A mixed-language Vault is searched and summarized with the UI in a different locale; canonical source text remains unchanged, derived indexes/translations remain rebuildable/provenance-bound, and AI/tool actions use stable language-neutral semantic IDs.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-029",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3446
+      },
+      "text": "The user/owner requests a solution-shaped feature. The engineering system records or demonstrably applies XY analysis, finds a simpler existing/shared/FOSS/integration route that satisfies the underlying outcome, and avoids unnecessary new subsystem code without dropping material requested behavior.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-030",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3448
+      },
+      "text": "The same large provider/export archive is imported twice. Acquire/Ingest recognizes source identity/content overlap, previews the reconciliation, avoids duplicate canonical records, preserves provenance, and reports any ambiguous conflicts instead of silently duplicating or overwriting user meaning.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-031",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3450
+      },
+      "text": "A heterogeneous personal-data export containing timeline events, artifacts, people, and locations is staged through Acquire/Ingest; raw/source identity remains inspectable, candidate mappings are previewable, and accepted records route to their canonical owners without creating a universal writable import database.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-032",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3452
+      },
+      "text": "A document/photo/receipt is represented once by the Artifact capability and referenced from multiple authorized domain records; derived preview/OCR/index corruption can be rebuilt without duplicating or losing the canonical artifact/reference.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-033",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3454
+      },
+      "text": "A location/GPX/GeoJSON import is used by travel/timeline and another domain through shared Place/Geo semantics; disabling location tracking does not remove imported historical data or require continuous surveillance.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-034",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3456
+      },
+      "text": "A user shares an explicitly bounded snapshot/projection. Linked private records, credentials, AI authority, attachments outside scope, and unrelated provenance do not transitively leak.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-035",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3458
+      },
+      "text": "A material upstream FOSS dependency publishes a new major release. Automation detects it, records release notes/currentness, stages an isolated candidate, runs characterization/contract/migration/target gates, and either adopts/adapts/defers/rejects it without modifying the accepted runtime until promotion.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-036",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3460
+      },
+      "text": "A new FOSS entrant appears that provides a currently missing or locally bespoke capability with materially lower lifecycle cost. The ecosystem radar adds it to the Capability Coverage Matrix, performs exact source/license/security/fit evaluation, and either replaces/consolidates the old path after proof or records why not.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-037",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3462
+      },
+      "text": "A high-severity vulnerability affects a shipped optional dependency. The security fast lane identifies affected scope, prevents false PASS, qualifies a fix/replacement or safely disables/degrades only the affected capability, and preserves unrelated core operation and user data.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-038",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3464
+      },
+      "text": "An adopted FOSS component is removed from public package/repository infrastructure. The accepted Omnevum release continues to run, and the documented reconstruction path either succeeds from retained lawful inputs or reports the exact bounded reconstruction limitation without silently substituting content.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-039",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3466
+      },
+      "text": "A copyleft FOSS capability is selected because it materially dominates alternatives. The release proves exact license/provenance/notice/corresponding-source obligations or isolates the component through a compliant integration; no license is silently misrepresented.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-040",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3468
+      },
+      "text": "An upstream project adds functionality that supersedes an Omnevum local patch or duplicate subsystem. The maintenance cycle proves parity, removes the obsolete local path, reduces the patch/delta burden, and reruns affected regression/release evidence.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-041",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3470
+      },
+      "text": "Before the initial shell/substrate architecture is frozen, the engineering system characterizes a current whole-app FOSS launchpad candidate such as NeumanOS and compares adapt/harvest/greenfield routes against static-host, mobile, local-first, accessibility, test, license, migration, and lifecycle criteria. The selected route records evidence that it is not an avoidable greenfield reinvention.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-042",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3472
+      },
+      "text": "The user creates one generic Track/Observe definition, records observations quickly from mobile, reuses the same canonical definition in multiple views/lenses, charts it through Visualize, and later maps selected observations into a specialist domain without duplicating or silently reclassifying source records.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-043",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3474
+      },
+      "text": "A large Vault uses qualified incremental repository mode to create two coherent snapshots with deduplication/chunk reuse, interrupt/resume an upload, verify integrity, prune unreachable data safely, and restore the selected snapshot through a different qualified transport without changing canonical IDs. The same product also supports a simple portable archive for a small Vault.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-044",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3476
+      },
+      "text": "Omnevum preserves an external Web/document source as an Artifact with provenance plus a bounded standard/portable snapshot where allowed; derived extraction/thumbnail/index data can be rebuilt while user highlights/annotations remain separate canonical meaning linked to the source.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-045",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3478
+      },
+      "text": "The game factory implements a nontrivial browser game using a qualified FOSS engine behind an Omnevum adapter, then upgrades or substitutes the engine in an isolated candidate while preserving Omnevum package/save/lifecycle contracts and rerunning game/browser/mobile/recovery evidence.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-046",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3480
+      },
+      "text": "A material upstream-backed capability is tested against both the currently accepted upstream version and a candidate update using the same Omnevum-owned compatibility harness. A changed upstream behavior is detected before promotion; either the adapter/migration is updated and all affected evidence passes, or the candidate is rejected/deferred without ordinary domain modules silently inheriting the break.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-047",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3482
+      },
+      "text": "A material canonical record is edited through several revisions; the user can inspect meaningful history/diff and safely revert an allowed change without using disaster backup. The owning domain's retention/deletion policy governs whether superseded sensitive revisions remain, and History/Version does not create a second writable copy or silently resurrect a deleted record.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-048",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3484
+      },
+      "text": "A user or qualified AI creates a declarative Compose/View definition containing a form, table/list, chart, and configurable dashboard arrangement over authorized canonical data. The view works on compact touch and expanded layouts, inherits theme/localization/accessibility, survives an Omnevum update, and every mutation still passes the owning semantic command/validation/permission path.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-049",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3486
+      },
+      "text": "A package uses a declarative automation predicate/rule. Malicious or malformed rule input cannot execute arbitrary JavaScript, access credentials/network/storage directly, or bypass confirmation/permission; a true rule only proposes an already-admitted semantic action.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-050",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3488
+      },
+      "text": "Artifact/Acquire processes representative PDF, CSV, image metadata, and OCR-capable inputs through qualified browser-native adapters. Large/heavy work is cancellable/resource-bounded, original source identity/provenance is preserved, derived output is marked DERIVED, and hostile extracted/HTML content cannot execute active behavior.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-051",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3490
+      },
+      "text": "The same logical Vault/replica identity can move between a vendor file transport and a qualified open personal-data/storage endpoint without changing canonical record IDs. Provider/schema-specific identifiers remain adapter metadata, and losing the remote endpoint does not prevent local core use.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-052",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3492
+      },
+      "text": "Before Omnevum ships a bespoke general-purpose Vault/sync engine, the engineering system qualifies at least one close browser-native FOSS substrate such as SelfStore plus one materially different alternative such as remoteStorage/Etebase/Solid-compatible tooling. If a candidate satisfies the contract at lower lifecycle cost, it is adopted or adapter-wrapped; if not, the rejected capability gaps become tests for the selected implementation.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-053",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3494
+      },
+      "text": "A fresh AI engineer defines an ordinary record-oriented first-party package using package/domain schema plus Omnevum capability declarations and obtains a generated baseline list/detail/form/capture experience with responsive, accessible, localized, themed behavior. The generated UI contains no direct-store or permission bypass and can be replaced by a specialized hand-composed workflow without data migration.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-054",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3496
+      },
+      "text": "A NeumanOS-class launchpad harvest assessment maps substantial working features to RETAIN, ADAPT, GENERALIZE, REPLACE, EXTERNALIZE, or DROP, identifies duplicate/local databases and high-authority seams, and proves that the selected fork/harvest/greenfield route preserves more qualified working value per lifecycle cost than the rejected routes.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-055",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3498
+      },
+      "text": "The same canonical record participates in two user-defined Spaces/Scopes (for example Personal and Household or Work) without writable duplication. Search/Home/Assistant can be bounded to one Space, sharing one Space does not disclose out-of-scope linked records, and deleting the Space does not silently delete the underlying canonical record.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-056",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3500
+      },
+      "text": "A representative large CSV/JSON/Parquet analytical dataset is queried locally through a qualified browser analytical projection engine such as DuckDB-Wasm without changing canonical ownership. The workload remains usable on the claimed target, cancellation/resource bounds work, required runtime assets are available under the static/offline profile, and remote extension/data fetch is not silently triggered.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-057",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3502
+      },
+      "text": "Search is exercised against a representative multilingual/mobile Vault using at least two materially different qualified browser search candidates before the engine is frozen. The selected implementation proves rebuildability, permission-sensitive invalidation, acceptable mobile memory/latency, typo/prefix/ranking behavior required by the profile, and full-text operation without mandatory AI/vector embeddings.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-058",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3504
+      },
+      "text": "A source permission or Space/Scope access change invalidates or filters affected full-text/vector/analytical derived projections so stale indexes, embeddings, query caches, or analytical tables cannot continue exposing data that the current authorized projection no longer includes.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-059",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3506
+      },
+      "text": "Omnevum connects to a controlled browser-compatible MCP/standard tool endpoint through the AI/tool broker. An allowed tool can propose an admitted semantic action, while a malicious or changed tool schema/prompt cannot widen Vault context, obtain credentials, bypass Space/Scope or domain permissions, or directly mutate canonical state. Disconnecting or making the endpoint unavailable degrades only the optional integration and does not break the non-AI/core product.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-060",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3508
+      },
+      "text": "The user highlights/comments on text and marks an image/PDF region using Annotate/Markup. The annotation remains a separate source-linked record with stable identity and provenance; exporting through a qualified portable annotation mapping preserves the relationship, while source modification that invalidates the anchor produces an explicit stale/orphan/ambiguous state rather than silently moving the annotation.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-061",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3510
+      },
+      "text": "A messy imported dataset is cleaned with previewed transformations, clustering/deduplication, and source/entity reconciliation. The accepted recipe/history is replayable/inspectable, ambiguous matches remain unresolved for review, and the original source plus provenance remain available; no fuzzy rule silently merges distinct canonical people/accounts/assets/records.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-062",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3512
+      },
+      "text": "On a supported installed/browser target, the user shares text, a URL, or a supported file to Omnevum through the platform share sheet and reaches staged Capture/Acquire without bypassing validation/provenance. On a target without qualified share-target support, equivalent capture remains available through ordinary in-app URL/text/file/clipboard flows.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-063",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3514
+      },
+      "text": "The user imports bibliographic data from at least two qualified interchange families such as BibTeX/RIS/CSL-JSON, links a reference to an Artifact/source plus user annotations, and renders citations/bibliography through a selectable style. Changing the style changes only derived presentation; it does not mutate source/evidence identity or annotation truth.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-064",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3516
+      },
+      "text": "A spatial Compose/View canvas contains freeform drawing plus references to canonical records. Moving/styling/grouping referenced nodes changes only view state unless the user invokes an admitted semantic command; a standalone drawing can be exported/backed up as an Artifact, and upgrading/replacing the underlying canvas engine does not require canonical-record migration.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-065",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3518
+      },
+      "text": "The user captures an ambiguous mixed item into the universal inbox. Triage/Clarify preserves the raw source and provenance, proposes possible owner/type/actions without silently committing them, lets the user split/link/route/defer/reference/delete through admitted commands, and closes the staging item without leaving duplicate writable copies. A separate unambiguous capture can bypass the inbox through an explicit safe route.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-066",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3520
+      },
+      "text": "The user performs a representative local document-finishing workflow such as annotate/fill/sign/mark, redact, page reorder, merge/split, compress, or convert using qualified browser-native FOSS. Omnevum preserves the original source by default, emits a derived Artifact with provenance, works without uploading the content, and does not misrepresent a visual signature/mark as a separately qualified legal/cryptographic signature.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-067",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3522
+      },
+      "text": "A user creates an external connector action while offline. Effect/Outbox persists one typed operation, the app/browser is restarted, and replay occurs only after current authority/credential/Space/destination revalidation. An injected ambiguous remote response enters OUTCOME_UNKNOWN/RECONCILE and is reconciled before retry; the final external system contains no duplicate effect, or any unavoidable duplication risk is surfaced truthfully.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-068",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3524
+      },
+      "text": "A reminder becomes due while Omnevum is closed on a target without qualified exact background scheduling. Omnevum does not falsely claim it notified at the due time; on next open/resume it deterministically surfaces the missed/overdue reminder. On a separately qualified external-calendar or ntfy/Gotify-class companion profile, stronger delivery may occur without making that companion a core dependency.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-069",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3526
+      },
+      "text": "A user enables a supported passkey/WebAuthn device-unlock wrapper for protected Vault/recovery secret access, then loses that browser profile or migrates Omnevum to a different HTTPS origin. Portable recovery using the independent recovery secret/key still succeeds, the old origin-bound passkey is not falsely treated as portable ownership, and the user can re-enroll a new local wrapper after restore.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-070",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3528
+      },
+      "text": "A connector/API credential is stored/used through the credential/key broker. Ordinary modules, declarative views/rules, diagnostics, ordinary Vault export, and model-visible AI context cannot read the raw reusable credential; revoking/locking it invalidates future broker effects and pending Effect/Outbox replay without deleting unrelated canonical data.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-071",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3530
+      },
+      "text": "An authorized set of canonical records is exported/projected through a qualified JSON-LD/RDF semantic-graph profile and queried/validated with a browser-local SPARQL/SHACL-class engine. Source IDs/provenance/disclosure boundaries are preserved, inferred/validation/query results remain DERIVED, and importing graph data routes through Acquire/Triage rather than directly mutating canonical owners.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-072",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3532
+      },
+      "text": "Before the initial whole-app route is frozen, current NeumanOS and Kurumi candidates are both characterized when still materially relevant. The engineering decision records which working features/code/tests are retained/harvested/adapted/replaced, and demonstrates that the selected combined fork/harvest/greenfield route dominates the rejected routes on static-host fit, canonical ownership, mobile/accessibility, security, updateability, and time-to-accepted-result.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-073",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3534
+      },
+      "text": "A user with an eligible paid AI subscription enables a provider-supported subscription route through the official SDK/agent/CLI or a qualified local companion without entering an API key. An Omnevum workflow uses only the authorized context projection, the result is marked DERIVED with route/provenance, and disabling the companion leaves all non-AI/core functions intact.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-074",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3536
+      },
+      "text": "The selected subscription route reaches its included quota or reports uncertain quota state. Omnevum does not silently purchase credits, activate usage-based billing, switch to a metered API key, or widen disclosure. It stops/degrades or moves only to another route explicitly allowed by the user's route policy.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-075",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3538
+      },
+      "text": "Provider currentness marks a consumer-web/OAuth-piggyback technique as TERMS_BLOCKED (for example current ChatGPT web automatic extraction or current Google legacy Gemini-CLI OAuth harvesting). Omnevum refuses that programmatic route without attempting stealth/browser impersonation and instead offers an official subscription agent, reverse integration, manual handoff, local model, or explicit API route where available.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-076",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3540
+      },
+      "text": "A plan/workspace that supports a reverse app/MCP/connector integration lets an external subscribed assistant query a deliberately bounded Omnevum projection. Read-only provider limits remain read-only; a write-capable provider action still traverses Omnevum's semantic-command/permission/Effect-Outbox path. Removing the external integration revokes future access without deleting canonical records.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-077",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3542
+      },
+      "text": "The engineering factory completes the same representative stateful work item under two materially different qualified agent hosts, with at least one current FOSS/open host when practical and at least one current subscription-backed official agent when the owner has that entitlement. The durable controller/evidence lets work resume after switching hosts without replaying owner decisions from chat.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-078",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3544
+      },
+      "text": "Camera/photo, microphone/audio, file/share/clipboard, geolocation, and barcode/QR capture are exercised through the Device/Input broker on supported profiles. Permission denial/cancellation releases resources and degrades to qualified manual/file alternatives; no module retains ambient camera/mic/location authority, and captured data routes through Artifact/Acquire/Track/Place/Triage rather than a private device database.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-079",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3546
+      },
+      "text": "Local AI is exercised against at least two materially different qualified browser runtimes or one runtime plus a browser-native built-in API where available. Model download/cache, WebGPU/WASM capability detection, worker/main-thread behavior, cancellation, memory/storage pressure, offline reuse and route fallback are measured before the runtime is frozen.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-080",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3548
+      },
+      "text": "A representative rich document/spreadsheet/canvas workflow is satisfied by a qualified reusable editor/office component or external-office integration rather than bespoke engine code. The editor does not gain global storage/AI/permission/sync authority, is lazy-loaded where heavy, and import/export round-trip loss is tested/reported.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-081",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3550
+      },
+      "text": "The first release containing adopted/copied FOSS runs an automated compliance pipeline that generates dependency/source/license inventory, notices/attribution and SBOM data, identifies applicable source/corresponding-source obligations, and fails closed on unresolved policy-critical findings instead of relying on a manually maintained notice list.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-082",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3552
+      },
+      "text": "If executable third-party extension support is claimed, a qualified isolation substrate passes adversarial tests for global/prototype escape, network/storage access, CPU/memory abuse, message validation, update revocation and capability leakage. If it does not, the release still supports declarative extensions but truthfully leaves executable third-party packages disabled.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-083",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3554
+      },
+      "text": "A representative large personal-health/wearable export is ingested through USER_EXPORT_IMPORT on a static-browser target with streaming/resource bounds, provenance, idempotent re-import and explicit subject identity. On a target with no direct browser HealthKit/Health Connect access, Omnevum reports PLATFORM_LIMITED instead of pretending direct access; an optional native/local companion can be enabled and removed without changing canonical IDs or breaking the file-import path.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-084",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3556
+      },
+      "text": "A person-specific sharing/delegation grant is created for a bounded purpose/Space/data set, used for an authorized projection/effect, then revoked. Future share/effect attempts are blocked after revalidation, stale derived/share state is reconciled as required, and neither household/contact membership nor provider ACLs silently recreate the grant.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-085",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3558
+      },
+      "text": "A provider whose current terms explicitly permit browser automation is exercised through a qualified user-controlled browser bridge and the same bounded AI Context Broker. The route does not scrape or reuse unrelated session data, bypass protective measures, exceed allowed automation scope, or become the sole AI path. Changing the provider's currentness state to TERMS_BLOCKED disables the route without data loss or hidden fallback.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-086",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3560
+      },
+      "text": "A local terms-aware Subscription Bridge discovers at least two officially authenticated provider agent/CLI surfaces the user already pays for, exposes them through typed provider-specific adapters without exporting raw session credentials to the PWA, and routes a bounded task according to capability/cost/currentness policy. A provider route known to prohibit third-party OAuth/session piggybacking is absent or TERMS_BLOCKED even if a community bridge could technically invoke it; disabling the bridge leaves canonical data and non-AI core behavior intact.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-087",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3562
+      },
+      "text": "If a release/profile admits downloadable offline maps, Place/Geo downloads a bounded offline map region through a qualified MapLibre/PMTiles-class route, reports expected size/quota and data attribution before or during acquisition as appropriate, remains usable without network, and can remove/reacquire the replaceable map package without changing canonical place/route identities. A target without the selected OPFS path degrades to an admitted fallback or PLATFORM_LIMITED state rather than losing canonical Place/Geo data.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-088",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3564
+      },
+      "text": "If a camera-document-scanning workflow is admitted, the user scans a multipage document through Device/Input using a qualified browser-local scanner path. Raw captured page frames remain recoverable until the owning workflow deliberately discards them; crop/corners/rotation/filter/perspective changes are represented as reversible derived edit state through preview/export; heavy CV work does not block the camera UI; cancellation/permission denial releases resources; and the resulting PDF/image Artifact carries source/provenance without creating a scanner-owned document database.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-089",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3566
+      },
+      "text": "If a release claims in-browser editing of DOCX/XLSX/PPTX-class artifacts, a representative workflow is exercised through a qualified static/browser-only office component with no required document server or content upload. Heavy editor assets are lazy/offline qualified, host-owned save/provenance remains under Artifact, exact round-trip limitations are reported, and applicable copyleft/trademark/notice obligations are satisfied in the candidate release.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-090",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3568
+      },
+      "text": "If live browser-to-browser collaboration is admitted, two authorized browser clients establish a session through a qualified WebRTC/Trystero-class transport from the static-host product, and a separately qualified relay-free QR/libp2p path is exercised on a compatible network when that profile is claimed. Loss of signalling/relay availability, restrictive NAT, client isolation, or suspension degrades only the affected live path; possession of a room/link/QR payload or peer connection alone does not grant data authority; revocation blocks future admitted writes/disclosure; and durable canonical state/Recovery does not depend on an ephemeral peer session.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-091",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3570
+      },
+      "text": "If local speech recognition or synthesis is admitted, the claimed local-speech profile is exercised through materially different qualified browser routes where practical, such as whisper.cpp WASM, sherpa-onnx WebAssembly, or Transformers.js/Kokoro-class TTS. Model/runtime downloads are explicit and reclaimable, unsupported SIMD/WebGPU/memory conditions degrade cleanly, microphone authority stays with Device/Input, retained transcripts/audio-derived meaning remain DERIVED until adopted, and no cloud speech route is silently activated.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-092",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3572
+      },
+      "text": "If the accepted profile admits iCalendar/vCard recurrence import or standards-based calendar interchange, Time imports a representative iCalendar source containing recurrence, time-zone transitions and at least one ambiguous/nonexistent local-time edge. A qualified ICAL.js-class route or proven equivalent preserves the applicable source semantics; Temporal-dependent arithmetic is capability-detected with a qualified fallback where required; recurrence expansion is resource-bounded; and export/re-import does not silently shift canonical instants, wall times, time zones or recurrence meaning.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-093",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3574
+      },
+      "text": "If browser-local media editing/conversion is admitted, a representative large media Artifact is probed, trimmed or transformed through a qualified Mediabunny/WebCodecs-class route when supported, with streaming/cancellation/resource bounds and original-source preservation. Unsupported codecs or target APIs degrade to a separately qualified fallback such as FFmpeg-Wasm or explicit PLATFORM_LIMITED state; no upload or transcoding route is silently widened.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-094",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3576
+      },
+      "text": "If a release/profile renders untrusted HTML/markup, a hostile fixture set including mutation-XSS/DOM-clobbering style cases is processed by the admitted rendering path. Native Sanitizer API use occurs only on support rows where qualified; a maintained DOMPurify-class fallback or equivalent blocks active behavior on other claimed rows; sanitizer bypass/currentness changes invalidate affected evidence; and sanitized presentation still grants no network, credential, canonical-write or external-effect authority.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-095",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3578
+      },
+      "text": "If WARC/WACZ preservation or replay is admitted, a representative archive is parsed through a qualified browser streaming implementation and replayed through a qualified Webrecorder-class path without installing an independent same-origin service worker. Archived active content cannot regain ambient live-network, credential, canonical-write or external-effect authority, and disabling/removing replay leaves the source Artifact and annotations intact.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-096",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3580
+      },
+      "text": "If an official release profile claims cryptographic signing or supply-chain attestation, the exact release artifact digest is verified against its signed bundle/attestation through a qualified open scheme such as Sigstore/cosign or in-toto-compatible metadata. Verification remains possible using the retained verification material required by the claim; provenance is not presented as safety assurance; and any identity/transparency-log disclosure is explicit in the release profile rather than a hidden side effect.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-097",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3582
+      },
+      "text": "If Place/Geo admits nontrivial client-side spatial analysis, representative GeoJSON operations such as distance, intersection/buffer or simplification are exercised through a qualified modular engine such as Turf before bespoke geometry is accepted. Results remain DERIVED, coordinate/reference assumptions are explicit, pathological inputs are resource-bounded, and upgrading/replacing the geometry engine does not change canonical place identities.",
+      "status": "UNKNOWN",
+      "evidence": []
+    },
+    {
+      "id": "OMN-ACC-098",
+      "source": {
+        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+        "line": 3584
+      },
+      "text": "If spreadsheet import/export is admitted, representative XLSX/ODS/CSV-class fixtures are processed through a qualified browser-capable FOSS route such as SheetJS Community Edition where fit. Source/release identity follows the canonical upstream, active content/macros remain inert, formula/value/type/date-loss behavior is reported and tested, and import/export does not turn a spreadsheet parser into canonical domain ownership.",
+      "status": "UNKNOWN",
+      "evidence": []
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -60,6 +60,20 @@ for (const [index, line] of mpes.split(/\r?\n/).entries()) {
 
 const writeJson = (name, value) => writeFileSync(join(controlRoot, name), `${JSON.stringify(value, null, 2)}\n`, "utf8");
 const generatedBy = "scripts/generate-control.mjs";
+const priorAcceptanceResultsPath = join(controlRoot, "acceptance-results.json");
+const priorAcceptanceResults = existsSync(priorAcceptanceResultsPath) ? JSON.parse(readFileSync(priorAcceptanceResultsPath, "utf8")) : undefined;
+const priorAcceptanceById = new Map(Array.isArray(priorAcceptanceResults?.items) ? priorAcceptanceResults.items.filter((item) => item && typeof item.id === "string").map((item) => [item.id, item]) : []);
+const acceptanceResults = acceptance.map((scenario) => {
+  const prior = priorAcceptanceById.get(scenario.id);
+  return {
+    ...scenario,
+    status: typeof prior?.status === "string" ? prior.status : "UNKNOWN",
+    evidence: Array.isArray(prior?.evidence) ? prior.evidence.filter((item) => typeof item === "string") : [],
+    ...(typeof prior?.notes === "string" ? { notes: prior.notes } : {})
+  };
+});
+const resultStatuses = new Set(acceptanceResults.map((item) => item.status));
+const resultStatus = resultStatuses.has("FAIL") ? "FAIL" : resultStatuses.has("UNKNOWN") || resultStatuses.has("PARTIAL") ? "PARTIAL" : resultStatuses.has("IN_PROGRESS") ? "IN_PROGRESS" : "PASS";
 writeJson("requirements.json", {
   schemaVersion: 1,
   kind: "requirement-register",
@@ -75,6 +89,18 @@ writeJson("acceptance-scenarios.json", {
   authority: "projection of the controlling MPES; statuses live in acceptance profiles",
   source,
   items: acceptance
+});
+writeJson("acceptance-results.json", {
+  schemaVersion: 1,
+  kind: "acceptance-result-register",
+  generatedBy,
+  authority: "maintained status overlay on the generated acceptance-scenario register",
+  source,
+  profile: "mvp",
+  status: resultStatus,
+  statusValues: ["NOT_STARTED", "IN_PROGRESS", "PASS", "PARTIAL", "FAIL", "NOT_APPLICABLE", "UNKNOWN"],
+  evidencePolicy: "PASS requires reproducible evidence; NOT_APPLICABLE requires a bounded profile rationale; UNKNOWN remains release-visible.",
+  items: acceptanceResults
 });
 
 const lockedPackages = Object.entries(lock.packages ?? {})
@@ -105,7 +131,7 @@ writeJson("dependency-sbom.json", {
   ]
 });
 
-const generatedFiles = ["requirements.json", "acceptance-scenarios.json", "dependency-sbom.json", "control-manifest.json"];
+const generatedFiles = ["requirements.json", "acceptance-scenarios.json", "acceptance-results.json", "dependency-sbom.json", "control-manifest.json"];
 writeJson("control-manifest.json", {
   schemaVersion: 1,
   kind: "control-manifest",

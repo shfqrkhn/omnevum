@@ -3,6 +3,25 @@ export const VAULT_FORMAT_VERSION = 1 as const;
 
 export type RecordType = "note" | "task" | "observation" | "relationship" | "artifact";
 
+export const CAPTURE_KINDS = [
+  "note",
+  "task",
+  "observation",
+  "expense",
+  "measurement",
+  "workout",
+  "event",
+  "person",
+  "goal",
+  "decision",
+  "url",
+  "voice",
+  "file",
+  "image",
+  "source"
+] as const;
+export type CaptureKind = (typeof CAPTURE_KINDS)[number];
+
 export type TruthClass =
   | "USER_OBSERVATION"
   | "IMPORTED_RECORD"
@@ -26,6 +45,8 @@ export interface CanonicalRecord {
   schemaVersion: typeof CURRENT_SCHEMA_VERSION;
   createdAt: string;
   modifiedAt: string;
+  effectiveAt?: string;
+  subjectId?: string;
   provenance: RecordProvenance;
   truthClass: TruthClass;
   sensitivity: "PRIVATE" | "SHARED";
@@ -55,4 +76,6 @@ export interface VaultDocument {
   records: CanonicalRecord[];
   history?: HistoryEntry[];
   artifacts?: VaultArtifact[];
+  integrity?: { algorithm: "SHA-256"; digest: string };
+  presentation?: Record<string, unknown>;
 }

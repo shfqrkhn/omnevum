@@ -8,8 +8,19 @@ export interface CreateRecordInput {
   recordType: RecordType;
   owner: string;
   data: Record<string, unknown>;
+  subjectId?: string;
   truthClass?: CanonicalRecord["truthClass"];
   sensitivity?: CanonicalRecord["sensitivity"];
+  provenance?: Partial<CanonicalRecord["provenance"]>;
+}
+
+export interface DerivedArtifactInput {
+  sourceId: string;
+  operation: string;
+  fileName: string;
+  mimeType: string;
+  blob: Blob;
+  space?: string;
 }
 
 export class RevisionConflictError extends Error {
@@ -22,6 +33,14 @@ export class RevisionConflictError extends Error {
 export class CommandBus {
   public constructor(private readonly store: CanonicalStore) {}
 
+  public async get(id: string, includeDeleted = false): Promise<CanonicalRecord | undefined> {
+    return this.store.get(id, includeDeleted);
+  }
+
+  public async findBySourceId(sourceId: string): Promise<CanonicalRecord[]> {
+    return this.store.findByProvenance(sourceId);
+  }
+
   public async create(input: CreateRecordInput): Promise<CanonicalRecord> {
     if (!input.owner.trim()) throw new Error("A canonical owner is required");
     const now = new Date().toISOString();
@@ -32,7 +51,8 @@ export class CommandBus {
       schemaVersion: CURRENT_SCHEMA_VERSION,
       createdAt: now,
       modifiedAt: now,
-      provenance: { source: "USER_INPUT", capturedAt: now },
+      ...(input.subjectId?.trim() ? { subjectId: input.subjectId.trim().slice(0, 160) } : {}),
+      provenance: { source: input.provenance?.source ?? "USER_INPUT", capturedAt: input.provenance?.capturedAt ?? now, ...(input.provenance?.sourceId ? { sourceId: input.provenance.sourceId } : {}) },
       truthClass: input.truthClass ?? "USER_OBSERVATION",
       sensitivity: input.sensitivity ?? "PRIVATE",
       revision: 1,
@@ -66,6 +86,31 @@ export class CommandBus {
     return record;
   }
 
+  public async createDerivedArtifact(input: DerivedArtifactInput): Promise<CanonicalRecord> {
+    const source = await this.store.get(input.sourceId, true);
+    if (!source) throw new Error("Source Artifact was not found");
+    if (!input.operation.trim() || !input.fileName.trim()) throw new Error("Derived Artifact operation and file name are required");
+    if (input.blob.size > MAX_PORTABLE_ARTIFACT_BYTES) throw new Error("Derived Artifact exceeds the bounded 10 MiB intake limit");
+    const now = new Date().toISOString();
+    const id = createOpaqueId("artifact-derived");
+    const record: CanonicalRecord = {
+      id,
+      recordType: "artifact",
+      owner: "platform.artifact",
+      schemaVersion: CURRENT_SCHEMA_VERSION,
+      createdAt: now,
+      modifiedAt: now,
+      provenance: { source: "IMPORT", capturedAt: now, sourceId: source.id },
+      truthClass: "DERIVED",
+      sensitivity: source.sensitivity,
+      revision: 1,
+      deleted: false,
+      data: { text: input.fileName, fileName: input.fileName, mimeType: input.mimeType || "application/octet-stream", size: input.blob.size, sha256: await sha256Hex(input.blob), blobRef: id, derivedFrom: { recordId: source.id, revision: source.revision }, operation: input.operation.trim().slice(0, 240), space: input.space ?? source.data.space ?? "personal", triageStatus: "REVIEWED" }
+    };
+    await this.store.put(record, input.blob);
+    return record;
+  }
+
   public async update(id: string, data: Record<string, unknown>, expectedRevision?: number): Promise<CanonicalRecord> {
     const current = await this.store.get(id, true);
     if (!current) throw new Error("Canonical record not found");
@@ -77,22 +122,22 @@ export class CommandBus {
       revision: current.revision + 1,
       deleted: false
     };
-    await this.store.put(updated);
+    await this.store.put(updated, undefined, current.revision);
     return updated;
   }
 
   public async archive(id: string): Promise<void> {
     const current = await this.store.get(id, true);
     if (!current) return;
-    await this.store.put({ ...current, deleted: true, modifiedAt: new Date().toISOString(), revision: current.revision + 1 });
+    await this.store.put({ ...current, deleted: true, modifiedAt: new Date().toISOString(), revision: current.revision + 1 }, undefined, current.revision);
   }
 
   public async restore(id: string): Promise<CanonicalRecord> {
     const current = await this.store.get(id, true);
     if (!current) throw new Error("Canonical record not found");
     if (!current.deleted) return current;
-    const restored = { ...current, deleted: false, modifiedAt: new Date().toISOString(), revision: current.revision + 1 };
-    await this.store.put(restored);
+    const restored = { ...current, deleted: false, modifiedAt: new Date().toISOString(), revision: current.revision + 1, data: { ...current.data, restoreIntent: "EXPLICIT_USER_RESTORE", restoredFromRevision: current.revision } };
+    await this.store.put(restored, undefined, current.revision);
     return restored;
   }
 
@@ -122,7 +167,7 @@ export class CommandBus {
       revision: current.revision + 1,
       deleted: false
     };
-    await this.store.put(restored);
+    await this.store.put(restored, undefined, current.revision);
     return restored;
   }
 }

@@ -26,20 +26,21 @@
     "qualified en-CA/fr-CA presentation locale persists without changing canonical identities",
     "equal-revision semantic Vault conflicts are detected and reported",
     "durable Effect/Outbox runner recovers interrupted operations through explicit reconciliation",
-    "23 unit tests pass across 5 test files after the recovery/localization/effect increment"
+    "bounded quantitative Track/Observe capture and derived Home signals are implemented",
+    "99 unit tests pass across 38 test files after the recovery/localization/effect/contract hardening increment"
   ],
   "unverified": [
-    "NeumanOS/Kurumi launchpad decision",
-    "SelfStore/remoteStorage storage decision",
+    "NeumanOS/Kurumi launchpad decision beyond the recorded harvest-reference route",
+    "SelfStore/remoteStorage storage decision beyond the recorded contract spike",
     "production static-host, browser-version, responsive, and assistive-technology evidence",
     "service-worker offline/update/rollback proof",
     "full Phase 0 acceptance gate and fault injection",
     "security/untrusted-content/credential boundary evidence",
     "static-host deployment, smoke, and rollback proof",
     "richer Time/Track/Compose capability contracts and target qualification",
-    "credential/key broker and external-effect replay evidence",
+    "provider-backed sync, credential/key broker, and external-effect replay evidence",
     "MVP release and later phases"
   ],
-  "nextAction": "Run the Phase 0 support/accessibility/offline/update and fault-injection matrix, then close the remaining credential, Effect/Outbox, and MVP outcome contracts before promoting the MVP gate.",
+  "nextAction": "Run the Phase 0 support/accessibility/offline/update and fault-injection matrix, then exercise the MVP outcomes in a clean static-host profile before promoting the MVP gate.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }

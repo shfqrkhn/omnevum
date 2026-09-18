@@ -3,7 +3,16 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "NOT_YET_CAPTURED", "sourceRevision": "NO_GIT_CONTEXT"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "77259cda81165f873b1830b7f46daaaabf2d91239e04caeb00ba8059bd79a839", "sourceRevision": "c2a615f2acd1b7deaed4fa889209e184e887cdbe"},
+  "artifactDigestMethod": "SHA-256 of sorted UTF-8 lines containing each dist relative path, file SHA-256, and byte length; captured after npm run build on 2026-09-17.",
+  "artifactFiles": [
+    {"path": "dist/assets/index-B1Ew2kpV.js", "sha256": "c3f68102f31738474319bd1b439d2f3fda9af885bca50eace2c30c54fa9479f7", "bytes": 42599},
+    {"path": "dist/assets/index-B1Ew2kpV.js.map", "sha256": "cf5138cd0f8e8ac3235d945c625dc58787eb50252f67b9863e76895bc2e08874", "bytes": 109693},
+    {"path": "dist/assets/index-CfXZlQ_X.css", "sha256": "fb83daaddfa0de8f140a6c5b45ebe0377c0a9e3557d8bb4c831bf66c96d7cd4c", "bytes": 4698},
+    {"path": "dist/index.html", "sha256": "a08a19ff4136c24a0b62edfc7320b4c2091dfbf1048aff1785e68f1ba30a2d01", "bytes": 603},
+    {"path": "dist/manifest.webmanifest", "sha256": "0e7ae17796f75aa3aa65be3a454fda697b1d5694110ecb205a2cf72386c5f2c9", "bytes": 245},
+    {"path": "dist/sw.js", "sha256": "9d850afa056b4791c038e048338e02e226bb61bb8991af43c46047e9eac6202d", "bytes": 1527}
+  ],
   "requiredEvidence": [
     "control-generation-and-drift",
     "structure-reference-architecture-audit",

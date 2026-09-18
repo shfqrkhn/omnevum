@@ -64,6 +64,26 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("rejects a concurrent revision mismatch without writing the candidate", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-put-conflict`);
+    await store.open();
+    const original = record("record-put-conflict");
+    await store.put(original);
+    await expect(store.put({ ...original, revision: 2, data: { text: "stale" } }, undefined, 99)).rejects.toThrow("revision conflict");
+    expect(await store.get(original.id)).toEqual(original);
+    store.close();
+  });
+
+  it("rejects a non-monotonic direct write", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-put-monotonic`);
+    await store.open();
+    const original = record("record-put-monotonic");
+    await store.put(original);
+    await expect(store.put({ ...original, revision: 1, data: { text: "same revision" } })).rejects.toThrow("revision conflict");
+    expect(await store.get(original.id)).toEqual(original);
+    store.close();
+  });
+
   it("treats a repeated identical Vault import as idempotent", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-idempotent-import`);
     await store.open();
@@ -112,6 +132,20 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("carries presentation settings in a Vault and restores them separately", async () => {
+    const source = new CanonicalStore(`omnevum-test-${Date.now()}-presentation-vault-source`);
+    const destination = new CanonicalStore(`omnevum-test-${Date.now()}-presentation-vault-destination`);
+    await source.open();
+    await destination.open();
+    await source.setSetting("presentation", { schemaVersion: 1, productName: "JohnOS", theme: "dark", locale: "en-CA" });
+    const vault = await source.exportVault();
+    expect(vault.presentation).toEqual({ schemaVersion: 1, productName: "JohnOS", theme: "dark", locale: "en-CA" });
+    await destination.importVault(vault);
+    expect(await destination.getSetting("presentation")).toEqual(vault.presentation);
+    source.close();
+    destination.close();
+  });
+
   it("preserves a bounded artifact payload through Vault export and restore", async () => {
     const source = new CanonicalStore(`omnevum-test-${Date.now()}-artifact-source`);
     const destination = new CanonicalStore(`omnevum-test-${Date.now()}-artifact-destination`);
@@ -121,6 +155,7 @@ describe("CanonicalStore", () => {
     const commands = new CommandBus(source);
     const created = await commands.createArtifact({ fileName: "hello.txt", mimeType: "text/plain", blob: new Blob(["hello artifact"]) });
     const vault = await source.exportVault();
+    expect(vault.integrity).toMatchObject({ algorithm: "SHA-256" });
     expect(vault.artifacts).toHaveLength(1);
     expect(await (await source.getArtifact(created.id))?.text()).toBe("hello artifact");
     await destination.importVault(vault);
@@ -140,6 +175,19 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("reclaims only the derived search state", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-reclaim`);
+    await store.open();
+    const original = record("record-reclaim");
+    await store.put(original);
+    await store.search("hello");
+    await store.reclaimDerivedState();
+    expect((await store.getSearchHealth()).valid).toBe(false);
+    expect(await store.get(original.id)).toEqual(original);
+    expect(await store.search("hello")).toEqual([original]);
+    store.close();
+  });
+
   it("reports an equal-revision semantic conflict instead of overwriting local meaning", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-conflict-import`);
     await store.open();
@@ -147,6 +195,29 @@ describe("CanonicalStore", () => {
     const result = await store.importVault({ format: "OMNEVUM_VAULT", version: 1, exportedAt: new Date().toISOString(), records: [{ ...record("record-conflict", 2), data: { text: "different" } }] });
     expect(result).toEqual({ imported: 0, skipped: 1, conflicts: 1 });
     expect((await store.get("record-conflict"))?.data.text).toBe("hello");
+    store.close();
+  });
+
+  it("does not resurrect a tombstoned record from a newer unmarked import", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-tombstone-import`);
+    await store.open();
+    const original = record("record-tombstone");
+    await store.put(original);
+    await store.put({ ...original, deleted: true, revision: 2 });
+    const result = await store.importVault({ format: "OMNEVUM_VAULT", version: 1, exportedAt: new Date().toISOString(), records: [{ ...original, revision: 3, data: { text: "remote resurrection" } }] });
+    expect(result).toEqual({ imported: 0, skipped: 1, conflicts: 1 });
+    expect((await store.get(original.id))?.deleted).toBeUndefined();
+    expect((await store.get(original.id, true))?.deleted).toBe(true);
+    store.close();
+  });
+
+  it("rejects a tampered integrity-protected Vault before writing", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-vault-integrity`);
+    await store.open();
+    const vault = await store.exportVault();
+    const tampered = { ...vault, exportedAt: new Date(Date.now() + 1).toISOString() };
+    await expect(store.importVault(tampered)).rejects.toThrow("integrity");
+    expect(await store.list()).toEqual([]);
     store.close();
   });
 
@@ -164,6 +235,7 @@ describe("CanonicalStore", () => {
       createdAt: new Date().toISOString(),
       status: "PENDING",
       retryCount: 0,
+      retryPolicy: { maxAttempts: 3, backoffSeconds: 1 },
       evidence: []
     };
     await store.enqueueEffect(effect);
@@ -173,6 +245,21 @@ describe("CanonicalStore", () => {
     await store.updateEffect(inFlight);
     expect(await store.getEffect(effect.operationId)).toEqual(inFlight);
     expect(await store.list()).toEqual([]);
+    store.close();
+  });
+
+  it("clears canonical records, history, artifacts, and effects without clearing presentation settings", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-clear`);
+    await store.open();
+    await store.setSetting("presentation", { productName: "JohnOS" });
+    const original = record("record-clear");
+    await store.put(original);
+      await store.enqueueEffect({ operationId: "effect-clear", owner: "platform.test", originatingCommand: "test.command", purpose: "test", destination: "test://destination", payloadOrReference: { value: "safe" }, idempotencyKey: "effect-clear-idempotency", createdAt: new Date().toISOString(), status: "PENDING", retryCount: 0, retryPolicy: { maxAttempts: 3, backoffSeconds: 1 }, evidence: [] });
+    await store.clear();
+    expect(await store.list(true)).toEqual([]);
+    expect(await store.history()).toEqual([]);
+    expect(await store.listEffects()).toEqual([]);
+    expect(await store.getSetting("presentation")).toEqual({ productName: "JohnOS" });
     store.close();
   });
 });
