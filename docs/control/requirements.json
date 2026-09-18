@@ -14,11 +14,11 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "90c94afe5640483c34e3e45469dbd39ed023ecec1e383881b99739d60936e733"
+      "sha256": "ee4a2d3922e6a1ad272c3910d15ea4ad744382b327c97e2bd9cbe81df47d9898"
     },
     "lockfile": {
       "path": "package-lock.json",
-      "sha256": "85518025625e43079f8f14b302f717c123501818e58d5a416bd2bf4f3b502a7f"
+      "sha256": "2209213b8c2ac98ae99979dfdd4fc1837124b88543fcac2dfc8f3dcde81212af"
     }
   },
   "items": [

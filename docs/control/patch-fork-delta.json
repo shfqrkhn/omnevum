@@ -52,6 +52,17 @@
       "delta": "Optional adapter behind Vault/sync contracts; never a static-core requirement or canonical owner.",
       "tests": "Upstream tests characterized; endpoint adapter not run.",
       "exitCondition": "Disable or remove if auth, conflict, quota, or endpoint evidence fails."
+    },
+    {
+      "id": "OMN-DELTA-005",
+      "candidate": "MiniSearch",
+      "source": "docs/evidence/phase0-bakeoff-2026-09-17.md",
+      "sourceIdentity": "3d239d1c3ae7aef1bf5d8945dd7b5f0709f646f5",
+      "license": "MIT",
+      "route": "ADAPT_PHASE0_SELECTED",
+      "delta": "Use only as a derived SearchDocument adapter; canonical ownership, permission filtering, invalidation, and rebuild remain Omnevum-owned.",
+      "tests": "src/core/search.test.ts; local 2,000-document bake-off",
+      "exitCondition": "Reopen or remove if representative mobile memory/latency, multilingual behavior, or currentness/security evidence fails."
     }
   ]
 }

@@ -18,6 +18,7 @@
     "required companion control registers materialized",
     "structure audit, strict typecheck, unit tests, and production build pass",
     "exact Phase 0 upstream characterization recorded",
+    "search/schema/analysis/parser reuse bake-off recorded; MiniSearch selected behind the derived-index owner",
     "local browser smoke recorded with reload persistence, capture, search, and theme evidence",
     "MVP nucleus smoke recorded for Space, triage, Time observation, summary, and relationship reference flow",
     "bounded Artifact ingest/Vault payload round-trip implemented",
@@ -41,6 +42,6 @@
     "provider-backed sync, credential/key broker, and external-effect replay evidence",
     "MVP release and later phases"
   ],
-  "nextAction": "Run the Phase 0 support/accessibility/offline/update and fault-injection matrix, then exercise the MVP outcomes in a clean static-host profile before promoting the MVP gate.",
+  "nextAction": "Run the Phase 0 support/accessibility/offline/update and fault-injection matrix, then exercise the MVP outcomes in a clean static-host profile before promoting the MVP gate; keep the MiniSearch adapter target qualification open.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }

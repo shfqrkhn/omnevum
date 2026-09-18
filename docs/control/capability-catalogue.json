@@ -12,7 +12,7 @@
     {"id": "visualize", "phase": 1, "owner": "platform.visualize", "status": "IMPLEMENTED_SUMMARY_SIGNALS"},
     {"id": "analyze-model", "phase": 1, "owner": "platform.analyze", "status": "IMPLEMENTED_DESCRIPTIVE_ONLY"},
     {"id": "history-version", "phase": 1, "owner": "platform.history", "status": "IMPLEMENTED_INITIAL"},
-    {"id": "search", "phase": 1, "owner": "platform.search", "status": "IMPLEMENTED_INITIAL"},
+    {"id": "search", "phase": 1, "owner": "platform.search", "status": "ADAPT_MINISEARCH_INITIAL_BAKEOFF"},
     {"id": "time", "phase": 1, "owner": "platform.time", "status": "IMPLEMENTED_INITIAL"},
     {"id": "place-geo", "phase": 1, "owner": "platform.place", "status": "IMPLEMENTED_POINT_DISTANCE"},
     {"id": "relate", "phase": 1, "owner": "platform.relate", "status": "IMPLEMENTED_INITIAL"},

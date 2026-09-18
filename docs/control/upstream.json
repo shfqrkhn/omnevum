@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "upstream-register",
-  "status": "PHASE0_CHARACTERIZED",
+  "status": "PHASE0_CHARACTERIZED_BAKEOFF",
   "snapshotDate": "2026-09-17",
   "items": [
     {"source": "https://github.com/travisjneuman/neumanos", "acceptedIdentity": "f4b2a174a339fc60524645a19417daedaf69ac91", "license": "MIT", "role": "launchpad harvest reference", "disposition": "HARVEST_REFERENCE", "characterization": "large React/Dexie product with multiple stores/services and strong isolated pattern value"},
@@ -12,6 +12,14 @@
     {"source": "npm:typescript", "acceptedIdentity": "7.0.2", "license": "Apache-2.0", "role": "type checker", "disposition": "ADOPT_PROVISIONAL"},
     {"source": "npm:vitest", "acceptedIdentity": "5.0.1", "license": "MIT", "role": "test runner", "disposition": "ADOPT_PROVISIONAL"},
     {"source": "npm:fake-indexeddb", "acceptedIdentity": "6.2.5", "license": "MIT", "role": "test-only IndexedDB harness", "disposition": "ADOPT_PROVISIONAL"}
+    ,{"source": "npm:minisearch", "acceptedIdentity": "7.2.0", "license": "MIT", "role": "derived search adapter", "disposition": "ADAPT_PHASE0_SELECTED", "sourceHead": "3d239d1c3ae7aef1bf5d8945dd7b5f0709f646f5"}
+    ,{"source": "npm:flexsearch", "acceptedIdentity": "0.8.212", "license": "Apache-2.0", "role": "search bake-off candidate", "disposition": "REJECTED_INITIAL_FIXTURE", "sourceHead": "f7ed963096a0792da7b2fd63bb7114b3fbac55ed"}
+    ,{"source": "npm:@orama/orama", "acceptedIdentity": "3.1.18", "license": "Apache-2.0", "role": "search bake-off candidate", "disposition": "DEFER_RESULT_LIMIT_AND_BUNDLE_REVIEW", "sourceHead": "b030e1bd1d330327bad1483f2d9c88a9ea0d493c"}
+    ,{"source": "npm:@jsonforms/core", "acceptedIdentity": "3.8.0", "license": "MIT", "role": "schema UI candidate", "disposition": "DEFER_FRAMEWORK_ADAPTER", "sourceHead": "41b7991e7753b2c4d851cbbf73bb7408cf5486da"}
+    ,{"source": "npm:@rjsf/core", "acceptedIdentity": "6.10.1", "license": "Apache-2.0", "role": "schema UI candidate", "disposition": "DEFER_FRAMEWORK_ADAPTER", "sourceHead": "3002e47912943dfd100a7ecbe266074895e38a97"}
+    ,{"source": "npm:@duckdb/duckdb-wasm", "acceptedIdentity": "1.33.1-dev57.0", "license": "MIT", "role": "analytical projection candidate", "disposition": "DEFER_HEAVY_RUNTIME", "sourceHead": "def100b4be91a8ba27d441914e496231695ba0a8"}
+    ,{"source": "npm:pdfjs-dist", "acceptedIdentity": "6.3.289", "license": "Apache-2.0", "role": "PDF Artifact parser candidate", "disposition": "DEFER_WORKER_QUALIFICATION", "sourceHead": "ba667924f62fdb9d50f14ab3b383fed06d36ab03"}
+    ,{"source": "npm:xlsx", "acceptedIdentity": "0.18.5", "license": "Apache-2.0", "role": "spreadsheet Artifact parser candidate", "disposition": "DEFER_ACTIVE_CONTENT_REVIEW", "sourceHead": "515d1c6f2e1d3ca422ee9198b177cfd926434936"}
   ],
   "limits": [
     "This is a currentness snapshot, not permanent release authority.",

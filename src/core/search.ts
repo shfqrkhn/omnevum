@@ -1,6 +1,7 @@
 import type { CanonicalRecord } from "./model";
+import MiniSearch from "minisearch";
 
-export const SEARCH_INDEX_VERSION = 1 as const;
+export const SEARCH_INDEX_VERSION = 2 as const;
 
 export interface SearchDocument {
   id: string;
@@ -23,7 +24,7 @@ function values(value: unknown): string[] {
 }
 
 export function normalizeSearchText(value: string): string {
-  return value.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  return value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 }
 
 export function makeSearchDocument(record: CanonicalRecord): SearchDocument {
@@ -31,14 +32,23 @@ export function makeSearchDocument(record: CanonicalRecord): SearchDocument {
 }
 
 export function searchDocuments(documents: SearchDocument[], query: string): SearchDocument[] {
-  const terms = normalizeSearchText(query).split(/\s+/).filter(Boolean);
-  return documents
-    .filter((document) => terms.every((term) => document.terms.includes(term)))
-    .sort((left, right) => right.modifiedAt.localeCompare(left.modifiedAt));
+  const normalizedQuery = normalizeSearchText(query);
+  if (!normalizedQuery) return [...documents].sort((left, right) => right.modifiedAt.localeCompare(left.modifiedAt));
+  const index = new MiniSearch<SearchDocument>({
+    fields: ["terms"],
+    storeFields: ["modifiedAt"],
+    tokenize: (value) => normalizeSearchText(value).split(/\s+/).filter(Boolean),
+    processTerm: (term) => normalizeSearchText(term)
+  });
+  index.addAll(documents);
+  const byId = new Map(documents.map((document) => [document.id, document]));
+  return index.search(normalizedQuery, { prefix: true, fuzzy: 0.2, combineWith: "AND" })
+    .map((result) => byId.get(String(result.id)))
+    .filter((document): document is SearchDocument => document !== undefined);
 }
 
 export function isSearchDocument(value: unknown): value is SearchDocument {
   if (typeof value !== "object" || value === null) return false;
   const candidate = value as Record<string, unknown>;
-  return typeof candidate.id === "string" && candidate.id.length > 0 && typeof candidate.terms === "string" && typeof candidate.modifiedAt === "string";
+  return typeof candidate.id === "string" && candidate.id.length > 0 && candidate.id.length <= 160 && typeof candidate.terms === "string" && candidate.terms.length <= 1_000_000 && typeof candidate.modifiedAt === "string";
 }

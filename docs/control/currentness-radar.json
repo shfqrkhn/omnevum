@@ -9,7 +9,7 @@
     {"id": "RADAR-002", "candidate": "Kurumi", "role": "local-first capture/knowledge substrate", "next": "recheck exact head, then harvest only behind Omnevum contracts", "status": "CHARACTERIZED_RECHECK_BEFORE_ADOPTION"},
     {"id": "RADAR-003", "candidate": "SelfStore", "role": "portable Vault backup/sync", "next": "isolated Phase 2 contract, security, conflict, and migration spike", "status": "CHARACTERIZED_PHASE2_CANDIDATE"},
     {"id": "RADAR-004", "candidate": "remoteStorage.js", "role": "user-controlled storage endpoint", "next": "isolated Phase 2 auth/CORS/recovery adapter spike", "status": "CHARACTERIZED_PHASE2_CANDIDATE"},
-    {"id": "RADAR-005", "candidate": "schema/headless UI and browser-local query/search", "role": "delete bespoke generic UI/analysis work", "next": "representative multilingual/mobile bake-off", "status": "OPEN"}
+    {"id": "RADAR-005", "candidate": "schema/headless UI and browser-local query/search", "role": "delete bespoke generic UI/analysis work", "next": "qualify MiniSearch adapter on representative mobile targets; keep JSON Forms/RJSF/DuckDB-Wasm isolated until bundle/worker evidence", "status": "INITIAL_BAKEOFF_RECORDED"}
   ],
   "refreshPolicy": "Recheck exact upstream, advisories, license, browser standards, provider terms, and build tooling before adoption, promotion, and release; candidate availability never becomes runtime authority automatically."
 }

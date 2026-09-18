@@ -37,6 +37,7 @@
     "IndexedDB",
     "OPFS-optional",
     "service-worker",
+    "derived-search-adapter",
     "Web-Share-optional",
     "installability-progressive"
   ],
