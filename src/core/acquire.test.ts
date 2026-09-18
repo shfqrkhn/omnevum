@@ -27,5 +27,14 @@ describe("Acquire/Ingest", () => {
   it("keeps URLs bounded and refuses non-web schemes", async () => {
     expect((await stageUrl("https://example.test/article")).candidates[0]?.kind).toBe("url");
     await expect(stageUrl("javascript:alert(1)")).rejects.toThrow("HTTP or HTTPS");
+    await expect(stageUrl("https://user:password@example.test/article")).rejects.toThrow("embedded credentials");
+    await expect(stageUrl(`https://example.test/${"x".repeat(4096)}`)).rejects.toThrow("4 KiB");
+  });
+
+  it("keeps hostile-looking imported text inert and removes secret-shaped fields", async () => {
+    const preview = await stageText(JSON.stringify({ kind: "note", text: "<img src=x onerror=alert(1)>", accessToken: "do-not-retain" }), { name: "untrusted.json", mimeType: "application/json" });
+    const candidate = preview.candidates[0];
+    expect(candidate?.data.text).toBe("<img src=x onerror=alert(1)>");
+    expect(candidate?.data.sourceFields).toEqual({ kind: "note", text: "<img src=x onerror=alert(1)>" });
   });
 });

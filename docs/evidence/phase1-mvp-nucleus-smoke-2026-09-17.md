@@ -22,7 +22,7 @@ Status: PARTIAL; vertical smoke only and not an MVP release claim
 - Safe Presentation Mode was enabled and exited in the production preview; the known-good profile rendered while the stored French presentation remained available after exit, and canonical counts remained unchanged.
 - Compose/View saved a user-defined dashboard through the native form, rendered a list/table/descriptive chart over authorized records, and reproduced the view after a production-preview reload; Vault export/import now carries validated view overlays separately from canonical records.
 - The startup capability runtime records READY/DEGRADED states and contains a failing optional module without preventing core Home/Recovery startup; the current regression run is 106 passing tests across 40 files.
-- The same regression run covers bounded Acquire/Ingest, source-linked Evidence and Annotation, Place/Geo, derived Data/Analyze, declarative Compose/Automation, package/game lifecycle contracts, Device/Input detection and bounded file/clipboard guards, optional AI/credential/effect boundaries, multilingual derived Search, migration, sharing, sync routes, exact Money/Quantity, storage fault/reclamation, and recovery validation.
+- The same regression run covers bounded Acquire/Ingest (including hostile-text and embedded-credential URL guards), source-linked Evidence and Annotation, Place/Geo, derived Data/Analyze, declarative Compose/Automation, package/game lifecycle contracts, Device/Input detection and bounded file/clipboard guards, optional AI/credential/effect boundaries, multilingual derived Search, migration, sharing, sync routes, exact Money/Quantity, storage fault/reclamation, and recovery validation.
 
 ## Still open
 

@@ -39,7 +39,8 @@
     "local service-worker update/rollback rehearsal precaches the new generation, retains the prior cache, and serves an offline rollback capture",
     "derived-search corruption is detected and rebuilt without changing canonical records",
     "injected storage pressure reclaims only derived state, exposes persistence status, and preserves canonical records",
-    "108 unit tests pass across 40 test files after the storage fault/recovery increment"
+    "Acquire rejects embedded-credential and oversized URLs and retains hostile-looking text as inert data",
+    "109 unit tests pass across 40 test files after the Acquire security-boundary increment"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad decision beyond the recorded harvest-reference route",
@@ -47,7 +48,7 @@
     "production static-host, browser-version, responsive, and assistive-technology evidence",
     "production static-host service-worker update/rollback and cross-origin deployment proof",
     "full Phase 0 acceptance gate, native quota/canonical-migration fault injection, and recovery matrix",
-    "security/untrusted-content/credential boundary evidence",
+    "broader security/untrusted-content/credential, active-content, egress, and production boundary evidence",
     "static-host deployment, smoke, and rollback proof",
     "richer Time/Track/Compose capability contracts and target qualification",
     "provider-backed sync, credential/key broker, and external-effect replay evidence",

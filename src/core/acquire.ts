@@ -5,6 +5,7 @@ import { scrubSensitiveValue } from "./safety";
 
 export const MAX_ACQUIRE_BYTES = 5 * 1024 * 1024;
 export const MAX_ACQUIRE_CANDIDATES = 500;
+export const MAX_ACQUIRE_URL_LENGTH = 4096;
 
 export type AcquireFormat = "TEXT" | "JSON" | "CSV" | "URL";
 
@@ -69,13 +70,16 @@ export async function stageText(text: string, input: { name?: string; mimeType?:
 }
 
 export async function stageUrl(url: string): Promise<AcquirePreview> {
+  const trimmed = url.trim();
+  if (new TextEncoder().encode(trimmed).byteLength > MAX_ACQUIRE_URL_LENGTH) throw new Error("Acquire URL exceeds the bounded 4 KiB limit");
   let parsed: URL;
   try {
-    parsed = new URL(url.trim());
+    parsed = new URL(trimmed);
   } catch {
     throw new Error("Acquire URL is invalid");
   }
   if (parsed.protocol !== "https:" && parsed.protocol !== "http:") throw new Error("Acquire URL must use HTTP or HTTPS");
+  if (parsed.username || parsed.password) throw new Error("Acquire URL must not contain embedded credentials");
   return stageText(parsed.href, { name: parsed.href, mimeType: "text/uri-list", format: "URL" });
 }
 
