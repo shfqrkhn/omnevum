@@ -31,6 +31,8 @@ import { createEffectRevalidationGuard } from "../core/effect-guard";
 import { EffectRunner } from "../core/effect-runner";
 import { JsonEndpointEffectExecutor, JsonEndpointTransport } from "../core/remote";
 import { SyncEngine, SyncFailure } from "../core/sync";
+import { createRecordAppDefinition } from "../core/factory";
+import { FACTORY_PREVIEW_APP_TITLE, FACTORY_PREVIEW_FIELDS, FACTORY_PREVIEW_GAME, FACTORY_PREVIEW_MANIFEST, factoryPreviewGameAdapter, type FactoryPreviewGamePayload } from "../core/factory-preview";
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -55,6 +57,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const copy = getUiCopy(presentation.locale);
   const recoveryCopy = getRecoveryCopy(presentation.locale);
   const timeCopy = getTimeCopy(presentation.locale);
+  const factoryPreviewMode = new URLSearchParams(window.location.search).get("factory-preview") === "1";
   root.dataset.theme = presentation.theme;
   root.dataset.density = presentation.density;
   root.dataset.typeface = presentation.typeface;
@@ -333,6 +336,35 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <ul id="space-list" class="record-list"></ul>
         <p class="hint">${copy.activeMemberships}</p>
         <ul id="space-membership-list" class="record-list"></ul>
+      </section>
+
+      <section id="factory-preview" class="panel" aria-labelledby="factory-preview-heading"${factoryPreviewMode ? "" : " hidden"}>
+        <p class="eyebrow">${copy.factoryPreview}</p>
+        <h2 id="factory-preview-heading">${copy.factoryPreview}</h2>
+        <div class="factory-preview-grid">
+          <div class="relationship-form">
+            <h3>${copy.factoryAppHeading}</h3>
+            <p class="hint">${copy.factoryAppHint}</p>
+            <form id="factory-app-form"></form>
+            <p id="factory-app-status" class="hint" role="status"></p>
+            <ul id="factory-app-list" class="record-list" aria-live="polite"></ul>
+          </div>
+          <div class="relationship-form">
+            <h3>${copy.factoryGameHeading}</h3>
+            <p class="hint">${copy.factoryGameHint}</p>
+            <p id="factory-game-status" class="hint" role="status"></p>
+            <div id="factory-game-board" class="factory-game-board" role="group" aria-label="${copy.factoryGameHeading}"></div>
+            <div class="form-row">
+              <button id="factory-game-move" type="button">${copy.factoryGameMove}</button>
+              <button id="factory-game-collect" type="button">${copy.factoryGameCollect}</button>
+              <button id="factory-game-pause" type="button" class="secondary">${copy.factoryGamePause}</button>
+            </div>
+            <div class="form-row">
+              <button id="factory-game-save" type="button" class="secondary">${copy.factoryGameSave}</button>
+              <button id="factory-game-load" type="button" class="secondary">${copy.factoryGameLoad}</button>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section id="compose" class="panel" aria-labelledby="compose-heading">
@@ -641,6 +673,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const spaceStatus = root.querySelector<HTMLElement>("#space-status");
   const spaceList = root.querySelector<HTMLUListElement>("#space-list");
   const spaceMembershipList = root.querySelector<HTMLUListElement>("#space-membership-list");
+  const factoryPreview = root.querySelector<HTMLElement>("#factory-preview");
+  const factoryAppForm = root.querySelector<HTMLFormElement>("#factory-app-form");
+  const factoryAppStatus = root.querySelector<HTMLElement>("#factory-app-status");
+  const factoryAppList = root.querySelector<HTMLUListElement>("#factory-app-list");
+  const factoryGameStatus = root.querySelector<HTMLElement>("#factory-game-status");
+  const factoryGameBoard = root.querySelector<HTMLElement>("#factory-game-board");
+  const factoryGameMove = root.querySelector<HTMLButtonElement>("#factory-game-move");
+  const factoryGameCollect = root.querySelector<HTMLButtonElement>("#factory-game-collect");
+  const factoryGamePause = root.querySelector<HTMLButtonElement>("#factory-game-pause");
+  const factoryGameSave = root.querySelector<HTMLButtonElement>("#factory-game-save");
+  const factoryGameLoad = root.querySelector<HTMLButtonElement>("#factory-game-load");
   const composeForm = root.querySelector<HTMLFormElement>("#compose-form");
   const composeTitle = root.querySelector<HTMLInputElement>("#compose-title");
   const composeFields = root.querySelector<HTMLInputElement>("#compose-fields");
@@ -762,6 +805,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const effectRunEndpoint = root.querySelector<HTMLInputElement>("#effect-run-endpoint");
   const effectRunStatus = root.querySelector<HTMLElement>("#effect-run-status");
   const effectRunDialog = root.querySelector<HTMLDialogElement>("#effect-run-dialog");
+  const effectRunDialogTitle = root.querySelector<HTMLHeadingElement>("#effect-run-dialog-title");
   const effectRunDialogMessage = root.querySelector<HTMLElement>("#effect-run-dialog-message");
   const effectRunDialogCancel = root.querySelector<HTMLButtonElement>("#effect-run-dialog-cancel");
   const effectRunDialogConfirm = root.querySelector<HTMLButtonElement>("#effect-run-dialog-confirm");
@@ -771,8 +815,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
     throw new Error("Omnevum document-finishing controls are missing");
   }
-  if (!effectStageForm || !effectStageDestination || !effectStagePurpose || !effectStagePayload || !effectStageSpace || !effectStageStatus || !effectRunForm || !effectRunEndpoint || !effectRunStatus || !effectRunDialog || !effectRunDialogMessage || !effectRunDialogCancel || !effectRunDialogConfirm) {
+  if (!effectStageForm || !effectStageDestination || !effectStagePurpose || !effectStagePayload || !effectStageSpace || !effectStageStatus || !effectRunForm || !effectRunEndpoint || !effectRunStatus || !effectRunDialog || !effectRunDialogTitle || !effectRunDialogMessage || !effectRunDialogCancel || !effectRunDialogConfirm) {
     throw new Error("Omnevum external-effect controls are missing");
+  }
+  if (!factoryPreview || !factoryAppForm || !factoryAppStatus || !factoryAppList || !factoryGameStatus || !factoryGameBoard || !factoryGameMove || !factoryGameCollect || !factoryGamePause || !factoryGameSave || !factoryGameLoad) {
+    throw new Error("Omnevum factory preview controls are missing");
   }
 
   const sharedParameters = new URLSearchParams(window.location.search);
@@ -786,9 +833,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   let stagedCandidates: AcquireCandidate[] = [];
   let activeSpace: SpaceId | undefined;
   const spaceLabels = new Map<SpaceId, string>(Object.entries(SPACE_LABELS));
-  const requestEffectRunConfirmation = (endpoint: string): Promise<boolean> => new Promise((resolve) => {
+  const requestConfirmation = (message: string, title = copy.confirmationHeading, confirmLabel = copy.confirm): Promise<boolean> => new Promise((resolve) => {
     const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    effectRunDialogMessage.textContent = `${copy.effectRunConfirmation} ${endpoint}?`;
+    effectRunDialogTitle.textContent = title;
+    effectRunDialogMessage.textContent = message;
+    effectRunDialogConfirm.textContent = confirmLabel;
     let settled = false;
     const finish = (confirmed: boolean): void => {
       if (settled) return;
@@ -809,6 +858,150 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     effectRunDialog.showModal();
     effectRunDialogConfirm.focus();
   });
+
+  const requestEffectRunConfirmation = (endpoint: string): Promise<boolean> => requestConfirmation(`${copy.effectRunConfirmation} ${endpoint}?`, copy.effectRunHeading, copy.effectRunConfirm);
+
+  const factoryAppDefinition = createRecordAppDefinition({ manifest: FACTORY_PREVIEW_MANIFEST, title: FACTORY_PREVIEW_APP_TITLE, fields: FACTORY_PREVIEW_FIELDS });
+  const factoryAppRuntime = factoryAppDefinition.createRuntime(commands);
+  const factoryGameSession = FACTORY_PREVIEW_GAME.createSession(factoryPreviewGameAdapter, 42);
+  factoryPreview.dataset.factoryViewId = factoryAppDefinition.baselineView.id;
+
+  const renderFactoryApp = async (): Promise<void> => {
+    const records = await factoryAppRuntime.list();
+    factoryAppList.replaceChildren();
+    if (records.length === 0) {
+      const empty = document.createElement("li");
+      empty.className = "empty-state";
+      empty.textContent = copy.factoryAppEmpty;
+      factoryAppList.append(empty);
+      return;
+    }
+    for (const record of [...records].reverse()) {
+      const item = document.createElement("li");
+      item.className = "record-item";
+      const body = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = String(record.data.title ?? "Generated record");
+      const meta = document.createElement("small");
+      meta.textContent = `${record.data.minutes ?? 0} min · ${record.data.status === "DONE" ? copy.taskDone : `revision ${record.revision}`}`;
+      body.append(title, meta);
+      const complete = document.createElement("button");
+      complete.type = "button";
+      complete.className = "icon-button";
+      complete.textContent = copy.factoryAppComplete;
+      complete.disabled = record.data.status === "DONE";
+      complete.addEventListener("click", async () => {
+        try {
+          await factoryAppRuntime.complete(record.id, record.revision);
+          factoryAppStatus.textContent = copy.factoryAppSaved(String(record.data.title ?? "record"));
+          await renderFactoryApp();
+        } catch (error) {
+          factoryAppStatus.textContent = describeError(error, "Generated record could not be completed; canonical state was not changed.");
+        }
+      });
+      item.append(body, complete);
+      factoryAppList.append(item);
+    }
+  };
+
+  const renderFactoryGame = (): void => {
+    const state = factoryGameSession.snapshot();
+    const payload = state.payload as Partial<FactoryPreviewGamePayload>;
+    const position = payload.position ?? 0;
+    const energy = payload.energy ?? 4;
+    const stars = payload.stars ?? 0;
+    const layout = FACTORY_PREVIEW_GAME.boardLayout(window.innerWidth);
+    factoryGameBoard.dataset.columns = String(layout.columns);
+    factoryGameBoard.dataset.compact = String(layout.compact);
+    factoryGameBoard.replaceChildren();
+    for (let index = 0; index < 4; index += 1) {
+      const cell = document.createElement("span");
+      cell.className = "factory-game-cell";
+      cell.textContent = index === position ? "●" : "○";
+      cell.setAttribute("aria-label", `Position ${index}${index === position ? ", current" : ""}`);
+      if (index === position) cell.dataset.current = "true";
+      factoryGameBoard.append(cell);
+    }
+    factoryGameStatus.textContent = copy.factoryGameStatus(position, energy, stars, state.tick);
+    factoryGamePause.textContent = state.paused ? copy.factoryGameResume : copy.factoryGamePause;
+    factoryGameMove.disabled = state.paused || energy <= 0 || position >= 3;
+    factoryGameCollect.disabled = state.paused || position === 0 || position % 2 !== 0 || stars >= 2;
+  };
+
+  const factoryGameDispatch = (action: "move.right" | "collect"): void => {
+    try {
+      factoryGameSession.dispatch(action);
+      renderFactoryGame();
+    } catch (error) {
+      factoryGameStatus.textContent = describeError(error, "The generated game rejected that action without changing its save.");
+    }
+  };
+
+  if (factoryPreviewMode) {
+    factoryAppForm.replaceChildren();
+    for (const field of factoryAppDefinition.fields) {
+      const label = document.createElement("label");
+      label.textContent = field.labels[presentation.locale] ?? field.labels["en-CA"] ?? field.id;
+      const input = document.createElement("input");
+      input.name = field.id;
+      input.dataset.factoryField = field.id;
+      input.dataset.factoryType = field.type;
+      input.required = Boolean(field.required);
+      input.type = field.type === "number" ? "number" : "text";
+      if (field.type === "tags") input.placeholder = "tag1, tag2";
+      label.htmlFor = `factory-field-${field.id}`;
+      input.id = label.htmlFor;
+      factoryAppForm.append(label, input);
+    }
+    const submit = document.createElement("button");
+    submit.type = "submit";
+    submit.textContent = copy.factoryAppSave;
+    factoryAppForm.append(submit);
+    factoryAppForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      try {
+        const input: Record<string, unknown> = {};
+        for (const field of factoryAppDefinition.fields) {
+          const control = factoryAppForm.elements.namedItem(field.id);
+          if (!(control instanceof HTMLInputElement)) continue;
+          input[field.id] = field.type === "number" ? (control.value ? control.valueAsNumber : undefined) : field.type === "tags" ? control.value.split(",").map((tag) => tag.trim()).filter(Boolean) : control.value;
+        }
+        const record = await factoryAppRuntime.capture(input);
+        factoryAppStatus.textContent = copy.factoryAppSaved(String(record.data.title ?? "record"));
+        factoryAppForm.reset();
+        await renderFactoryApp();
+      } catch (error) {
+        factoryAppStatus.textContent = describeError(error, "The generated record was not saved; canonical state was not changed.");
+      }
+    });
+    factoryGameMove.addEventListener("click", () => factoryGameDispatch("move.right"));
+    factoryGameCollect.addEventListener("click", () => factoryGameDispatch("collect"));
+    factoryGamePause.addEventListener("click", () => {
+      if (factoryGameSession.snapshot().paused) factoryGameSession.resume();
+      else factoryGameSession.pause();
+      renderFactoryGame();
+    });
+    factoryGameSave.addEventListener("click", async () => {
+      await store.setSetting("factory.preview.game.save", factoryGameSession.save());
+      factoryGameStatus.textContent = copy.factoryGameSaved;
+    });
+    factoryGameLoad.addEventListener("click", async () => {
+      const save = await store.getSetting<string>("factory.preview.game.save");
+      if (!save) {
+        factoryGameStatus.textContent = copy.factoryGameLoaded;
+        return;
+      }
+      try {
+        factoryGameSession.load(save);
+        factoryGameStatus.textContent = copy.factoryGameLoaded;
+        renderFactoryGame();
+      } catch (error) {
+        factoryGameStatus.textContent = describeError(error, "The generated game save was incompatible; current state was retained.");
+      }
+    });
+    void renderFactoryApp();
+    renderFactoryGame();
+  }
 
   const sectionLabel = (id: PresentationSectionId): string => {
     switch (id) {
@@ -1013,7 +1206,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       remove.className = "icon-button";
       remove.textContent = copy.removeSpace;
       remove.addEventListener("click", async () => {
-        if (!window.confirm(copy.removeSpaceConfirmation(space.name))) return;
+        if (!await requestConfirmation(copy.removeSpaceConfirmation(space.name), copy.removeSpace)) return;
         try {
           await spaceService.removeSpace(space.id);
           if (activeSpace === space.id) activeSpace = undefined;
@@ -1041,7 +1234,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       remove.className = "icon-button";
       remove.textContent = copy.removeMembership;
       remove.addEventListener("click", async () => {
-        if (!window.confirm(copy.removeMembershipConfirmation(recordText(source), spaceLabel(membership.data.space)))) return;
+        if (!await requestConfirmation(copy.removeMembershipConfirmation(recordText(source), spaceLabel(membership.data.space)), copy.removeMembership)) return;
         try {
           await spaceService.remove(membership.id);
           spaceStatus.textContent = copy.membershipRemoved(spaceLabel(membership.data.space));
@@ -1652,7 +1845,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         cancel.className = "icon-button";
         cancel.textContent = copy.effectCancel;
         cancel.addEventListener("click", async () => {
-          if (!window.confirm(`${copy.effectCancel}?`)) return;
+          if (!await requestConfirmation(`${copy.effectCancel}?`, copy.effectOutboxHeading)) return;
           try {
             const cancelled = transitionEffect(operation, "CANCELLED", { evidence: [...operation.evidence, "cancelled-from-recovery-ledger"] });
             await store.updateEffect(cancelled, operation.status);
@@ -2352,7 +2545,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   });
 
   clearCanonicalButton.addEventListener("click", async () => {
-    if (!window.confirm(recoveryCopy.clearConfirmation)) return;
+    if (!await requestConfirmation(recoveryCopy.clearConfirmation, copy.confirmationHeading)) return;
     try {
       await store.clear();
       recoveryStatus.textContent = recoveryCopy.clearedCanonical;
@@ -2371,7 +2564,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const parsed: unknown = JSON.parse(text);
       const vault = isEncryptedVaultEnvelope(parsed) ? await decryptVault(parsed, vaultPassword.value) : parseVault(text);
       const preview = await store.previewVault(vault);
-      if (!window.confirm(copy.importPreviewMessage(preview.recordCount, preview.historyEntries, preview.artifactPayloads, preview.imported, preview.skipped, preview.conflicts, preview.hasPresentation))) {
+      if (!await requestConfirmation(copy.importPreviewMessage(preview.recordCount, preview.historyEntries, preview.artifactPayloads, preview.imported, preview.skipped, preview.conflicts, preview.hasPresentation), copy.importVault)) {
         recoveryStatus.textContent = copy.importCancelled;
         return;
       }

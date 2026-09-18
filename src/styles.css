@@ -81,6 +81,12 @@ select[multiple] { min-height: 9rem; }
 .search-row button { flex: 0 0 auto; }
 .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.65rem; }
 .domain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+.factory-preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+.factory-game-board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.45rem; margin-top: 0.7rem; }
+.factory-game-board[data-columns="1"] { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.factory-game-board[data-columns="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.factory-game-cell { display: grid; min-height: 3rem; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-muted); color: var(--muted); font-size: 1.4rem; }
+.factory-game-cell[data-current="true"] { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); color: var(--accent); }
 .presentation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); align-items: start; }
 .presentation-fieldset { display: grid; gap: 0.6rem; border: 1px solid var(--line); border-radius: 12px; margin: 0.8rem 0 0; padding: 0.8rem; }
 .presentation-fieldset legend { padding-inline: 0.35rem; font-weight: 800; }
@@ -124,6 +130,7 @@ dialog::backdrop { background: rgba(10, 18, 30, 0.58); }
 dialog h2 { margin-bottom: 0.5rem; }
 dialog p { overflow-wrap: anywhere; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1rem; }
+button:disabled { cursor: not-allowed; opacity: 0.55; }
 input[type="file"] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .file-button { display: inline-flex; align-items: center; }
 footer { display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid var(--line); padding: 1rem 0 2rem; color: var(--muted); font-size: 0.78rem; }
