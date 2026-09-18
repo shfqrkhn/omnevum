@@ -89,7 +89,7 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-exact-current-artifact-offline-capturesearchreload-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-exact-current-artifact-offline-follow-up"
       ],
-      "notes": "Fresh local static origins reloaded the cached shell offline, created canonical notes offline, and preserved them after network restoration; the historical receipt-bound Edge artifact repeated offline mutation/reload with a healthy derived index and empty app-origin diagnostics, while the historical Chromium artifact reported Failed to fetch for offline sync and kept local capture usable. GitHub Pages, Safari/Firefox, assistive technology, native fault behavior, and external provider qualification still require qualification."
+      "notes": "Current exact-artifact Chromium and Edge local static previews cached the shell, created canonical notes offline, searched them, and retained them after offline reload with healthy derived indexes and empty app-origin diagnostics; broader deployment, Safari/Firefox, assistive technology, native fault behavior, and external provider qualification still require qualification."
     },
     {
       "id": "OMN-ACC-003",

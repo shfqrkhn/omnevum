@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "52cba2980afa86365fffff4c428f55ea0d0e6b071c0d9ecbd22cb4d743798a85",
-        "bytes": 109721
+        "sha256": "f0f26f7bd5caeb02ac8600b2553b35e138610287997da6d5a0e0422f5a315f6f",
+        "bytes": 109566
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "33e1ac1408aca3f6a7aa833abdd44ebea409355b1778f26d9d370e7c78b2510b",
-        "bytes": 33287
+        "sha256": "df8692ac91795444a66dfbd546690cfeec97cc36c4aaeb64d77667a9dcfb2aa1",
+        "bytes": 33367
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -244,8 +244,8 @@
       },
       {
         "path": "docs/control/support-matrix.json",
-        "sha256": "14b437cda079440f2c99683d40911410edebc806c37b03d6258376cd43910955",
-        "bytes": 2555
+        "sha256": "fb438e4ede420e047cea2aa003ad531089cb767c751f61fece54b17e3ff6eaab",
+        "bytes": 2577
       },
       {
         "path": "docs/control/upstream.json",
