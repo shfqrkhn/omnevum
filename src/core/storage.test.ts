@@ -204,6 +204,33 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("preserves canonical data when an IndexedDB migration transaction is interrupted", async () => {
+    const databaseName = `omnevum-test-${Date.now()}-interrupted-migration`;
+    const store = new CanonicalStore(databaseName);
+    await store.open();
+    const original = record("record-interrupted-migration");
+    await store.put(original);
+    store.close();
+
+    const upgrade = indexedDB.open(databaseName, 7);
+    await new Promise<void>((resolve, reject) => {
+      upgrade.onupgradeneeded = () => {
+        upgrade.result.createObjectStore("interrupted-migration-marker");
+        upgrade.transaction?.abort();
+      };
+      upgrade.onsuccess = () => {
+        upgrade.result.close();
+        reject(new Error("Interrupted migration unexpectedly completed"));
+      };
+      upgrade.onerror = () => resolve();
+    });
+
+    const recovered = new CanonicalStore(databaseName);
+    await recovered.open();
+    expect(await recovered.get(original.id)).toEqual(original);
+    recovered.close();
+  });
+
   it("reclaims only derived state under injected quota pressure and exposes persistence state", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-quota-pressure`, {
       estimateStorage: async () => ({ usageBytes: 90, quotaBytes: 100 }),
