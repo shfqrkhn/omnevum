@@ -288,9 +288,10 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#stale-client-storage-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#interrupted-canonical-migration-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-recovery-repair-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-recovery-fault-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-recovery-fault-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-recovery-repair-completion-follow-up"
       ],
-      "notes": "Local static Chromium service-worker update/rollback, malformed-state recovery snapshot, explicit repair-from-snapshot preserving valid records, deterministic stale-client fencing, an aborted IndexedDB upgrade followed by exact-record reopen, and current-artifact Edge recovery-shell/read-only-export interaction are covered; native quota/corruption behavior, repair-button completion, accessibility, and production deployment remain open."
+      "notes": "Local static Chromium service-worker update/rollback, malformed-state recovery snapshot, explicit repair-from-snapshot preserving valid records, deterministic stale-client fencing, an aborted IndexedDB upgrade followed by exact-record reopen, and current-artifact Edge recovery-shell/read-only-export/repair interaction are covered; native quota/corruption behavior, browser-family breadth, accessibility, and production deployment remain open."
     },
     {
       "id": "OMN-ACC-018",
