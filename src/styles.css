@@ -88,6 +88,7 @@ select[multiple] { min-height: 9rem; }
 .triage-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; }
 .triage-split { display: grid; grid-template-columns: minmax(6rem, auto) minmax(14rem, 1fr) auto; gap: 0.45rem; flex: 1 1 100%; align-items: start; }
 .triage-split textarea { min-height: 3rem; padding: 0.45rem 0.6rem; }
+.triage-actions input[type="datetime-local"] { min-height: 36px; min-width: 12rem; padding: 0.45rem 0.6rem; }
 .record-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; border: 1px solid var(--line); border-radius: 12px; padding: 0.9rem; }
 .record-item p { margin: 0.35rem 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .history-details { margin-top: 0.6rem; color: var(--muted); font-size: 0.82rem; }

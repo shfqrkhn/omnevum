@@ -105,4 +105,16 @@ describe("CommandBus", () => {
     expect((await store.list()).filter((record) => record.data.triageSplitSourceId === source.id)).toHaveLength(2);
     store.close();
   });
+
+  it("defers a triage source until an explicit due time and clears stale disposition", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-triage-defer`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const source = await commands.create({ recordType: "note", owner: "core.capture", data: { text: "defer me", triageStatus: "INBOX", triageDisposition: "REFERENCE" } });
+    const deferred = await commands.deferTriage(source.id, "2030-01-01T12:00:00.000Z", source.revision);
+    expect(deferred.data).toMatchObject({ triageStatus: "DEFERRED", triageDeferredUntil: "2030-01-01T12:00:00.000Z" });
+    expect(deferred.data.triageDisposition).toBeUndefined();
+    await expect(commands.deferTriage(source.id, "invalid", deferred.revision)).rejects.toThrow("defer time");
+    store.close();
+  });
 });

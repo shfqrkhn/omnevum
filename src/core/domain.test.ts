@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { CanonicalRecord } from "./model";
-import { recordText, recordTriageDisposition, recordTriageStatus } from "./domain";
+import { recordText, recordTriageDeferredUntil, recordTriageDisposition, recordTriageStatus } from "./domain";
 
 describe("domain record projections", () => {
   it("renders an evidence claim instead of exposing an opaque relationship label", () => {
@@ -23,5 +23,7 @@ describe("domain record projections", () => {
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "ROUTED" } })).toBe("ROUTED");
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "SPLIT" } })).toBe("SPLIT");
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "ROUTE" } })).toBeUndefined();
+    expect(recordTriageDeferredUntil({ ...base, data: { triageDeferredUntil: "2030-01-01T00:00:00.000Z" } })).toBe("2030-01-01T00:00:00.000Z");
+    expect(recordTriageDeferredUntil({ ...base, data: { triageDeferredUntil: "not-a-time" } })).toBeUndefined();
   });
 });

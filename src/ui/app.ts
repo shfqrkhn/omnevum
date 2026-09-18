@@ -1,6 +1,6 @@
 import type { CommandBus, TriageRouteTarget, TriageSplitPart } from "../core/commands";
 import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate, type AcquirePreview } from "../core/acquire";
-import { isCompletedTask, recordSpace, recordText, recordTriageStatus, type SpaceId, type TriageStatus } from "../core/domain";
+import { isCompletedTask, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, type SpaceId, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
 import { resolvePresentationProfile, type PresentationProfile } from "../core/presentation";
@@ -810,7 +810,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
 
   const renderReview = async (): Promise<void> => {
     const scoped = await scopedRecords();
-    const records = scoped.filter((record) => recordTriageStatus(record) !== "REVIEWED");
+    const now = Date.now();
+    const records = scoped.filter((record) => {
+      if (recordTriageStatus(record) === "REVIEWED") return false;
+      const deferredUntil = recordTriageDeferredUntil(record);
+      return !deferredUntil || Date.parse(deferredUntil) <= now;
+    });
     const linkTargets = scoped.filter((record) => record.recordType !== "relationship");
     reviewList.replaceChildren();
     reviewCount.textContent = formatNumber(presentation.locale, records.length);
@@ -840,7 +845,23 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         actions.append(button);
       };
       updateTriage("REVIEWED", copy.markReviewed);
-      updateTriage("DEFERRED", copy.defer);
+      const deferUntil = document.createElement("input");
+      deferUntil.type = "datetime-local";
+      deferUntil.setAttribute("aria-label", copy.deferUntil);
+      deferUntil.value = new Date(Date.now() + 24 * 60 * 60 * 1000 - new Date().getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 16);
+      const defer = document.createElement("button");
+      defer.type = "button";
+      defer.className = "icon-button";
+      defer.textContent = copy.defer;
+      defer.addEventListener("click", async () => {
+        try {
+          await commands.deferTriage(record.id, new Date(deferUntil.value).toISOString(), record.revision);
+          await renderRecords(searchQuery.value);
+        } catch (error) {
+          triageStatusMessage.textContent = describeError(error, "Triage defer failed; canonical data was not changed.");
+        }
+      });
+      actions.append(deferUntil, defer);
       updateTriage("CLARIFY", copy.clarify);
       updateTriage("REVIEWED", copy.reference, { triageDisposition: "REFERENCE" });
       const targets = linkTargets.filter((target) => target.id !== record.id);

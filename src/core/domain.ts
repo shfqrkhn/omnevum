@@ -29,6 +29,11 @@ export function recordTriageDisposition(record: CanonicalRecord): TriageDisposit
   return record.data.triageDisposition === "REFERENCE" || record.data.triageDisposition === "LINKED" || record.data.triageDisposition === "ROUTED" || record.data.triageDisposition === "SPLIT" ? record.data.triageDisposition : undefined;
 }
 
+export function recordTriageDeferredUntil(record: CanonicalRecord): string | undefined {
+  const value = record.data.triageDeferredUntil;
+  return typeof value === "string" && Number.isFinite(Date.parse(value)) ? value : undefined;
+}
+
 export function isCompletedTask(record: CanonicalRecord): boolean {
   return record.recordType === "task" && record.data.status === "DONE";
 }
