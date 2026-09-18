@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -77,6 +78,16 @@ if (failures.length === 0) {
       if (release.releaseIdentity?.artifactDigest !== digest) failures.push("release evidence artifact digest is stale");
       const cache = serviceWorker.match(/const CACHE_NAME = "(omnevum-shell-[a-f0-9]{16})"/u)?.[1];
       if (release.releaseIdentity?.serviceWorkerCache !== cache) failures.push("release evidence service-worker cache is stale");
+      const sourceRevision = release.releaseIdentity?.sourceRevision;
+      if (typeof sourceRevision !== "string" || !/^[0-9a-f]{7,64}$/u.test(sourceRevision)) failures.push("release evidence source revision is invalid");
+      else {
+        try {
+          execFileSync("git", ["rev-parse", "--verify", `${sourceRevision}^{commit}`], { cwd: root, stdio: "ignore" });
+          execFileSync("git", ["merge-base", "--is-ancestor", sourceRevision, "HEAD"], { cwd: root, stdio: "ignore" });
+        } catch {
+          failures.push("release evidence source revision is missing or not an ancestor of HEAD");
+        }
+      }
     } catch {
       failures.push("release evidence register is invalid JSON");
     }
