@@ -1072,7 +1072,7 @@ On 2026-09-18, source revision `9a78396` added `src/core/package-automation.ts`,
 
 ## Current package automation lifecycle follow-up
 
-On 2026-09-18, source revision `8d0fa37` added `src/core/package-automation-registry.ts`. The registry requires an installed enabled package before rule registration, bounds each package to 50 rules, rejects duplicate rule IDs, supports explicit rule disable/enable metadata, and checks package lifecycle status at every preview so disabled or retired packages cannot emit stale proposals. It returns only proposal envelopes; it does not persist rules, execute commands, hold credentials, access network/storage, or bypass permission/confirmation.
+On 2026-09-18, source revision `8d0fa37` added `src/core/package-automation-registry.ts`, and source revision `8a9fe15` deep-freezes validated rule data at the adapter boundary. The registry requires an installed enabled package before rule registration, bounds each package to 50 rules, rejects duplicate rule IDs, supports explicit rule disable/enable metadata, and checks package lifecycle status at every preview so disabled or retired packages cannot emit stale proposals. It returns only proposal envelopes; it does not persist rules, execute commands, hold credentials, access network/storage, or bypass permission/confirmation.
 
 `src/core/package-automation-registry.test.ts` passes three focused lifecycle regressions covering enabled-trigger filtering, rule disable/enable, package disable/retirement suppression, unavailable-package rejection, and duplicate registration. OMN-ACC-049 remains `PARTIAL`; durable persistence, UI editing, normal command-path integration, browser/target qualification, and human acceptance remain open.
 
