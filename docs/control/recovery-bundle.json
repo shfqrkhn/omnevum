@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "c958ab55df3b024891918615d59da57f4c5f6359992d1da3cddad9a6b2ff3273",
-        "bytes": 96827
+        "sha256": "dc829a745434e54398b82f07a53c690de05ae9d76fa2074395292fb3b596ea42",
+        "bytes": 96952
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "436aed879f96eec551fba921552b540562c2c5a5dcccfeb89526befd47f61887",
-        "bytes": 23154
+        "sha256": "e6fd28460d7febc4a5911803ba7e1f7798b73d3787cca02c72cc773c8f389e61",
+        "bytes": 23482
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "86be77e013634e0657d094571c1be2017768fab3d2983f7f16af656929d1b858",
+        "sha256": "abf414da3912de3d6ac36cfd2d3006add193e5289ad5e24da0857b5994c3b93c",
         "bytes": 2398
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "c4078877ca352e5dccc84a2fb0ecbdd20742b171ed3d66a8c5acf6c06872b324",
-        "bytes": 124075
+        "sha256": "5085523f9a1a045405a007c854472fd102f68766262dbc6593421180e2f4e97e",
+        "bytes": 125846
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -334,18 +334,18 @@
       },
       {
         "path": "scripts/effect-loopback-core.d.mts",
-        "sha256": "8777062e5739cc7b0737160b272e41a261e6be2b6058c97656082e19d2ab354e",
-        "bytes": 471
+        "sha256": "07f7390ee445fa7cea8d74ab447007f75828f18f5cb1618816f078fda1ab7f3c",
+        "bytes": 556
       },
       {
         "path": "scripts/effect-loopback-core.mjs",
-        "sha256": "03bdce70a713b44e5b1f10527fd4bcab88b996a681ed08a86c7722e1d553cb23",
-        "bytes": 3310
+        "sha256": "7523cf021aee9531a25c908efcc73ea1869c3334db20b2208176d3f112dd17ee",
+        "bytes": 3990
       },
       {
         "path": "scripts/effect-loopback-fixture.mjs",
-        "sha256": "d7bb2067d52c104b8d4ee53331ec5bec1794bbc38f03eaf56c575ea6234d12aa",
-        "bytes": 865
+        "sha256": "bfe9aebfd65ae4a6876eb0267e9734e778c9a087b1259b9457afbb4c31b9b3f6",
+        "bytes": 973
       },
       {
         "path": "scripts/factory-interruption-benchmark.mjs",
@@ -734,8 +734,8 @@
       },
       {
         "path": "src/core/remote.test.ts",
-        "sha256": "1df8518538fb4cb84c835f9eaf818b905f7859242e49f17eb9da4699d4cac6e9",
-        "bytes": 8471
+        "sha256": "09b688d4bb27366dd904d9fa58cb81adffdb38ecdfcfc71ed89c613f3b8e3004",
+        "bytes": 10129
       },
       {
         "path": "src/core/remote.ts",
@@ -904,8 +904,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "96b08af689c3195334535217c242b1aa433db308366eff896cfa50b4724a5370",
-        "bytes": 149588
+        "sha256": "ac1233ae71ab9b6f24f0d162d0035407af2683e2d44520bc67ffa1fe9ddc87e5",
+        "bytes": 152823
       },
       {
         "path": "tsconfig.json",
@@ -914,8 +914,8 @@
       },
       {
         "path": "vite.config.ts",
-        "sha256": "f6a94cc26b5571d6bae118c61f27ed38d77215f2eb263061b9201823f0cad1bc",
-        "bytes": 1192
+        "sha256": "156cd52d596f1ff7211a660b2101751e3e7c3f62e17ef3ae06a6fc8e33b16632",
+        "bytes": 1309
       }
     ]
   }
