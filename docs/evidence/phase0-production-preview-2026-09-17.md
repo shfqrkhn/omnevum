@@ -140,9 +140,9 @@ This is local Chromium evidence for the presentation/search slice only. It does 
 
 ## Current built-artifact sync follow-up
 
-The exact `npm run ci` artifact at source revision `3f16981` (artifact digest `96651643e32389b2d2ce153dfcc37b53d96e25ecaa90fbba224ba767166f4e9b`, worker cache `omnevum-shell-e08a9ac162676855`) was served from the built `dist/` files by a temporary single-origin static harness at `http://localhost:4212/` in the Codex In-app Browser Chromium surface. The same harness exposed `/replica` as a bounded local replica containing synthetic record `remote-sync-sentinel`.
+The exact `npm run ci` artifact at source revision `b1ffa19` (artifact digest `4dcdb2d8414248de3e128c2db29da3952633b18ab134c2644d01121016dc26a6`, worker cache `omnevum-shell-60930e9e8eb3697c`) was served from the built `dist/` files by a temporary single-origin static harness at `http://localhost:4213/` in the Codex In-app Browser Chromium surface. The same harness exposed `/replica` as a bounded local replica containing synthetic record `remote-sync-sentinel`.
 
-- The Sync / Portability form accepted the owner-controlled `http://localhost:4212/replica` development endpoint and reported `Sync completed: 1 imported, 0 skipped, 0 conflict(s), 0 tombstone(s) preserved.`
+- The Sync / Portability form accepted the owner-controlled `http://localhost:4213/replica` development endpoint and reported `Sync completed: 1 imported, 0 skipped, 0 conflict(s), 0 tombstone(s) preserved.`
 - The imported `Remote sync sentinel` appeared in the canonical record list as a Personal Note owned by `core.remote`, revision 1; the local replica received the merged PUT payload (`461` bytes).
 - Browser diagnostics returned no warning/error console entries.
 
