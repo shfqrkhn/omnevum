@@ -47,9 +47,10 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-target-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-current-artifact-capture-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-capture-receipt-refresh"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-capture-receipt-refresh",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-exact-build-persistence-follow-up"
       ],
-      "notes": "Fresh local static Chromium and current-artifact Edge evidence cover the core no-account create/reload path, including a current-artifact Chromium receipt; GitHub Pages, supported mobile rows, and full onboarding qualification remain open."
+      "notes": "Fresh local static Chromium and exact-current-artifact Edge evidence cover the core no-account create/reload path; GitHub Pages, supported mobile rows, and full onboarding qualification remain open."
     },
     {
       "id": "OMN-ACC-002",

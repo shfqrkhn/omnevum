@@ -105,6 +105,7 @@
     "EffectRunner persists bounded exponential retry backoff and transitions retry exhaustion to FAILED_TERMINAL with explicit evidence; source bba3b14",
     "current receipt-bound Chromium preview on the 655f0fb artifact exposes the Recovery Effect/Outbox ledger, re-queues a retryable operation, cancels replay, and returns to a clean effect state; source 655f0fb",
     "CredentialKeyBroker.authorizeEffect is the canonical guard for credential-bound EffectRunner operations, and revocation cancels a pending operation before executor use; source 7986327",
+    "current receipt-bound Edge preview on the exact 655f0fb artifact accepts a synthetic canonical capture, retains it after reload, and returns to a clean scoped origin; source 655f0fb",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [
