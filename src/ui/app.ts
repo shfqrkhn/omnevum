@@ -24,7 +24,7 @@ import { makePlaceData, parseGeoJsonPoint } from "../core/place";
 import { projectForAuthorizedShare } from "../core/share";
 import { canUseShareGrant, createShareGrant, revokeShareGrant } from "../core/sharing";
 import { JsonEndpointTransport } from "../core/remote";
-import { SyncEngine } from "../core/sync";
+import { SyncEngine, SyncFailure } from "../core/sync";
 
 export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
@@ -1438,7 +1438,13 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       syncStatus.textContent = copy.syncResult(result.imported, result.skipped, result.conflicts.length, result.tombstonesPreserved);
       await renderRecords(searchQuery.value);
     } catch (error) {
-      syncStatus.textContent = describeError(error, "Sync failed; canonical records were not changed by this action.");
+      if (error instanceof SyncFailure && error.phase === "PUSH" && error.partialResult) {
+        const result = error.partialResult;
+        syncStatus.textContent = `${copy.syncPartial(result.imported, result.skipped, result.conflicts.length, result.tombstonesPreserved)} ${describeError(error, "Remote sync push failed.")}`;
+        await renderRecords(searchQuery.value);
+      } else {
+        syncStatus.textContent = describeError(error, "Sync failed before the local canonical merge completed; local canonical records were not changed by this action.");
+      }
     }
   });
 

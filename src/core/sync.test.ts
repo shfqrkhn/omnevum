@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { CanonicalRecord } from "./model";
-import { mergeReplicaRecords, SyncEngine, type SyncTransport } from "./sync";
+import { mergeReplicaRecords, SyncEngine, SyncFailure, type SyncTransport } from "./sync";
 import { CanonicalStore } from "./storage";
 
 function record(id: string, revision: number, deleted = false, text = "same"): CanonicalRecord {
@@ -46,6 +46,27 @@ describe("provider-neutral replica merge", () => {
     expect(result.imported).toBe(1);
     expect(pushed[0]?.map((item) => item.id)).toEqual(["local", "remote"]);
     expect((await store.list()).map((item) => item.id)).toEqual(["local", "remote"]);
+    store.close();
+  });
+
+  it("reports a partial local merge when the remote push fails", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-sync-push-failure`);
+    await store.open();
+    const transport: SyncTransport = {
+      pull: async () => [record("remote", 1, false, "remote")],
+      push: async () => { throw new Error("remote unavailable"); }
+    };
+    let failure: unknown;
+    try {
+      await new SyncEngine(store, transport).synchronize();
+    } catch (error) {
+      failure = error;
+    }
+    expect(failure).toBeInstanceOf(SyncFailure);
+    if (!(failure instanceof SyncFailure)) throw new Error("Expected SyncFailure");
+    expect(failure.phase).toBe("PUSH");
+    expect(failure.partialResult?.imported).toBe(1);
+    expect((await store.list()).map((item) => item.id)).toEqual(["remote"]);
     store.close();
   });
 });
