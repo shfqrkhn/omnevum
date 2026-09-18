@@ -674,8 +674,8 @@
       },
       {
         "path": "src/core/i18n.ts",
-        "sha256": "33ea830ecf08d3bf917077060600f3a40d3cb31a5059b1c89f5facf0b0dad6b5",
-        "bytes": 58717
+        "sha256": "4de1ff97acbeb28e7765eccbeda802416f9b710f87f39232986d9964df176586",
+        "bytes": 58935
       },
       {
         "path": "src/core/id.ts",
@@ -694,8 +694,8 @@
       },
       {
         "path": "src/core/model.ts",
-        "sha256": "dd0a9f6b67e59ce6b79f6518a4cf4e70c900061a055934f6db27e852ce72f67e",
-        "bytes": 1857
+        "sha256": "0dbb17e63c6cb45c5894df1cf73dd49b59c0c61831eab8c04a9c00507c5c00e6",
+        "bytes": 2208
       },
       {
         "path": "src/core/money.test.ts",
@@ -709,13 +709,13 @@
       },
       {
         "path": "src/core/package-automation-registry.test.ts",
-        "sha256": "05199d92ecdb613a4a4aa203bbf7553112b4b89f6eaaf12bd3debf5a29a61eba",
-        "bytes": 3445
+        "sha256": "1fa49d20467c1f53b0c71233ffd4659b1567ed34b8cd9a0e7396dd2df51e5c68",
+        "bytes": 4451
       },
       {
         "path": "src/core/package-automation-registry.ts",
-        "sha256": "112318f49e6bea691d8ff392cf537e72fe715667f3b1626e7381c0e58de80687",
-        "bytes": 4617
+        "sha256": "e5cfd2fea818fa2359f0a449a0ae22fe14d0e28f2ee36529dfb72895c1026853",
+        "bytes": 6488
       },
       {
         "path": "src/core/package-automation.test.ts",
@@ -849,13 +849,13 @@
       },
       {
         "path": "src/core/storage.test.ts",
-        "sha256": "e8b4bd6515ef186f51001919f6bbd1e0a9a40053ca767dc29fb7196b801d4cfa",
-        "bytes": 27908
+        "sha256": "1b03442abd1d119fdb93b16f6d139a5d095dd05a294f8f924873e6feec6911ae",
+        "bytes": 29504
       },
       {
         "path": "src/core/storage.ts",
-        "sha256": "6da8540f793f8a3e009f707bafb3901321c30a2e679ff8df2b7c7c3a92afb51b",
-        "bytes": 44189
+        "sha256": "0f31831982945a32d702619b9a9b89a2dff77f6fd14606bd57b47e76c8fd4e7e",
+        "bytes": 46698
       },
       {
         "path": "src/core/sync-routes.test.ts",
@@ -909,13 +909,13 @@
       },
       {
         "path": "src/core/validation.test.ts",
-        "sha256": "7b331f2a4cd3dcb05ae7f46ac490dfe0723ac272dedce92dde51734c384823f0",
-        "bytes": 2105
+        "sha256": "dc10bcd1b0f8875b79ec513c54b373ae8b72a7c9647c5501621219e2cfddbd22",
+        "bytes": 3198
       },
       {
         "path": "src/core/validation.ts",
-        "sha256": "f1d6852509de38c92902430d7e352377a35776a365cbfea15549fe66548d671e",
-        "bytes": 7854
+        "sha256": "5582fdfeb9ea5cfc5171a84c7fafde243be591b4b52722c9839812f0c5707dd7",
+        "bytes": 9748
       },
       {
         "path": "src/core/vault.ts",
@@ -949,8 +949,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "2e94ca2e56cae0188cf67990282897adb406b03990b7927f1d3b8573644ea96d",
-        "bytes": 179812
+        "sha256": "370f7165e7e4636030b3a44fc122306f2ffdafbd3741071fbb6d71a7fcbbd057",
+        "bytes": 179837
       },
       {
         "path": "tsconfig.json",

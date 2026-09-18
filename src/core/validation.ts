@@ -1,4 +1,6 @@
-import type { CanonicalRecord, HistoryEntry, VaultArtifact, VaultDocument, VaultPackageState } from "./model";
+import { isAutomationRule } from "./automation";
+import { MAX_AUTOMATION_DOCUMENT_BYTES } from "./package-automation";
+import type { CanonicalRecord, HistoryEntry, VaultArtifact, VaultDocument, VaultPackageAutomation, VaultPackageState } from "./model";
 import { CURRENT_SCHEMA_VERSION, VAULT_FORMAT_VERSION } from "./model";
 
 const recordTypes = new Set(["note", "task", "observation", "relationship", "artifact"]);
@@ -22,6 +24,7 @@ export const MAX_VAULT_RECORDS = 50_000;
 export const MAX_VAULT_HISTORY_ENTRIES = 100_000;
 export const MAX_VAULT_ARTIFACT_TOTAL_BYTES = 50 * 1024 * 1024;
 export const MAX_VAULT_PACKAGE_STATES = 100;
+export const MAX_VAULT_AUTOMATION_RULES = 100;
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -120,11 +123,44 @@ export function assertVaultPackageState(value: unknown): asserts value is VaultP
   if (!isVaultPackageState(value)) throw new Error("Invalid Vault package state");
 }
 
+export function isVaultPackageAutomation(value: unknown): value is VaultPackageAutomation {
+  if (!isObject(value)) return false;
+  if (
+    value.schemaVersion !== 1 ||
+    typeof value.packageId !== "string" ||
+    !/^[a-z][a-z0-9._-]{1,80}$/.test(value.packageId) ||
+    typeof value.ruleId !== "string" ||
+    !/^[a-z][a-z0-9._-]{1,80}$/.test(value.ruleId) ||
+    !value.ruleId.startsWith(`${value.packageId}.`) ||
+    typeof value.ruleVersion !== "number" ||
+    !Number.isSafeInteger(value.ruleVersion) ||
+    value.ruleVersion < 1 ||
+    typeof value.document !== "string" ||
+    value.document.length === 0 ||
+    new TextEncoder().encode(value.document).byteLength > MAX_AUTOMATION_DOCUMENT_BYTES ||
+    (value.status !== "ENABLED" && value.status !== "DISABLED") ||
+    !isTimestamp(value.installedAt) ||
+    (value.disabledReason !== undefined && (typeof value.disabledReason !== "string" || value.disabledReason.length > 500))
+  ) return false;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(value.document) as unknown;
+  } catch {
+    return false;
+  }
+  return isAutomationRule(parsed) && parsed.ruleId === value.ruleId && parsed.version === value.ruleVersion;
+}
+
+export function assertVaultPackageAutomation(value: unknown): asserts value is VaultPackageAutomation {
+  if (!isVaultPackageAutomation(value)) throw new Error("Invalid Vault package automation");
+}
+
 export function isVaultDocument(value: unknown): value is VaultDocument {
   if (!isObject(value) || value.format !== "OMNEVUM_VAULT" || value.version !== VAULT_FORMAT_VERSION) return false;
   if (!isTimestamp(value.exportedAt) || !Array.isArray(value.records) || value.records.length > MAX_VAULT_RECORDS || !value.records.every(isCanonicalRecord)) return false;
   if (value.presentation !== undefined && !isObject(value.presentation)) return false;
   if (value.packageStates !== undefined && (!Array.isArray(value.packageStates) || value.packageStates.length > MAX_VAULT_PACKAGE_STATES || !value.packageStates.every(isVaultPackageState) || new Set(value.packageStates.map((state) => state.packageId)).size !== value.packageStates.length)) return false;
+  if (value.automationRules !== undefined && (!Array.isArray(value.automationRules) || value.automationRules.length > MAX_VAULT_AUTOMATION_RULES || !value.automationRules.every(isVaultPackageAutomation) || new Set(value.automationRules.map((rule) => rule.ruleId)).size !== value.automationRules.length)) return false;
   if (value.integrity !== undefined && (!isObject(value.integrity) || value.integrity.algorithm !== "SHA-256" || typeof value.integrity.digest !== "string" || !/^[a-f0-9]{64}$/i.test(value.integrity.digest))) return false;
   const records = value.records as CanonicalRecord[];
   if (new Set(records.map((record) => record.id)).size !== records.length) return false;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { CanonicalRecord } from "./model";
+import type { CanonicalRecord, VaultPackageAutomation } from "./model";
 import type { EffectOperation } from "./effect";
 import { transitionEffect } from "./effect";
 import { CanonicalStore, type CanonicalStoreChange } from "./storage";
@@ -19,6 +19,27 @@ function record(id: string, revision = 1): CanonicalRecord {
     revision,
     deleted: false,
     data: { text: "hello" }
+  };
+}
+
+function automationRule(): VaultPackageAutomation {
+  return {
+    schemaVersion: 1,
+    packageId: "sample.automation",
+    ruleId: "sample.automation.review",
+    ruleVersion: 1,
+    document: JSON.stringify({
+      schemaVersion: 1,
+      ruleId: "sample.automation.review",
+      version: 1,
+      trigger: "ON_CAPTURE",
+      when: { op: "exists", path: "record.kind" },
+      actions: [{ command: "record.update", arguments: { field: "priority", value: 3 } }],
+      enabled: true
+    }),
+    status: "DISABLED",
+    installedAt: new Date().toISOString(),
+    disabledReason: "owner paused this rule"
   };
 }
 
@@ -243,6 +264,8 @@ describe("CanonicalStore", () => {
     await store.put(original);
     const packageState = { packageId: "preview.constellation", schemaVersion: 1, state: { schemaVersion: 1, seed: 42, tick: 3, paused: false, payload: { position: 2, stars: 1 } } };
     await store.setPackageState(packageState);
+    const automation = automationRule();
+    await store.setAutomationRules([automation]);
 
     const request = indexedDB.open(databaseName, 6);
     const database = await new Promise<IDBDatabase>((resolve, reject) => {
@@ -261,9 +284,10 @@ describe("CanonicalStore", () => {
     const retainedState = await store.exportRetainedState();
     if (retainedState.format !== "OMNEVUM_RECOVERY_SNAPSHOT") throw new Error("Expected a recovery snapshot");
     await expect(store.repairFromRecoverySnapshot({ ...retainedState, records: [{ invalid: true }] })).rejects.toThrow("no valid canonical records");
-    await expect(store.repairFromRecoverySnapshot({ ...retainedState, records: [...retainedState.records, { invalid: true }] })).resolves.toMatchObject({ retainedRecords: 1, removedRecords: 2, retainedPackageStates: 1, skippedPackageStates: 0 });
+    await expect(store.repairFromRecoverySnapshot({ ...retainedState, records: [...retainedState.records, { invalid: true }] })).resolves.toMatchObject({ retainedRecords: 1, removedRecords: 2, retainedPackageStates: 1, skippedPackageStates: 0, retainedAutomationRules: 1, skippedAutomationRules: 0 });
     expect(await store.list()).toEqual([original]);
     expect(await store.getPackageState(packageState.packageId)).toEqual(packageState);
+    expect(await store.getAutomationRules()).toEqual([automation]);
     await expect(store.exportVault()).resolves.toMatchObject({ records: [original] });
     store.close();
   });
@@ -440,6 +464,22 @@ describe("CanonicalStore", () => {
     await store.search("");
     expect((await store.health()).searchIndexValid).toBe(true);
     store.close();
+  });
+
+  it("round-trips bounded package automation through Vault export and import", async () => {
+    const source = new CanonicalStore(`omnevum-test-${Date.now()}-automation-source`);
+    const destination = new CanonicalStore(`omnevum-test-${Date.now()}-automation-destination`);
+    await source.open();
+    await destination.open();
+    const rule = automationRule();
+    await source.setAutomationRules([rule]);
+    const vault = await source.exportVault();
+    expect(vault.automationRules).toEqual([rule]);
+    expect((await source.previewVault(vault)).automationRules).toBe(1);
+    await destination.importVault(vault);
+    expect(await destination.getAutomationRules()).toEqual([rule]);
+    source.close();
+    destination.close();
   });
 
   it("exports category-level diagnostics without canonical content", async () => {

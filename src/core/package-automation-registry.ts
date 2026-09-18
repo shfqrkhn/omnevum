@@ -1,6 +1,8 @@
 import type { AutomationProposal } from "./automation";
 import { parsePackageAutomationDocument, type PackageAutomationAdapter } from "./package-automation";
 import { PackageRegistry } from "./package-contract";
+import type { VaultPackageAutomation } from "./model";
+import { assertVaultPackageAutomation } from "./validation";
 
 export type PackageAutomationStatus = "ENABLED" | "DISABLED";
 
@@ -22,6 +24,7 @@ const MAX_AUTOMATIONS_PER_PACKAGE = 50;
 
 interface RegisteredAutomation {
   adapter: PackageAutomationAdapter;
+  document: string;
   status: PackageAutomationStatus;
   installedAt: string;
   disabledReason?: string;
@@ -45,7 +48,7 @@ export class PackageAutomationRegistry {
     if (packageCount >= MAX_AUTOMATIONS_PER_PACKAGE) throw new Error("Package automation limit exceeded");
     const adapter = parsePackageAutomationDocument(installed.manifest, document);
     if (this.automations.has(adapter.rule.ruleId)) throw new Error("Automation rule is already registered");
-    const entry: RegisteredAutomation = { adapter, status: "ENABLED", installedAt: new Date().toISOString() };
+    const entry: RegisteredAutomation = { adapter, document, status: "ENABLED", installedAt: new Date().toISOString() };
     this.automations.set(adapter.rule.ruleId, entry);
     return this.describe(adapter.rule.ruleId, entry);
   }
@@ -87,6 +90,47 @@ export class PackageAutomationRegistry {
         return entry.adapter.preview(context).map((proposal) => ({ ...proposal, packageId: entry.adapter.packageId }));
       })
       .map((proposal) => ({ ...proposal, arguments: structuredClone(proposal.arguments) }));
+  }
+
+  public exportState(): VaultPackageAutomation[] {
+    return [...this.automations.entries()]
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([ruleId, entry]) => ({
+        schemaVersion: 1,
+        packageId: entry.adapter.packageId,
+        ruleId,
+        ruleVersion: entry.adapter.rule.version,
+        document: entry.document,
+        status: entry.status,
+        installedAt: entry.installedAt,
+        ...(entry.disabledReason ? { disabledReason: entry.disabledReason } : {})
+      }));
+  }
+
+  public restoreState(states: readonly VaultPackageAutomation[]): { restored: number; skipped: number } {
+    const next = new Map<string, RegisteredAutomation>();
+    let skipped = 0;
+    for (const state of states) {
+      assertVaultPackageAutomation(state);
+      if (next.has(state.ruleId)) throw new Error("Automation rule is duplicated in the restore state");
+      const installed = this.packages.get(state.packageId);
+      if (!installed || installed.status !== "INSTALLED") {
+        skipped += 1;
+        continue;
+      }
+      const adapter = parsePackageAutomationDocument(installed.manifest, state.document);
+      if (adapter.rule.ruleId !== state.ruleId || adapter.rule.version !== state.ruleVersion) throw new Error("Automation restore state does not match its document");
+      next.set(state.ruleId, {
+        adapter,
+        document: state.document,
+        status: state.status,
+        installedAt: state.installedAt,
+        ...(state.disabledReason ? { disabledReason: state.disabledReason } : {})
+      });
+    }
+    this.automations.clear();
+    for (const [ruleId, entry] of next) this.automations.set(ruleId, entry);
+    return { restored: next.size, skipped };
   }
 
   private require(ruleId: string): RegisteredAutomation {

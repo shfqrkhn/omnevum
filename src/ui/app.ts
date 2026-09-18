@@ -3079,7 +3079,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const parsed: unknown = JSON.parse(text);
       const vault = isEncryptedVaultEnvelope(parsed) ? await decryptVault(parsed, vaultPassword.value) : parseVault(text);
       const preview = await store.previewVault(vault);
-      if (!await requestConfirmation(copy.importPreviewMessage(preview.recordCount, preview.historyEntries, preview.artifactPayloads, preview.imported, preview.skipped, preview.conflicts, preview.hasPresentation, preview.packageStates), copy.importVault)) {
+      if (!await requestConfirmation(copy.importPreviewMessage(preview.recordCount, preview.historyEntries, preview.artifactPayloads, preview.imported, preview.skipped, preview.conflicts, preview.hasPresentation, preview.packageStates, preview.automationRules), copy.importVault)) {
         recoveryStatus.textContent = copy.importCancelled;
         return;
       }

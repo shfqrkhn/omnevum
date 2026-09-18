@@ -66,4 +66,23 @@ describe("package automation lifecycle", () => {
     registry.install(manifest.packageId, document);
     expect(() => registry.install(manifest.packageId, document)).toThrow("already registered");
   });
+
+  it("round-trips lifecycle state and skips rules whose package is unavailable", () => {
+    const packages = new PackageRegistry();
+    packages.install(manifest);
+    const registry = new PackageAutomationRegistry(packages);
+    registry.install(manifest.packageId, document);
+    registry.disable("sample.automation.review", "owner paused this rule");
+
+    const state = registry.exportState();
+    expect(state).toHaveLength(1);
+    const restored = new PackageAutomationRegistry(packages);
+    expect(restored.restoreState(state)).toEqual({ restored: 1, skipped: 0 });
+    expect(restored.get("sample.automation.review")).toMatchObject({ status: "DISABLED", disabledReason: "owner paused this rule" });
+    expect(restored.preview("ON_CAPTURE", { record: { kind: "task" } })).toEqual([]);
+
+    const unavailable = new PackageAutomationRegistry(new PackageRegistry());
+    expect(unavailable.restoreState(state)).toEqual({ restored: 0, skipped: 1 });
+    expect(unavailable.list()).toEqual([]);
+  });
 });

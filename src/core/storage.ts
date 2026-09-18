@@ -1,10 +1,10 @@
-import type { CanonicalRecord, HistoryEntry, VaultArtifact, VaultDocument, VaultPackageState } from "./model";
+import type { CanonicalRecord, HistoryEntry, VaultArtifact, VaultDocument, VaultPackageAutomation, VaultPackageState } from "./model";
 import { MAX_PORTABLE_ARTIFACT_BYTES } from "./artifact";
 import { VAULT_FORMAT_VERSION } from "./model";
 import { isSearchDocument, makeSearchDocument, SEARCH_INDEX_VERSION, searchDocuments, type SearchDocument, type SearchIndexMeta } from "./search";
 import { assertEffectOperation, type EffectOperation } from "./effect";
 import { withVaultIntegrity, verifyVaultIntegrity } from "./vault";
-import { assertCanonicalRecord, assertVaultDocument, assertVaultPackageState, isCanonicalRecord, isHistoryEntry, isVaultPackageState, MAX_VAULT_PACKAGE_STATES } from "./validation";
+import { assertCanonicalRecord, assertVaultDocument, assertVaultPackageState, isCanonicalRecord, isHistoryEntry, isVaultPackageAutomation, isVaultPackageState, MAX_VAULT_AUTOMATION_RULES, MAX_VAULT_PACKAGE_STATES } from "./validation";
 import { isViewDefinition, VIEW_SETTING } from "./compose";
 
 const RECORD_STORE = "records";
@@ -15,6 +15,7 @@ const SETTINGS_STORE = "settings";
 const ARTIFACT_STORE = "artifactBlobs";
 const EFFECT_STORE = "effects";
 const PACKAGE_STATE_PREFIX = "packageState:";
+const AUTOMATION_RULES_SETTING_ID = "automation.rules";
 
 function requestResult<T>(request: IDBRequest<T>): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -92,6 +93,7 @@ export interface VaultImportPreview {
   conflicts: number;
   hasPresentation: boolean;
   packageStates: number;
+  automationRules: number;
 }
 
 export interface RecoverySnapshot {
@@ -102,6 +104,7 @@ export interface RecoverySnapshot {
   history: unknown[];
   artifacts: VaultArtifact[];
   packageStates?: VaultPackageState[];
+  automationRules?: VaultPackageAutomation[];
   presentation?: unknown;
   summary: {
     recordCount: number;
@@ -124,6 +127,8 @@ export interface RecoveryRepairResult {
   skippedArtifactPayloads: number;
   retainedPackageStates: number;
   skippedPackageStates: number;
+  retainedAutomationRules: number;
+  skippedAutomationRules: number;
 }
 
 type PersistenceState = "GRANTED" | "DENIED" | "UNAVAILABLE";
@@ -324,6 +329,17 @@ export class CanonicalStore {
       .sort((left, right) => left.packageId.localeCompare(right.packageId));
   }
 
+  public async getAutomationRules(): Promise<VaultPackageAutomation[]> {
+    const value = await this.getSetting<unknown>(AUTOMATION_RULES_SETTING_ID);
+    if (!Array.isArray(value) || value.length > MAX_VAULT_AUTOMATION_RULES || !value.every(isVaultPackageAutomation)) return [];
+    return structuredClone(value);
+  }
+
+  public async setAutomationRules(rules: VaultPackageAutomation[]): Promise<void> {
+    if (rules.length > MAX_VAULT_AUTOMATION_RULES || !rules.every(isVaultPackageAutomation) || new Set(rules.map((rule) => rule.ruleId)).size !== rules.length) throw new Error("Invalid Vault package automation rules");
+    await this.setSetting(AUTOMATION_RULES_SETTING_ID, structuredClone(rules));
+  }
+
   public async getArtifact(id: string): Promise<Blob | undefined> {
     const value = await requestResult(this.requireDatabase().transaction(ARTIFACT_STORE, "readonly").objectStore(ARTIFACT_STORE).get(id));
     if (!value || typeof value !== "object" || !("blob" in value) || !(value.blob instanceof Blob)) return undefined;
@@ -455,6 +471,7 @@ export class CanonicalStore {
     }
     const presentation = await this.getSetting<unknown>("presentation");
     const packageStates = await this.listPackageStates();
+    const automationRules = await this.getAutomationRules();
     const composeViews = await this.getSetting<unknown>(VIEW_SETTING);
     const presentationOverlay = presentation && typeof presentation === "object" && !Array.isArray(presentation) ? { ...(presentation as Record<string, unknown>) } : {};
     if (Array.isArray(composeViews) && composeViews.length <= 40 && composeViews.every(isViewDefinition)) presentationOverlay.composeViews = structuredClone(composeViews);
@@ -466,6 +483,7 @@ export class CanonicalStore {
       history: await this.history(),
       artifacts,
       ...(packageStates.length > 0 ? { packageStates } : {}),
+      ...(automationRules.length > 0 ? { automationRules } : {}),
       ...(Object.keys(presentationOverlay).length > 0 ? { presentation: presentationOverlay } : {})
     });
   }
@@ -517,6 +535,18 @@ export class CanonicalStore {
       packageStates.push(structuredClone(candidate));
     }
 
+    const automationRules: VaultPackageAutomation[] = [];
+    const automationRuleIds = new Set<string>();
+    let skippedAutomationRules = 0;
+    for (const candidate of snapshot.automationRules ?? []) {
+      if (!isVaultPackageAutomation(candidate) || automationRuleIds.has(candidate.ruleId) || automationRules.length >= MAX_VAULT_AUTOMATION_RULES) {
+        skippedAutomationRules += 1;
+        continue;
+      }
+      automationRuleIds.add(candidate.ruleId);
+      automationRules.push(structuredClone(candidate));
+    }
+
     const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE, SETTINGS_STORE], "readwrite");
     transaction.objectStore(RECORD_STORE).clear();
     transaction.objectStore(SEARCH_STORE).clear();
@@ -525,10 +555,12 @@ export class CanonicalStore {
     transaction.objectStore(ARTIFACT_STORE).clear();
     const settingsStore = transaction.objectStore(SETTINGS_STORE);
     packageSettingIds.forEach((id) => settingsStore.delete(id));
+    settingsStore.delete(AUTOMATION_RULES_SETTING_ID);
     records.forEach((record) => transaction.objectStore(RECORD_STORE).put(record));
     history.forEach((entry) => transaction.objectStore(HISTORY_STORE).put(entry));
     artifacts.forEach((artifact) => transaction.objectStore(ARTIFACT_STORE).put(artifact));
     packageStates.forEach((state) => settingsStore.put({ id: packageStateSettingId(state.packageId), value: state, modifiedAt: new Date().toISOString() }));
+    if (automationRules.length > 0) settingsStore.put({ id: AUTOMATION_RULES_SETTING_ID, value: automationRules, modifiedAt: new Date().toISOString() });
     await transactionDone(transaction);
 
     return {
@@ -539,7 +571,9 @@ export class CanonicalStore {
       retainedArtifactPayloads: artifacts.length,
       skippedArtifactPayloads,
       retainedPackageStates: packageStates.length,
-      skippedPackageStates
+      skippedPackageStates,
+      retainedAutomationRules: automationRules.length,
+      skippedAutomationRules
     };
   }
 
@@ -562,6 +596,7 @@ export class CanonicalStore {
     }
     const presentation = await this.getSetting<unknown>("presentation");
     const packageStates = await this.listPackageStates();
+    const automationRules = await this.getAutomationRules();
     return {
       format: "OMNEVUM_RECOVERY_SNAPSHOT",
       version: 1,
@@ -570,6 +605,7 @@ export class CanonicalStore {
       history,
       artifacts,
       ...(packageStates.length > 0 ? { packageStates } : {}),
+      ...(automationRules.length > 0 ? { automationRules } : {}),
       ...(presentation === undefined ? {} : { presentation: structuredClone(presentation) }),
       summary: {
         recordCount: records.length,
@@ -596,7 +632,7 @@ export class CanonicalStore {
       else if (disposition === "CONFLICT") conflicts += 1;
       else skipped += 1;
     }
-    return { recordCount: vault.records.length, historyEntries: vault.history?.length ?? 0, artifactPayloads: vault.artifacts?.length ?? 0, imported, skipped, conflicts, hasPresentation: vault.presentation !== undefined, packageStates: vault.packageStates?.length ?? 0 };
+    return { recordCount: vault.records.length, historyEntries: vault.history?.length ?? 0, artifactPayloads: vault.artifacts?.length ?? 0, imported, skipped, conflicts, hasPresentation: vault.presentation !== undefined, packageStates: vault.packageStates?.length ?? 0, automationRules: vault.automationRules?.length ?? 0 };
   }
 
   public async importVault(input: unknown): Promise<{ imported: number; skipped: number; conflicts: number }> {
@@ -649,6 +685,7 @@ export class CanonicalStore {
     for (const state of vault.packageStates ?? []) {
       settingsStore.put({ id: packageStateSettingId(state.packageId), value: structuredClone(state), modifiedAt: new Date().toISOString() });
     }
+    if (vault.automationRules && vault.automationRules.length > 0) settingsStore.put({ id: AUTOMATION_RULES_SETTING_ID, value: structuredClone(vault.automationRules), modifiedAt: new Date().toISOString() });
     searchMetaStore.put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
     try {
       await transactionDone(transaction);
@@ -842,13 +879,14 @@ function rawArtifactMimeType(candidate: { data?: unknown }, blob: Blob): string 
 
 function isRecoverySnapshot(value: unknown): value is RecoverySnapshot {
   if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
-  const candidate = value as { format?: unknown; version?: unknown; records?: unknown; history?: unknown; artifacts?: unknown; packageStates?: unknown };
+  const candidate = value as { format?: unknown; version?: unknown; records?: unknown; history?: unknown; artifacts?: unknown; packageStates?: unknown; automationRules?: unknown };
   return candidate.format === "OMNEVUM_RECOVERY_SNAPSHOT"
     && candidate.version === 1
     && Array.isArray(candidate.records)
     && Array.isArray(candidate.history)
     && Array.isArray(candidate.artifacts)
-    && (candidate.packageStates === undefined || (Array.isArray(candidate.packageStates) && candidate.packageStates.length <= MAX_VAULT_PACKAGE_STATES));
+    && (candidate.packageStates === undefined || (Array.isArray(candidate.packageStates) && candidate.packageStates.length <= MAX_VAULT_PACKAGE_STATES))
+    && (candidate.automationRules === undefined || (Array.isArray(candidate.automationRules) && candidate.automationRules.length <= MAX_VAULT_AUTOMATION_RULES));
 }
 
 function isRecoveryArtifact(value: unknown): value is VaultArtifact {

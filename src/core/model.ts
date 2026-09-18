@@ -75,6 +75,19 @@ export interface VaultPackageState {
   state: Record<string, unknown>;
 }
 
+export type VaultPackageAutomationStatus = "ENABLED" | "DISABLED";
+
+export interface VaultPackageAutomation {
+  schemaVersion: 1;
+  packageId: string;
+  ruleId: string;
+  ruleVersion: number;
+  document: string;
+  status: VaultPackageAutomationStatus;
+  installedAt: string;
+  disabledReason?: string;
+}
+
 export interface VaultDocument {
   format: "OMNEVUM_VAULT";
   version: typeof VAULT_FORMAT_VERSION;
@@ -83,6 +96,7 @@ export interface VaultDocument {
   history?: HistoryEntry[];
   artifacts?: VaultArtifact[];
   packageStates?: VaultPackageState[];
+  automationRules?: VaultPackageAutomation[];
   integrity?: { algorithm: "SHA-256"; digest: string };
   presentation?: Record<string, unknown>;
 }

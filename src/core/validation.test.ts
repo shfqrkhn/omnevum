@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isCanonicalRecord, isVaultDocument, isVaultPackageState } from "./validation";
+import { isCanonicalRecord, isVaultDocument, isVaultPackageAutomation, isVaultPackageState } from "./validation";
 import type { CanonicalRecord } from "./model";
 
 function record(overrides: Partial<CanonicalRecord> = {}): CanonicalRecord {
@@ -42,5 +42,30 @@ describe("bounded untrusted record validation", () => {
     expect(isVaultPackageState(valid)).toBe(true);
     expect(isVaultPackageState({ ...valid, packageId: "Bad Package" })).toBe(false);
     expect(isVaultDocument({ format: "OMNEVUM_VAULT", version: 1, exportedAt: new Date().toISOString(), records: [], packageStates: [valid, valid], artifacts: [] })).toBe(false);
+  });
+
+  it("validates bounded package automation documents and Vault uniqueness", () => {
+    const document = JSON.stringify({
+      schemaVersion: 1,
+      ruleId: "sample.automation.review",
+      version: 1,
+      trigger: "ON_CAPTURE",
+      when: { op: "exists", path: "record.kind" },
+      actions: [{ command: "record.update", arguments: { field: "priority", value: 3 } }],
+      enabled: true
+    });
+    const valid = {
+      schemaVersion: 1,
+      packageId: "sample.automation",
+      ruleId: "sample.automation.review",
+      ruleVersion: 1,
+      document,
+      status: "DISABLED" as const,
+      installedAt: new Date().toISOString(),
+      disabledReason: "owner paused this rule"
+    };
+    expect(isVaultPackageAutomation(valid)).toBe(true);
+    expect(isVaultPackageAutomation({ ...valid, document: document.replace('"version":1', '"version":2') })).toBe(false);
+    expect(isVaultDocument({ format: "OMNEVUM_VAULT", version: 1, exportedAt: new Date().toISOString(), records: [], automationRules: [valid, valid], artifacts: [] })).toBe(false);
   });
 });
