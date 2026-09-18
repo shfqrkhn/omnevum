@@ -44,3 +44,9 @@ Each candidate was checked at its recorded Git head, with package metadata, repo
 ## Phase 0 outcome
 
 The whole-app launchpad remains the small Omnevum Vite/TypeScript/native-DOM foundation because it is the only candidate that does not import an unqualified second application authority. NeumanOS and Kurumi remain high-value harvest references; SelfStore is the leading Phase 2 Vault/sync candidate; remoteStorage.js is an optional endpoint adapter candidate. The next proof is a schema-driven UI and browser-local search/analysis bake-off on representative mobile/multilingual Vault fixtures, followed by the MVP vertical slice.
+
+## Currentness revalidation follow-up (2026-09-18)
+
+Read-only `git ls-remote <source> HEAD` checks returned the same accepted identities for all four primary candidates: NeumanOS `f4b2a174a339fc60524645a19417daedaf69ac91`, Kurumi `5453bbb08630d5b36138f8d3dc186b81be1ca93e`, SelfStore `0b56c7fdf74fe8e8d5ffeb9025f3e6893275338e`, and remoteStorage.js `d899b5aee41849fc94c45470cfad08a7363780b6`. The current public project pages still describe NeumanOS as a broad local-only React/IndexedDB productivity platform, Kurumi as a local-first AI-native PWA with capture/recall/sync, SelfStore as browser-local encrypted backup/merge/sync infrastructure, and remoteStorage.js as a local browser cache plus optional remoteStorage/Dropbox/Google Drive client.
+
+No disposition changes: NeumanOS and Kurumi remain harvest references, SelfStore remains a Phase 2 adoption candidate, and remoteStorage.js remains an optional Phase 2 adapter. This refresh proves source-head currentness only; it does not qualify their target behavior, security, migration, provider terms, licenses beyond the recorded identities, or Omnevum adapter integration.
