@@ -957,9 +957,13 @@
         "src/core/effect-runner.ts",
         "src/core/effect-runner.test.ts",
         "src/core/storage.test.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-effectoutbox-and-credential-boundary-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-effectoutbox-and-credential-boundary-follow-up",
+        "src/core/remote.ts",
+        "src/core/remote.test.ts#executes-one-typed-idempotent-request-through-the-credential-broker-without-exposing-the-secret-in-the-payload",
+        "src/core/remote.test.ts#converts-an-ambiguous-request-failure-to-reconcile-instead-of-blindly-replaying-it",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-provider-neutral-effectoutbox-endpoint-follow-up"
       ],
-      "notes": "The platform runner proves crash recovery through OUTCOME_UNKNOWN/RECONCILE, no-blind-replay behavior, retry persistence, expiry, guard denial, and bounded effect storage. A real offline connector, browser/process restart, external duplicate-outcome qualification, shipped authority/Space revalidation, and target evidence remain open."
+      "notes": "The platform runner plus the provider-neutral JsonEndpointEffectExecutor prove crash recovery through OUTCOME_UNKNOWN/RECONCILE, no-blind-replay behavior, retry persistence, expiry, guard denial, bounded effect storage, idempotency headers, secret-free payloads, brokered authorization, and bounded HTTP classification. A real offline connector, browser/process restart, external duplicate-outcome qualification, shipped authority/Space/destination revalidation, and target evidence remain open."
     },
     {
       "id": "OMN-ACC-068",

@@ -3,16 +3,16 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "ea717d56884b12686bd396865ae0c8d76b3c9c965a4a89cf394e0186175812e6", "sourceRevision": "673030e", "serviceWorkerCache": "omnevum-shell-e80c503b6e8293e0"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "ed1fe795cfe671c391f8a8df5998528bed55d45c0af81e8c676b99fa68f80361", "sourceRevision": "f96f77a", "serviceWorkerCache": "omnevum-shell-ea82ce633081b027"},
   "artifactDigestMethod": "SHA-256 of sorted repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, separated by LF with no trailing LF; captured after the full npm run build on 2026-09-18.",
   "artifactFiles": [
     {"path": "dist/assets/index-C9r5hAEW.css", "sha256": "1414dbfdae53914db5e18f992bb3ca8b4971c5f4c6ef550f34812baccde6bf16", "bytes": 8576},
     {"path": "dist/assets/index-BSTa9U0W.js", "sha256": "b841672ad5d38ee104ba7f53401d0abe6c5236fd22b9d3acfb23748e518591e4", "bytes": 195006},
-    {"path": "dist/assets/index-BSTa9U0W.js.map", "sha256": "c7eb5b2dbb38f17c8f08158da82b834298ebde0d575297f71ee0074423a0c6ae", "bytes": 588998},
+    {"path": "dist/assets/index-BSTa9U0W.js.map", "sha256": "61651408b55f9ae2ba47b7085fdda27d94f5ed01bad657d522485ca3971dd913", "bytes": 593766},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
     {"path": "dist/index.html", "sha256": "52d5dba09343807e07f977a771735cb4e7ee3e5864b716c916c888305a2aa4dc", "bytes": 888},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
-    {"path": "dist/sw.js", "sha256": "b1089fe408e144064191add7576a91df038983979f9126282bff40fcce9276d9", "bytes": 3036}
+    {"path": "dist/sw.js", "sha256": "e54bffc7dbeba7ee18e029db08dc753384a24af063ec650e474fb8a6f39ea727", "bytes": 3036}
   ],
   "requiredEvidence": [
     "control-generation-and-drift",
