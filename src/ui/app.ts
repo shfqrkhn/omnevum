@@ -1,5 +1,6 @@
 import type { CommandBus, TriageRouteTarget, TriageSplitPart } from "../core/commands";
 import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate, type AcquirePreview } from "../core/acquire";
+import { inspectArtifact } from "../core/artifact";
 import { isCompletedTask, isSpaceId, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, SPACE_LABELS, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
@@ -2112,8 +2113,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const file = artifactInput.files?.[0];
     if (!file) return;
     try {
-      const record = await commands.createArtifact({ fileName: file.name, mimeType: file.type || "application/octet-stream", blob: file, space: "personal" });
-      recoveryStatus.textContent = copy.attachedMessage(String(record.data.fileName), Number(record.data.size));
+      const inspection = await inspectArtifact(file, file.name, file.type || "application/octet-stream");
+      const record = await commands.createArtifact({ fileName: file.name, mimeType: file.type || "application/octet-stream", blob: file, space: "personal", adapter: inspection.adapter, metadata: inspection.metadata, ...(inspection.derivedText ? { derivedText: inspection.derivedText } : {}) });
+      recoveryStatus.textContent = `${copy.attachedMessage(String(record.data.fileName), Number(record.data.size))} ${copy.artifactInspectionMessage(inspection.adapter, inspection.adapterStatus, inspection.ocr, inspection.warnings.length)}`;
       await renderRecords(searchQuery.value);
     } catch (error) {
       recoveryStatus.textContent = error instanceof Error ? error.message : "Artifact intake failed";

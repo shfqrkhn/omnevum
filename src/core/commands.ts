@@ -3,6 +3,7 @@ import { MAX_PORTABLE_ARTIFACT_BYTES, sha256Hex, type ArtifactInput } from "./ar
 import type { CanonicalRecord, RecordType } from "./model";
 import { CURRENT_SCHEMA_VERSION } from "./model";
 import { CanonicalStore } from "./storage";
+import { scrubSensitiveValue } from "./safety";
 
 export interface CreateRecordInput {
   recordType: RecordType;
@@ -90,12 +91,24 @@ export class CommandBus {
       schemaVersion: CURRENT_SCHEMA_VERSION,
       createdAt: now,
       modifiedAt: now,
-      provenance: { source: "IMPORT", capturedAt: now, sourceId: input.fileName },
+      provenance: { source: "IMPORT", capturedAt: now, sourceId: input.sourceId?.trim() || input.fileName },
       truthClass: "IMPORTED_RECORD",
       sensitivity: "PRIVATE",
       revision: 1,
       deleted: false,
-      data: { text: input.fileName, fileName: input.fileName, mimeType: input.mimeType, size: input.blob.size, sha256: await sha256Hex(input.blob), blobRef: id, space: input.space ?? "personal", triageStatus: "REVIEWED" }
+      data: {
+        text: input.fileName,
+        fileName: input.fileName,
+        mimeType: input.mimeType,
+        size: input.blob.size,
+        sha256: await sha256Hex(input.blob),
+        blobRef: id,
+        space: input.space ?? "personal",
+        triageStatus: "REVIEWED",
+        ...(input.adapter ? { adapter: input.adapter } : {}),
+        ...(input.metadata ? { adapterMetadata: scrubSensitiveValue(input.metadata) } : {}),
+        ...(input.derivedText ? { derivedText: input.derivedText } : {})
+      }
     };
     await this.store.put(record, input.blob);
     return record;

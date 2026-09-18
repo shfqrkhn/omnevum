@@ -1,4 +1,4 @@
-import { sha256Hex } from "./artifact";
+import { inspectArtifact, type ArtifactAdapter, type ArtifactInspection, type DerivedArtifactText } from "./artifact";
 import type { CaptureKind, RecordType } from "./model";
 import type { CommandBus } from "./commands";
 import { scrubSensitiveValue } from "./safety";
@@ -7,7 +7,7 @@ export const MAX_ACQUIRE_BYTES = 5 * 1024 * 1024;
 export const MAX_ACQUIRE_CANDIDATES = 500;
 export const MAX_ACQUIRE_URL_LENGTH = 4096;
 
-export type AcquireFormat = "TEXT" | "JSON" | "CSV" | "URL" | "GPX";
+export type AcquireFormat = "TEXT" | "JSON" | "CSV" | "URL" | "GPX" | "HTML" | "PDF" | "IMAGE" | "BINARY";
 
 export interface AcquireSource {
   sourceId: string;
@@ -17,6 +17,7 @@ export interface AcquireSource {
   sha256: string;
   format: AcquireFormat;
   capturedAt: string;
+  adapter?: ArtifactAdapter;
 }
 
 export interface AcquireCandidate {
@@ -29,6 +30,14 @@ export interface AcquireCandidate {
   data: Record<string, unknown>;
   confidence: "HIGH" | "REVIEW";
   reason: string;
+  artifact?: {
+    fileName: string;
+    mimeType: string;
+    blob: Blob;
+    adapter: ArtifactAdapter;
+    metadata: Record<string, string | number | boolean>;
+    derivedText?: DerivedArtifactText;
+  };
 }
 
 export interface AcquirePreview {
@@ -37,11 +46,13 @@ export interface AcquirePreview {
   warnings: string[];
 }
 
-export async function stageBlob(blob: Blob, name = "source", mimeType = blob.type || "application/octet-stream"): Promise<AcquirePreview> {
+export async function stageBlob(blob: Blob, name = "source", mimeType = blob.type || "application/octet-stream", signal?: AbortSignal): Promise<AcquirePreview> {
   if (blob.size > MAX_ACQUIRE_BYTES) throw new Error("Acquire source exceeds the bounded 5 MiB staging limit");
+  const inspection = await inspectArtifact(blob, name, mimeType, signal ? { signal, maxBytes: MAX_ACQUIRE_BYTES } : { maxBytes: MAX_ACQUIRE_BYTES });
+  if (inspection.adapter === "PDF" || inspection.adapter === "IMAGE" || inspection.adapter === "HTML" || inspection.adapter === "BINARY") return stageInspectedArtifact(inspection, blob);
   const sourceText = await blob.text();
-  const format = detectFormat(name, mimeType, sourceText);
-  return stageText(sourceText, { name, mimeType, sizeBytes: blob.size, sha256: await sha256Hex(blob), format });
+  const format = inspection.adapter === "TEXT" || inspection.adapter === "JSON" || inspection.adapter === "CSV" || inspection.adapter === "GPX" ? inspection.adapter : detectFormat(name, mimeType, sourceText);
+  return stageText(sourceText, { name, mimeType, sizeBytes: blob.size, sha256: inspection.sha256, format });
 }
 
 export async function stageText(text: string, input: { name?: string; mimeType?: string; sizeBytes?: number; sha256?: string; format?: AcquireFormat } = {}): Promise<AcquirePreview> {
@@ -86,6 +97,18 @@ export async function stageUrl(url: string): Promise<AcquirePreview> {
 export async function acceptCandidate(commands: CommandBus, candidate: AcquireCandidate): Promise<{ accepted: boolean; id?: string }> {
   const existing = await commands.findBySourceId(candidate.sourceId);
   if (existing.length > 0) return existing[0] ? { accepted: false, id: existing[0].id } : { accepted: false };
+  if (candidate.recordType === "artifact" && candidate.artifact) {
+    const record = await commands.createArtifact({
+      fileName: candidate.artifact.fileName,
+      mimeType: candidate.artifact.mimeType,
+      blob: candidate.artifact.blob,
+      sourceId: candidate.sourceId,
+      adapter: candidate.artifact.adapter,
+      metadata: candidate.artifact.metadata,
+      ...(candidate.artifact.derivedText ? { derivedText: candidate.artifact.derivedText } : {})
+    });
+    return { accepted: true, id: record.id };
+  }
   const record = await commands.create({
     recordType: candidate.recordType,
     owner: candidate.owner,
@@ -131,6 +154,12 @@ function candidateFromRow(row: unknown, source: AcquireSource, sequence: number)
     ...(start ? { start } : {}),
     ...(recordType === "task" ? { status: "OPEN" } : {})
   };
+  if (recordType === "artifact" && typeof object.artifactAdapter === "string") {
+    data.artifactAdapter = object.artifactAdapter;
+    data.adapterStatus = typeof object.adapterStatus === "string" ? object.adapterStatus : "UNKNOWN";
+    data.artifactMetadata = scrubSensitiveValue(object.artifactMetadata);
+    if (object.derivedExtraction && typeof object.derivedExtraction === "object") data.derivedExtraction = scrubSensitiveValue(object.derivedExtraction);
+  }
   return {
     candidateId: `${source.sourceId}:${sequence}`,
     sourceId: `${source.sourceId}:${sequence}`,
@@ -142,6 +171,38 @@ function candidateFromRow(row: unknown, source: AcquireSource, sequence: number)
     confidence: rawType || typeof object.text === "string" ? "HIGH" : "REVIEW",
     reason: rawType ? "recognized record type" : "type requires user review"
   };
+}
+
+function stageInspectedArtifact(inspection: ArtifactInspection, blob: Blob): AcquirePreview {
+  const source: AcquireSource = {
+    sourceId: `source:${inspection.sha256}`,
+    name: inspection.fileName,
+    mimeType: inspection.mimeType,
+    sizeBytes: inspection.sizeBytes,
+    sha256: inspection.sha256,
+    format: inspection.adapter,
+    capturedAt: new Date().toISOString(),
+    adapter: inspection.adapter
+  };
+  const candidate = candidateFromRow({
+    type: "artifact",
+    kind: inspection.adapter === "IMAGE" ? "image" : "file",
+    name: inspection.fileName,
+    mimeType: inspection.mimeType,
+    artifactAdapter: inspection.adapter,
+    adapterStatus: inspection.adapterStatus,
+    artifactMetadata: inspection.metadata,
+    ...(inspection.derivedText ? { derivedExtraction: inspection.derivedText } : {})
+  }, source, 1);
+  candidate.artifact = {
+    fileName: inspection.fileName,
+    mimeType: inspection.mimeType,
+    blob,
+    adapter: inspection.adapter,
+    metadata: inspection.metadata,
+    ...(inspection.derivedText ? { derivedText: inspection.derivedText } : {})
+  };
+  return { source, candidates: [candidate], warnings: inspection.warnings };
 }
 
 function captureKind(object: Record<string, unknown>, recordType: RecordType): CaptureKind {

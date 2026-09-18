@@ -43,6 +43,22 @@ describe("Acquire/Ingest", () => {
     expect(preview.candidates.every((candidate) => candidate.data.sourceId === preview.source.sourceId)).toBe(true);
   });
 
+  it("stages a PDF as one source-preserving Artifact candidate and retains its payload on acceptance", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-acquire-pdf`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const preview = await stageBlob(new Blob(["%PDF-1.7\n/Type /Page\n/Title (Receipt)\n/JavaScript (ignored)"]), "receipt.pdf", "application/pdf");
+    expect(preview.source.format).toBe("PDF");
+    expect(preview.candidates[0]).toMatchObject({ recordType: "artifact", owner: "platform.artifact", data: { artifactAdapter: "PDF", adapterStatus: "BOUNDED" } });
+    expect(preview.warnings).toContain("PDF active actions were detected and were not executed.");
+    expect(await acceptCandidates(commands, preview.candidates)).toMatchObject({ accepted: 1, skipped: 0 });
+    expect(await acceptCandidates(commands, preview.candidates)).toMatchObject({ accepted: 0, skipped: 1 });
+    const record = (await store.list())[0];
+    expect(record).toMatchObject({ owner: "platform.artifact", provenance: { source: "IMPORT", sourceId: preview.candidates[0]?.sourceId }, data: { adapter: "PDF" } });
+    expect((await store.getArtifact(record?.id ?? ""))?.size).toBeGreaterThan(0);
+    store.close();
+  });
+
   it("accepts candidates through the command owner and makes repetition idempotent", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-acquire`);
     await store.open();
