@@ -319,8 +319,13 @@
         "line": 3426
       },
       "text": "A fresh AI engineer creates a nontrivial stateful module using only the public Omnevum app contract and normal repository interfaces.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/factory.ts",
+        "src/core/factory-preview.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-receipt-bound-edge-factory-qualification-follow-up"
+      ],
+      "notes": "The current browser receipt proves a nontrivial stateful declarative app can be created through the public factory contract and canonical command path. It does not prove independent fresh-AI creation or interrupted-agent resumption; those remain open."
     },
     {
       "id": "OMN-ACC-020",
@@ -329,8 +334,13 @@
         "line": 3428
       },
       "text": "A fresh AI engineer creates a nontrivial game using the same package/lifecycle infrastructure and proves save/resume, touch input, responsive behavior, and Recovery.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/factory.ts",
+        "src/core/factory-preview.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-receipt-bound-edge-factory-qualification-follow-up"
+      ],
+      "notes": "The current browser receipt proves the public game contract, semantic controls, save/load, and desktop rendering. It does not prove independent fresh-AI creation, touch hardware, mobile targets, Recovery integration, or interrupted-agent resumption; those remain open."
     },
     {
       "id": "OMN-ACC-021",
@@ -345,9 +355,10 @@
         "scripts/recovery-audit.mjs",
         "scripts/fresh-agent-resume-benchmark.mjs",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-integrity-manifested-engineering-recovery-bundle-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-checkout-fresh-agent-resume-benchmark-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-checkout-fresh-agent-resume-benchmark-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-receipt-bound-edge-factory-qualification-follow-up"
       ],
-      "notes": "The generated integrity-manifested Recovery bundle references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths. The fresh-agent benchmark creates a detached clean worktree, runs npm ci, recovery audit, and the complete CI gate without conversation state, and verifies cleanup; the manifest verifies 161 current file hashes plus an exact retained Git revision. The intentionally interrupted nontrivial app/game factory benchmark remains open."
+      "notes": "The generated integrity-manifested Recovery bundle references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths. The fresh-agent benchmark creates a detached clean worktree, runs npm ci, recovery audit, and the complete CI gate without conversation state, and verifies cleanup; the manifest verifies current file hashes plus an exact retained Git revision. The browser factory surface is now receipt-bound, but the intentionally interrupted nontrivial app/game benchmark remains open."
     },
     {
       "id": "OMN-ACC-022",
@@ -660,10 +671,12 @@
         "src/core/package-contract.ts",
         "src/core/factory.ts",
         "src/core/factory.test.ts",
+        "src/core/factory-preview.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-schema-driven-appgame-factory-contract-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-schema-driven-appgame-factory-contract-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-receipt-bound-edge-factory-qualification-follow-up"
       ],
-      "notes": "The deterministic GameSession/package contract plus the factory benchmark now prove a bounded nontrivial Constellation state machine with semantic input, pause/resume, responsive layout, save/load, and undeclared-action rejection. A rendered browser game, qualified FOSS engine adapter, isolated candidate upgrade, Recovery integration, and target evidence remain open."
+      "notes": "The deterministic GameSession/package contract plus the factory benchmark and current Edge receipt prove a bounded nontrivial Constellation state machine with semantic input, pause/resume, responsive layout, save/load, accessible controls, and undeclared-action rejection. A qualified FOSS engine adapter, isolated candidate upgrade, Recovery integration, mobile/touch hardware, and broader target evidence remain open."
     },
     {
       "id": "OMN-ACC-046",
@@ -777,10 +790,12 @@
         "src/core/compose.ts",
         "src/core/factory.ts",
         "src/core/factory.test.ts",
+        "src/core/factory-preview.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-schema-driven-appgame-factory-contract-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-schema-driven-appgame-factory-contract-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-receipt-bound-edge-factory-qualification-follow-up"
       ],
-      "notes": "The package and record-app factory validate declarative manifests, canonical ownership, declared fields, command-owned capture/update/complete/archive, localized labels, Vault round-trip, and a generated baseline form/list view. Fresh-agent creation, actual generated browser detail/capture UI, responsive/accessibility/theme qualification, and migration replacement evidence remain open."
+      "notes": "The package and record-app factory validate declarative manifests, canonical ownership, declared fields, command-owned capture/update/complete/archive, localized labels, Vault round-trip, and a generated baseline form/list view. The current Edge receipt now proves an actual generated browser capture/list surface with labelled controls and canonical persistence; fresh-agent creation, responsive matrix breadth, theme/mobile qualification, detail editing, and migration replacement evidence remain open."
     },
     {
       "id": "OMN-ACC-054",

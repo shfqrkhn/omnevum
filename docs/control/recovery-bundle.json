@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "20bb6c56b1c6a55d51a548203acbc0be7f2eb2cf1a998a25feca469359be71e4",
-        "bytes": 94661
+        "sha256": "587b09fe76d09db06adc59bd51152bb0a209dadb9f23beef5cc9b669d8d847b1",
+        "bytes": 96276
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -159,8 +159,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "76c5c39c50ca2161478620f212f978a3ce4d050bf863075222dbffa9598e9ddd",
-        "bytes": 2205
+        "sha256": "76ce48a2673c26214ec52ba853fe43e1eb30d12477f91252a88951885d896c24",
+        "bytes": 2264
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "f01b03f62d8a9db9b0b17c87a6f4dc375bb3299ac4b73340b58f785753db0d12",
-        "bytes": 22174
+        "sha256": "55a65ea782e7a7216d4877940b4c8e696dadfe041814502d952e696b0116fdad",
+        "bytes": 22394
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "2a44d880d95e77286123cc77945ad8f71d708736b72573b7e216b3a90e588561",
+        "sha256": "94d6ad66bcbf44b705e72660b7f1cc612751baf018accee5ba4081a9975334c3",
         "bytes": 2398
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "4468db59fdd29365a7d8d1b89965b7d8113686393935c169afde7252834536dd",
-        "bytes": 116711
+        "sha256": "c2aec8b8546221ad3752de31b9792d1646d47f566eb87739f3d32e4f3aaa1dc5",
+        "bytes": 118662
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -608,6 +608,11 @@
         "bytes": 1057
       },
       {
+        "path": "src/core/factory-preview.ts",
+        "sha256": "8a1e74ff320d6d385a130f846517ecbfd1fa2f94186cec64ee6812d9c215a550",
+        "bytes": 3787
+      },
+      {
         "path": "src/core/factory.test.ts",
         "sha256": "82e94bf0b6f175c63e57d5dc64edb7e1b239f4a9dc389e23f6209723af0ad2c6",
         "bytes": 6749
@@ -644,8 +649,8 @@
       },
       {
         "path": "src/core/i18n.ts",
-        "sha256": "e35edca0b36518db0b8c8acb9cb48112cb5671ceb55e323d59ab27f49eaf2158",
-        "bytes": 44539
+        "sha256": "ab1cee0e226254abcdfdbd4f80c63c492e9370fe1dc05e0ef86df301b85a92a9",
+        "bytes": 47497
       },
       {
         "path": "src/core/id.ts",
@@ -879,8 +884,8 @@
       },
       {
         "path": "src/styles.css",
-        "sha256": "8a98c95984fdb92237f188db1375087c52672890e2acd8d316c19a0d0a04ebcd",
-        "bytes": 10279
+        "sha256": "bb0a492d9ec8e92e0ad1ff6bbd174a08ce6c62f9520c3bdd1e0e295aacc69c95",
+        "bytes": 11091
       },
       {
         "path": "src/test/setup.ts",
@@ -889,8 +894,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "bd81d0e1f99aa819a10f44790cbaddceaeba8a3cfccfeb5a235b1df00d5bf5a0",
-        "bytes": 136294
+        "sha256": "37f5d0e75ce3c6c0b1b1c803e525a56a6481ef006873331c9d6adaa263fc9323",
+        "bytes": 147060
       },
       {
         "path": "tsconfig.json",
