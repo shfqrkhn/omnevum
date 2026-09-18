@@ -245,3 +245,16 @@ const deviceInputCopy: Record<PresentationLocale, DeviceInputCopy> = {
 export function getDeviceInputCopy(locale: PresentationLocale): DeviceInputCopy {
   return deviceInputCopy[locale];
 }
+
+export type StoragePersistenceState = "GRANTED" | "DENIED" | "UNAVAILABLE";
+
+export function getStoragePersistenceNotice(locale: PresentationLocale, state: StoragePersistenceState): string {
+  if (locale === "fr-CA") {
+    return state === "GRANTED"
+      ? "Persistance du stockage : accordee."
+      : `Persistance du stockage : ${state === "DENIED" ? "refusee" : "indisponible"}; exportez un Vault pour la portabilite.`;
+  }
+  return state === "GRANTED"
+    ? "Storage persistence: granted."
+    : `Storage persistence: ${state.toLowerCase()}; export a Vault for portability.`;
+}

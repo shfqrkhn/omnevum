@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDateTime, formatNumber, getDeviceInputCopy, getInstalledMetadataStatus, getUiCopy, localeDirection } from "./i18n";
+import { formatDateTime, formatNumber, getDeviceInputCopy, getInstalledMetadataStatus, getStoragePersistenceNotice, getUiCopy, localeDirection } from "./i18n";
 
 describe("presentation localization contract", () => {
   it("keeps claimed locales offline and exposes direction/formatting", () => {
@@ -21,5 +21,11 @@ describe("presentation localization contract", () => {
     expect(getDeviceInputCopy("en-CA").hint).toContain("explicit action");
     expect(getDeviceInputCopy("en-CA").mediaGranted("camera")).toContain("released");
     expect(getDeviceInputCopy("fr-CA").locationStaged).toContain("enregistrez-la");
+  });
+
+  it("exposes storage persistence state with portable recovery guidance", () => {
+    expect(getStoragePersistenceNotice("en-CA", "DENIED")).toBe("Storage persistence: denied; export a Vault for portability.");
+    expect(getStoragePersistenceNotice("fr-CA", "UNAVAILABLE")).toBe("Persistance du stockage : indisponible; exportez un Vault pour la portabilite.");
+    expect(getStoragePersistenceNotice("en-CA", "GRANTED")).toBe("Storage persistence: granted.");
   });
 });

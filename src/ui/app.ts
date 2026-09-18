@@ -3,7 +3,7 @@ import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate
 import { inspectArtifact } from "../core/artifact";
 import { redactTextArtifact } from "../core/document";
 import { isCompletedTask, isSpaceId, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, SPACE_LABELS, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
-import { captureKindLabel, formatDateTime, formatNumber, getDeviceInputCopy, getInstalledMetadataStatus, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
+import { captureKindLabel, formatDateTime, formatNumber, getDeviceInputCopy, getInstalledMetadataStatus, getRecoveryCopy, getStoragePersistenceNotice, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
 import { DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationHomeWidgetId, type PresentationProfile, type PresentationSectionId } from "../core/presentation";
 import { TrackService } from "../core/track";
@@ -2207,7 +2207,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const healthBefore = await store.health();
     if (!healthBefore.searchIndexValid) await store.rebuildSearchIndex();
     const healthAfter = await store.health();
-    healthStatus.textContent = copy.healthMessage(healthAfter.activeRecords, healthAfter.archivedRecords, healthAfter.historyEntries, healthAfter.artifactPayloads, healthAfter.searchIndexValid ? copy.healthy : copy.degraded, healthAfter.storage?.pressure);
+    healthStatus.textContent = `${copy.healthMessage(healthAfter.activeRecords, healthAfter.archivedRecords, healthAfter.historyEntries, healthAfter.artifactPayloads, healthAfter.searchIndexValid ? copy.healthy : copy.degraded, healthAfter.storage?.pressure)} ${getStoragePersistenceNotice(presentation.locale, healthAfter.storage?.persistence ?? "UNAVAILABLE")}`;
     await renderEffects();
     if (!archivePanel.hidden) await renderArchived();
     return records.length;

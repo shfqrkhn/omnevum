@@ -654,13 +654,13 @@
       },
       {
         "path": "src/core/i18n.test.ts",
-        "sha256": "47712832742298913e4a71ab4aea26ae2875665e4eb76a566dac56853af5fd6f",
-        "bytes": 1399
+        "sha256": "70aaace4f4337ae414407db3a2208cab8ae289b69cd05ad48bd83e42b3623928",
+        "bytes": 1897
       },
       {
         "path": "src/core/i18n.ts",
-        "sha256": "4343c8cb1672e40d8f487463e07adafa7151211eb2f1f536550cda2baed011d4",
-        "bytes": 51904
+        "sha256": "3fc2ef0c1896bbb25a63242c90d6a25aee8bc93babca62fe5a545d71aea6eadb",
+        "bytes": 52488
       },
       {
         "path": "src/core/id.ts",
@@ -904,8 +904,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "2bc98fdce009f377d34e08566343ec61253fbe554a458532f82bedf22da167a7",
-        "bytes": 164322
+        "sha256": "aaa316190e32eec07930658e50fe274525ab910cd84b8d98ef98b73c130157d8",
+        "bytes": 164459
       },
       {
         "path": "tsconfig.json",
