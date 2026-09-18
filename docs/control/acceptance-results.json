@@ -832,11 +832,17 @@
         "src/core/package-automation.test.ts",
         "src/core/package-automation-registry.ts",
         "src/core/package-automation-registry.test.ts",
+        "src/core/model.ts",
+        "src/core/validation.ts",
+        "src/core/validation.test.ts",
+        "src/core/storage.ts",
+        "src/core/storage.test.ts",
         "src/core/proposal-router.ts",
         "src/core/proposal-router.test.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-automation-proposal-boundary-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-automation-proposal-boundary-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-automation-vault-persistence-follow-up"
       ],
-      "notes": "Source/unit evidence proves bounded data-only evaluation, prototype-path rejection, resource budgets, explicit admitted semantic-command IDs, and proposal-only output. Source revision 9a78396 adds a package-scoped declarative adapter; source revision 8d0fa37 adds an in-memory lifecycle registry that suppresses proposals for disabled or retired packages and supports explicit rule disable/enable; source revision 8a9fe15 deep-freezes validated rule data at the adapter boundary; source revision 2de7dba routes explicitly confirmed, scope-bound update/defer/link/route/delete proposals through existing CommandBus owners and fails closed for authority fields or unsupported structure. A UI editor, durable persistence, UI permission/confirmation integration, broader command coverage, browser/target qualification, and broader package qualification remain open."
+      "notes": "Source/unit evidence proves bounded data-only evaluation, prototype-path rejection, resource budgets, explicit admitted semantic-command IDs, and proposal-only output. Source revision 9a78396 adds a package-scoped declarative adapter; source revision 8d0fa37 adds lifecycle suppression; source revision 8a9fe15 deep-freezes validated rule data; source revision 2de7dba routes explicitly confirmed, scope-bound proposals through existing CommandBus owners and fails closed for authority fields or unsupported structure; source revision 7e6524a adds bounded validation plus Vault export/import and Recovery transport for rule documents and lifecycle state, and the Vault confirmation preview names imported automation rules. The editor, registry-to-runtime store wiring, UI permission/confirmation integration, broader command coverage, browser/target qualification, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-050",

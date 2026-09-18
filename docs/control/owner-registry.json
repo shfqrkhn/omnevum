@@ -28,7 +28,7 @@
     {"ownerId": "platform.place", "meaning": "bounded Place/Geo parsing and derived geometry", "writes": ["place-reference"], "status": "IMPLEMENTED_INITIAL"},
     {"ownerId": "platform.package", "meaning": "declarative package manifest and lifecycle admission", "writes": ["package-state"], "status": "CONTRACT_SPIKE"},
     {"ownerId": "platform.game", "meaning": "deterministic game lifecycle and save compatibility", "writes": ["game-save-state"], "status": "CONTRACT_SPIKE"},
-    {"ownerId": "platform.automation", "meaning": "bounded declarative predicates and admitted proposals", "writes": ["automation-proposal"], "status": "CONTRACT_SPIKE"},
+    {"ownerId": "platform.automation", "meaning": "bounded declarative predicates, persisted configuration, and admitted proposals", "writes": ["automation-proposal", "automation.rules"], "status": "IMPLEMENTED_PARTIAL"},
     {"ownerId": "platform.compose", "meaning": "persisted declarative user views and derived projections", "writes": ["compose-view-setting"], "status": "IMPLEMENTED_NATIVE_DASHBOARD"}
   ],
   "rule": "A module may project or reference another owner's records but may not silently create a second writable owner for the same meaning."
