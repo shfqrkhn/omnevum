@@ -1,3 +1,4 @@
+import { createServer } from "node:http";
 import { describe, expect, it } from "vitest";
 import { JsonEndpointEffectExecutor, JsonEndpointTransport } from "./remote";
 import type { CanonicalRecord } from "./model";
@@ -74,6 +75,63 @@ describe("bounded remote sync transport", () => {
     });
     await expect(executor.execute(operation)).resolves.toMatchObject({ outcome: "OUTCOME_UNKNOWN" });
     await expect(executor.reconcile(operation)).resolves.toMatchObject({ outcome: "SUCCEEDED", remoteIdentity: "remote-reconciled" });
+  });
+
+  it("reconciles a real localhost response loss without posting the same idempotency key twice", async () => {
+    const remoteIdentities = new Map<string, string>();
+    let postCount = 0;
+    let createdCount = 0;
+    let duplicateCount = 0;
+    let reconcileCount = 0;
+    const server = createServer(async (request, response) => {
+      await new Promise<void>((resolve, reject) => {
+        request.once("error", reject);
+        request.once("end", resolve);
+        request.resume();
+      });
+      const idempotencyKey = String(request.headers["idempotency-key"] ?? "");
+      const requestUrl = new URL(request.url ?? "/", `http://${request.headers.host ?? "localhost"}`);
+      if (request.method === "POST") {
+        postCount += 1;
+        if (!remoteIdentities.has(idempotencyKey)) {
+          remoteIdentities.set(idempotencyKey, "loopback-remote-1");
+          createdCount += 1;
+          response.destroy();
+          return;
+        }
+        duplicateCount += 1;
+        response.writeHead(200, { "content-type": "application/json" });
+        response.end(JSON.stringify({ outcome: "SUCCEEDED", remoteIdentity: remoteIdentities.get(idempotencyKey), duplicate: true }));
+        return;
+      }
+      if (request.method === "GET" && requestUrl.searchParams.get("idempotencyKey") === idempotencyKey && remoteIdentities.has(idempotencyKey)) {
+        reconcileCount += 1;
+        response.writeHead(200, { "content-type": "application/json" });
+        response.end(JSON.stringify({ outcome: "SUCCEEDED", remoteIdentity: remoteIdentities.get(idempotencyKey) }));
+        return;
+      }
+      response.writeHead(404).end();
+    });
+    await new Promise<void>((resolve, reject) => {
+      server.once("error", reject);
+      server.listen(0, "localhost", () => resolve());
+    });
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("Expected loopback server address");
+    const operation = effect();
+    delete operation.credentialHandle;
+    operation.destination = `http://localhost:${address.port}/action`;
+    const executor = new JsonEndpointEffectExecutor(operation.destination);
+    try {
+      await expect(executor.execute(operation)).resolves.toMatchObject({ outcome: "OUTCOME_UNKNOWN" });
+      await expect(executor.reconcile(operation)).resolves.toMatchObject({ outcome: "SUCCEEDED", remoteIdentity: "loopback-remote-1" });
+      expect(postCount).toBe(1);
+      expect(createdCount).toBe(1);
+      expect(duplicateCount).toBe(0);
+      expect(reconcileCount).toBe(1);
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+    }
   });
 
   it("bounds remote effect responses and classifies retryable HTTP failures", async () => {
