@@ -51,6 +51,16 @@
       "alternatives": ["claim executable extensions without isolation proof", "disable all extensions", "admit a qualified isolated executable runtime"],
       "revisitWhen": "A Phase 8 candidate supplies current source/license/provenance and passes adversarial authority-leakage, resource-abuse, message-validation, update-revocation, and target tests.",
       "evidence": ["src/core/extension-policy.ts", "src/core/extension-policy.test.ts", "docs/control/capability-catalogue.json", "docs/evidence/phase0-production-preview-2026-09-17.md#current-finite-extension-boundary-follow-up"]
+    },
+    {
+      "id": "OMN-DEC-006",
+      "title": "Finite search, UI, and analysis substrate profile",
+      "status": "DECIDED_FOR_PHASE0",
+      "decision": "Keep native DOM/TypeScript as the static-core UI owner and MiniSearch as the selected rebuildable multilingual text-search adapter. Keep JSON Forms/RJSF, DuckDB-Wasm, PDF.js, and SheetJS isolated as deferred candidates rather than adding them to the core runtime without target, bundle, worker, accessibility, cancellation, active-content, and offline evidence.",
+      "why": "The repeatable bake-off found MiniSearch met the representative accent-normalized workload and the native UI already preserves the action spine with lower lifecycle cost. The deferred candidates either add substantial runtime weight or require separate worker, parser, security, and target qualification that is not necessary for the finite Phase 0/MVP profile.",
+      "alternatives": ["admit a schema UI framework to the core", "admit DuckDB-Wasm to the core", "replace MiniSearch before target qualification", "build bespoke full document/analytical engines"],
+      "revisitWhen": "A representative accepted target/workload demonstrates a material capability gap or lower lifecycle-cost candidate, with exact current source, license, security, migration, accessibility, resource, and replacement evidence.",
+      "evidence": ["docs/evidence/phase0-bakeoff-2026-09-17.md", "docs/control/capability-coverage.json", "src/core/search.ts", "src/core/search.test.ts"]
     }
   ]
 }
