@@ -127,3 +127,13 @@ The exact `npm run ci` artifact at source revision `6c872c8` (artifact digest `6
 - revoked the grant through the canonical command path, which disabled future export, then reloaded with the revoked grant and source records present; no browser warning/error console entries were returned.
 
 This is current local Chromium/static-preview evidence for bounded sharing only. It does not qualify remote delivery/effects, provider ACLs, stale-share reconciliation, cross-target disclosure, GitHub Pages deployment, or release readiness.
+
+## Current built-artifact multilingual follow-up
+
+The exact same `npm run ci` artifact at source revision `6c872c8` (artifact digest `6dd97c1814a8e4b4c8e7c36043bb13c44a27a3c55bf2813195397c1c136eefc9`, worker cache `omnevum-shell-42a84fd68e3032e8`) was served on the clean local static origin `http://127.0.0.1:4208/` in the Codex In-app Browser Chromium surface. With synthetic records, the preview:
+
+- retained one French-authored and one English-authored canonical record without translating source text;
+- switched the presentation UI to `fr-CA`, searched the English token `Hello`, and returned one result with a healthy derived index;
+- reloaded with the French UI and both original source texts present; no browser warning/error console entries were returned.
+
+This is local Chromium evidence for the presentation/search slice only. It does not qualify mixed-language Vault import/summary, AI/tool language-neutral semantic IDs, other browser families, deployment, or release readiness.

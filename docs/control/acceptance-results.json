@@ -372,8 +372,13 @@
         "line": 3444
       },
       "text": "A mixed-language Vault is searched and summarized with the UI in a different locale; canonical source text remains unchanged, derived indexes/translations remain rebuildable/provenance-bound, and AI/tool actions use stable language-neutral semantic IDs.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/search.test.ts",
+        "src/core/i18n.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-multilingual-follow-up"
+      ],
+      "notes": "The current built preview retained English and French-authored text, switched the UI to fr-CA, searched an English token successfully, and retained locale/text after reload. Mixed-language Vault import/summary, AI/tool semantic-ID behavior, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-029",
