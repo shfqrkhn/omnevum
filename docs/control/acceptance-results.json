@@ -314,9 +314,11 @@
         "src/core/capability-runtime.test.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-startup-search-degradation-follow-up",
-        "src/main.ts"
+        "src/main.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-capability-error-redaction-follow-up",
+        "src/core/capability-runtime.test.ts#redacts-reusable-credential-shaped-details-from-visible-failure-reasons"
       ],
-      "notes": "The capability runtime isolates a failing optional module, and the current startup owner marks invalid derived search DEGRADED while core startup and Recovery remain usable. Native failure matrices, direct browser fault injection, and broader target qualification remain open."
+      "notes": "The capability runtime isolates a failing optional module, marks invalid derived search DEGRADED while core startup and Recovery remain usable, and redacts credential-shaped failure details before DOM exposure. Native failure matrices, direct browser fault injection, and broader target qualification remain open."
     },
     {
       "id": "OMN-ACC-017",

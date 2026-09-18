@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "90bca0e0ed42c4bcdc00faed5907faa90f1f0e566266bc92062fd8a8580d0196",
-        "bytes": 110661
+        "sha256": "3bc3c01cbf378385d4cb1fe2816ebbc5eefd5aa962dda15e3de698777a32ed6a",
+        "bytes": 110927
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "b997e222ed274f3e42eb4c99d1eaf71c6589e7743e331f192ecb4f1378818777",
-        "bytes": 34392
+        "sha256": "5c3a0acd42960adce932f7cd24d3c834ceecc9c2d3c68d2bc35c624aa9970ca8",
+        "bytes": 34489
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "b5099209d086b328234b40d1765c24982ccbe91dc067d39d5e73df98c618255f",
+        "sha256": "3abc9bd237d62733025258dfb87e1ede6513fdc05d6e7380ca48167a78f20f7d",
         "bytes": 2432
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "b4d27814a0d9aad06629d8baf882ed08c8c2bb28df1eda6f9a3d4a319ab4c7f0",
-        "bytes": 186783
+        "sha256": "f52c2d83bb6c79f04b9cf14dc092b2fe2594ed3cbaa45ca185da0480e853fd17",
+        "bytes": 187875
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -469,13 +469,13 @@
       },
       {
         "path": "src/core/capability-runtime.test.ts",
-        "sha256": "4e94eca3a308ce6b0248a89867913918c1dd12e273a36c1e210169fa10d8621b",
-        "bytes": 2063
+        "sha256": "5d0e04a9f01f7f1e09f1714c63361501fd2be89cea77dfbbcb2088755e9b287d",
+        "bytes": 2582
       },
       {
         "path": "src/core/capability-runtime.ts",
-        "sha256": "44007e77e6009e8018d86516b52839f5ac5933273233a5f9d2a774df01dc3372",
-        "bytes": 3074
+        "sha256": "5077609b68159ed3f498fdb1a87109bcbc553cc46220724134548a7311cde9bc",
+        "bytes": 3533
       },
       {
         "path": "src/core/commands.test.ts",
