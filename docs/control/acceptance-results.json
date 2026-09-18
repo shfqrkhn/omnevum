@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "3a4c99eda86e722d3830555dfe528075f007ab8c8371211b7ceeebad7eb15e8a"
+      "sha256": "4408ac329277aa9db97e202dc1f58ced5c8b772750139ed87c5336f3fd997acc"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -658,9 +658,12 @@
         "src/core/game.ts",
         "src/core/game.test.ts",
         "src/core/package-contract.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up"
+        "src/core/factory.ts",
+        "src/core/factory.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-schema-driven-appgame-factory-contract-follow-up"
       ],
-      "notes": "The deterministic GameSession/package contract proves declared input, pause/resume, save/load, and lifecycle boundaries. A nontrivial browser game, qualified FOSS engine adapter, isolated candidate upgrade, Recovery integration, and target evidence remain open."
+      "notes": "The deterministic GameSession/package contract plus the factory benchmark now prove a bounded nontrivial Constellation state machine with semantic input, pause/resume, responsive layout, save/load, and undeclared-action rejection. A rendered browser game, qualified FOSS engine adapter, isolated candidate upgrade, Recovery integration, and target evidence remain open."
     },
     {
       "id": "OMN-ACC-046",
@@ -772,9 +775,12 @@
         "src/core/package-contract.ts",
         "src/core/package-contract.test.ts",
         "src/core/compose.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up"
+        "src/core/factory.ts",
+        "src/core/factory.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-schema-driven-appgame-factory-contract-follow-up"
       ],
-      "notes": "The package contract validates declarative manifests, canonical ownership, command collision, lifecycle status, and a generated baseline form/list view. Fresh-agent generation, detail/capture wiring, responsive/accessibility/localization/theme qualification, and migration replacement evidence remain open."
+      "notes": "The package and record-app factory validate declarative manifests, canonical ownership, declared fields, command-owned capture/update/complete/archive, localized labels, Vault round-trip, and a generated baseline form/list view. Fresh-agent creation, actual generated browser detail/capture UI, responsive/accessibility/theme qualification, and migration replacement evidence remain open."
     },
     {
       "id": "OMN-ACC-054",
