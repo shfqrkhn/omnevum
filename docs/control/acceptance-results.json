@@ -453,8 +453,15 @@
         "line": 3452
       },
       "text": "A document/photo/receipt is represented once by the Artifact capability and referenced from multiple authorized domain records; derived preview/OCR/index corruption can be rebuilt without duplicating or losing the canonical artifact/reference.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/artifact.ts",
+        "src/core/artifact.test.ts#keeps-one-artifact-payload-shared-by-multiple-references-while-rebuilding-derived-search",
+        "src/core/commands.ts",
+        "src/core/storage.test.ts#preserves-a-bounded-artifact-payload-through-vault-export-and-restore",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-artifact-multi-reference-follow-up"
+      ],
+      "notes": "Source/unit evidence proves one canonical Artifact payload can be referenced by two relationship records and survive derived search-index rebuild plus Vault payload round-trip. Browser attachment/reference evidence, preview/OCR adapters, heavy-work cancellation/resource bounds, hostile rendering, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-033",
