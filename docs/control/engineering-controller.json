@@ -106,7 +106,7 @@
     "EffectRunner persists bounded exponential retry backoff and transitions retry exhaustion to FAILED_TERMINAL with explicit evidence; source bba3b14",
     "current receipt-bound Chromium preview on the 655f0fb artifact exposes the Recovery Effect/Outbox ledger, re-queues a retryable operation, cancels replay, and returns to a clean effect state; source 655f0fb",
     "EffectRunner.recoverInterrupted is invoked by the shipped app after canonical-store open and promotes persisted IN_FLIGHT operations to visible RECONCILE without an external adapter; source 2caf242",
-    "CredentialKeyBroker.authorizeEffect is the canonical guard for credential-bound EffectRunner operations, and revocation cancels a pending operation before executor use; source 7986327",
+    "CredentialKeyBroker.authorizeEffect is the canonical guard for credential-bound EffectRunner operations, revocation cancels a pending operation before executor use, and the session-only restoreSession seam rehydrates an opaque handle only with a non-secret recovery reference and fresh material; source 13b1c02",
     "current receipt-bound Edge preview on the exact 655f0fb artifact accepts a synthetic canonical capture, retains it after reload, and returns to a clean scoped origin; source 655f0fb",
     "current receipt-bound Edge preview on the exact 655f0fb artifact detects a malformed canonical row, exports retained state, repairs explicitly, preserves the valid row, and returns to a clean scoped origin; source 655f0fb",
     "the selected MiniSearch owner has a repeatable 10,000-record multilingual host benchmark with an explicit p95 guardrail; mobile/browser target qualification remains open; source search.test.ts",

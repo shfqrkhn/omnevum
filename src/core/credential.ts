@@ -13,14 +13,27 @@ export interface CredentialMetadata {
   recoveryReference?: string;
 }
 
+type CredentialIssueInput = Omit<CredentialMetadata, "handleId" | "createdAt" | "storageClass" | "revokedAt">;
+
 export class CredentialKeyBroker {
   private readonly secrets = new Map<string, { secret: string; metadata: CredentialMetadata }>();
 
-  public issue(secret: string, input: Omit<CredentialMetadata, "handleId" | "createdAt" | "storageClass" | "revokedAt">): CredentialMetadata {
+  public issue(secret: string, input: CredentialIssueInput): CredentialMetadata {
+    return this.register(createOpaqueId("credential"), secret, input);
+  }
+
+  public restoreSession(handleId: string, secret: string, input: CredentialIssueInput): CredentialMetadata {
+    if (!/^credential_[A-Za-z0-9_-]{8,}$/.test(handleId)) throw new Error("Credential handle is invalid for session restoration");
+    if (!input.recoveryReference?.trim()) throw new Error("Credential recovery reference is required for session restoration");
+    if (this.secrets.has(handleId)) throw new Error("Credential handle is already active");
+    return this.register(handleId, secret, input);
+  }
+
+  private register(handleId: string, secret: string, input: CredentialIssueInput): CredentialMetadata {
     if (!secret) throw new Error("Credential material cannot be empty");
     if (!input.provider.trim() || !input.audience.trim() || !Array.isArray(input.scope) || input.scope.length === 0 || input.scope.length > 50 || input.scope.some((scope) => !/^[a-z][a-z0-9._:-]{0,120}$/.test(scope))) throw new Error("Credential metadata scope is invalid");
-    const handleId = createOpaqueId("credential");
-    const metadata: CredentialMetadata = { ...input, provider: input.provider.trim().slice(0, 160), audience: input.audience.trim().slice(0, 240), scope: input.scope.map((scope) => scope.trim()), handleId, createdAt: new Date().toISOString(), storageClass: "SESSION_MEMORY" };
+    const recoveryReference = input.recoveryReference?.trim().slice(0, 240);
+    const metadata: CredentialMetadata = { ...input, ...(recoveryReference ? { recoveryReference } : {}), provider: input.provider.trim().slice(0, 160), audience: input.audience.trim().slice(0, 240), scope: input.scope.map((scope) => scope.trim()), handleId, createdAt: new Date().toISOString(), storageClass: "SESSION_MEMORY" };
     this.secrets.set(handleId, { secret, metadata });
     return { ...metadata };
   }

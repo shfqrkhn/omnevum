@@ -17,4 +17,18 @@ describe("credential/key broker", () => {
     broker.clear();
     expect(broker.metadata(metadata.handleId)).toBeUndefined();
   });
+
+  it("rehydrates an opaque handle after process restart without persisting the secret", async () => {
+    const firstProcess = new CredentialKeyBroker();
+    const issued = firstProcess.issue("old-secret", { provider: "test", scope: ["read"], audience: "test-service", recoveryReference: "host-authorized-reference" });
+    const restartedProcess = new CredentialKeyBroker();
+
+    expect(restartedProcess.metadata(issued.handleId)).toBeUndefined();
+    const restored = restartedProcess.restoreSession(issued.handleId, "new-secret", { provider: "test", scope: ["read"], audience: "test-service", recoveryReference: "host-authorized-reference" });
+
+    expect(restored).toMatchObject({ handleId: issued.handleId, storageClass: "SESSION_MEMORY", recoveryReference: "host-authorized-reference" });
+    expect(JSON.stringify(restored)).not.toContain("new-secret");
+    await expect(restartedProcess.withSecret(issued.handleId, "restored request", async (secret) => secret)).resolves.toBe("new-secret");
+    expect(() => restartedProcess.restoreSession(issued.handleId, "another-secret", { provider: "test", scope: ["read"], audience: "test-service" })).toThrow("recovery reference");
+  });
 });

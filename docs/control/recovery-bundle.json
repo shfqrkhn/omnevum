@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "fc133d41d64836d15390774d2b552aac798c96a71891b540b8f6c2c339eb7624",
-        "bytes": 98953
+        "sha256": "00bdcb43653a8d04a81df6c03c27cf7a5edef2d60206a5b3f354794a55411d73",
+        "bytes": 99510
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -164,8 +164,8 @@
       },
       {
         "path": "docs/control/credential-key-policy.json",
-        "sha256": "8fe85c91545eec9997d3fa80cc82671439c0086cd6a4faa84ba11b2d1218cf2d",
-        "bytes": 1137
+        "sha256": "e1f4f881867aa6d6c2906c7d0d7c243c4c2018e835db150fb33ffb969b8cd537",
+        "bytes": 1359
       },
       {
         "path": "docs/control/currentness-radar.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "c26c0c801b5a02a597ae6a355ddb8678ba156e361c0a87d0bc16ef8c072fe26d",
-        "bytes": 25211
+        "sha256": "4c130e898e7f5ab253c18e6bd3f64217e5c7de8392b02bff14e4c2dcf3267c57",
+        "bytes": 25338
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -494,13 +494,13 @@
       },
       {
         "path": "src/core/credential.test.ts",
-        "sha256": "2c2eb81f82b5e524f2f54d977ed7ca138b628196e5e6a843f5cb4e4e01a585e0",
-        "bytes": 1080
+        "sha256": "720142b7c93cb25cedd7a633dd18f8f43416bf52b9915bf84f3b4415a79f6710",
+        "bytes": 2267
       },
       {
         "path": "src/core/credential.ts",
-        "sha256": "65a8cf67a0d7b5d0626925746dfe39209f1464d83310025f388a570186a72f11",
-        "bytes": 2787
+        "sha256": "3fd5dc26dfef7d73cb07924b3377b817910da43f878011ef1835dd6d526e899e",
+        "bytes": 3613
       },
       {
         "path": "src/core/crypto.test.ts",
