@@ -68,6 +68,10 @@ The privacy-minimized diagnostics export now reports explicit category states fo
 
 The current `npm run ci` artifact (`omnevum-shell-30a45ac985e813bc`, source revision `5e6881a`) was served on the local static preview `http://127.0.0.1:4175/`. In the browser, Acquire staged the synthetic payload `<img src=x onerror=alert(1)>` as visible literal text; after acceptance the same literal remained in review, selectors, and the canonical record list, with no active markup surface observed. The Export diagnostics control completed and displayed the privacy-minimized status. This is a local Chromium observation using synthetic data, not sanitizer, assistive-technology, cross-browser, or production-host evidence.
 
+## Vault preview follow-up
+
+`CanonicalStore.previewVault()` now performs the same Vault integrity, schema, presentation-view, revision, tombstone, and equal-revision conflict checks as import classification without writing records, history, artifacts, settings, or derived state. The regression fixture confirms an older Vault revision reports `skipped` without changing the newer local meaning. This qualifies a deterministic local dry-run seam; browser file transfer, destination-capacity checks, cross-origin restore, and materially different browser/platform evidence remain open.
+
 ## Limits
 
 This receipt establishes only a local production-preview activation/offline-reload and update/rollback rehearsal at one Chromium-based browser surface and one mobile viewport, plus deterministic storage fault tests. It does not establish GitHub Pages routing, browser-family support, full responsive/accessibility conformance, native browser quota exhaustion, interrupted canonical migration, or release readiness. Those remain open in the support, risk, and completion registers.

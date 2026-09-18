@@ -5,7 +5,7 @@
   "authority": "MPES Sections 4, 6, 8, 12, and 22",
   "cases": [
     {"id": "MIG-001", "case": "fresh store", "source": "none", "target": "schema-1", "strategy": "create object store", "rollback": "no user data exists", "status": "TESTED_INITIAL"},
-    {"id": "MIG-002", "case": "Vault restore", "source": "OMNEVUM_VAULT v1", "target": "canonical schema-1", "strategy": "validate then revision-aware transaction", "rollback": "transaction abort leaves existing store unchanged", "status": "TESTED_INITIAL"},
+    {"id": "MIG-002", "case": "Vault restore", "source": "OMNEVUM_VAULT v1", "target": "canonical schema-1", "strategy": "read-only integrity/conflict preview followed by revision-aware transaction", "rollback": "preview is non-mutating; transaction abort leaves existing store unchanged", "status": "TESTED_PREVIEWED_TRANSACTION"},
     {"id": "MIG-003", "case": "origin change", "source": "browser-private origin storage", "target": "new origin", "strategy": "user-mediated Vault export/import", "rollback": "retain source Vault and source origin", "status": "PARTIAL"},
     {"id": "MIG-004", "case": "future schema", "source": "older supported schema", "target": "current schema", "strategy": "versioned explicit migrator", "rollback": "pre-migration Vault plus recovery mode", "status": "TESTED_SAFE_REFUSAL_SPIKE"}
   ],

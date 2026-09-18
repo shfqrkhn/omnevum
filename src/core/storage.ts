@@ -47,6 +47,16 @@ export interface DiagnosticsRuntimeState {
   packageIntegrity?: { status: "NOT_PROVIDED" | "VERIFIED" | "UNVERIFIED"; artifactDigest?: string };
 }
 
+export interface VaultImportPreview {
+  recordCount: number;
+  historyEntries: number;
+  artifactPayloads: number;
+  imported: number;
+  skipped: number;
+  conflicts: number;
+  hasPresentation: boolean;
+}
+
 type PersistenceState = "GRANTED" | "DENIED" | "UNAVAILABLE";
 
 export class CanonicalStore {
@@ -301,15 +311,27 @@ export class CanonicalStore {
     });
   }
 
+  public async previewVault(input: unknown): Promise<VaultImportPreview> {
+    const vault = await this.validateVaultInput(input);
+    const existing = new Map((await this.list(true)).map((record) => [record.id, record]));
+    let imported = 0;
+    let skipped = 0;
+    let conflicts = 0;
+    for (const record of vault.records) {
+      const disposition = importDisposition(record, existing.get(record.id));
+      if (disposition === "IMPORT") imported += 1;
+      else if (disposition === "CONFLICT") conflicts += 1;
+      else skipped += 1;
+    }
+    return { recordCount: vault.records.length, historyEntries: vault.history?.length ?? 0, artifactPayloads: vault.artifacts?.length ?? 0, imported, skipped, conflicts, hasPresentation: vault.presentation !== undefined };
+  }
+
   public async importVault(input: unknown): Promise<{ imported: number; skipped: number; conflicts: number }> {
-    assertVaultDocument(input);
-    await verifyVaultIntegrity(input);
+    const vault = await this.validateVaultInput(input);
     await this.reclaimDerivedStateUnderPressure();
-    const importedComposeViews = input.presentation?.composeViews;
-    if (importedComposeViews !== undefined && (!Array.isArray(importedComposeViews) || importedComposeViews.length > 40 || !importedComposeViews.every(isViewDefinition))) throw new Error("Vault contains invalid Compose views");
     const existing = new Map((await this.list(true)).map((record) => [record.id, record]));
     const existingArtifactIds = new Set<string>();
-    for (const artifact of input.artifacts ?? []) {
+    for (const artifact of vault.artifacts ?? []) {
       if (await this.getArtifact(artifact.id)) existingArtifactIds.add(artifact.id);
     }
     const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE, SETTINGS_STORE], "readwrite");
@@ -323,20 +345,14 @@ export class CanonicalStore {
     let conflicts = 0;
     const acceptedIds = new Set<string>();
 
-    for (const record of input.records) {
+    for (const record of vault.records) {
       const current = existing.get(record.id);
-      if (!current) {
+      const disposition = importDisposition(record, current);
+      if (disposition === "IMPORT") {
         objectStore.put(record);
         acceptedIds.add(record.id);
         imported += 1;
-      } else if (current.deleted && !record.deleted && record.data.restoreIntent !== "EXPLICIT_USER_RESTORE") {
-        conflicts += 1;
-        skipped += 1;
-      } else if (record.revision > current.revision) {
-        objectStore.put(record);
-        acceptedIds.add(record.id);
-        imported += 1;
-      } else if (record.revision === current.revision && stableJson(record) !== stableJson(current)) {
+      } else if (disposition === "CONFLICT") {
         conflicts += 1;
         skipped += 1;
       } else {
@@ -344,14 +360,14 @@ export class CanonicalStore {
       }
     }
 
-    for (const entry of input.history ?? []) historyStore.put(entry);
-    for (const artifact of input.artifacts ?? []) {
+    for (const entry of vault.history ?? []) historyStore.put(entry);
+    for (const artifact of vault.artifacts ?? []) {
       const current = existing.get(artifact.id);
       const payloadMissing = !existingArtifactIds.has(artifact.id);
       if (acceptedIds.has(artifact.id) || !current || payloadMissing) artifactStore.put({ id: artifact.id, blob: base64ToBlob(artifact.dataBase64, artifact.mimeType) });
     }
-    if (input.presentation) {
-      const { composeViews, ...presentation } = input.presentation;
+    if (vault.presentation) {
+      const { composeViews, ...presentation } = vault.presentation;
       settingsStore.put({ id: "presentation", value: structuredClone(presentation), modifiedAt: new Date().toISOString() });
       if (composeViews !== undefined) {
         settingsStore.put({ id: VIEW_SETTING, value: structuredClone(composeViews), modifiedAt: new Date().toISOString() });
@@ -476,6 +492,14 @@ export class CanonicalStore {
       return "DENIED";
     }
   }
+
+  private async validateVaultInput(input: unknown): Promise<VaultDocument> {
+    assertVaultDocument(input);
+    await verifyVaultIntegrity(input);
+    const importedComposeViews = input.presentation?.composeViews;
+    if (importedComposeViews !== undefined && (!Array.isArray(importedComposeViews) || importedComposeViews.length > 40 || !importedComposeViews.every(isViewDefinition))) throw new Error("Vault contains invalid Compose views");
+    return input;
+  }
 }
 
 export interface StoreHealth {
@@ -504,6 +528,13 @@ function storageWriteError(error: unknown): Error {
   const name = error && typeof error === "object" && "name" in error ? String((error as { name?: unknown }).name) : "";
   if (name === "QuotaExceededError") return new Error("Storage quota is exhausted. Export a Vault, then retry after replaceable state is reclaimed.");
   return error instanceof Error ? error : new Error("IndexedDB write failed");
+}
+
+function importDisposition(record: CanonicalRecord, current: CanonicalRecord | undefined): "IMPORT" | "SKIP" | "CONFLICT" {
+  if (current?.deleted && !record.deleted && record.data.restoreIntent !== "EXPLICIT_USER_RESTORE") return "CONFLICT";
+  if (!current || record.revision > current.revision) return "IMPORT";
+  if (record.revision === current.revision && stableJson(record) !== stableJson(current)) return "CONFLICT";
+  return "SKIP";
 }
 
 function stableJson(value: unknown): string {

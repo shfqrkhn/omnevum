@@ -64,6 +64,17 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("previews Vault merge outcomes without mutating canonical state", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-vault-preview`);
+    await store.open();
+    await store.put(record("record-preview", 2));
+    const older = { ...record("record-preview", 1), data: { text: "old" } };
+    const preview = await store.previewVault({ format: "OMNEVUM_VAULT", version: 1, exportedAt: new Date().toISOString(), records: [older] });
+    expect(preview).toMatchObject({ recordCount: 1, imported: 0, skipped: 1, conflicts: 0, hasPresentation: false });
+    expect((await store.get("record-preview"))?.data.text).toBe("hello");
+    store.close();
+  });
+
   it("rejects a concurrent revision mismatch without writing the candidate", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-put-conflict`);
     await store.open();

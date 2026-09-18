@@ -42,7 +42,8 @@
     "Acquire rejects embedded-credential and oversized URLs and retains hostile-looking text as inert data",
     "privacy-minimized diagnostics expose category-level runtime states without canonical content",
     "current production preview renders hostile Acquire text literally and completes category diagnostics export",
-    "110 unit tests pass across 40 test files after the diagnostics increment"
+    "Vault merge preview validates integrity and conflict outcomes without mutation",
+    "111 unit tests pass across 40 test files after the Vault preview increment"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad decision beyond the recorded harvest-reference route",
