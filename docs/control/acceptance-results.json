@@ -336,8 +336,11 @@
         "line": 3438
       },
       "text": "The accepted core is deployed on the constrained GitHub Pages profile without custom server response headers/functions. Core security/privacy/durability claims that are made for that profile remain valid; a deliberately header-dependent optional feature is explicitly unavailable/degraded rather than silently assumed safe.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#github-pages-deployment-path"
+      ],
+      "notes": "A locked GitHub Pages build/upload/deploy workflow is configured with a relative-base artifact and static-host policy; no remote workflow run, live URL, clean-origin smoke, rollback, or target qualification is yet evidenced."
     },
     {
       "id": "OMN-ACC-026",
@@ -501,8 +504,12 @@
         "line": 3470
       },
       "text": "Before the initial shell/substrate architecture is frozen, the engineering system characterizes a current whole-app FOSS launchpad candidate such as NeumanOS and compares adapt/harvest/greenfield routes against static-host, mobile, local-first, accessibility, test, license, migration, and lifecycle criteria. The selected route records evidence that it is not an avoidable greenfield reinvention.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
+        "docs/control/decision-log.json"
+      ],
+      "notes": "NeumanOS and Kurumi are characterized at exact recorded identities and the small Omnevum foundation is selected as the Phase 0 launchpad; a fresh benchmark and full currentness/support/license/security comparison remain open."
     },
     {
       "id": "OMN-ACC-042",
@@ -623,8 +630,13 @@
         "line": 3492
       },
       "text": "Before Omnevum ships a bespoke general-purpose Vault/sync engine, the engineering system qualifies at least one close browser-native FOSS substrate such as SelfStore plus one materially different alternative such as remoteStorage/Etebase/Solid-compatible tooling. If a candidate satisfies the contract at lower lifecycle cost, it is adopted or adapter-wrapped; if not, the rejected capability gaps become tests for the selected implementation.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
+        "docs/control/decision-log.json",
+        "docs/control/capability-coverage.json"
+      ],
+      "notes": "SelfStore and remoteStorage.js are compared and dispositioned as isolated Phase 2 candidates; contract, security, quota, crash, migration, provider, and cross-origin qualification is not yet run."
     },
     {
       "id": "OMN-ACC-053",
@@ -643,8 +655,13 @@
         "line": 3496
       },
       "text": "A NeumanOS-class launchpad harvest assessment maps substantial working features to RETAIN, ADAPT, GENERALIZE, REPLACE, EXTERNALIZE, or DROP, identifies duplicate/local databases and high-authority seams, and proves that the selected fork/harvest/greenfield route preserves more qualified working value per lifecycle cost than the rejected routes.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
+        "docs/control/patch-fork-delta.json",
+        "docs/control/decision-log.json"
+      ],
+      "notes": "The harvest assessment records RETAIN/ADAPT/GENERALIZE/REPLACE-style boundaries and avoids importing a second application authority; quantitative lifecycle benchmarking and target/security qualification remain open."
     },
     {
       "id": "OMN-ACC-055",
@@ -677,8 +694,12 @@
         "line": 3502
       },
       "text": "Search is exercised against a representative multilingual/mobile Vault using at least two materially different qualified browser search candidates before the engine is frozen. The selected implementation proves rebuildability, permission-sensitive invalidation, acceptable mobile memory/latency, typo/prefix/ranking behavior required by the profile, and full-text operation without mandatory AI/vector embeddings.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-bakeoff-2026-09-17.md",
+        "src/core/search.test.ts"
+      ],
+      "notes": "MiniSearch, FlexSearch, and Orama were compared on a multilingual 2,000-record local fixture and MiniSearch was isolated behind the derived owner; mobile/browser memory-latency, ranking breadth, permission invalidation, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-058",
@@ -834,8 +855,13 @@
         "line": 3532
       },
       "text": "Before the initial whole-app route is frozen, current NeumanOS and Kurumi candidates are both characterized when still materially relevant. The engineering decision records which working features/code/tests are retained/harvested/adapted/replaced, and demonstrates that the selected combined fork/harvest/greenfield route dominates the rejected routes on static-host fit, canonical ownership, mobile/accessibility, security, updateability, and time-to-accepted-result.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
+        "docs/control/decision-log.json",
+        "docs/control/patch-fork-delta.json"
+      ],
+      "notes": "Both launchpad candidates are characterized and the selected route preserves Omnevum ownership; a current comparative benchmark across all listed dimensions remains open before final route closure."
     },
     {
       "id": "OMN-ACC-073",
