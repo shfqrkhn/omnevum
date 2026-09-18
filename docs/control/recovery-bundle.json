@@ -394,8 +394,8 @@
       },
       {
         "path": "scripts/structure-audit.mjs",
-        "sha256": "42d772a1903245e81a9db1d7350e5c73a8f4774ad7de78b2471d5c8805d6e6fb",
-        "bytes": 7108
+        "sha256": "ba8bd6e9a4bf0acbc83b90e1fbd3de6c700c92bdff613b159d064659ac4cc6b1",
+        "bytes": 7134
       },
       {
         "path": "src/core/acquire.test.ts",
