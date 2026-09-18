@@ -6,7 +6,7 @@ const effectLoopbackPreviewPlugin: Plugin = {
   configurePreviewServer(server) {
     if (process.env.OMNEVUM_EFFECT_FIXTURE !== "1") return;
     const state = createEffectLoopbackState();
-    const fixture = createEffectLoopbackHandler(state, { basePath: "/__omnevum/effect" });
+    const fixture = createEffectLoopbackHandler(state, { basePath: "/__omnevum/effect", ...(process.env.OMNEVUM_EFFECT_FIXTURE_BEARER ? { requiredBearer: process.env.OMNEVUM_EFFECT_FIXTURE_BEARER } : {}) });
     server.middlewares.use((request, response, next) => {
       const pathname = new URL(request.url ?? "/", "http://localhost").pathname;
       if (pathname !== "/__omnevum/effect" && !pathname.startsWith("/__omnevum/effect/")) {

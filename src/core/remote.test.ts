@@ -4,6 +4,7 @@ import { JsonEndpointEffectExecutor, JsonEndpointTransport } from "./remote";
 import type { CanonicalRecord } from "./model";
 import type { EffectOperation } from "./effect";
 import { CredentialKeyBroker } from "./credential";
+import { createEffectLoopbackHandler, createEffectLoopbackState } from "../../scripts/effect-loopback-core.mjs";
 
 function record(): CanonicalRecord {
   const now = new Date().toISOString();
@@ -64,6 +65,31 @@ describe("bounded remote sync transport", () => {
     expect(seenHeaders?.get("Authorization")).toBe("Bearer remote-secret");
     expect(seenBody).not.toContain("remote-secret");
     expect(seenBody).toContain("effect-remote-key");
+  });
+
+  it("uses the broker bearer at the repository loopback fixture without persisting raw credential material", async () => {
+    const state = createEffectLoopbackState();
+    const server = createServer(createEffectLoopbackHandler(state, { requiredBearer: "fixture-secret" }));
+    await new Promise<void>((resolve, reject) => {
+      server.once("error", reject);
+      server.listen(0, "localhost", () => resolve());
+    });
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("Expected loopback server address");
+    const broker = new CredentialKeyBroker();
+    const metadata = broker.issue("fixture-secret", { provider: "test", scope: ["write"], audience: "loopback" });
+    const operation = { ...effect(), destination: `http://localhost:${address.port}/action`, credentialHandle: metadata.handleId };
+    const executor = new JsonEndpointEffectExecutor(operation.destination, undefined, broker);
+    try {
+      expect(JSON.stringify(operation)).not.toContain("fixture-secret");
+      await expect(executor.execute(operation)).resolves.toMatchObject({ outcome: "OUTCOME_UNKNOWN" });
+      await expect(executor.reconcile(operation)).resolves.toMatchObject({ outcome: "SUCCEEDED", remoteIdentity: "loopback-1" });
+      expect(state.authorizedRequests).toBe(2);
+      expect(state.credentialFailures).toBe(0);
+      expect(state.created).toBe(1);
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+    }
   });
 
   it("converts an ambiguous request failure to reconcile instead of blindly replaying it", async () => {

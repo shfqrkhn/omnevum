@@ -3,7 +3,9 @@ export interface EffectLoopbackState {
   created: number;
   posts: number;
   reconciliations: number;
+  authorizedRequests: number;
+  credentialFailures: number;
 }
 
 export function createEffectLoopbackState(): EffectLoopbackState;
-export function createEffectLoopbackHandler(state: EffectLoopbackState, options?: { basePath?: string; log?: (event: Record<string, unknown>) => void }): (request: import("node:http").IncomingMessage, response: import("node:http").ServerResponse) => Promise<void>;
+export function createEffectLoopbackHandler(state: EffectLoopbackState, options?: { basePath?: string; requiredBearer?: string; log?: (event: Record<string, unknown>) => void }): (request: import("node:http").IncomingMessage, response: import("node:http").ServerResponse) => Promise<void>;

@@ -60,6 +60,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const timeCopy = getTimeCopy(presentation.locale);
   const factoryPreviewMode = new URLSearchParams(window.location.search).get("factory-preview") === "1";
   const effectRevocationPreviewMode = new URLSearchParams(window.location.search).get("effect-revocation-preview") === "1";
+  const effectCredentialedPreviewMode = new URLSearchParams(window.location.search).get("effect-credentialed-preview") === "1";
   root.dataset.theme = presentation.theme;
   root.dataset.density = presentation.density;
   root.dataset.typeface = presentation.typeface;
@@ -1927,6 +1928,46 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     await renderEffects();
   };
 
+  const runEffectCredentialedPreview = async (): Promise<void> => {
+    if (!effectCredentialedPreviewMode) return;
+    const endpointValue = new URLSearchParams(window.location.search).get("effectEndpoint")?.trim();
+    if (!endpointValue) throw new Error("Credentialed effect preview requires effectEndpoint");
+    let endpointUrl: URL;
+    try { endpointUrl = new URL(endpointValue); } catch { throw new Error("Credentialed effect preview endpoint is invalid"); }
+    if (endpointUrl.protocol !== "http:" || !["localhost", "127.0.0.1"].includes(endpointUrl.hostname) || endpointUrl.username || endpointUrl.password || endpointUrl.origin !== window.location.origin || endpointUrl.pathname !== "/__omnevum/effect/action") throw new Error("Credentialed effect preview is restricted to the same-origin repository-owned loopback fixture");
+    const endpoint = endpointUrl.href;
+    const phaseSetting = "effect.preview.credentialed.phase";
+    if (await store.getSetting<string>(phaseSetting) !== undefined) return;
+    const broker = new CredentialKeyBroker();
+    const metadata = broker.issue("qualification-fixture-secret", { provider: "qualification", scope: ["effect.execute"], audience: "loopback-fixture" });
+    const operation = {
+      ...createExternalEffect({
+        destination: endpoint,
+        purpose: "browser credentialed connector qualification",
+        payloadOrReference: { fixture: "credentialed-effect", phase: "preview" },
+        authorization: { authority: "local-user", permission: "effect.execute", space: "personal", disclosureClass: "PRIVATE", schema: "effect-json-v1" }
+      }),
+      credentialHandle: metadata.handleId
+    };
+    if (JSON.stringify(operation).includes("qualification-fixture-secret")) throw new Error("Credentialed preview leaked secret into the durable operation");
+    await store.enqueueEffect(operation);
+    const guard = createEffectRevalidationGuard({
+      authority: "local-user",
+      allowedPermissions: ["effect.execute"],
+      availableSpaces: async () => new Set((await spaceService.listSpaces()).map((space) => space.id)),
+      allowedDisclosureClasses: ["PRIVATE"],
+      supportedSchemas: ["effect-json-v1"],
+      credentialBroker: broker
+    });
+    const results = await new EffectRunner(store, new JsonEndpointEffectExecutor(endpoint, undefined, broker), guard).runAvailable();
+    const completed = results.find((result) => result.operationId === operation.operationId);
+    const persisted = await store.getEffect(operation.operationId);
+    if (!completed || completed.status !== "SUCCEEDED" || !persisted || JSON.stringify(persisted).includes("qualification-fixture-secret")) throw new Error(`Credentialed effect preview did not complete without persisting secret material (result ${completed?.status ?? "MISSING"}; persisted ${persisted?.status ?? "MISSING"})`);
+    await store.setSetting(phaseSetting, "SUCCEEDED_WITH_SESSION_BROKER");
+    effectRunStatus.textContent = "Credentialed connector effect succeeded; secret remained in session memory.";
+    await renderEffects();
+  };
+
   effectStageForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     try {
@@ -2694,6 +2735,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
 
   await renderRecords();
   await runEffectRevocationPreview();
+  await runEffectCredentialedPreview();
 }
 
 async function readServiceWorkerDiagnostics(): Promise<NonNullable<NonNullable<Parameters<CanonicalStore["exportDiagnostics"]>[0]>["serviceWorker"]>> {

@@ -1,5 +1,5 @@
 export function createEffectLoopbackState() {
-  return { identities: new Map(), created: 0, posts: 0, reconciliations: 0 };
+  return { identities: new Map(), created: 0, posts: 0, reconciliations: 0, authorizedRequests: 0, credentialFailures: 0 };
 }
 
 export function createEffectLoopbackHandler(state, options = {}) {
@@ -10,10 +10,20 @@ export function createEffectLoopbackHandler(state, options = {}) {
     const requestUrl = new URL(request.url ?? "/", `http://${request.headers.host ?? "localhost"}`);
     const pathname = requestUrl.pathname.startsWith(basePath) ? requestUrl.pathname.slice(basePath.length) || "/" : requestUrl.pathname;
     const origin = String(request.headers.origin ?? "");
-    const corsHeaders = /^http:\/\/(?:localhost|127\.0\.0\.1):\d+$/u.test(origin) ? { "access-control-allow-origin": origin, "access-control-allow-headers": "Content-Type, Idempotency-Key", "access-control-allow-methods": "GET, POST, OPTIONS", vary: "Origin" } : {};
+    const corsHeaders = /^http:\/\/(?:localhost|127\.0\.0\.1):\d+$/u.test(origin) ? { "access-control-allow-origin": origin, "access-control-allow-headers": "Authorization, Content-Type, Idempotency-Key", "access-control-allow-methods": "GET, POST, OPTIONS", vary: "Origin" } : {};
     if (request.method === "OPTIONS" && pathname === "/action") {
       response.writeHead(204, corsHeaders).end();
       return;
+    }
+    if (options.requiredBearer && pathname === "/action") {
+      if (String(request.headers.authorization ?? "") !== `Bearer ${options.requiredBearer}`) {
+        state.credentialFailures += 1;
+        log({ event: "CREDENTIAL_REJECTED", credentialFailures: state.credentialFailures });
+        writeJson(response, 401, { error: "credential-required" }, corsHeaders);
+        return;
+      }
+      state.authorizedRequests += 1;
+      log({ event: "CREDENTIAL_ACCEPTED", authorizedRequests: state.authorizedRequests });
     }
     const idempotencyKey = String(request.headers["idempotency-key"] ?? "");
     if (request.method === "POST" && pathname === "/action") {
@@ -38,7 +48,7 @@ export function createEffectLoopbackHandler(state, options = {}) {
       return;
     }
     if (request.method === "GET" && pathname === "/stats") {
-      writeJson(response, 200, { posts: state.posts, created: state.created, reconciliations: state.reconciliations, keys: [...state.identities.keys()] }, corsHeaders);
+      writeJson(response, 200, { posts: state.posts, created: state.created, reconciliations: state.reconciliations, authorizedRequests: state.authorizedRequests, credentialFailures: state.credentialFailures, keys: [...state.identities.keys()] }, corsHeaders);
       return;
     }
     response.writeHead(404, corsHeaders).end();

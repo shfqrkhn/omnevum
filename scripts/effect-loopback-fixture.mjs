@@ -5,7 +5,8 @@ const requestedPort = Number(process.argv[2] ?? 59994);
 if (!Number.isInteger(requestedPort) || requestedPort < 0 || requestedPort > 65_535) throw new Error("Port must be an integer from 0 through 65535");
 
 const state = createEffectLoopbackState();
-const server = createServer(createEffectLoopbackHandler(state));
+const requiredBearer = process.env.OMNEVUM_EFFECT_FIXTURE_BEARER;
+const server = createServer(createEffectLoopbackHandler(state, requiredBearer ? { requiredBearer } : {}));
 
 server.listen(requestedPort, "localhost", () => {
   const address = server.address();
