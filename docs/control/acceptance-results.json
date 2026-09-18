@@ -66,7 +66,7 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-release-offline-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-offline-receipt-refresh",
-      "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-offline-network-capability-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-offline-network-capability-follow-up"
       ],
       "notes": "Fresh local static origins reloaded the cached shell offline, created canonical notes offline, and preserved them after network restoration; the historical receipt-bound Edge artifact repeated offline mutation/reload with a healthy derived index and empty app-origin diagnostics, while the historical Chromium artifact reported Failed to fetch for offline sync and kept local capture usable. GitHub Pages, Safari/Firefox, assistive technology, native fault behavior, and external provider qualification still require qualification."
     },
@@ -111,7 +111,7 @@
       "evidence": [
         "src/core/presentation.test.ts#uses-a-known-good-safe-profile-without-rewriting-malformed-presentation-or-canonical-data",
         "docs/evidence/phase0-production-preview-2026-09-17.md#safe-presentation-mode-follow-up",
-      "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-safe-presentation-recovery-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-safe-presentation-recovery-follow-up"
       ],
       "notes": "Deterministic core/storage evidence and historical built Chromium interaction prove malformed presentation and canonical data are preserved while a known-good Safe Presentation profile is selected for the session; broader browser/accessibility/visual qualification and production deployment remain open."
     },
@@ -362,7 +362,7 @@
         "src/core/presentation.test.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-personalization-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-metadata-follow-up",
-      "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-presentation-profile-portability-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-presentation-profile-portability-follow-up"
       ],
       "notes": "The historical built preview proves bounded declarative branding, terminology, navigation visibility/order controls, Home composition, typeface, icon treatment, density, theme contract, document metadata binding, standalone profile export/import, reload persistence, Recovery reachability, and unchanged canonical counts. Target accessibility/browser breadth, icon/logo assets, installed-host metadata, profile migration across future schemas, and release qualification remain open."
     },
