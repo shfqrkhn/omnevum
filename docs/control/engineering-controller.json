@@ -61,7 +61,8 @@
     "current receipt-bound Chromium preview keeps default captures in the inbox and, only when the visible Safe direct route checkbox is selected, creates an unambiguous capture as REVIEWED outside the inbox",
     "triage CommandBus regression records an explicit DELETED disposition before archiving a source for reversible Recovery restore; the built UI exposes the separate Delete action",
     "current triage link/route/split/delete transitions use one revision-fenced IndexedDB batch with atomicity regression coverage; the release receipt is bound to source 310d278",
-    "current built-artifact Chromium preview exposes proposal-only triage owner/type/action guidance without canonical mutation; the release receipt is bound to source 0aaa935"
+    "current built-artifact Chromium preview exposes proposal-only triage owner/type/action guidance without canonical mutation; the release receipt is bound to source 0aaa935",
+    "bounded automation evaluator emits only proposal-only actions from the explicit admitted semantic-command set and rejects network.fetch/prototype/budget abuse; source bbc902d"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",

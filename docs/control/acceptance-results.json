@@ -652,8 +652,13 @@
         "line": 3486
       },
       "text": "A package uses a declarative automation predicate/rule. Malicious or malformed rule input cannot execute arbitrary JavaScript, access credentials/network/storage directly, or bypass confirmation/permission; a true rule only proposes an already-admitted semantic action.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/automation.ts",
+        "src/core/automation.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-automation-proposal-boundary-follow-up"
+      ],
+      "notes": "Source/unit evidence proves bounded data-only evaluation, prototype-path rejection, resource budgets, explicit admitted semantic-command IDs, and proposal-only output. A package-facing editor, execution adapter, permission/confirmation integration, and broader package qualification remain open."
     },
     {
       "id": "OMN-ACC-050",
