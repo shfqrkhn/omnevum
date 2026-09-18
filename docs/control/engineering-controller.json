@@ -72,7 +72,8 @@
     "shared AI broker tests cover distinct core.capture/core.track workflows without domain-owned credentials and reject unadmitted commands, authority-shaped arguments, and out-of-scope record IDs; provider/process/browser qualification remains open; source 5fc9486",
     "optional ToolBroker validates changed endpoint schemas, explicit scrubbed context, proposal-only admitted semantic actions, malicious output, and disconnect degradation; source tool-broker.ts",
     "current Acquire mapping tests retain one heterogeneous source identity and route event/artifact/location-shaped candidates to existing Time/Artifact/Place owners without a universal import store; source db7f8f6",
-    "current built-artifact Chromium preview proves bounded declarative presentation personalization for branding, terminology, navigation visibility/order controls, Home composition, density, typeface, icon treatment, reload persistence, Recovery reachability, and unchanged canonical counts; source 307470e"
+    "current built-artifact Chromium preview proves bounded declarative presentation personalization for branding, terminology, navigation visibility/order controls, Home composition, density, typeface, icon treatment, reload persistence, Recovery reachability, and unchanged canonical counts; source 307470e",
+    "current receipt-bound Edge desktop preview on Microsoft Edge 153.0.4234.32 accepts a synthetic canonical capture and retains it across reload with a healthy derived index; source 307470e"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",
