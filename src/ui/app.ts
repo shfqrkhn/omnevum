@@ -15,7 +15,7 @@ import { countRecords, groupCounts } from "../core/analysis";
 import type { CapabilityRuntime } from "../core/capability-runtime";
 import { DeviceInputBroker } from "../core/device";
 import { SpaceService } from "../core/space";
-import { historyWithDiffs } from "../core/history";
+import { historyWithDiffs, revertToRevision } from "../core/history";
 import { makeUserDashboard, projectView, ViewRegistry } from "../core/compose";
 import { readPath } from "../core/data";
 import { assessTextAnchor, createTextAnnotation } from "../core/annotation";
@@ -1366,6 +1366,21 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const changes = entry.changesFromPrevious.length > 0 ? entry.changesFromPrevious.map((change) => change.path) : ["initial"];
       const item = document.createElement("li");
       item.textContent = copy.historyEntry(entry.revision, formatDateTime(presentation.locale, entry.recordedAt), changes.join(", "));
+      if (entry.revision < record.revision) {
+        const revert = document.createElement("button");
+        revert.type = "button";
+        revert.className = "secondary";
+        revert.textContent = copy.revertToRevision(entry.revision);
+        revert.addEventListener("click", async () => {
+          try {
+            await revertToRevision(commands, store, record.id, entry.revision);
+            await renderRecords(searchQuery.value);
+          } catch (error) {
+            healthStatus.textContent = describeError(error, "Revert failed; canonical data was not changed.");
+          }
+        });
+        item.append(revert);
+      }
       list.append(item);
     }
     details.append(summary, list);

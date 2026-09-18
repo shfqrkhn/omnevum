@@ -21,7 +21,7 @@ export interface UiCopy {
   sharing: string; sharingHeading: string; shareRecipient: string; sharePurpose: string; shareExpiry: string; shareGrant: string; selectGrant: string; selectRecords: string; includePrivate: string; createGrant: string; exportProjection: string; sharingHint: string; grantSaved: string; grantRevoked: string; grantRequired: string; grantSpaceMismatch: string; projectionSaved: (included: number, omitted: number) => string; shareSelectionRequired: string; revoke: string;
   syncHeading: string; syncEndpoint: string; syncRun: string; syncHint: string; syncResult: (imported: number, skipped: number, conflicts: number, tombstones: number) => string; syncPartial: (imported: number, skipped: number, conflicts: number, tombstones: number) => string;
   canonicalRecords: string; recentCaptures: string; recordCount: string; nothingCaptured: string; noMatching: string; historyHeading: string; historyEntry: (revision: number, time: string, changes: string) => string;
-  taskDone: string; complete: string; undo: string; archive: string; archivedRecords: string; showArchived: string;
+  taskDone: string; complete: string; undo: string; revertToRevision: (revision: number) => string; archive: string; archivedRecords: string; showArchived: string;
   hideArchived: string; noArchived: string; restore: string; recovery: string; keepPortable: string;
   recoveryHint: string; exportVault: string; exportDiagnostics: string; repairSearch: string; importVault: string;
   attachArtifact: string; footerPhase0: string; footerOptional: string; themeLight: string; themeDark: string;
@@ -36,6 +36,7 @@ export interface UiCopy {
 }
 
 const english: UiCopy = {
+  revertToRevision: (revision) => `Revert to revision ${revision}`,
   safeDirectRoute: "Safe direct route (explicit)", safeDirectRouteHint: "Use only when this capture is unambiguous; checked records bypass the inbox.", delete: "Delete",
   sources: "Sources / meaning", sourcesHeading: "Keep claims, annotations, and places linked", evidenceHeading: "Link evidence to a claim", subjectRecord: "Claim or subject record", evidenceRelation: "Evidence relation", supports: "Supports", contradicts: "Contradicts", qualifies: "Qualifies", derivesFrom: "Derived from", claim: "Claim", uncertainty: "Uncertainty (optional)", createEvidence: "Save evidence link", evidenceSaved: "Evidence link saved.", annotationHeading: "Annotate a source", annotationQuote: "Quoted source text", annotationNote: "Annotation", createAnnotation: "Save annotation", annotationSaved: "Annotation saved.", quoteMissing: "The quoted text must be present in the selected source.", placeHeading: "Capture a place", placeLabel: "Place label", latitude: "Latitude", longitude: "Longitude", optionalGeoJson: "GeoJSON Point (optional)", savePlace: "Save place", placeSaved: (label) => `Saved ${label} as a place.`, knowledgeStatus: (evidence, annotations, active, stale, orphaned, places) => `${evidence} evidence link(s), ${annotations} annotation(s), ${places} place(s); anchors: ${active} active, ${stale} stale, ${orphaned} orphaned.`, sourceRequired: "Choose a source record.",
   sharing: "Share / disclose", sharingHeading: "Export a bounded projection", shareRecipient: "Recipient or audience", sharePurpose: "Purpose", shareExpiry: "Expiry (optional)", shareGrant: "Active authorization", selectGrant: "Select an active grant", selectRecords: "Selected records", includePrivate: "Include selected private records", createGrant: "Create share grant", exportProjection: "Export bounded snapshot", sharingHint: "Only selected records authorized by the active grant are considered; private records stay out unless you explicitly include them.", grantSaved: "Share grant saved and can be revoked below.", grantRevoked: "Share grant revoked.", grantRequired: "Select an active grant that authorizes every selected record.", grantSpaceMismatch: "Every selected record must belong to the grant's declared Space.", projectionSaved: (included, omitted) => `Exported ${included} record(s); omitted ${omitted} selected record(s) by disclosure policy.`, shareSelectionRequired: "Select at least one record.", revoke: "Revoke",
@@ -58,6 +59,7 @@ const english: UiCopy = {
 
 const french: UiCopy = {
   ...english,
+  revertToRevision: (revision) => `Revenir a la revision ${revision}`,
   exportPresentationProfile: "Exporter le profil", importPresentationProfile: "Importer le profil", presentationProfileExported: "Profil de presentation exporte.", presentationProfileImported: "Profil de presentation importe; les donnees canoniques n'ont pas change.",
   safeDirectRoute: "Route directe sure (explicite)", safeDirectRouteHint: "Utilisez-la seulement si la capture est non ambigue; une capture cochee contourne la boite.", delete: "Supprimer",
   triageProposal: (owners, types, actions) => `Proposition seulement - proprietaire(s) possible(s): ${owners}; type(s): ${types}; action(s): ${actions}. Aucun etat canonique modifie.`,
