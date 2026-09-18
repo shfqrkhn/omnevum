@@ -1,7 +1,7 @@
 # Phase 0 reuse-before-build bake-off receipt
 
-Date: 2026-09-17  
-Status: INITIAL_BAKEOFF; exploratory local measurements, not target qualification or release evidence
+Date: 2026-09-17 (initial comparison); refreshed 2026-09-18
+Status: REPEATABLE_HOST_BENCHMARK; target qualification and release evidence remain incomplete
 
 ## Search
 
@@ -14,6 +14,12 @@ The representative fixture contained 2,000 records with English, accented French
 | Orama | 3.1.18 | Apache-2.0 | `b030e1bd1d330327bad1483f2d9c88a9ea0d493c` | 30.04 | 3.50 | 10 returned under the default result limit |
 
 The measurements are one local Node run and do not transfer to mobile/browser performance. MiniSearch is the current adapter choice because it met the representative multilingual query behavior with a small integration boundary; its derived index remains rebuildable and permission-filtered by the platform store. Reopen this decision for representative mobile memory/latency before a release profile is frozen.
+
+## Repeatable selected-owner workload
+
+`npx vitest run src/core/search.test.ts --reporter=verbose` now exercises the real `searchDocuments` owner against 10,000 multilingual records and five prefix/normalized queries. The 2026-09-18 local Node/Vitest receipt reported `SEARCH_BENCHMARK_PASS documents=10000 queries=5 p95Ms=57.39 heapDeltaBytes=35917120 minimumMatches=2500`; the test keeps a deliberately broad 500 ms host guardrail and proves every query returns matches. The observed heap delta is diagnostic rather than a mobile memory budget.
+
+This makes the selected-owner workload repeatable and prevents gross local regressions. It does not qualify a mobile browser, browser heap ceiling, thermal behavior, or target latency; run the same fixture on the frozen supported mobile/browser rows before changing OMN-ACC-057 to PASS.
 
 ## Schema-driven UI and analysis
 

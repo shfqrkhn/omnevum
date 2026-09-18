@@ -819,9 +819,10 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-bakeoff-2026-09-17.md",
-        "src/core/search.test.ts"
+        "src/core/search.test.ts",
+        "src/core/search.test.ts#measures-the-selected-owner-against-a-representative-multilingual-workload"
       ],
-      "notes": "MiniSearch, FlexSearch, and Orama were compared on a multilingual 2,000-record local fixture and MiniSearch was isolated behind the derived owner; mobile/browser memory-latency, ranking breadth, permission invalidation, and target qualification remain open."
+      "notes": "MiniSearch, FlexSearch, and Orama were compared on a multilingual 2,000-record fixture, and the selected owner now has a repeatable 10,000-record host guardrail (observed p95 57.39 ms, diagnostic heap delta 35,917,120 bytes). Mobile/browser memory-latency, ranking breadth, permission invalidation, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-058",

@@ -107,6 +107,7 @@
     "CredentialKeyBroker.authorizeEffect is the canonical guard for credential-bound EffectRunner operations, and revocation cancels a pending operation before executor use; source 7986327",
     "current receipt-bound Edge preview on the exact 655f0fb artifact accepts a synthetic canonical capture, retains it after reload, and returns to a clean scoped origin; source 655f0fb",
     "current receipt-bound Edge preview on the exact 655f0fb artifact detects a malformed canonical row, exports retained state, repairs explicitly, preserves the valid row, and returns to a clean scoped origin; source 655f0fb",
+    "the selected MiniSearch owner has a repeatable 10,000-record multilingual host benchmark with an explicit p95 guardrail; mobile/browser target qualification remains open; source search.test.ts",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [
