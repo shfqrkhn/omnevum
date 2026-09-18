@@ -55,6 +55,18 @@ export class CapabilityRuntime<Context> {
     }
   }
 
+  public async retry(id: string, context: Context): Promise<CapabilityStatus> {
+    const module = this.modules.find((candidate) => candidate.id === id);
+    if (!module) throw new Error(`Capability ${id} is unknown`);
+    try {
+      await module.start(context);
+      this.statuses.set(id, { id, critical: module.critical === true, state: "READY" });
+    } catch (error) {
+      this.statuses.set(id, { id, critical: module.critical === true, state: "DEGRADED", reason: safeReason(error) });
+    }
+    return { ...this.statuses.get(id)! };
+  }
+
   public disable(id: string, reason = "disabled by policy"): void {
     const status = this.statuses.get(id);
     if (!status) throw new Error(`Capability ${id} is unknown`);

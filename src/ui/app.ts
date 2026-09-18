@@ -1233,9 +1233,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     return visible.filter((record) => record.owner !== "platform.space");
   };
 
-  const degradedCapabilities = (capabilityRuntime?.snapshot() ?? []).filter((status) => status.state === "DEGRADED");
-  capabilityStatus.textContent = degradedCapabilities.length === 0 ? copy.local : `${copy.local} - ${degradedCapabilities.length} degraded`;
-  capabilityStatus.title = degradedCapabilities.length === 0 ? "Core capabilities are ready." : degradedCapabilities.map((status) => `${status.id}: ${status.reason ?? "degraded"}`).join("; ");
+  const refreshCapabilityStatus = (): void => {
+    const degradedCapabilities = (capabilityRuntime?.snapshot() ?? []).filter((status) => status.state === "DEGRADED");
+    capabilityStatus.textContent = degradedCapabilities.length === 0 ? copy.local : `${copy.local} - ${degradedCapabilities.length} degraded`;
+    capabilityStatus.title = degradedCapabilities.length === 0 ? "Core capabilities are ready." : degradedCapabilities.map((status) => `${status.id}: ${status.reason ?? "degraded"}`).join("; ");
+  };
+  refreshCapabilityStatus();
 
   presentationStatus.textContent = safePresentationMode ? recoveryCopy.safePresentationHint : presentationResolution.storedProfileValid ? copy.presentationHint : `Safe presentation fallback is active. ${copy.presentationHint}`;
 
@@ -2236,7 +2239,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     await renderShareChoices();
     await renderShareGrants();
     const healthBefore = await store.health();
-    if (!healthBefore.searchIndexValid) await store.rebuildSearchIndex();
+    if (!healthBefore.searchIndexValid) {
+      await store.rebuildSearchIndex();
+      if (capabilityRuntime) await capabilityRuntime.retry("core.search", undefined);
+      refreshCapabilityStatus();
+    }
     const healthAfter = await store.health();
     healthStatus.textContent = `${copy.healthMessage(healthAfter.activeRecords, healthAfter.archivedRecords, healthAfter.historyEntries, healthAfter.artifactPayloads, healthAfter.searchIndexValid ? copy.healthy : copy.degraded, healthAfter.storage?.pressure)} ${getStoragePersistenceNotice(presentation.locale, healthAfter.storage?.persistence ?? "UNAVAILABLE")}`;
     await renderEffects();
@@ -2828,6 +2835,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   repairSearchButton.addEventListener("click", async () => {
     try {
       await store.rebuildSearchIndex();
+      if (capabilityRuntime) await capabilityRuntime.retry("core.search", undefined);
+      refreshCapabilityStatus();
       recoveryStatus.textContent = copy.searchRepairMessage;
       await renderRecords(searchQuery.value);
     } catch (error) {

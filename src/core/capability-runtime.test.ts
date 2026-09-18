@@ -46,4 +46,13 @@ describe("capability runtime", () => {
     expect(JSON.stringify(status)).not.toContain("raw-secret");
     expect(JSON.stringify(status)).not.toContain("token-value");
   });
+
+  it("can recover a degraded module after its owned state is repaired", async () => {
+    let available = false;
+    const runtime = new CapabilityRuntime([{ id: "core.search", start: () => { if (!available) throw new Error("index stale"); } }]);
+
+    expect((await runtime.start(undefined))[0]?.state).toBe("DEGRADED");
+    available = true;
+    await expect(runtime.retry("core.search", undefined)).resolves.toMatchObject({ id: "core.search", state: "READY" });
+  });
 });
