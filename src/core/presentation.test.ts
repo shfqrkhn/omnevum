@@ -5,11 +5,14 @@ import { CanonicalStore } from "./storage";
 describe("presentation profile", () => {
   it("falls back safely and bounds imported branding", () => {
     expect(parsePresentationProfile(null)).toEqual(DEFAULT_PRESENTATION);
-    expect(parsePresentationProfile({ productName: "  JohnOS  ", theme: "dark", locale: "fr-FR" })).toEqual({
+    expect(parsePresentationProfile({ productName: "  JohnOS  ", theme: "dark", locale: "fr-FR" })).toMatchObject({
       schemaVersion: 1,
       productName: "JohnOS",
       theme: "dark",
-      locale: "en-CA"
+      locale: "en-CA",
+      density: "comfortable",
+      typeface: "system",
+      iconography: "labels"
     });
   });
 
@@ -18,12 +21,25 @@ describe("presentation profile", () => {
   });
 
   it("accepts the qualified French Canadian UI locale", () => {
-    expect(parsePresentationProfile({ productName: "JohnOS", theme: "dark", locale: "fr-CA" })).toEqual({
-      schemaVersion: 1,
+    expect(parsePresentationProfile({ productName: "JohnOS", theme: "dark", locale: "fr-CA" })).toMatchObject({ productName: "JohnOS", theme: "dark", locale: "fr-CA" });
+  });
+
+  it("bounds inert personalization and keeps recovery reachable", () => {
+    const profile = parsePresentationProfile({
       productName: "JohnOS",
-      theme: "dark",
-      locale: "fr-CA"
+      tagline: "  Private cockpit  ",
+      density: "compact",
+      typeface: "mono",
+      iconography: "glyphs",
+      labels: { home: "Today", capture: "Inbox", records: "Journal" },
+      navigation: { visible: ["search", "capture"], order: ["search", "capture"] },
+      homeWidgets: ["attention", "summary"]
     });
+    expect(profile.tagline).toBe("Private cockpit");
+    expect(profile.labels).toEqual({ home: "Today", capture: "Inbox", records: "Journal" });
+    expect(profile.navigation.visible).toEqual(["search", "capture", "recovery", "presentation"]);
+    expect(profile.navigation.order.slice(0, 2)).toEqual(["search", "capture"]);
+    expect(profile.homeWidgets).toEqual(["attention", "summary"]);
   });
 
   it("distinguishes a recoverable profile from malformed stored settings", () => {

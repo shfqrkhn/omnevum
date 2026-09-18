@@ -3,7 +3,7 @@ import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate
 import { isCompletedTask, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
-import { resolvePresentationProfile, type PresentationProfile } from "../core/presentation";
+import { DEFAULT_PRESENTATION, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_SECTION_IDS, parsePresentationProfile, resolvePresentationProfile, type PresentationHomeWidgetId, type PresentationProfile, type PresentationSectionId } from "../core/presentation";
 import { TrackService } from "../core/track";
 import { makeReminderData, reconcileReminders } from "../core/time";
 import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/crypto";
@@ -35,7 +35,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const recoveryCopy = getRecoveryCopy(presentation.locale);
   const timeCopy = getTimeCopy(presentation.locale);
   root.dataset.theme = presentation.theme;
+  root.dataset.density = presentation.density;
+  root.dataset.typeface = presentation.typeface;
+  root.dataset.iconography = presentation.iconography;
   document.documentElement.dataset.theme = presentation.theme;
+  document.documentElement.dataset.typeface = presentation.typeface;
   document.documentElement.lang = presentation.locale;
   document.documentElement.dir = localeDirection(presentation.locale);
   root.innerHTML = `
@@ -43,10 +47,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       <div>
         <p id="product-label" class="eyebrow"></p>
         <h1 id="product-heading">${copy.productHeading}</h1>
-        <p class="lede">${copy.lede}</p>
+        <p id="product-tagline" class="lede">${copy.lede}</p>
       </div>
       <button id="theme-toggle" class="secondary" type="button" aria-pressed="false">${copy.themeDark}</button>
     </header>
+    <nav id="primary-nav" class="primary-nav" aria-label="${copy.home}"><ol id="primary-nav-list"></ol></nav>
     <main>
       <section class="status-card" aria-labelledby="status-heading">
         <div>
@@ -60,27 +65,33 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       <section id="home-summary" class="panel" aria-labelledby="summary-heading">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">${copy.home}</p>
+            <p id="home-label" class="eyebrow">${copy.home}</p>
             <h2 id="summary-heading">${copy.currentPicture}</h2>
           </div>
           <span id="summary-total" class="count" aria-label="${copy.activeRecordCount}">0</span>
         </div>
-        <div id="summary-grid" class="summary-grid"></div>
-        <p id="analysis-status" class="hint" role="status"></p>
-        <div class="section-heading insight-heading">
-          <div>
-            <p class="eyebrow">${copy.visualize}</p>
-            <h3>${copy.signals}</h3>
-          </div>
+        <div data-home-widget="summary">
+          <div id="summary-grid" class="summary-grid"></div>
+          <p id="analysis-status" class="hint" role="status"></p>
         </div>
-        <div id="insights-grid" class="summary-grid"></div>
-        <div class="section-heading insight-heading">
-          <div>
-            <p class="eyebrow">${timeCopy.reminders}</p>
-            <h3>${timeCopy.dueOnResume}</h3>
+        <div data-home-widget="insights">
+          <div class="section-heading insight-heading">
+            <div>
+              <p class="eyebrow">${copy.visualize}</p>
+              <h3>${copy.signals}</h3>
+            </div>
           </div>
+          <div id="insights-grid" class="summary-grid"></div>
         </div>
-        <div id="attention-panel" class="attention-panel" role="status"></div>
+        <div data-home-widget="attention">
+          <div class="section-heading insight-heading">
+            <div>
+              <p class="eyebrow">${timeCopy.reminders}</p>
+              <h3>${timeCopy.dueOnResume}</h3>
+            </div>
+          </div>
+          <div id="attention-panel" class="attention-panel" role="status"></div>
+        </div>
       </section>
 
       <section id="presentation" class="panel" aria-labelledby="presentation-heading">
@@ -97,12 +108,55 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <option value="en-CA">${copy.english}</option>
             <option value="fr-CA">${copy.french}</option>
           </select>
+          <label for="tagline">${copy.tagline}</label>
+          <input id="tagline" name="tagline" type="text" maxlength="160" />
+          <div class="form-row presentation-grid">
+            <div>
+              <label for="density">${copy.density}</label>
+              <select id="density" name="density"><option value="comfortable">${copy.comfortable}</option><option value="compact">${copy.compact}</option></select>
+            </div>
+            <div>
+              <label for="typeface">${copy.typeface}</label>
+              <select id="typeface" name="typeface"><option value="system">${copy.systemTypeface}</option><option value="serif">${copy.serifTypeface}</option><option value="mono">${copy.monoTypeface}</option></select>
+            </div>
+            <div>
+              <label for="iconography">${copy.iconography}</label>
+              <select id="iconography" name="iconography"><option value="labels">${copy.labelIconography}</option><option value="glyphs">${copy.glyphIconography}</option></select>
+            </div>
+          </div>
+          <div class="presentation-grid">
+            <div>
+              <label for="home-label-input">${copy.homeLabel}</label>
+              <input id="home-label-input" name="homeLabel" type="text" maxlength="40" />
+            </div>
+            <div>
+              <label for="capture-label-input">${copy.captureLabel}</label>
+              <input id="capture-label-input" name="captureLabel" type="text" maxlength="40" />
+            </div>
+            <div>
+              <label for="records-label-input">${copy.recordsLabel}</label>
+              <input id="records-label-input" name="recordsLabel" type="text" maxlength="40" />
+            </div>
+          </div>
+          <fieldset class="presentation-fieldset">
+            <legend>${copy.navigationSections}</legend>
+            <div id="navigation-options" class="presentation-options"></div>
+            <p class="hint">${copy.navigationHint}</p>
+          </fieldset>
+          <fieldset class="presentation-fieldset">
+            <legend>${copy.homeWidgets}</legend>
+            <div id="home-widget-options" class="presentation-options"></div>
+            <p class="hint">${copy.homeWidgetsHint}</p>
+          </fieldset>
+          <div class="form-row">
+            <button id="reset-presentation" class="secondary" type="button">${copy.resetPresentation}</button>
+          </div>
           <p id="presentation-status" class="hint" role="status">${copy.presentationHint}</p>
         </form>
       </section>
 
       <section id="capture" class="panel" aria-labelledby="capture-heading">
-        <p class="eyebrow">${copy.capture}</p>
+        <p id="capture-label" class="eyebrow">${copy.capture}</p>
         <h2 id="capture-heading">${copy.getItOut}</h2>
         <form id="capture-form">
           <label for="capture-type">${copy.kind}</label>
@@ -419,7 +473,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       <section id="records" class="panel" aria-labelledby="records-heading">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">${copy.canonicalRecords}</p>
+            <p id="records-label" class="eyebrow">${copy.canonicalRecords}</p>
             <h2 id="records-heading">${copy.recentCaptures}</h2>
           </div>
           <span id="record-count" class="count" aria-label="${copy.recordCount}">0</span>
@@ -566,8 +620,23 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const reminderDue = root.querySelector<HTMLInputElement>("#reminder-due");
   const reminderStatus = root.querySelector<HTMLElement>("#reminder-status");
   const productLabel = root.querySelector<HTMLElement>("#product-label");
+  const productTagline = root.querySelector<HTMLElement>("#product-tagline");
   const productName = root.querySelector<HTMLInputElement>("#product-name");
   const localeInput = root.querySelector<HTMLSelectElement>("#locale");
+  const taglineInput = root.querySelector<HTMLInputElement>("#tagline");
+  const densityInput = root.querySelector<HTMLSelectElement>("#density");
+  const typefaceInput = root.querySelector<HTMLSelectElement>("#typeface");
+  const iconographyInput = root.querySelector<HTMLSelectElement>("#iconography");
+  const homeLabelInput = root.querySelector<HTMLInputElement>("#home-label-input");
+  const captureLabelInput = root.querySelector<HTMLInputElement>("#capture-label-input");
+  const recordsLabelInput = root.querySelector<HTMLInputElement>("#records-label-input");
+  const captureLabel = root.querySelector<HTMLElement>("#capture-label");
+  const navigationOptions = root.querySelector<HTMLElement>("#navigation-options");
+  const homeWidgetOptions = root.querySelector<HTMLElement>("#home-widget-options");
+  const resetPresentation = root.querySelector<HTMLButtonElement>("#reset-presentation");
+  const primaryNavList = root.querySelector<HTMLOListElement>("#primary-nav-list");
+  const homeLabel = root.querySelector<HTMLElement>("#home-label");
+  const recordsLabel = root.querySelector<HTMLElement>("#records-label");
   const presentationForm = root.querySelector<HTMLFormElement>("#presentation-form");
   const presentationStatus = root.querySelector<HTMLElement>("#presentation-status");
   const recordList = root.querySelector<HTMLUListElement>("#record-list");
@@ -590,7 +659,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
 
@@ -604,6 +673,130 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const deviceInput = new DeviceInputBroker();
   let stagedCandidates: AcquireCandidate[] = [];
   let activeSpace: SpaceId | undefined;
+
+  const sectionLabel = (id: PresentationSectionId): string => {
+    switch (id) {
+      case "home-summary": return presentation.labels.home || copy.home;
+      case "capture":
+      case "acquire": return presentation.labels.capture || copy.capture;
+      case "records": return presentation.labels.records || copy.canonicalRecords;
+      case "presentation": return copy.personalization;
+      case "recovery": return copy.recovery;
+      case "track": return copy.track;
+      case "domains": return copy.domains;
+      case "search": return copy.searchExplore;
+      case "spaces": return copy.space;
+      case "compose": return copy.compose;
+      case "review": return copy.triage;
+      case "relate": return copy.relate;
+      case "knowledge": return copy.sources;
+      case "sharing": return copy.sharing;
+      case "sync": return copy.syncHeading;
+      case "focus": return copy.timeObserve;
+      case "reminders": return timeCopy.reminders;
+    }
+  };
+
+  const homeWidgetLabel = (id: PresentationHomeWidgetId): string => id === "summary" ? copy.currentPicture : id === "insights" ? copy.signals : timeCopy.dueOnResume;
+  const sectionIcon = (id: PresentationSectionId): string => ({ "home-summary": "⌂", capture: "✎", acquire: "↓", track: "◌", domains: "◇", search: "⌕", spaces: "▦", compose: "▤", review: "✓", relate: "↔", knowledge: "§", sharing: "⇧", sync: "⟳", focus: "◷", reminders: "!", records: "☷", recovery: "↺", presentation: "⚙" })[id];
+  const presentationSections = new Map(PRESENTATION_SECTION_IDS.map((id) => [id, root.querySelector<HTMLElement>(`#${id}`)] as const));
+  const movePresentationRow = (container: HTMLElement, button: HTMLButtonElement): void => {
+    const row = button.closest<HTMLElement>("[data-presentation-option]");
+    if (!row) return;
+    if (button.dataset.direction === "up" && row.previousElementSibling) container.insertBefore(row, row.previousElementSibling);
+    if (button.dataset.direction === "down" && row.nextElementSibling) container.insertBefore(row.nextElementSibling, row);
+  };
+  const renderPresentationOptions = (): void => {
+    const renderRows = <T extends string>(container: HTMLElement, order: readonly T[], allowed: readonly T[], labelFor: (id: T) => string, visible: readonly T[], required: readonly T[], optionName: string): void => {
+      container.replaceChildren();
+      const ordered = [...order, ...allowed.filter((id) => !order.includes(id))];
+      for (const id of ordered) {
+        const row = document.createElement("div");
+        row.dataset.presentationOption = id;
+        const label = document.createElement("label");
+        label.className = "check-row";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = visible.includes(id);
+        checkbox.disabled = required.includes(id);
+        checkbox.dataset.presentationVisibility = optionName;
+        checkbox.value = id;
+        label.append(checkbox, document.createTextNode(labelFor(id)));
+        const actions = document.createElement("span");
+        actions.className = "presentation-order-actions";
+        for (const direction of ["up", "down"] as const) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "secondary icon-button";
+          button.dataset.direction = direction;
+          button.textContent = direction === "up" ? "↑" : "↓";
+          button.setAttribute("aria-label", direction === "up" ? "Move up" : "Move down");
+          actions.append(button);
+        }
+        row.append(label, actions);
+        container.append(row);
+      }
+    };
+    renderRows(navigationOptions, presentation.navigation.order, PRESENTATION_SECTION_IDS, sectionLabel, presentation.navigation.visible, ["recovery", "presentation"], "navigation");
+    renderRows(homeWidgetOptions, presentation.homeWidgets, PRESENTATION_HOME_WIDGET_IDS, homeWidgetLabel, presentation.homeWidgets, [], "home");
+  };
+  const readOptionOrder = <T extends string>(container: HTMLElement): T[] => [...container.children].map((row) => row.getAttribute("data-presentation-option")).filter((value): value is T => typeof value === "string") ;
+  const readOptionVisibility = <T extends string>(container: HTMLElement): T[] => [...container.querySelectorAll<HTMLInputElement>("input[data-presentation-visibility]:checked")].map((input) => input.value as T);
+  const applyPresentationProfile = (): void => {
+    root.dataset.theme = presentation.theme;
+    root.dataset.density = presentation.density;
+    root.dataset.typeface = presentation.typeface;
+    root.dataset.iconography = presentation.iconography;
+    document.documentElement.dataset.theme = presentation.theme;
+    document.documentElement.dataset.typeface = presentation.typeface;
+    productLabel.textContent = `${presentation.productName} ${copy.foundation}`;
+    productTagline.textContent = presentation.tagline || copy.lede;
+    productName.value = presentation.productName;
+    taglineInput.value = presentation.tagline;
+    localeInput.value = presentation.locale;
+    densityInput.value = presentation.density;
+    typefaceInput.value = presentation.typeface;
+    iconographyInput.value = presentation.iconography;
+    homeLabelInput.value = presentation.labels.home;
+    captureLabelInput.value = presentation.labels.capture;
+    recordsLabelInput.value = presentation.labels.records;
+    homeLabel.textContent = presentation.labels.home || copy.home;
+    captureLabel.textContent = presentation.labels.capture || copy.capture;
+    recordsLabel.textContent = presentation.labels.records || copy.canonicalRecords;
+    themeToggle.textContent = presentation.theme === "dark" ? copy.themeLight : copy.themeDark;
+    themeToggle.setAttribute("aria-pressed", String(presentation.theme === "dark"));
+    renderPresentationOptions();
+    primaryNavList.replaceChildren();
+    const visible = new Set(presentation.navigation.visible);
+    for (const id of presentation.navigation.order) {
+      if (!visible.has(id)) continue;
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = `#${id}`;
+      link.textContent = sectionLabel(id);
+      link.dataset.navIcon = sectionIcon(id);
+      item.append(link);
+      primaryNavList.append(item);
+    }
+    const order = new Map(presentation.navigation.order.map((id, index) => [id, index + 1]));
+    for (const id of PRESENTATION_SECTION_IDS) {
+      const section = presentationSections.get(id);
+      if (!section) continue;
+      section.hidden = !visible.has(id);
+      section.style.order = String(order.get(id) ?? PRESENTATION_SECTION_IDS.length + 1);
+    }
+    const homeOrder = new Map(presentation.homeWidgets.map((id, index) => [id, index + 1]));
+    for (const widget of root.querySelectorAll<HTMLElement>("[data-home-widget]")) {
+      const id = widget.dataset.homeWidget as PresentationHomeWidgetId;
+      widget.hidden = !presentation.homeWidgets.includes(id);
+      widget.style.order = String(homeOrder.get(id) ?? PRESENTATION_HOME_WIDGET_IDS.length + 1);
+    }
+  };
+  for (const container of [navigationOptions, homeWidgetOptions]) container.addEventListener("click", (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-direction]");
+    if (button) movePresentationRow(container, button);
+  });
+  applyPresentationProfile();
 
   const showAcquirePreview = (preview: AcquirePreview): void => {
     stagedCandidates = preview.candidates;
@@ -632,12 +825,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   capabilityStatus.textContent = degradedCapabilities.length === 0 ? copy.local : `${copy.local} - ${degradedCapabilities.length} degraded`;
   capabilityStatus.title = degradedCapabilities.length === 0 ? "Core capabilities are ready." : degradedCapabilities.map((status) => `${status.id}: ${status.reason ?? "degraded"}`).join("; ");
 
-  productLabel.textContent = `${presentation.productName} ${copy.foundation}`;
-  productName.value = presentation.productName;
-  localeInput.value = presentation.locale;
   presentationStatus.textContent = safePresentationMode ? recoveryCopy.safePresentationHint : presentationResolution.storedProfileValid ? copy.presentationHint : `Safe presentation fallback is active. ${copy.presentationHint}`;
-  themeToggle.textContent = presentation.theme === "dark" ? copy.themeLight : copy.themeDark;
-  themeToggle.setAttribute("aria-pressed", String(presentation.theme === "dark"));
 
   const typeLabel = (recordType: string): string => recordType === "task" ? copy.task : recordType === "observation" ? copy.observation : recordType === "artifact" ? copy.attachArtifact : recordType === "relationship" ? copy.relationship : copy.note;
   const triageActionLabel = (action: TriageProposalAction): string => ({ REVIEW: copy.markReviewed, CLARIFY: copy.clarify, DEFER: copy.defer, REFERENCE: copy.reference, LINK: copy.createLink, ROUTE: copy.route, SPLIT: copy.split, DELETE: copy.delete })[action];
@@ -1635,10 +1823,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     try {
       await store.setSetting("presentation", nextPresentation);
       presentation = nextPresentation;
-      root.dataset.theme = presentation.theme;
-      document.documentElement.dataset.theme = presentation.theme;
-      themeToggle.textContent = dark ? copy.themeLight : copy.themeDark;
-      themeToggle.setAttribute("aria-pressed", String(dark));
+      applyPresentationProfile();
     } catch (error) {
       presentationStatus.textContent = describeError(error, "Theme preference was not saved");
     }
@@ -1661,17 +1846,43 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const nextLocale: PresentationProfile["locale"] = localeInput.value === "fr-CA" ? "fr-CA" : "en-CA";
     const localeChanged = nextLocale !== presentation.locale;
     try {
-      const nextPresentation: PresentationProfile = { ...presentation, productName: nextName, locale: nextLocale };
+      const nextPresentation = parsePresentationProfile({
+        ...presentation,
+        productName: nextName,
+        tagline: taglineInput.value,
+        locale: nextLocale,
+        density: densityInput.value,
+        typeface: typefaceInput.value,
+        iconography: iconographyInput.value,
+        labels: { home: homeLabelInput.value, capture: captureLabelInput.value, records: recordsLabelInput.value },
+        navigation: {
+          visible: readOptionVisibility<PresentationSectionId>(navigationOptions),
+          order: readOptionOrder<PresentationSectionId>(navigationOptions)
+        },
+        homeWidgets: readOptionVisibility<PresentationHomeWidgetId>(homeWidgetOptions)
+      });
       await store.setSetting("presentation", nextPresentation);
       presentation = nextPresentation;
       if (localeChanged) {
         await mountApp(root, store, commands);
         return;
       }
-      productLabel.textContent = `${presentation.productName} ${copy.foundation}`;
+      applyPresentationProfile();
       presentationStatus.textContent = copy.savedName(presentation.productName);
     } catch (error) {
       presentationStatus.textContent = describeError(error, "Presentation preference was not saved");
+    }
+  });
+
+  resetPresentation.addEventListener("click", async () => {
+    try {
+      const reset = parsePresentationProfile(structuredClone(DEFAULT_PRESENTATION));
+      await store.setSetting("presentation", reset);
+      presentation = reset;
+      applyPresentationProfile();
+      presentationStatus.textContent = `${copy.resetPresentation}. ${copy.presentationHint}`;
+    } catch (error) {
+      presentationStatus.textContent = describeError(error, "Presentation reset failed; canonical data was not changed.");
     }
   });
 
