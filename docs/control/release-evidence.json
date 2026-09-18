@@ -3,16 +3,16 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "d433fcaab3450e02d73860ae61262e18c54eb0a32d1628f6fc72abf2818c2f81", "sourceRevision": "7686754", "serviceWorkerCache": "omnevum-shell-97edb5c16fe1fbd4"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "87f764004357129a8c05afd424e95d8a70fe843772d0bc00da4644b3dbebff72", "sourceRevision": "f8f86af", "serviceWorkerCache": "omnevum-shell-5855305f2814b677"},
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF; captured after the full npm run build on 2026-09-18.",
   "artifactFiles": [
     {"path": "dist/assets/index-BlVv-CvB.css", "sha256": "23fd1e5379f3a1828087422cae3a713b6531d0b39d552383c62150a408b9c2cd", "bytes": 8942},
-    {"path": "dist/assets/index-DlYcOsWC.js", "sha256": "6487acae652fdf60a98b420116f59c0d863d38e92b5d7e20681f3c78e4a8d17d", "bytes": 224585},
-    {"path": "dist/assets/index-DlYcOsWC.js.map", "sha256": "beb3d9a5b987a21408166b29ed47acfca844db27fac9639db4baf53cf0c53b67", "bytes": 665399},
+    {"path": "dist/assets/index-DdnUOVbf.js", "sha256": "74168c8c89f2fa8746a858b6657e70fd785166a99520af7c0515f22bf4ff8fa9", "bytes": 224628},
+    {"path": "dist/assets/index-DdnUOVbf.js.map", "sha256": "586e419ddb1e8700d3fbfe1f0a272e09ef2c89324f95b79ff846fd7f1e0cb803", "bytes": 665590},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "26bc9c8c4485065cc82499ee278396315d9acd69e3eaad6b4babd9a00546f6e9", "bytes": 888},
+    {"path": "dist/index.html", "sha256": "bb5fcb0d19d2e9f8f2a2f1a76a02ae0a13acc7e5749ed8a6bf2d9cbdd02a06a9", "bytes": 888},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
-    {"path": "dist/sw.js", "sha256": "3970086124c16c1e4b7cdcec54d9275747d373a95fde4ca47f97c55d1d273851", "bytes": 3036}
+    {"path": "dist/sw.js", "sha256": "2440d5e7360380b89c1012f0784341c71fe1a169b72105fadefff5e0e7e92daa", "bytes": 3036}
   ],
   "requiredEvidence": [
     "control-generation-and-drift",
