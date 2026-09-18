@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "npm run typecheck && vite build && node scripts/stamp-service-worker.mjs",
     "preview": "vite preview",
+    "fixture:effect": "node scripts/effect-loopback-fixture.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
