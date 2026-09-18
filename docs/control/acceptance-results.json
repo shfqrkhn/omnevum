@@ -180,8 +180,13 @@
         "line": 3410
       },
       "text": "The user syncs to at least one consumer cloud route and one zero-required-payment/self-hosted or owner-controlled route; provider migration preserves logical identity.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/remote.test.ts",
+        "src/core/sync.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-sync-follow-up"
+      ],
+      "notes": "The provider-neutral transport and owner-controlled localhost route are exercised against a bounded local replica, including pull/import/push identity preservation. Consumer-cloud qualification, provider migration, authentication, and zero-payment/self-host target qualification remain open."
     },
     {
       "id": "OMN-ACC-012",
@@ -190,8 +195,12 @@
         "line": 3412
       },
       "text": "A stale/offline replica reappears after deletion; tombstone/rejoin semantics prevent silent resurrection.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/sync.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-sync-follow-up"
+      ],
+      "notes": "Deterministic merge tests preserve tombstones and reject silent resurrection, and the built UI completes a local bounded pull/import/push. Offline replica interruption, browser rejoin, and a browser-level tombstone scenario remain open."
     },
     {
       "id": "OMN-ACC-013",

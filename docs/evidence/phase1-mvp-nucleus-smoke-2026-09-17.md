@@ -41,6 +41,8 @@ The current recovery regression also covers the failed-open boundary: malformed 
 
 The exact current built artifact also exposed the consolidated Source / meaning workbench on a clean local origin. Synthetic source/subject notes produced a command-path Evidence link, an absent quote was rejected before annotation creation, a matching quote produced an active source-revision-bound annotation, and a GeoJSON Point produced a canonical Place observation. Reload retained all five records and the workbench reported one evidence link, one active annotation, and one place with no browser console warnings/errors. This remains local Chromium evidence and does not qualify deployment, browser-family, heterogeneous import, or external-document workflows.
 
+The later receipt-bound artifact also exercised the provider-neutral Sync / Portability form against a same-origin bounded localhost replica: one synthetic remote record was imported, the merged replica was pushed back, and the UI reported zero conflicts/tombstones with no browser warning/error logs. This remains local Chromium evidence; provider-backed sync, authentication, offline rejoin, and deployment qualification remain open. See the canonical Phase 0 receipt for the exact artifact digest and harness details.
+
 ## Still open
 
 Richer Time/Track schemas, cross-domain visualization beyond summary counts, actual provider-backed external effects, durable credential/key brokering, browser/accessibility matrix, native quota/canonical-migration fault injection, and all applicable acceptance scenarios remain unqualified. Artifact ingestion is bounded and Vault-tested, but broader parser/extraction and target qualification remain open. The completion ledger remains `IN_PROGRESS`.

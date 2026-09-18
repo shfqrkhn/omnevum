@@ -137,3 +137,13 @@ The exact same `npm run ci` artifact at source revision `6c872c8` (artifact dige
 - reloaded with the French UI and both original source texts present; no browser warning/error console entries were returned.
 
 This is local Chromium evidence for the presentation/search slice only. It does not qualify mixed-language Vault import/summary, AI/tool language-neutral semantic IDs, other browser families, deployment, or release readiness.
+
+## Current built-artifact sync follow-up
+
+The exact `npm run ci` artifact at source revision `3f16981` (artifact digest `96651643e32389b2d2ce153dfcc37b53d96e25ecaa90fbba224ba767166f4e9b`, worker cache `omnevum-shell-e08a9ac162676855`) was served from the built `dist/` files by a temporary single-origin static harness at `http://localhost:4212/` in the Codex In-app Browser Chromium surface. The same harness exposed `/replica` as a bounded local replica containing synthetic record `remote-sync-sentinel`.
+
+- The Sync / Portability form accepted the owner-controlled `http://localhost:4212/replica` development endpoint and reported `Sync completed: 1 imported, 0 skipped, 0 conflict(s), 0 tombstone(s) preserved.`
+- The imported `Remote sync sentinel` appeared in the canonical record list as a Personal Note owned by `core.remote`, revision 1; the local replica received the merged PUT payload (`461` bytes).
+- Browser diagnostics returned no warning/error console entries.
+
+This qualifies the provider-neutral pull/merge/push seam and its localhost development exception only. Production requires HTTPS; consumer-cloud/self-host provider qualification, authentication/key brokering, external security, offline interruption/rejoin behavior, browser-level tombstone reconciliation, and release readiness remain open. No canonical user data or credential was sent to a third party.

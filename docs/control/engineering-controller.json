@@ -51,7 +51,8 @@
     "current built-artifact Chromium preview completes the integrated MVP workflow, localized rebrand/reload, and confirmed Vault merge",
     "current receipt-bound Chromium preview completes Evidence link creation, quote-validated source annotation, GeoJSON Point Place capture, reload persistence, and zero console warnings/errors",
     "current receipt-bound Chromium preview proves grant-bound private-share omission, explicit private inclusion, declared-Space enforcement, purpose-bound grant creation/revocation, revoked-export disablement, reload persistence, and zero console warnings/errors",
-    "current receipt-bound Chromium preview retains mixed English/French source text, searches an English token under fr-CA UI, persists locale/text after reload, and returns zero console warnings/errors"
+    "current receipt-bound Chromium preview retains mixed English/French source text, searches an English token under fr-CA UI, persists locale/text after reload, and returns zero console warnings/errors",
+    "current receipt-bound Chromium single-origin preview pulls one bounded remote sentinel through JsonEndpointTransport, imports it through the canonical store, pushes the merged replica, and returns zero console warnings/errors"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",
@@ -65,7 +66,7 @@
     "heterogeneous Acquire import, GPX/timeline Place reuse, external Web-document preservation, and spatial-analysis qualification",
     "remote share delivery/effect use, provider ACL interaction, stale-share reconciliation, and cross-target disclosure qualification",
     "mixed-language Vault import/summary and AI/tool language-neutral semantic-ID qualification",
-    "provider-backed sync, credential/key broker, and external-effect replay evidence",
+    "provider-backed or consumer-cloud sync, transport authentication/credential-key brokering, offline rejoin UI, and external-effect replay evidence",
     "MVP release and later phases"
   ],
   "nextAction": "Execute the Pages workflow on the configured remote repository, then run the Phase 0 support/accessibility/offline/update and native fault-injection matrix, including failed-open repair and recovery-snapshot handling, before promoting the MVP gate; keep the MiniSearch adapter target qualification open and do not treat workflow configuration or local preview as deployment proof.",
