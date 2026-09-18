@@ -3,7 +3,7 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "0f065507009226e9f7cd559570f3abfc43eb6aae77d6473e8f919475298584e2", "sourceRevision": "68cca65"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "c28803a11054118997279291cc26b56dce11f91e5d39b63d300023fce3769884", "sourceRevision": "e78832c"},
   "artifactDigestMethod": "SHA-256 of sorted UTF-8 lines containing each dist relative path, file SHA-256, and byte length; captured after the full npm run ci build on 2026-09-17.",
   "artifactFiles": [
     {"path": "dist/assets/index-DId-fK--.css", "sha256": "0cf58e9f4284a761d0d3960551240355ad1e5782eeef17af82ccb16a5e077c9f", "bytes": 6080},
@@ -12,7 +12,7 @@
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
     {"path": "dist/index.html", "sha256": "bfd7a51a49ecb42a580036bb8db03bf8781129077844f84630131c926c0b9ec3", "bytes": 888},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
-    {"path": "dist/sw.js", "sha256": "153ffb5cb6c72884740a5fe6bb8b1cad68850cc849b4cd948d021b82576cfbb1", "bytes": 1611}
+    {"path": "dist/sw.js", "sha256": "cef00f651c056d6ebb5fd9bab3d9a9fdf9a034b30e2e19bfe1e0198c84811812", "bytes": 3036}
   ],
   "requiredEvidence": [
     "control-generation-and-drift",
