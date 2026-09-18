@@ -148,6 +148,12 @@ The exact `npm run ci` artifact at source revision `b1ffa19` (artifact digest `4
 
 This qualifies the provider-neutral pull/merge/push seam and its localhost development exception only. Production requires HTTPS; consumer-cloud/self-host provider qualification, authentication/key brokering, external security, offline interruption/rejoin behavior, browser-level tombstone reconciliation, and release readiness remain open. No canonical user data or credential was sent to a third party.
 
+## Current built-artifact partial-sync failure follow-up
+
+The current exact `npm run ci` artifact at source revision `aa5a8e4` (artifact digest `e7c96a631ead1cf288f1f22909eb27bac0520a4d7bccff06c2cda1ba4883f8a1`, worker cache `omnevum-shell-ef6a4afc50ad3df7`) was served from `dist/` at `http://localhost:4214/` in the Codex In-app Browser Chromium surface. A synthetic same-origin replica returned one `partial-sync-sentinel` record on pull and HTTP 503 on push. The Sync / Portability UI reported: `Local merge completed (1 imported, 0 skipped, 0 conflict(s), 0 tombstone(s) preserved), but remote push failed. Review local records before retrying. Remote sync push failed with HTTP 503`. The imported `Partial sync sentinel` remained visible, health reported `1 active, 0 archived, 0 revision snapshot(s), 0 artifact payload(s); search index healthy.`, and localhost app-origin diagnostics returned no warning/error entries.
+
+The unit regression in `src/core/sync.test.ts` covers the same partial-merge contract. This proves truthful local state handling for a failed remote push only; it does not qualify durable Effect/Outbox retry, authentication, provider migration, offline rejoin, or external transport security.
+
 ## Current built-artifact offline follow-up
 
 The same exact artifact at source revision `b1ffa19` (digest `4dcdb2d8414248de3e128c2db29da3952633b18ab134c2644d01121016dc26a6`, worker cache `omnevum-shell-60930e9e8eb3697c`) was exercised on the fresh `http://localhost:4213/` origin. After the shell loaded, CDP network emulation was set offline; the browser created `Offline receipt note`, reloaded, retained two active canonical records, and reported a healthy derived search index. Network emulation was then restored. The browser returned no warning/error console entries.

@@ -186,9 +186,10 @@
       "evidence": [
         "src/core/remote.test.ts",
         "src/core/sync.test.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-sync-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-sync-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-partial-sync-failure-follow-up"
       ],
-      "notes": "The provider-neutral transport and owner-controlled localhost route are exercised against a bounded local replica, including pull/import/push identity preservation. Consumer-cloud qualification, provider migration, authentication, and zero-payment/self-host target qualification remain open."
+      "notes": "The provider-neutral transport and owner-controlled localhost route are exercised against a bounded local replica, including pull/import/push identity preservation and truthful reporting when push fails after local import. Consumer-cloud qualification, provider migration, authentication, and zero-payment/self-host target qualification remain open."
     },
     {
       "id": "OMN-ACC-012",
