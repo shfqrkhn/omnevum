@@ -43,4 +43,29 @@ describe("Device/Input capability detection", () => {
     await expect(broker.scanBarcode(new Blob(["image"]))).resolves.toEqual([{ rawValue: "https://example.test", format: "qr_code" }]);
     await expect(new DeviceInputBroker({ navigator: {}, window: {} }).scanBarcode(new Blob(["image"]))).rejects.toThrow("unavailable");
   });
+
+  it("releases media tracks when capture processing is cancelled", async () => {
+    let stopped = 0;
+    const stream = { getTracks: () => [{ stop: () => { stopped += 1; } }] } as unknown as MediaStream;
+    const broker = new DeviceInputBroker({ navigator: { mediaDevices: { getUserMedia: async () => stream } as MediaDevices } });
+
+    await expect(broker.withMedia("microphone", async () => { throw new Error("capture cancelled"); })).rejects.toThrow("capture cancelled");
+    expect(stopped).toBe(1);
+  });
+
+  it("propagates permission denial and cancellation without retaining device authority", async () => {
+    const broker = new DeviceInputBroker({
+      navigator: {
+        share: async () => { throw new Error("share cancelled"); },
+        mediaDevices: { getUserMedia: async () => { throw new Error("NotAllowedError"); } } as unknown as MediaDevices,
+        geolocation: {
+          getCurrentPosition: (_success, error) => error?.({ code: 1, message: "permission denied" } as GeolocationPositionError)
+        } as Geolocation
+      }
+    });
+
+    await expect(broker.requestMedia("camera")).rejects.toThrow("NotAllowedError");
+    await expect(broker.readLocation()).rejects.toMatchObject({ code: 1 });
+    await expect(broker.shareText("local preview")).rejects.toThrow("share cancelled");
+  });
 });

@@ -464,7 +464,7 @@ Source revision `f96f77a` adds `JsonEndpointEffectExecutor` behind the existing 
 
 Source revision `6c7218a` extends the explicit Device/Input broker with optional browser-native BarcodeDetector/QR capability discovery, bounded barcode input, and `withMedia`, which always releases every acquired media track in a `finally` block after the caller's operation completes or fails. Unsupported barcode targets retain a truthful manual/file fallback; no camera, microphone, or location permission was requested during this increment.
 
-`src/core/device.test.ts` proves capability detection, filtered bounded QR results, explicit unavailable behavior, and automatic media-track release. This strengthens OMN-ACC-078's broker contract only: real permission denial/cancellation on supported browsers, camera/photo and microphone capture routing through Artifact/Acquire/Track/Place/Triage, geolocation policy, hardware/browser target qualification, accessibility evidence, and human acceptance remain open.
+`src/core/device.test.ts` proves capability detection, filtered bounded QR results, explicit unavailable behavior, automatic media-track release, cancellation cleanup, and propagation of camera/location/share denial or cancellation without retained broker authority. This strengthens OMN-ACC-078's broker contract only: real permission denial/cancellation on supported browsers, camera/photo and microphone capture routing through Artifact/Acquire/Track/Place/Triage, geolocation policy, hardware/browser target qualification, accessibility evidence, and human acceptance remain open.
 
 ## Current bounded local document-finishing follow-up
 

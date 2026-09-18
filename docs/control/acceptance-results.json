@@ -1173,6 +1173,8 @@
       "evidence": [
         "src/core/device.ts",
         "src/core/device.test.ts",
+        "src/core/device.test.ts#releases-media-tracks-when-capture-processing-is-cancelled",
+        "src/core/device.test.ts#propagates-permission-denial-and-cancellation-without-retaining-device-authority",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up",
         "src/core/device.test.ts#keeps-media-ownership-scoped-and-exposes-browser-native-QR-results-only-when-available",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-deviceinput-broker-ownership-follow-up",

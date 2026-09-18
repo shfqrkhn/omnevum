@@ -97,6 +97,7 @@
     "bounded Artifact adapters now inspect PDF/image/HTML/text input without active execution, mark derived text and OCR limits explicitly, honor cancellation, and retain PDF Acquire payloads idempotently; source 673030e",
     "provider-neutral JsonEndpointEffectExecutor now sends typed idempotent operations through the credential broker, bounds remote responses, and routes ambiguous outcomes to explicit reconciliation; source f96f77a",
     "Device/Input broker now detects optional BarcodeDetector/QR support, filters bounded results, and releases media tracks through a scoped finally helper; source 6c7218a",
+    "Device/Input regressions now prove cancellation cleanup and propagation of camera/location/share denial without retained broker authority; source device.test.ts",
     "bounded local text/inert-HTML document finishing preserves the source Artifact and emits a lineage-linked DERIVED redaction Artifact through the visible Recovery surface; current synthetic Chromium receipt verifies active-content stripping, two payloads, provenance, and clean-origin recovery; source 072630d",
     "CanonicalStore emits exact metadata-only cross-tab invalidations for canonical, setting, and effect writes; the UI refreshes external canonical changes and reloads external presentation changes; source ac6f754",
     "current receipt-bound Chromium two-tab preview on the ac6f754 artifact shows canonical capture, user-defined Space creation, membership projection, zero warning/error logs, and clean-origin recovery; source ac6f754",
