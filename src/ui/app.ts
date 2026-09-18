@@ -195,7 +195,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           </div>
           <div class="form-row">
             <label class="file-button secondary" for="acquire-file">${copy.acquireFile}</label>
-            <input id="acquire-file" type="file" accept="text/*,application/json,.json,.csv,.txt" />
+            <input id="acquire-file" type="file" accept="text/*,application/json,application/gpx+xml,.json,.csv,.gpx,.txt" />
             <button id="acquire-clipboard" class="secondary" type="button">${copy.readClipboard}</button>
           </div>
           <p id="acquire-status" class="hint" role="status"></p>

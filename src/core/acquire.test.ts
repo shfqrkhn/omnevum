@@ -30,6 +30,19 @@ describe("Acquire/Ingest", () => {
     expect(preview.candidates.map((candidate) => candidate.sequence)).toEqual([1, 2, 3, 4]);
   });
 
+  it("maps bounded GPX waypoints and track points to Place and Time owners", async () => {
+    const preview = await stageBlob(new Blob([`<?xml version="1.0"?><gpx><wpt lat="43.6532" lon="-79.3832"><name>Toronto &amp; home</name></wpt><trk><trkseg><trkpt lat="43.7" lon="-79.4"><time>2026-09-18T12:00:00Z</time></trkpt></trkseg></trk></gpx>`]), "walk.gpx", "application/gpx+xml");
+    expect(preview.source.format).toBe("GPX");
+    expect(preview.candidates).toHaveLength(2);
+    expect(preview.candidates.map((candidate) => [candidate.recordType, candidate.owner])).toEqual([
+      ["observation", "platform.place"],
+      ["observation", "platform.time"]
+    ]);
+    expect(preview.candidates[0]?.data).toMatchObject({ text: "Toronto & home", latitude: 43.6532, longitude: -79.3832 });
+    expect(preview.candidates[1]?.data).toMatchObject({ start: "2026-09-18T12:00:00Z", latitude: 43.7, longitude: -79.4 });
+    expect(preview.candidates.every((candidate) => candidate.data.sourceId === preview.source.sourceId)).toBe(true);
+  });
+
   it("accepts candidates through the command owner and makes repetition idempotent", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-acquire`);
     await store.open();

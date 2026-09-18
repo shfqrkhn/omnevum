@@ -7,7 +7,7 @@ export const MAX_ACQUIRE_BYTES = 5 * 1024 * 1024;
 export const MAX_ACQUIRE_CANDIDATES = 500;
 export const MAX_ACQUIRE_URL_LENGTH = 4096;
 
-export type AcquireFormat = "TEXT" | "JSON" | "CSV" | "URL";
+export type AcquireFormat = "TEXT" | "JSON" | "CSV" | "URL" | "GPX";
 
 export interface AcquireSource {
   sourceId: string;
@@ -56,7 +56,7 @@ export async function stageText(text: string, input: { name?: string; mimeType?:
   const warnings: string[] = [];
   let rows: unknown[];
   try {
-    rows = format === "JSON" ? parseJsonRows(text) : format === "CSV" ? parseCsvRows(text) : format === "URL" ? [{ text, url: text, kind: "url" }] : [{ text }];
+    rows = format === "JSON" ? parseJsonRows(text) : format === "CSV" ? parseCsvRows(text) : format === "GPX" ? parseGpxRows(text) : format === "URL" ? [{ text, url: text, kind: "url" }] : [{ text }];
   } catch (error) {
     warnings.push(error instanceof Error ? error.message : "Source parsing failed; retained as one text candidate");
     rows = [{ text }];
@@ -117,6 +117,9 @@ function candidateFromRow(row: unknown, source: AcquireSource, sequence: number)
   const kind = captureKind(object, recordType);
   const text = firstText(object) ?? JSON.stringify(row) ?? "Imported record";
   const sourceFields = scrubSensitiveValue(Object.fromEntries(Object.entries(object).slice(0, 50))) as Record<string, unknown>;
+  const latitude = numericField(object.latitude);
+  const longitude = numericField(object.longitude);
+  const start = typeof object.start === "string" && object.start.trim() ? object.start.trim().slice(0, 80) : undefined;
   const data: Record<string, unknown> = {
     text: text.slice(0, 5000),
     kind,
@@ -124,6 +127,8 @@ function candidateFromRow(row: unknown, source: AcquireSource, sequence: number)
     sourceSequence: sequence,
     sourceFields,
     triageStatus: "INBOX",
+    ...(latitude !== undefined && longitude !== undefined ? { latitude, longitude } : {}),
+    ...(start ? { start } : {}),
     ...(recordType === "task" ? { status: "OPEN" } : {})
   };
   return {
@@ -211,12 +216,56 @@ function parseCsv(text: string): string[][] {
   return rows.filter((candidate) => candidate.some((value) => value.trim()));
 }
 
+function parseGpxRows(text: string): unknown[] {
+  const rows: unknown[] = [];
+  const pointPattern = /<(wpt|trkpt)\b([^>]*)>([\s\S]*?)<\/\1\s*>/gi;
+  let match: RegExpExecArray | null;
+  while ((match = pointPattern.exec(text)) !== null && rows.length < MAX_ACQUIRE_CANDIDATES) {
+    const tag = match[1]?.toLowerCase();
+    const attributes = match[2] ?? "";
+    const body = match[3] ?? "";
+    const latitude = Number(attributeValue(attributes, "lat"));
+    const longitude = Number(attributeValue(attributes, "lon"));
+    if (!validCoordinate(latitude, longitude)) continue;
+    if (tag === "wpt") {
+      rows.push({ type: "location", kind: "location", name: elementText(body, "name") ?? `GPX waypoint ${rows.length + 1}`, latitude, longitude, source: "GPX_WAYPOINT" });
+    } else {
+      rows.push({ type: "event", kind: "event", title: `GPX track point ${rows.length + 1}`, start: elementText(body, "time"), latitude, longitude, source: "GPX_TRACKPOINT" });
+    }
+  }
+  if (rows.length === 0) throw new Error("GPX contained no bounded waypoint or track point");
+  return rows;
+}
+
+function attributeValue(attributes: string, name: string): string | undefined {
+  return new RegExp(`\\b${name}\\s*=\\s*["']([^"']+)["']`, "i").exec(attributes)?.[1];
+}
+
+function elementText(body: string, name: string): string | undefined {
+  const value = new RegExp(`<${name}\\b[^>]*>([\\s\\S]*?)<\\/${name}\\s*>`, "i").exec(body)?.[1];
+  return value?.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim().slice(0, 240) || undefined;
+}
+
+function validCoordinate(latitude: number, longitude: number): boolean {
+  return Number.isFinite(latitude) && latitude >= -90 && latitude <= 90 && Number.isFinite(longitude) && longitude >= -180 && longitude <= 180;
+}
+
+function numericField(value: unknown): number | undefined {
+  if (typeof value === "number") return Number.isFinite(value) ? value : undefined;
+  if (typeof value === "string" && value.trim()) {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+  return undefined;
+}
+
 function detectFormat(name: string, mimeType: string, text: string): AcquireFormat {
   const lowerName = name.toLowerCase();
   const lowerMime = mimeType.toLowerCase();
   if (lowerName.startsWith("http://") || lowerName.startsWith("https://") || lowerMime === "text/uri-list") return "URL";
   if (lowerName.endsWith(".json") || lowerMime.includes("json")) return "JSON";
   if (lowerName.endsWith(".csv") || lowerMime.includes("csv")) return "CSV";
+  if (lowerName.endsWith(".gpx") || lowerMime.includes("gpx") || /<gpx\b/i.test(text)) return "GPX";
   try {
     JSON.parse(text);
     return "JSON";
