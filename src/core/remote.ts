@@ -14,7 +14,7 @@ export class JsonEndpointTransport implements SyncTransport {
   private readonly endpoint: URL;
 
   public constructor(endpoint: string, private readonly request: FetchLike = (input, init) => fetch(input, init)) {
-    this.endpoint = parseEndpoint(endpoint);
+    this.endpoint = parseRemoteEndpoint(endpoint);
   }
 
   public async pull(): Promise<CanonicalRecord[]> {
@@ -33,7 +33,11 @@ export class JsonEndpointEffectExecutor {
   private readonly endpoint: URL;
 
   public constructor(endpoint: string, private readonly request: FetchLike = (input, init) => fetch(input, init), private readonly broker?: CredentialKeyBroker) {
-    this.endpoint = parseEndpoint(endpoint);
+    this.endpoint = parseRemoteEndpoint(endpoint);
+  }
+
+  public supports(operation: EffectOperation): boolean {
+    return operation.destination === this.endpoint.href;
   }
 
   public async execute(operation: EffectOperation): Promise<EffectExecutionResult> {
@@ -85,7 +89,7 @@ export class JsonEndpointEffectExecutor {
   }
 }
 
-function parseEndpoint(value: string): URL {
+export function parseRemoteEndpoint(value: string): URL {
   let endpoint: URL;
   try { endpoint = new URL(value); } catch { throw new Error("Remote sync endpoint is invalid"); }
   if (endpoint.protocol !== "https:" && !(endpoint.hostname === "localhost" && endpoint.protocol === "http:")) throw new Error("Remote sync requires HTTPS except for localhost");

@@ -26,8 +26,25 @@ import { makePlaceData, parseGeoJsonPoint } from "../core/place";
 import { projectForAuthorizedShare } from "../core/share";
 import { canUseShareGrant, createShareGrant, revokeShareGrant } from "../core/sharing";
 import { transitionEffect } from "../core/effect";
-import { JsonEndpointTransport } from "../core/remote";
+import { createExternalEffect } from "../core/effect-service";
+import { EffectRunner } from "../core/effect-runner";
+import { JsonEndpointEffectExecutor, JsonEndpointTransport } from "../core/remote";
 import { SyncEngine, SyncFailure } from "../core/sync";
+
+function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
+  const raw = value.trim();
+  if (!raw) throw new Error("Enter a JSON object or a stable reference beginning with ref:");
+  if (raw.startsWith("ref:")) return raw;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    throw new Error("Enter valid JSON or a stable reference beginning with ref:");
+  }
+  if (typeof parsed === "string" && parsed.trim()) return parsed;
+  if (typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)) return parsed as Record<string, unknown>;
+  throw new Error("The external effect payload must be a JSON object or string reference");
+}
 
 export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
@@ -533,6 +550,26 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <button type="submit">${copy.documentFinishSubmit}</button>
           <p id="document-finish-status" class="hint" role="status"></p>
         </form>
+        <form id="effect-stage-form" class="relationship-form">
+          <h3>${copy.effectStageHeading}</h3>
+          <label for="effect-stage-destination">${copy.effectDestination}</label>
+          <input id="effect-stage-destination" type="url" maxlength="500" placeholder="https://your-endpoint.example/action" required />
+          <label for="effect-stage-purpose">${copy.effectPurpose}</label>
+          <input id="effect-stage-purpose" type="text" maxlength="500" required />
+          <label for="effect-stage-payload">${copy.effectPayload}</label>
+          <textarea id="effect-stage-payload" rows="4" maxlength="20000" required></textarea>
+          <p class="hint">${copy.effectStageHint}</p>
+          <button type="submit">${copy.effectQueue}</button>
+          <p id="effect-stage-status" class="hint" role="status"></p>
+        </form>
+        <form id="effect-run-form" class="relationship-form">
+          <h3>${copy.effectRunHeading}</h3>
+          <label for="effect-run-endpoint">${copy.effectRunEndpoint}</label>
+          <input id="effect-run-endpoint" type="url" maxlength="500" placeholder="https://your-endpoint.example/action" required />
+          <p class="hint">${copy.effectRunHint}</p>
+          <button type="submit">${copy.effectRun}</button>
+          <p id="effect-run-status" class="hint" role="status"></p>
+        </form>
         <div class="relationship-form">
           <h3>${copy.effectOutboxHeading}</h3>
           <p class="hint">${copy.effectOutboxHint}</p>
@@ -704,11 +741,22 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const documentFinishTerms = root.querySelector<HTMLInputElement>("#document-finish-terms");
   const documentFinishReplacement = root.querySelector<HTMLInputElement>("#document-finish-replacement");
   const documentFinishStatus = root.querySelector<HTMLElement>("#document-finish-status");
+  const effectStageForm = root.querySelector<HTMLFormElement>("#effect-stage-form");
+  const effectStageDestination = root.querySelector<HTMLInputElement>("#effect-stage-destination");
+  const effectStagePurpose = root.querySelector<HTMLInputElement>("#effect-stage-purpose");
+  const effectStagePayload = root.querySelector<HTMLTextAreaElement>("#effect-stage-payload");
+  const effectStageStatus = root.querySelector<HTMLElement>("#effect-stage-status");
+  const effectRunForm = root.querySelector<HTMLFormElement>("#effect-run-form");
+  const effectRunEndpoint = root.querySelector<HTMLInputElement>("#effect-run-endpoint");
+  const effectRunStatus = root.querySelector<HTMLElement>("#effect-run-status");
   if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
     throw new Error("Omnevum document-finishing controls are missing");
+  }
+  if (!effectStageForm || !effectStageDestination || !effectStagePurpose || !effectStagePayload || !effectStageStatus || !effectRunForm || !effectRunEndpoint || !effectRunStatus) {
+    throw new Error("Omnevum external-effect controls are missing");
   }
 
   const sharedParameters = new URLSearchParams(window.location.search);
@@ -1596,6 +1644,35 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       effectList.append(item);
     }
   };
+
+  effectStageForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      const operation = createExternalEffect({ destination: effectStageDestination.value, purpose: effectStagePurpose.value, payloadOrReference: parseExternalEffectPayload(effectStagePayload.value) });
+      await store.enqueueEffect(operation);
+      effectStageStatus.textContent = copy.effectQueued;
+      effectStagePurpose.value = "";
+      effectStagePayload.value = "";
+      await renderEffects();
+    } catch (error) {
+      effectStageStatus.textContent = describeError(error, "The external effect was not queued; no request was sent.");
+    }
+  });
+
+  effectRunForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const endpoint = effectRunEndpoint.value.trim();
+    if (!window.confirm(`${copy.effectRunConfirmation} ${endpoint}?`)) return;
+    try {
+      const results = await new EffectRunner(store, new JsonEndpointEffectExecutor(endpoint)).runAvailable();
+      const succeeded = results.filter((operation) => operation.status === "SUCCEEDED").length;
+      const attention = results.length - succeeded;
+      effectRunStatus.textContent = copy.effectRunResult(results.length, succeeded, attention);
+      await renderEffects();
+    } catch (error) {
+      effectRunStatus.textContent = describeError(error, "External effects could not be run; persisted state was not discarded.");
+    }
+  });
 
   const renderRecords = async (query = ""): Promise<number> => {
     const allRecords = await store.list();

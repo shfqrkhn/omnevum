@@ -70,6 +70,29 @@ describe("EffectRunner", () => {
     store.close();
   });
 
+  it("moves an ambiguous execution into reconciliation without replaying it", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-effect-ambiguous`);
+    await store.open();
+    await store.enqueueEffect(effect());
+    let executions = 0;
+    let reconciliations = 0;
+    const runner = new EffectRunner(store, {
+      execute: async () => { executions += 1; return { outcome: "OUTCOME_UNKNOWN" as const, evidence: ["transport-lost"] }; },
+      reconcile: async () => { reconciliations += 1; return { outcome: "SUCCEEDED" as const, remoteIdentity: "remote-after-reconcile" }; }
+    });
+
+    const ambiguous = await runner.runAvailable();
+    expect(ambiguous[0]).toMatchObject({ status: "RECONCILE", evidence: ["transport-lost", "execution-remains-ambiguous"] });
+    expect(executions).toBe(1);
+    expect(reconciliations).toBe(0);
+
+    const reconciled = await runner.runAvailable();
+    expect(reconciled[0]).toMatchObject({ status: "SUCCEEDED", remoteIdentity: "remote-after-reconcile" });
+    expect(executions).toBe(1);
+    expect(reconciliations).toBe(1);
+    store.close();
+  });
+
   it("honors retry backoff and terminally exhausts the attempt budget", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-effect-retry-policy`);
     await store.open();
@@ -113,6 +136,21 @@ describe("EffectRunner", () => {
     const results = await runner.runAvailable();
     expect(executions).toBe(0);
     expect(results.map((result) => result.status)).toEqual(["EXPIRED", "CANCELLED"]);
+    store.close();
+  });
+
+  it("does not execute an operation through a different configured destination", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-effect-destination`);
+    await store.open();
+    await store.enqueueEffect(effect());
+    let executions = 0;
+    const runner = new EffectRunner(store, {
+      supports: () => false,
+      execute: async () => { executions += 1; return { outcome: "SUCCEEDED" as const }; }
+    });
+    await expect(runner.runAvailable()).resolves.toEqual([]);
+    expect(executions).toBe(0);
+    expect(await store.getEffect("runner-effect")).toMatchObject({ status: "PENDING", destination: "test://destination" });
     store.close();
   });
 

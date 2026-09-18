@@ -10,6 +10,7 @@ export type EffectExecutionResult =
 export interface EffectExecutor {
   execute(operation: EffectOperation): Promise<EffectExecutionResult>;
   reconcile?(operation: EffectOperation): Promise<EffectExecutionResult>;
+  supports?(operation: EffectOperation): boolean;
 }
 
 export interface EffectExecutionGuard {
@@ -38,6 +39,10 @@ export class EffectRunner {
       if (candidate.status === "IN_FLIGHT") {
         const interrupted = await this.recoverInterruptedOperation(candidate);
         if (!interrupted) continue;
+        if (!this.supports(interrupted)) {
+          recovered.push(interrupted);
+          continue;
+        }
         recovered.push(await this.reconcileOnce(interrupted));
         continue;
       }
@@ -49,6 +54,10 @@ export class EffectRunner {
       if (candidate.nextAttemptAt && Date.parse(candidate.nextAttemptAt) > Date.now()) continue;
       if (!runnableStatuses.has(candidate.status)) continue;
       if (candidate.status === "RECONCILE") {
+        if (!this.supports(candidate)) {
+          recovered.push(candidate);
+          continue;
+        }
         if (!this.executor?.reconcile) {
           recovered.push(candidate);
           continue;
@@ -57,6 +66,7 @@ export class EffectRunner {
         continue;
       }
       if (!this.executor) continue;
+      if (!this.supports(candidate)) continue;
       recovered.push(await this.executeOnce(candidate));
     }
     return recovered;
@@ -101,6 +111,13 @@ export class EffectRunner {
       ...(result.outcome === "SUCCEEDED" && result.remoteIdentity ? { remoteIdentity: result.remoteIdentity } : {}),
       ...(result.outcome === "FAILED_RETRYABLE" ? { retryCount: attemptCount } : {})
     };
+    if (result.outcome === "OUTCOME_UNKNOWN") {
+      const unknown = transitionEffect(inFlight, "OUTCOME_UNKNOWN", { evidence: [...evidence, "execution-remains-ambiguous"] });
+      if (!await this.updateIfCurrent(unknown, "IN_FLIGHT")) return (await this.store.getEffect(operation.operationId)) ?? inFlight;
+      const reconcile = transitionEffect(unknown, "RECONCILE");
+      if (!await this.updateIfCurrent(reconcile, "OUTCOME_UNKNOWN")) return (await this.store.getEffect(operation.operationId)) ?? unknown;
+      return reconcile;
+    }
     const final = transitionEffect(inFlight, nextStatus, patch);
     if (!await this.updateIfCurrent(final, "IN_FLIGHT")) return (await this.store.getEffect(operation.operationId)) ?? inFlight;
     return final;
@@ -150,5 +167,9 @@ export class EffectRunner {
       if (error instanceof EffectStateConflictError) return false;
       throw error;
     }
+  }
+
+  private supports(operation: EffectOperation): boolean {
+    return this.executor?.supports ? this.executor.supports(operation) : true;
   }
 }
