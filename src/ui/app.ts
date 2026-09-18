@@ -16,7 +16,7 @@ import { projectDataset } from "../core/data";
 import { countRecords, groupCounts } from "../core/analysis";
 import type { CapabilityRuntime } from "../core/capability-runtime";
 import { DeviceInputBroker } from "../core/device";
-import { SpaceService } from "../core/space";
+import { isSpaceMembership, SpaceService } from "../core/space";
 import { historyWithDiffs, revertToRevision } from "../core/history";
 import { makeUserDashboard, projectView, ViewRegistry } from "../core/compose";
 import { readPath } from "../core/data";
@@ -312,6 +312,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <option value="work">${copy.work}</option>
         </select>
         <ul id="space-list" class="record-list"></ul>
+        <p class="hint">${copy.activeMemberships}</p>
+        <ul id="space-membership-list" class="record-list"></ul>
       </section>
 
       <section id="compose" class="panel" aria-labelledby="compose-heading">
@@ -584,6 +586,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const spaceFilter = root.querySelector<HTMLSelectElement>("#space-filter");
   const spaceStatus = root.querySelector<HTMLElement>("#space-status");
   const spaceList = root.querySelector<HTMLUListElement>("#space-list");
+  const spaceMembershipList = root.querySelector<HTMLUListElement>("#space-membership-list");
   const composeForm = root.querySelector<HTMLFormElement>("#compose-form");
   const composeTitle = root.querySelector<HTMLInputElement>("#compose-title");
   const composeFields = root.querySelector<HTMLInputElement>("#compose-fields");
@@ -694,7 +697,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const documentFinishTerms = root.querySelector<HTMLInputElement>("#document-finish-terms");
   const documentFinishReplacement = root.querySelector<HTMLInputElement>("#document-finish-replacement");
   const documentFinishStatus = root.querySelector<HTMLElement>("#document-finish-status");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
@@ -929,6 +932,32 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       spaceList.append(item);
     }
     const records = (await store.list()).filter((record) => record.owner !== "platform.space");
+    const recordsById = new Map(records.map((record) => [record.id, record]));
+    spaceMembershipList.replaceChildren();
+    for (const membership of (await spaceService.memberships()).filter(isSpaceMembership)) {
+      const source = recordsById.get(membership.data.recordId);
+      if (!source) continue;
+      const item = document.createElement("li");
+      item.className = "record-item";
+      const label = document.createElement("strong");
+      label.textContent = `${spaceLabel(membership.data.space)} - ${typeLabel(source.recordType)}: ${recordText(source).slice(0, 120)}`;
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "icon-button";
+      remove.textContent = copy.removeMembership;
+      remove.addEventListener("click", async () => {
+        if (!window.confirm(copy.removeMembershipConfirmation(recordText(source), spaceLabel(membership.data.space)))) return;
+        try {
+          await spaceService.remove(membership.id);
+          spaceStatus.textContent = copy.membershipRemoved(spaceLabel(membership.data.space));
+          await renderRecords(searchQuery.value);
+        } catch (error) {
+          spaceStatus.textContent = describeError(error, "Space membership was not removed; canonical records were not changed.");
+        }
+      });
+      item.append(label, remove);
+      spaceMembershipList.append(item);
+    }
     const previous = spaceRecord.value;
     spaceRecord.replaceChildren();
     for (const record of records) {
