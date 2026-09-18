@@ -77,7 +77,7 @@
     "current receipt-bound Edge desktop preview on Microsoft Edge 153.0.4234.32 accepts a synthetic canonical capture and retains it across reload with a healthy derived index; source 307470e",
     "current receipt-bound Edge preview detects a synthetic malformed IndexedDB canonical row, enters the Recovery shell, and completes read-only retained-state export without mutation; source 307470e",
     "current receipt-bound Edge preview performs an offline canonical capture and offline reload persistence with a healthy derived index; source 307470e",
-    "current release receipt is refreshed and independently hash-verified for source 3b4a11b, artifact digest 8bcf9937e8118d7141d4dda114281b682754f100665a0200637165c1b06cadef, and service-worker cache omnevum-shell-450841040531899c",
+    "current release receipt is refreshed and independently hash-verified for source 44675df, artifact digest 9472c8ed1ba73cdd25a56e9e01df9c671ef9f0cb69939a5070bb4c34a348cd95, and service-worker cache omnevum-shell-7f874ebece8aa6d5",
     "current receipt-bound Edge preview proves presentation branding updates document.title and theme-color and persists after reload; source bd9e242",
     "current receipt-bound Edge preview at 390x844 records no horizontal overflow, visible labelled controls, sequential keyboard focus, and an empty warning/error console; source bd9e242",
     "current receipt-bound Edge preview accepts a synthetic capture, retains it after reload, and returns to a clean scoped origin; source bd9e242",
@@ -99,6 +99,7 @@
     "bounded local text/inert-HTML document finishing preserves the source Artifact and emits a lineage-linked DERIVED redaction Artifact through the visible Recovery surface; current synthetic Chromium receipt verifies active-content stripping, two payloads, provenance, and clean-origin recovery; source 072630d",
     "CanonicalStore emits exact metadata-only cross-tab invalidations for canonical, setting, and effect writes; the UI refreshes external canonical changes and reloads external presentation changes; source ac6f754",
     "current receipt-bound Chromium two-tab preview on the ac6f754 artifact shows canonical capture, user-defined Space creation, membership projection, zero warning/error logs, and clean-origin recovery; source ac6f754",
+    "current receipt-bound Chromium two-tab preview on the 44675df artifact revokes an active user-defined Space, resets the other tab from the stale scope to All Spaces, retains the canonical record, and clears the temporary test state; source 44675df",
     "EffectRunner claims pending/reconciliation operations with an IndexedDB status compare-and-set so concurrent runners cannot execute one pending operation twice; source 3b4a11b",
     "CredentialKeyBroker.authorizeEffect is the canonical guard for credential-bound EffectRunner operations, and revocation cancels a pending operation before executor use; source 7986327",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
@@ -109,7 +110,7 @@
     "production static-host, browser-version, responsive, and assistive-technology evidence",
     "production static-host service-worker update/rollback and cross-origin deployment proof",
     "full Phase 0 acceptance gate, native quota/canonical-migration matrix, browser-family recovery interaction, and recovery matrix",
-    "two-tab permission/Space revocation browser receipt and vector/analytical derived-projection invalidation",
+    "multi-user permission revocation, vector/analytical derived-projection invalidation, and broader target qualification",
     "broader security/untrusted-content/credential, active-content, egress, and production boundary evidence",
     "static-host deployment, smoke, and rollback proof",
     "richer Time/Track/Compose capability contracts and target qualification",
@@ -121,6 +122,6 @@
     "built-artifact browser receipt and qualified broader document/office adapter evidence for local document finishing",
     "MVP release and later phases"
   ],
-  "nextAction": "No Git remote is configured in this workspace, so Pages deployment proof is blocked until the owner supplies/configures the intended remote. Until then, run the Phase 0 support/accessibility/offline/update and native fault-injection matrix locally, including failed-open repair and recovery-snapshot handling; capture the two-tab permission/Space revocation receipt, keep MiniSearch adapter qualification open, and do not treat workflow configuration or local preview as deployment proof.",
+  "nextAction": "No Git remote is configured in this workspace, so Pages deployment proof is blocked until the owner supplies/configures the intended remote. Until then, run the Phase 0 support/accessibility/offline/update and native fault-injection matrix locally, including failed-open repair and recovery-snapshot handling; qualify MiniSearch on target memory/latency and complete the remaining permission, projection, connector, recovery, and human-acceptance evidence. Do not treat workflow configuration or local preview as deployment proof.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }

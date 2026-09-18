@@ -486,6 +486,14 @@ Source revision `ac6f754` adds an exact metadata-only `BroadcastChannel` contrac
 
 This qualifies current local Chromium cross-tab canonical refresh and user-defined Space projection without writable record copying. It does not qualify permission/Space revocation across live tabs, vector/analytical projection invalidation, other browser families, assistive technology, or deployment proof; OMN-ACC-058 remains PARTIAL.
 
+## Current cross-tab Space revocation follow-up
+
+Source revision `44675df` resets a stale active Space scope when canonical invalidation removes that Space, reports the revocation, and returns the view to All Spaces while retaining canonical records. The current build is bound in `docs/control/release-evidence.json` to artifact digest `9472c8ed1ba73cdd25a56e9e01df9c671ef9f0cb69939a5070bb4c34a348cd95`, JavaScript `dist/assets/index-CgFZwyiZ.js`, and service-worker cache `omnevum-shell-7f874ebece8aa6d5`.
+
+On `http://localhost:4230/` in two Codex In-app Browser Chromium tabs (`Chrome/153.0.0.0`, viewport `504x1270`), tab A captured `Cross-tab revocation sentinel`; tab B automatically rendered the canonical record. Tab A created `Cross-tab Revocation Space`, added the record through the `platform.space` overlay, and tab B selected that Space and rendered the scoped sentinel. While tab B remained scoped, tab A removed the Space. Tab B automatically refreshed, retained the one canonical sentinel, changed `View Space` to `All Spaces`, and displayed `space_<opaque-id> is no longer available; showing all Spaces.` The visible Recovery action then cleared the temporary canonical test state in both tabs; both reported zero active records and zero payloads.
+
+This qualifies local Chromium cross-tab Space revocation and stale-scope reset without deleting the underlying canonical record. It does not qualify multi-user permission revocation, vector/analytical projection invalidation, external routes, other browser families, assistive technology, deployment, or human acceptance; OMN-ACC-058 remains PARTIAL.
+
 ## Current Effect/Outbox concurrency follow-up
 
 Source revision `3b4a11b` adds an expected-status compare-and-set to `CanonicalStore.updateEffect`. `EffectRunner` claims pending, retryable, expired, and reconciliation transitions through that owner and ignores a stale competing transition; reconciliation is itself claimed before the executor runs. This prevents two same-origin runners from executing one pending operation twice while preserving the existing idempotency/reconciliation contract. `src/core/effect-runner.test.ts#claims-a-pending-operation-atomically-so-concurrent-runners-execute-it-once` runs two runners against one IndexedDB store, holds the first execution open, and proves exactly one executor call and a final `SUCCEEDED` state. Focused storage/effect tests and typecheck pass.
