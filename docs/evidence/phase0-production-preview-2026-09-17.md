@@ -95,3 +95,7 @@ Presentation resolution now has an explicit contract: Safe Presentation Mode sel
 ## Stale-client storage follow-up
 
 CanonicalStore now fences a live client when another client requests an IndexedDB version upgrade: the first connection closes on `versionchange`, clears its persistence state, and rejects later reads/writes until explicitly reopened. A fake-indexeddb regression upgrades a second connection to version `7` and verifies the stale client cannot continue reading. This is deterministic concurrency evidence; native multi-tab/browser behavior, interrupted migration, and repair/reopen UX remain open.
+
+## GitHub Pages deployment path
+
+The repository now contains `.github/workflows/pages.yml`, which uses the official GitHub Pages custom-workflow shape: locked install, full `npm run ci`, top-level `dist/` Pages artifact, protected `github-pages` environment, and `pages:write`/`id-token:write` deployment permissions. This proves the repository deployment path is executable in principle, not that a remote workflow ran. The live Pages URL, routing, clean-origin smoke, rollback, browser matrix, and release promotion remain unverified until the configured remote repository executes the workflow.

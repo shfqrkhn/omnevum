@@ -28,3 +28,5 @@ npm run dev
 ```
 
 Control projections live under `docs/control/`; research and receipts live under `docs/evidence/`. Generated control files identify their generator and source hashes. The normal CI gate runs structure, reference, architecture, strict type, unit, build, static-host, generated-drift, and whitespace checks.
+
+The `.github/workflows/pages.yml` workflow is the static deployment path: it runs the same locked CI/build gate, uploads only the top-level `dist/` artifact, and deploys through the GitHub Pages environment. A live URL, deployment smoke, rollback, and target support receipt remain release evidence rather than being inferred from the workflow file.

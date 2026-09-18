@@ -45,6 +45,7 @@
     "Vault merge preview validates integrity and conflict outcomes without mutation",
     "boot recovery exports a bounded read-only raw-state snapshot when malformed canonical state prevents a portable Vault",
     "stale IndexedDB clients are fenced after a version upgrade rather than continuing unsafe reads/writes",
+    "GitHub Pages deployment workflow runs the locked CI/build gate and uploads only the built dist artifact; live deployment remains unverified",
     "114 unit tests pass across 40 test files after the stale-client storage increment",
     "current built-artifact Chromium preview completes the integrated MVP workflow, localized rebrand/reload, and confirmed Vault merge"
   ],
@@ -60,6 +61,6 @@
     "provider-backed sync, credential/key broker, and external-effect replay evidence",
     "MVP release and later phases"
   ],
-  "nextAction": "Run the Phase 0 support/accessibility/offline/update and native fault-injection matrix, including failed-open repair and recovery-snapshot handling, then exercise the MVP outcomes in a clean static-host profile before promoting the MVP gate; keep the MiniSearch adapter target qualification open and do not treat the current local built-preview evidence as deployment proof.",
+  "nextAction": "Execute the Pages workflow on the configured remote repository, then run the Phase 0 support/accessibility/offline/update and native fault-injection matrix, including failed-open repair and recovery-snapshot handling, before promoting the MVP gate; keep the MiniSearch adapter target qualification open and do not treat workflow configuration or local preview as deployment proof.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }
