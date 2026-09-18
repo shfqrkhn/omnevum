@@ -1,3 +1,5 @@
+import { ADMITTED_SEMANTIC_COMMANDS } from "./semantic-command";
+
 export type RuleScalar = string | number | boolean | null;
 export type RuleValue = { kind: "literal"; value: RuleScalar } | { kind: "path"; path: string };
 export type RuleExpression =
@@ -28,7 +30,7 @@ export interface AutomationProposal {
   requiresNormalCommandPath: true;
 }
 
-export const ADMITTED_AUTOMATION_COMMANDS = ["record.create", "record.update", "triage.defer", "triage.link", "triage.route", "triage.split", "triage.delete"] as const;
+export const ADMITTED_AUTOMATION_COMMANDS = ADMITTED_SEMANTIC_COMMANDS;
 
 const MAX_RULE_NODES = 1000;
 const MAX_RULE_DEPTH = 64;

@@ -232,8 +232,12 @@
         "line": 3416
       },
       "text": "The same shared AI broker is used by at least two distinct domain workflows without either domain owning provider credentials.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/ai.ts",
+        "src/core/ai.test.ts#shares-one-credential-free-broker-across-distinct-domain-owners"
+      ],
+      "notes": "One shared route registry/context broker serves distinct core.capture and core.track workflows while provider credentials remain outside domain owners. Shipped provider adapters and built-workflow qualification remain open."
     },
     {
       "id": "OMN-ACC-015",
@@ -242,8 +246,12 @@
         "line": 3418
       },
       "text": "An AI response containing malicious embedded instructions cannot expand context scope, switch provider/disclosure class, modify permissions, or execute a canonical mutation without the normal command/policy path.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/ai.ts",
+        "src/core/ai.test.ts#rejects-malicious-proposal-commands-and-authority-context-widening"
+      ],
+      "notes": "The broker fixes disclosure/source context, rejects unadmitted commands and authority-shaped arguments, bounds proposal sources, and requires the normal command path. Provider/process/browser adversarial qualification and command execution integration remain open."
     },
     {
       "id": "OMN-ACC-016",

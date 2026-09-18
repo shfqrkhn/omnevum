@@ -1,5 +1,6 @@
 import type { CanonicalRecord } from "./model";
 import { scrubSensitiveValue } from "./safety";
+import { isAdmittedSemanticCommand } from "./semantic-command";
 
 export type AiOperation = "SUMMARIZE" | "EXTRACT" | "COMPARE" | "CLASSIFY" | "EXPLAIN" | "DRAFT" | "SUGGEST" | "TRANSLATE" | "RELATE" | "SEARCH";
 export type AiDisclosureClass = "PRIVATE" | "SHARED" | "PUBLIC";
@@ -102,8 +103,17 @@ export class AiBroker {
     if (request.expectedOutput !== "PROPOSAL" || request.operation !== "SUGGEST") throw new Error("AI request is not a proposal operation");
     if (typeof proposal !== "object" || proposal === null) throw new Error("Invalid AI action proposal");
     const candidate = proposal as Record<string, unknown>;
-    if (typeof candidate.command !== "string" || !/^[a-z][a-z0-9._-]{1,80}$/.test(candidate.command) || typeof candidate.arguments !== "object" || candidate.arguments === null || Array.isArray(candidate.arguments) || Object.keys(candidate.arguments).length > 50) throw new Error("Invalid AI action proposal");
-    return { kind: "PROPOSAL", command: candidate.command, arguments: scrubSensitiveValue(candidate.arguments) as Record<string, unknown>, sourceIds: context.records.map((record) => record.id), requiresNormalCommandPath: true };
+    if (typeof candidate.command !== "string" || !isAdmittedSemanticCommand(candidate.command) || typeof candidate.arguments !== "object" || candidate.arguments === null || Array.isArray(candidate.arguments) || Object.keys(candidate.arguments).length > 50) throw new Error("Invalid AI action proposal");
+    const contextIds = new Set(context.records.map((record) => record.id));
+    const argumentsValue = candidate.arguments as Record<string, unknown>;
+    for (const [key, value] of Object.entries(argumentsValue)) {
+      if (!/^[a-zA-Z][a-zA-Z0-9_.-]{0,80}$/.test(key) || /^(?:context|disclosureClass|provider|routeId|model|credential|credentials|secret|token|network|permission|permissions|scope|sourceIds)$/i.test(key)) throw new Error("AI proposal cannot carry authority controls");
+      if (/(?:^|\.)(?:record|source|target|subject|artifact)(?:Id|Ids)$/i.test(key)) {
+        const ids = Array.isArray(value) ? value : [value];
+        if (!ids.every((id) => typeof id === "string" && contextIds.has(id))) throw new Error("AI proposal cannot widen its source context");
+      }
+    }
+    return { kind: "PROPOSAL", command: candidate.command, arguments: scrubSensitiveValue(argumentsValue) as Record<string, unknown>, sourceIds: [...contextIds], requiresNormalCommandPath: true };
   }
 }
 
