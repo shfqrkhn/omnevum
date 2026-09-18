@@ -500,9 +500,10 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/place.test.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-source-meaning-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-source-meaning-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-track-place-and-compose-follow-up"
       ],
-      "notes": "The current built preview captures a validated GeoJSON Point through the shared Place/Geo owner and preserves it as a canonical observation; GPX/timeline reuse, location-tracking policy, and broader import/target qualification remain open."
+      "notes": "The current built preview captures a validated GeoJSON Point through the shared Place/Geo owner and preserves it as a canonical observation; the current artifact also saves a coordinate Place record through the visible form and retains it beside Track records. GPX/timeline reuse, location-tracking policy, and broader import/target qualification remain open."
     },
     {
       "id": "OMN-ACC-034",
@@ -602,9 +603,10 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/track.test.ts",
-        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-track-place-and-compose-follow-up"
       ],
-      "notes": "The built preview covers mobile-compatible Track capture and derived dashboard rendering; multi-view reuse and specialist-domain mapping remain open."
+      "notes": "The built preview covers Track capture and derived dashboard rendering; the current artifact saves two observations through one reusable definition path and keeps them as platform.track records. Mobile/touch qualification, multi-view permission breadth, and specialist-domain mapping remain open."
     },
     {
       "id": "OMN-ACC-043",
@@ -681,9 +683,10 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/compose.test.ts",
-        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-track-place-and-compose-follow-up"
       ],
-      "notes": "Built-preview evidence covers declarative form/list/table/chart projection, localization, and semantic command boundaries; configurable layout breadth, compact/expanded accessibility qualification, update survival, and qualified AI creation remain open."
+      "notes": "Built-preview evidence covers declarative form/list/table/chart projection, localization, and semantic command boundaries; the current artifact also saves a safe-field dashboard over Track and Place records and proves canonical counts remain bounded. Configurable layout breadth, compact/expanded accessibility qualification, update survival, and qualified AI creation remain open."
     },
     {
       "id": "OMN-ACC-049",
