@@ -659,8 +659,11 @@
         "line": 3512
       },
       "text": "On a supported installed/browser target, the user shares text, a URL, or a supported file to Omnevum through the platform share sheet and reaches staged Capture/Acquire without bypassing validation/provenance. On a target without qualified share-target support, equivalent capture remains available through ordinary in-app URL/text/file/clipboard flows.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#acquireinput-follow-up"
+      ],
+      "notes": "Local Chromium static-preview evidence covers ordinary in-app file and clipboard fallback flows through staged Acquire and canonical acceptance. Share-target delivery, supported-browser qualification, and installed-target behavior remain open."
     },
     {
       "id": "OMN-ACC-063",

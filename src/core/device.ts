@@ -58,12 +58,18 @@ export class DeviceInputBroker {
     const clipboard = this.environment.navigator ? this.environment.navigator.clipboard : runtimeNavigator?.clipboard;
     const readText = clipboard?.readText;
     if (!clipboard || typeof readText !== "function") throw new Error("Clipboard input is unavailable on this target");
-    return readText.call(clipboard);
+    const text = await readText.call(clipboard);
+    if (new TextEncoder().encode(text).byteLength > MAX_DEVICE_TEXT_BYTES) throw new Error("Clipboard text exceeds the bounded 5 MiB limit");
+    return text;
+  }
+
+  public readFile(file: Blob): Blob {
+    if (file.size > MAX_DEVICE_TEXT_BYTES) throw new Error("File input exceeds the bounded 5 MiB limit");
+    return file;
   }
 
   public async readFileText(file: Blob): Promise<string> {
-    if (file.size > MAX_DEVICE_TEXT_BYTES) throw new Error("File text input exceeds the bounded 5 MiB limit");
-    return file.text();
+    return this.readFile(file).text();
   }
 
   public async shareText(text: string, url?: string): Promise<void> {

@@ -35,7 +35,8 @@
     "Safe Presentation Mode is reversible and preserves the stored presentation profile",
     "persisted Compose/View dashboard projects accessible list, table, chart, and capture boundaries",
     "production preview service worker is activated and controls the page; stamped cache identity, offline reload/mutation, 390x844 labelled keyboard focus, and no browser warnings are evidenced",
-    "105 unit tests pass across 40 test files after the Compose/View and Vault-overlay increment"
+    "Device/Input broker mediates bounded file and clipboard Acquire staging through the existing preview and canonical command path",
+    "106 unit tests pass across 40 test files after the bounded file/clipboard Acquire increment"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad decision beyond the recorded harvest-reference route",

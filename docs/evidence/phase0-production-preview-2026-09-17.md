@@ -38,6 +38,12 @@ This is a local static-origin offline mutation/reload receipt. It is not evidenc
 
 After the service-worker cache-identity hardening, `npm run build` produced cache identity `omnevum-shell-e4428b7e0470f612`. On the fresh `4174` origin, the new worker became `activated`, retired the prior `omnevum-shell-v1` cache, and retained the current root, CSS, and JavaScript assets. With network emulation disabled, the shell reloaded and accepted `Stamped worker offline capture`; network restoration and reload preserved three canonical notes and a healthy derived index.
 
+## Acquire/Input follow-up
+
+After the bounded Device/Input integration build (`npm run build`, cache identity `omnevum-shell-c687d0d941bd37ea`), the fresh local static origin exposed file and clipboard routes in the Acquire surface. A local `README.md` fixture selected through the file control produced one staged `HIGH` candidate, and accepting it created one canonical `core.acquire` record with the existing command/provenance path. A synthetic clipboard value produced one staged `HIGH` candidate through the same preview path. The browser console returned no warning or error entries after these interactions.
+
+The Device/Input broker now bounds clipboard text and file blobs at 5 MiB before Acquire sees them; the unit suite covers the boundary. This proves only the local Chromium static-preview fallback routes. It does not qualify share-target delivery, other browser families, permissions, camera/microphone/location, parser breadth, or production deployment.
+
 ## Limits
 
 This receipt establishes only a local production-preview activation/offline-reload smoke at one Chromium-based browser surface and one mobile viewport. It does not establish GitHub Pages routing, service-worker update/rollback, browser-family support, responsive/accessibility conformance, core offline mutations/degradation, or release readiness. Those remain open in the support, risk, and completion registers.

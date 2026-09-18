@@ -15,7 +15,7 @@
     {"ownerId": "platform.credential-key", "meaning": "credential handles, key lifecycle, device unlock, recovery metadata", "writes": ["secret-free-handle-metadata"], "status": "CONTRACT_SPIKE_SESSION_ONLY"},
     {"ownerId": "platform.presentation", "meaning": "theme, locale, branding, navigation and safe presentation profile", "writes": ["presentation-profile"], "status": "IMPLEMENTED_SAFE_MODE"},
     {"ownerId": "platform.recovery", "meaning": "health, diagnostics, safe mode, repair and restore", "writes": ["recovery-state"], "status": "IMPLEMENTED_INITIAL"},
-    {"ownerId": "platform.device-input", "meaning": "capability detection and explicit device/file/share input", "writes": ["staged-input"], "status": "CONTRACT_SPIKE"},
+    {"ownerId": "platform.device-input", "meaning": "capability detection and explicit device/file/share input", "writes": ["staged-input"], "status": "IMPLEMENTED_FILE_CLIPBOARD_BOUNDED"},
     {"ownerId": "platform.track", "meaning": "generic quantitative and qualitative observations", "writes": ["observation-record"], "status": "IMPLEMENTED_INITIAL"},
     {"ownerId": "platform.time", "meaning": "explicit focus/time observations and due-state semantics", "writes": ["time-observation"], "status": "IMPLEMENTED_INITIAL"},
     {"ownerId": "platform.relate", "meaning": "cross-record reference relationships", "writes": ["relationship-record"], "status": "IMPLEMENTED_INITIAL"},

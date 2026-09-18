@@ -10,6 +10,7 @@ This checkout is the initial Phase 0 implementation foundation. The governing de
 - Native DOM presentation with accessible Light and AMOLED Dark themes.
 - IndexedDB canonical record store with revision and tombstone semantics.
 - One command path for Capture, triage, update, archive, Undo, relationship, focus-Time, and bounded Artifact records.
+- Acquire/Ingest stages bounded text, JSON, CSV, URL, file, and clipboard input for review before canonical acceptance.
 - Search over a rebuildable derived index with health reporting.
 - Portable unencrypted Vault export/import with revision-aware validation and Artifact payloads.
 - Platform-owned Effect/Outbox state with secret-field rejection, ready for optional external adapters.

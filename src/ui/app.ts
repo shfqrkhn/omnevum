@@ -1,5 +1,5 @@
 import type { CommandBus } from "../core/commands";
-import { acceptCandidates, stageText, stageUrl, type AcquireCandidate } from "../core/acquire";
+import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate, type AcquirePreview } from "../core/acquire";
 import { isCompletedTask, recordSpace, recordText, recordTriageStatus, type SpaceId } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
@@ -13,6 +13,7 @@ import { captureExpense, captureHealthMeasurement } from "../core/workflows";
 import { projectDataset } from "../core/data";
 import { countRecords, groupCounts } from "../core/analysis";
 import type { CapabilityRuntime } from "../core/capability-runtime";
+import { DeviceInputBroker } from "../core/device";
 import { SpaceService } from "../core/space";
 import { historyWithDiffs } from "../core/history";
 import { makeUserDashboard, projectView, ViewRegistry } from "../core/compose";
@@ -124,6 +125,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <div class="form-row">
             <span class="hint">${copy.acquireHint}</span>
             <button type="submit">${copy.stageImport}</button>
+          </div>
+          <div class="form-row">
+            <label class="file-button secondary" for="acquire-file">${copy.acquireFile}</label>
+            <input id="acquire-file" type="file" accept="text/*,application/json,.json,.csv,.txt" />
+            <button id="acquire-clipboard" class="secondary" type="button">${copy.readClipboard}</button>
           </div>
           <p id="acquire-status" class="hint" role="status"></p>
           <ul id="acquire-preview" class="record-list"></ul>
@@ -355,6 +361,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const captureText = root.querySelector<HTMLTextAreaElement>("#capture-text");
   const acquireForm = root.querySelector<HTMLFormElement>("#acquire-form");
   const acquireText = root.querySelector<HTMLTextAreaElement>("#acquire-text");
+  const acquireFile = root.querySelector<HTMLInputElement>("#acquire-file");
+  const acquireClipboard = root.querySelector<HTMLButtonElement>("#acquire-clipboard");
   const acquireStatus = root.querySelector<HTMLElement>("#acquire-status");
   const acquirePreview = root.querySelector<HTMLUListElement>("#acquire-preview");
   const acceptStaged = root.querySelector<HTMLButtonElement>("#accept-staged");
@@ -438,7 +446,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
 
@@ -449,8 +457,26 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const trackService = new TrackService(store, commands);
   const spaceService = new SpaceService(store, commands);
   const viewRegistry = new ViewRegistry(store);
+  const deviceInput = new DeviceInputBroker();
   let stagedCandidates: AcquireCandidate[] = [];
   let activeSpace: SpaceId | undefined;
+
+  const showAcquirePreview = (preview: AcquirePreview): void => {
+    stagedCandidates = preview.candidates;
+    acquirePreview.replaceChildren();
+    for (const candidate of stagedCandidates.slice(0, 20)) {
+      const item = document.createElement("li");
+      item.textContent = `${candidate.kind} - ${typeof candidate.data.text === "string" ? candidate.data.text : candidate.candidateId} (${candidate.confidence})`;
+      acquirePreview.append(item);
+    }
+    acquireStatus.textContent = copy.stagedMessage(stagedCandidates.length, preview.warnings.length);
+    acceptStaged.disabled = stagedCandidates.length === 0;
+  };
+
+  const stageAcquireText = async (source: string): Promise<void> => {
+    const preview = /^https?:\/\//i.test(source) ? await stageUrl(source) : await stageText(source);
+    showAcquirePreview(preview);
+  };
 
   const scopedRecords = async (includeDeleted = false): Promise<Awaited<ReturnType<CanonicalStore["list"]>>> => {
     const records = await store.list(includeDeleted);
@@ -836,18 +862,33 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const source = acquireText.value.trim();
     if (!source) return;
     try {
-      const preview = /^https?:\/\//i.test(source) ? await stageUrl(source) : await stageText(source);
-      stagedCandidates = preview.candidates;
-      acquirePreview.replaceChildren();
-      for (const candidate of stagedCandidates.slice(0, 20)) {
-        const item = document.createElement("li");
-        item.textContent = `${candidate.kind} - ${typeof candidate.data.text === "string" ? candidate.data.text : candidate.candidateId} (${candidate.confidence})`;
-        acquirePreview.append(item);
-      }
-      acquireStatus.textContent = copy.stagedMessage(stagedCandidates.length, preview.warnings.length);
-      acceptStaged.disabled = stagedCandidates.length === 0;
+      await stageAcquireText(source);
     } catch (error) {
       acquireStatus.textContent = error instanceof Error ? error.message : "Acquire staging failed";
+    }
+  });
+
+  acquireFile.addEventListener("change", async () => {
+    const file = acquireFile.files?.[0];
+    if (!file) return;
+    try {
+      const preview = await stageBlob(deviceInput.readFile(file), file.name, file.type || "text/plain");
+      acquireText.value = "";
+      showAcquirePreview(preview);
+    } catch (error) {
+      acquireStatus.textContent = error instanceof Error ? error.message : "Acquire file staging failed";
+    } finally {
+      acquireFile.value = "";
+    }
+  });
+
+  acquireClipboard.addEventListener("click", async () => {
+    try {
+      const text = await deviceInput.readClipboardText();
+      acquireText.value = text;
+      await stageAcquireText(text.trim());
+    } catch (error) {
+      acquireStatus.textContent = error instanceof Error ? error.message : "Clipboard staging failed";
     }
   });
 
@@ -860,6 +901,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       acquirePreview.replaceChildren();
       acceptStaged.disabled = true;
       acquireText.value = "";
+      acquireFile.value = "";
       await renderRecords(searchQuery.value);
     } catch (error) {
       acquireStatus.textContent = describeError(error, "Staged records were not accepted");
