@@ -23,6 +23,8 @@ import { createEvidenceLink, type EvidenceRelation } from "../core/evidence";
 import { makePlaceData, parseGeoJsonPoint } from "../core/place";
 import { projectForAuthorizedShare } from "../core/share";
 import { canUseShareGrant, createShareGrant, revokeShareGrant } from "../core/sharing";
+import { JsonEndpointTransport } from "../core/remote";
+import { SyncEngine } from "../core/sync";
 
 export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
@@ -375,6 +377,18 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <ul id="share-grant-list" class="record-list"></ul>
       </section>
 
+      <section id="sync" class="panel" aria-labelledby="sync-heading">
+        <p class="eyebrow">SYNC / PORTABILITY</p>
+        <h2 id="sync-heading">${copy.syncHeading}</h2>
+        <form id="sync-form" class="relationship-form">
+          <label for="sync-endpoint">${copy.syncEndpoint}</label>
+          <input id="sync-endpoint" name="endpoint" type="url" maxlength="500" placeholder="https://your-endpoint.example/replica" required />
+          <p class="hint">${copy.syncHint}</p>
+          <button id="sync-submit" type="submit">${copy.syncRun}</button>
+          <p id="sync-status" class="hint" role="status"></p>
+        </form>
+      </section>
+
       <section id="focus" class="panel" aria-labelledby="focus-heading">
         <p class="eyebrow">${copy.timeObserve}</p>
         <h2 id="focus-heading">${copy.focusHeading}</h2>
@@ -537,6 +551,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const shareExport = root.querySelector<HTMLButtonElement>("#share-export");
   const shareStatus = root.querySelector<HTMLElement>("#share-status");
   const shareGrantList = root.querySelector<HTMLUListElement>("#share-grant-list");
+  const syncForm = root.querySelector<HTMLFormElement>("#sync-form");
+  const syncEndpoint = root.querySelector<HTMLInputElement>("#sync-endpoint");
+  const syncStatus = root.querySelector<HTMLElement>("#sync-status");
   const focusToggle = root.querySelector<HTMLButtonElement>("#focus-toggle");
   const focusStatus = root.querySelector<HTMLElement>("#focus-status");
   const reminderForm = root.querySelector<HTMLFormElement>("#reminder-form");
@@ -568,7 +585,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
 
@@ -1411,6 +1428,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       shareStatus.textContent = copy.projectionSaved(projection.records.length, projection.omittedRecordCount);
     } catch (error) {
       shareStatus.textContent = describeError(error, "Bounded share projection failed; canonical records were not changed.");
+    }
+  });
+
+  syncForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      const result = await new SyncEngine(store, new JsonEndpointTransport(syncEndpoint.value.trim())).synchronize();
+      syncStatus.textContent = copy.syncResult(result.imported, result.skipped, result.conflicts.length, result.tombstonesPreserved);
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      syncStatus.textContent = describeError(error, "Sync failed; canonical records were not changed by this action.");
     }
   });
 
