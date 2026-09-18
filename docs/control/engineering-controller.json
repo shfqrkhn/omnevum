@@ -95,6 +95,7 @@
     "current receipt-bound Chromium preview attaches a 37-byte fixture through the visible Artifact chooser, retains one platform.artifact payload, exposes it through shared selectors, and returns to a clean scoped origin; source d04efcc",
     "bounded Artifact adapters now inspect PDF/image/HTML/text input without active execution, mark derived text and OCR limits explicitly, honor cancellation, and retain PDF Acquire payloads idempotently; source 673030e",
     "provider-neutral JsonEndpointEffectExecutor now sends typed idempotent operations through the credential broker, bounds remote responses, and routes ambiguous outcomes to explicit reconciliation; source f96f77a",
+    "Device/Input broker now detects optional BarcodeDetector/QR support, filters bounded results, and releases media tracks through a scoped finally helper; source 6c7218a",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [

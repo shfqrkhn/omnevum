@@ -1092,9 +1092,11 @@
       "evidence": [
         "src/core/device.ts",
         "src/core/device.test.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up",
+        "src/core/device.test.ts#keeps-media-ownership-scoped-and-exposes-browser-native-QR-results-only-when-available",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-deviceinput-broker-ownership-follow-up"
       ],
-      "notes": "Source/unit evidence covers capability detection, explicit broker access, bounded file/clipboard input, and manual fallback. Real camera/microphone/geolocation permission denial/cancellation, barcode/QR, capture routing, browser/device targets, and accessibility evidence remain open."
+      "notes": "Source/unit evidence covers capability detection, explicit broker access, bounded file/clipboard input, manual fallback, browser-native QR detection when exposed, filtered bounded results, and automatic media-track release. Real camera/microphone/geolocation permission denial/cancellation, hardware capture routing through Artifact/Acquire/Track/Place/Triage, browser/device targets, and accessibility evidence remain open."
     },
     {
       "id": "OMN-ACC-079",
