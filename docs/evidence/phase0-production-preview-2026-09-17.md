@@ -219,3 +219,9 @@ The current `npm run build` artifact at source revision `183a9b8` is bound in `d
 On a fresh origin at `http://127.0.0.1:4223/` in the Codex In-app Browser Chromium surface, an unchecked `Default inbox sentinel` capture produced one visible inbox item. A second `Unambiguous direct sentinel` capture with the checkbox selected produced two active Notes while the review count remained one and the default item stayed in the inbox. Health reported `2 active, 0 archived, 2 revision snapshot(s), 0 artifact payload(s); search index healthy.`
 
 This is bounded source/unit and fresh-origin local Chromium interaction evidence only. It does not qualify an automated ambiguity classifier, richer proposal UI, broader accessibility/target coverage, or complete triage acceptance.
+
+## Triage delete/discard command follow-up
+
+The current `npm run build` artifact at source revision `29361b7` is bound in `docs/control/release-evidence.json` by artifact digest `7914b0ca96f75521c4130bdce61dcf7ba0546180ce3a1c8fd260f89cfe99db37`; its stamped service-worker cache is `omnevum-shell-5c7a66cf10834034`. Triage now admits `deleteTriage`: it checks the active source revision, records `triageDisposition: DELETED` and `triageStatus: REVIEWED`, then archives the source through the existing reversible canonical archive path. The Recovery/Archived Records surface therefore retains the source for explicit restore instead of silently erasing history. The UI exposes Delete separately from Archive, and the CommandBus regression verifies provenance-preserving disposition, archived state, and no active writable copy.
+
+This increment is source/unit and built-control evidence. A fresh-origin browser exposed the separate Delete action, but activation was not included in this receipt because graphical local deletion requires an action-time confirmation; no synthetic browser data was deleted.
