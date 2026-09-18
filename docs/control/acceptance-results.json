@@ -347,12 +347,13 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-factory-appgame-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-factory-touch-profile-follow-up",
         "src/core/factory.ts",
         "src/core/factory-preview.ts",
         "src/core/factory-interruption.test.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-state-vault-recovery-and-factory-interruption-follow-up"
       ],
-      "notes": "The current browser receipt proves a nontrivial stateful declarative app can be created through the public factory contract and canonical command path; the two-process benchmark proves interrupted app resumption. Independent fresh-AI authorship, touch/mobile breadth, engine substitution, and human acceptance remain open."
+      "notes": "The current browser receipt proves a nontrivial stateful declarative app can be created through the public factory contract and canonical command path; the touch-capable 390x844 Chromium profile repeats generated capture/list persistence with empty diagnostics; the two-process benchmark proves interrupted app resumption. Independent fresh-AI authorship, physical touch/mobile browser breadth, engine substitution, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-020",
@@ -364,13 +365,14 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-factory-appgame-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-factory-touch-profile-follow-up",
         "src/core/factory.ts",
         "src/core/factory-preview.ts",
         "src/core/storage.ts",
         "src/core/factory-interruption.test.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-state-vault-recovery-and-factory-interruption-follow-up"
       ],
-      "notes": "The current browser receipt proves the public game contract, semantic controls, save/load, and desktop rendering; automated storage regressions and the two-process benchmark now prove package-state Vault export/import, Recovery repair retention, and interrupted resumption. Independent fresh-AI creation, touch hardware, mobile targets, engine substitution, native on-device Recovery interaction, and human acceptance remain open."
+      "notes": "The current browser receipt proves the public game contract, semantic controls, save/load, and desktop rendering; the touch-capable 390x844 Chromium profile proves responsive generated controls plus save/load persistence with empty diagnostics; automated storage regressions and the two-process benchmark prove package-state Vault export/import, Recovery repair retention, and interrupted resumption. Independent fresh-AI creation, physical touch hardware, mobile browser targets, engine substitution, native on-device Recovery interaction, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-021",
@@ -831,6 +833,7 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-factory-appgame-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-factory-touch-profile-follow-up",
         "src/core/package-contract.ts",
         "src/core/package-contract.test.ts",
         "src/core/compose.ts",

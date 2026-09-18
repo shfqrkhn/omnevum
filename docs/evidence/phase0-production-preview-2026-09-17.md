@@ -818,6 +818,14 @@ The opt-in generated Reading Log form/list accepted `Current generated reading 2
 
 This is current-artifact Chromium desktop factory app/game evidence only. It does not qualify fresh-AI authorship, touch/mobile hardware, FOSS engine substitution, Recovery-on-device interaction, deployment, or human acceptance; OMN-ACC-019, OMN-ACC-020, and OMN-ACC-053 remain `PARTIAL`.
 
+## Current Chromium factory touch-profile follow-up
+
+On 2026-09-18, the exact current built artifact generated from source revision `e8766667ea94211e04508f508c9f390efeffc9bf` (artifact digest `e079783ed42bb1e2534bb390e3b1715e9ddebbbeaec89addb8b9bd5a64efc47a`, JavaScript `index-DCcQNrzv.js`, service-worker cache `omnevum-shell-474ebecf133b967f`) was served with `npm run preview -- --host 127.0.0.1 --port 4268` at `http://127.0.0.1:4268/?factory-preview=1&touch-factory=1` in the Codex In-app Browser Chromium surface (`Chrome/153.0.0.0`). CDP emulation used `390x844`, device scale `1`, and `navigator.maxTouchPoints=5`; document `scrollWidth` remained `390px`.
+
+At the touch-capable responsive profile, the generated Reading Log form saved `Touch profile reading`, `15` minutes, and `touch,390` tags through the generated app contract. The generated Constellation game moved to position `2`, collected one star, saved `position=2`, `energy=2`, `stars=1`, `tick=3`, moved onward, and restored the saved state with `Load game`. After a full reload, the generated record remained listed, the app reported `1 active, 0 archived, 1 revision snapshot(s), 0 artifact payload(s); search index healthy.`, and `Load game` again restored `position=2`, `energy=2`, `stars=1`, `tick=3`. The app diagnostic array and browser warning/error log were empty.
+
+This is responsive/touch-capable browser emulation using the visible semantic controls; it is not physical touch hardware, mobile Safari/Firefox, assistive-technology certification, native on-device Recovery, fresh-AI authorship, engine substitution, deployment, or human acceptance. OMN-ACC-019, OMN-ACC-020, and OMN-ACC-053 remain `PARTIAL`.
+
 ## Current Chromium credentialed Effect/Outbox restart and reconciliation follow-up
 
 On 2026-09-18, the exact built application artifact generated from source revision `e8766667ea94211e04508f508c9f390efeffc9bf` (artifact digest `e079783ed42bb1e2534bb390e3b1715e9ddebbbeaec89addb8b9bd5a64efc47a`, JavaScript `index-DCcQNrzv.js`, service-worker cache `omnevum-shell-474ebecf133b967f`) was served with `npm run preview:effect-fixture -- 4267` at `http://localhost:4267/?effect-credentialed-restart-preview=1&effectEndpoint=http%3A%2F%2Flocalhost%3A4267%2F__omnevum%2Feffect%2Faction%3Fambiguous%3D1` in the Codex In-app Browser Chromium surface (`Chrome/153.0.0.0`) on a fresh local origin. The preview process used an ephemeral synthetic bearer and the opt-in, repository-owned ambiguous-response fixture mode; no external provider or user credential was used.
