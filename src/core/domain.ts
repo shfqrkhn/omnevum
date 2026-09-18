@@ -1,11 +1,22 @@
 import type { CanonicalRecord, RecordType } from "./model";
 
-export type SpaceId = "personal" | "household" | "work";
-export const SPACE_LABELS: Record<SpaceId, string> = {
+export const BUILT_IN_SPACE_IDS = ["personal", "household", "work"] as const;
+export type BuiltInSpaceId = (typeof BUILT_IN_SPACE_IDS)[number];
+export type SpaceId = string;
+export const SPACE_LABELS: Record<BuiltInSpaceId, string> = {
   personal: "Personal",
   household: "Household",
   work: "Work"
 };
+const SPACE_ID_PATTERN = /^[A-Za-z][A-Za-z0-9_-]{1,159}$/;
+
+export function isSpaceId(value: unknown): value is SpaceId {
+  return typeof value === "string" && SPACE_ID_PATTERN.test(value);
+}
+
+export function isBuiltInSpaceId(value: unknown): value is BuiltInSpaceId {
+  return value === "personal" || value === "household" || value === "work";
+}
 export type TriageStatus = "INBOX" | "REVIEWED" | "DEFERRED" | "CLARIFY";
 export type TriageDisposition = "REFERENCE" | "LINKED" | "ROUTED" | "SPLIT" | "DELETED";
 export type TriageProposalAction = "REVIEW" | "CLARIFY" | "DEFER" | "REFERENCE" | "LINK" | "ROUTE" | "SPLIT" | "DELETE";
@@ -27,7 +38,7 @@ export function recordText(record: CanonicalRecord): string {
 }
 
 export function recordSpace(record: CanonicalRecord): SpaceId {
-  return record.data.space === "household" || record.data.space === "work" ? record.data.space : "personal";
+  return isSpaceId(record.data.space) ? record.data.space : "personal";
 }
 
 export function recordTriageStatus(record: CanonicalRecord): TriageStatus {

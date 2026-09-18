@@ -1,5 +1,5 @@
 import type { CanonicalRecord, RecordType } from "./model";
-import type { SpaceId } from "./domain";
+import { isSpaceId, type SpaceId } from "./domain";
 import type { CanonicalStore } from "./storage";
 
 export const COMPOSE_WIDGET_TYPES = ["form", "list", "table", "chart", "timeline", "text"] as const;
@@ -37,7 +37,7 @@ export function isViewDefinition(value: unknown): value is ViewDefinition {
   const candidate = value as Record<string, unknown>;
   if (candidate.schemaVersion !== 1 || typeof candidate.id !== "string" || !/^[a-z][a-z0-9._-]{1,120}$/.test(candidate.id) || typeof candidate.title !== "string" || !candidate.title.trim() || candidate.title.length > MAX_VIEW_TEXT || (candidate.layout !== "stack" && candidate.layout !== "grid") || !["SYSTEM", "USER", "PACKAGE"].includes(String(candidate.source)) || !Array.isArray(candidate.widgets) || candidate.widgets.length === 0 || candidate.widgets.length > 32) return false;
   if (candidate.recordType !== undefined && !["note", "task", "observation", "relationship", "artifact"].includes(String(candidate.recordType))) return false;
-  if (candidate.space !== undefined && !["personal", "household", "work"].includes(String(candidate.space))) return false;
+  if (candidate.space !== undefined && !isSpaceId(candidate.space)) return false;
   return candidate.widgets.every((widget) => {
     if (typeof widget !== "object" || widget === null) return false;
     const item = widget as Record<string, unknown>;

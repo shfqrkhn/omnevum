@@ -1,7 +1,7 @@
 import type { CommandBus } from "./commands";
 import type { CanonicalRecord } from "./model";
 import type { CanonicalStore } from "./storage";
-import type { SpaceId } from "./domain";
+import { isSpaceId, type SpaceId } from "./domain";
 
 export interface TrackDefinition {
   id: string;
@@ -43,7 +43,7 @@ export class TrackService {
     if ((valueType === "TEXT" || valueType === "RATING") && typeof value !== "string" && typeof value !== "number") throw new Error("Tracker value type does not match the definition");
     const name = typeof data.name === "string" ? data.name : "Observation";
     const unit = typeof data.unit === "string" ? data.unit : undefined;
-    const space = data.space === "household" || data.space === "work" ? data.space : "personal";
+    const space = isSpaceId(data.space) ? data.space : "personal";
     return this.commands.create({
       recordType: "observation",
       owner: "platform.track",

@@ -45,10 +45,11 @@ describe("bounded share projection", () => {
     const commands = new CommandBus(store);
     const spaces = new SpaceService(store, commands);
     const source = await commands.create({ recordType: "note", owner: "core.capture", data: { text: "space-bound" } });
-    const grant = await createShareGrant(commands, { grantedTo: "person:reviewer", purpose: "review", space: "household", recordIds: [source.id] });
+    const custom = await spaces.create("Household trip");
+    const grant = await createShareGrant(commands, { grantedTo: "person:reviewer", purpose: "review", space: custom.id, recordIds: [source.id] });
     const initial = await store.list();
     expect(() => projectForAuthorizedShare(grant, initial, [source.id], true, initial)).toThrow(/Space/);
-    await spaces.add(source.id, "household");
+    await spaces.add(source.id, custom.id);
     const withMembership = await store.list();
     expect(projectForAuthorizedShare(grant, withMembership, [source.id], true, withMembership).records).toHaveLength(1);
     store.close();

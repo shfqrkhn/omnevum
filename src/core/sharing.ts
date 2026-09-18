@@ -1,6 +1,6 @@
 import type { CommandBus } from "./commands";
 import type { CanonicalRecord } from "./model";
-import type { SpaceId } from "./domain";
+import { isSpaceId, type SpaceId } from "./domain";
 
 export interface ShareGrantInput {
   grantedTo: string;
@@ -28,6 +28,7 @@ export async function createShareGrant(commands: CommandBus, input: ShareGrantIn
   const purpose = input.purpose.trim().slice(0, 500);
   const recordIds = [...new Set(input.recordIds.filter((id) => /^[a-zA-Z0-9:_-]{1,160}$/.test(id)))].slice(0, 500);
   if (!grantedTo || !purpose || recordIds.length === 0) throw new Error("Share grant requires recipient, purpose, and records");
+  if (!isSpaceId(input.space)) throw new Error("Share grant Space is invalid");
   if (input.expiresAt && !Number.isFinite(Date.parse(input.expiresAt))) throw new Error("Share grant expiry is invalid");
   const createdAt = new Date().toISOString();
   const data: ShareGrantData = { kind: "share-grant", grantedTo, purpose, space: input.space, recordIds, status: "ACTIVE", createdAt, triageStatus: "REVIEWED", ...(input.expiresAt ? { expiresAt: input.expiresAt } : {}) };

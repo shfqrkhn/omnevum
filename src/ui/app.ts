@@ -1,6 +1,6 @@
 import type { CommandBus, TriageRouteTarget, TriageSplitPart } from "../core/commands";
 import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate, type AcquirePreview } from "../core/acquire";
-import { isCompletedTask, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
+import { isCompletedTask, isSpaceId, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, SPACE_LABELS, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
 import { DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationHomeWidgetId, type PresentationProfile, type PresentationSectionId } from "../core/presentation";
@@ -284,6 +284,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       <section id="spaces" class="panel" aria-labelledby="spaces-heading">
         <p class="eyebrow">${copy.space}</p>
         <h2 id="spaces-heading">${copy.scopeWithoutCopying}</h2>
+        <form id="space-create-form" class="relationship-form">
+          <label for="space-name">${copy.spaceName}</label>
+          <input id="space-name" name="name" type="text" maxlength="80" required />
+          <button id="space-create" type="submit">${copy.createSpace}</button>
+          <p id="space-create-status" class="hint" role="status"></p>
+        </form>
         <form id="space-form" class="relationship-form">
           <label for="space-record">${copy.assignToSpace}</label>
           <select id="space-record" name="record"></select>
@@ -303,6 +309,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <option value="household">${copy.household}</option>
           <option value="work">${copy.work}</option>
         </select>
+        <ul id="space-list" class="record-list"></ul>
       </section>
 
       <section id="compose" class="panel" aria-labelledby="compose-heading">
@@ -554,11 +561,15 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const searchQuery = root.querySelector<HTMLInputElement>("#search-query");
   const clearSearch = root.querySelector<HTMLButtonElement>("#clear-search");
   const searchStatus = root.querySelector<HTMLElement>("#search-status");
+  const spaceCreateForm = root.querySelector<HTMLFormElement>("#space-create-form");
+  const spaceName = root.querySelector<HTMLInputElement>("#space-name");
+  const spaceCreateStatus = root.querySelector<HTMLElement>("#space-create-status");
   const spaceForm = root.querySelector<HTMLFormElement>("#space-form");
   const spaceRecord = root.querySelector<HTMLSelectElement>("#space-record");
   const spaceMembership = root.querySelector<HTMLSelectElement>("#space-membership");
   const spaceFilter = root.querySelector<HTMLSelectElement>("#space-filter");
   const spaceStatus = root.querySelector<HTMLElement>("#space-status");
+  const spaceList = root.querySelector<HTMLUListElement>("#space-list");
   const composeForm = root.querySelector<HTMLFormElement>("#compose-form");
   const composeTitle = root.querySelector<HTMLInputElement>("#compose-title");
   const composeFields = root.querySelector<HTMLInputElement>("#compose-fields");
@@ -664,7 +675,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
 
@@ -678,6 +689,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const deviceInput = new DeviceInputBroker();
   let stagedCandidates: AcquireCandidate[] = [];
   let activeSpace: SpaceId | undefined;
+  const spaceLabels = new Map<SpaceId, string>(Object.entries(SPACE_LABELS));
 
   const sectionLabel = (id: PresentationSectionId): string => {
     switch (id) {
@@ -837,9 +849,63 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
 
   const typeLabel = (recordType: string): string => recordType === "task" ? copy.task : recordType === "observation" ? copy.observation : recordType === "artifact" ? copy.attachArtifact : recordType === "relationship" ? copy.relationship : copy.note;
   const triageActionLabel = (action: TriageProposalAction): string => ({ REVIEW: copy.markReviewed, CLARIFY: copy.clarify, DEFER: copy.defer, REFERENCE: copy.reference, LINK: copy.createLink, ROUTE: copy.route, SPLIT: copy.split, DELETE: copy.delete })[action];
-  const spaceLabel = (space: SpaceId): string => space === "household" ? copy.household : space === "work" ? copy.work : copy.personal;
+  const spaceLabel = (space: SpaceId): string => spaceLabels.get(space) ?? space;
 
   const renderSpaceChoices = async (): Promise<void> => {
+    const spaces = await spaceService.listSpaces();
+    spaceLabels.clear();
+    for (const space of spaces) {
+      const localizedName = space.id === "personal" ? copy.personal : space.id === "household" ? copy.household : space.id === "work" ? copy.work : space.name;
+      spaceLabels.set(space.id, localizedName);
+    }
+    const fillSpaces = (select: HTMLSelectElement, includeAll: boolean): void => {
+      const previous = select.value;
+      select.replaceChildren();
+      if (includeAll) {
+        const all = document.createElement("option");
+        all.value = "";
+        all.textContent = copy.allSpaces;
+        select.append(all);
+      }
+      for (const space of spaces) {
+        const option = document.createElement("option");
+        option.value = space.id;
+        option.textContent = spaceLabels.get(space.id) ?? space.name;
+        select.append(option);
+      }
+      if ([...select.options].some((option) => option.value === previous)) select.value = previous;
+      else if (!includeAll && spaces[0]) select.value = spaces[0].id;
+    };
+    fillSpaces(spaceMembership, false);
+    fillSpaces(spaceFilter, true);
+    fillSpaces(composeSpace, true);
+    fillSpaces(shareSpace, false);
+    spaceList.replaceChildren();
+    for (const space of spaces.filter((candidate) => !candidate.builtIn)) {
+      const item = document.createElement("li");
+      item.className = "record-item";
+      const label = document.createElement("strong");
+      label.textContent = space.name;
+      const meta = document.createElement("small");
+      meta.textContent = space.id;
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "icon-button";
+      remove.textContent = copy.removeSpace;
+      remove.addEventListener("click", async () => {
+        if (!window.confirm(copy.removeSpaceConfirmation(space.name))) return;
+        try {
+          await spaceService.removeSpace(space.id);
+          if (activeSpace === space.id) activeSpace = undefined;
+          spaceStatus.textContent = copy.spaceRemoved(space.name);
+          await renderRecords(searchQuery.value);
+        } catch (error) {
+          spaceStatus.textContent = describeError(error, "Space was not removed; canonical records were not changed.");
+        }
+      });
+      item.append(label, meta, remove);
+      spaceList.append(item);
+    }
     const records = (await store.list()).filter((record) => record.owner !== "platform.space");
     const previous = spaceRecord.value;
     spaceRecord.replaceChildren();
@@ -1455,9 +1521,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       item.append(content, archive);
       recordList.append(item);
     }
+    await renderSpaceChoices();
     await renderSummary();
     await renderReview();
-    await renderSpaceChoices();
     await renderComposeView();
     await renderRelationshipChoices();
     await renderKnowledgeChoices();
@@ -1636,9 +1702,23 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
   });
 
+  spaceCreateForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      const created = await spaceService.create(spaceName.value);
+      spaceName.value = "";
+      spaceCreateStatus.textContent = copy.spaceCreated(created.name);
+      activeSpace = created.id;
+      await renderRecords();
+      spaceFilter.value = created.id;
+    } catch (error) {
+      spaceCreateStatus.textContent = describeError(error, "Space was not created; canonical records were not changed.");
+    }
+  });
+
   spaceForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const selectedSpace = spaceMembership.value === "household" || spaceMembership.value === "work" ? spaceMembership.value : "personal";
+    const selectedSpace = isSpaceId(spaceMembership.value) ? spaceMembership.value : "personal";
     if (!spaceRecord.value) {
       spaceStatus.textContent = copy.capturePicture;
       return;
@@ -1655,7 +1735,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   });
 
   spaceFilter.addEventListener("change", async () => {
-    activeSpace = spaceFilter.value === "household" || spaceFilter.value === "work" ? spaceFilter.value : spaceFilter.value === "personal" ? "personal" : undefined;
+    activeSpace = isSpaceId(spaceFilter.value) ? spaceFilter.value : undefined;
     spaceStatus.textContent = activeSpace ? `Showing ${spaceLabel(activeSpace)} records.` : copy.showingAll;
     await renderRecords(searchQuery.value);
   });
@@ -1663,7 +1743,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   composeForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     try {
-      const viewSpace = composeSpace.value === "household" || composeSpace.value === "work" ? composeSpace.value : composeSpace.value === "personal" ? "personal" : undefined;
+      const viewSpace = isSpaceId(composeSpace.value) ? composeSpace.value : undefined;
       const view = makeUserDashboard(composeTitle.value, composeFields.value.split(",").map((field) => field.trim()), viewSpace);
       await viewRegistry.save(view);
       composeStatus.textContent = copy.viewSaved;
@@ -1760,7 +1840,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       shareStatus.textContent = copy.shareSelectionRequired;
       return;
     }
-    const space = shareSpace.value === "household" || shareSpace.value === "work" ? shareSpace.value : "personal";
+    const space = isSpaceId(shareSpace.value) ? shareSpace.value : "personal";
     try {
       const scopedIds = new Set((await spaceService.project(await store.list(), space)).map((record) => record.id));
       if (recordIds.some((id) => !scopedIds.has(id))) {
