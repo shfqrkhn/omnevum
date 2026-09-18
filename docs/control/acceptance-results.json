@@ -456,7 +456,7 @@
         "src/core/acquire.ts",
         "src/core/acquire.test.ts#routes-heterogeneous-event-artifact-and-location-candidates-to-existing-owners"
       ],
-      "notes": "Acquire now preserves one source digest/sequence and previews heterogeneous event, artifact, location, and person-shaped candidates while routing recognized rows to existing Time, Artifact, and Place owners without a universal import store. Real provider exports, entity reconciliation, artifact payload retention, and built UI acceptance remain open."
+      "notes": "Acquire now preserves one source digest/sequence and previews heterogeneous event, artifact, location, and person-shaped candidates while routing recognized rows to existing Time, Artifact, and Place owners without a universal import store; the current built preview staged and accepted all four synthetic rows with owner-labeled canonical output. Real provider exports, entity reconciliation, artifact payload retention, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-032",
