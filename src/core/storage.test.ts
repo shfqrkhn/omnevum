@@ -184,6 +184,26 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("fences a stale client after another client upgrades the database", async () => {
+    const databaseName = `omnevum-test-${Date.now()}-versionchange`;
+    const store = new CanonicalStore(databaseName);
+    await store.open();
+    await store.put(record("record-versionchange"));
+
+    const request = indexedDB.open(databaseName, 7);
+    const newerDatabase = await new Promise<IDBDatabase>((resolve, reject) => {
+      request.onupgradeneeded = () => {
+        if (!request.result.objectStoreNames.contains("upgrade-marker")) request.result.createObjectStore("upgrade-marker");
+      };
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error ?? new Error("IndexedDB upgrade failed"));
+    });
+    newerDatabase.close();
+
+    await expect(store.get("record-versionchange")).rejects.toThrow("Store is not open");
+    store.close();
+  });
+
   it("reclaims only derived state under injected quota pressure and exposes persistence state", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-quota-pressure`, {
       estimateStorage: async () => ({ usageBytes: 90, quotaBytes: 100 }),

@@ -91,3 +91,7 @@ This is deterministic local recovery evidence only. It does not qualify real bro
 ## Safe Presentation Mode follow-up
 
 Presentation resolution now has an explicit contract: Safe Presentation Mode selects a known-good built-in profile, while malformed stored presentation remains untouched and is reported as a fallback outside safe mode. The regression stores an invalid profile beside a canonical record, resolves safe mode, and verifies both the original malformed setting and canonical record remain unchanged. This is deterministic storage/core evidence; browser interaction, visual recovery, assistive technology, and target-matrix qualification remain open.
+
+## Stale-client storage follow-up
+
+CanonicalStore now fences a live client when another client requests an IndexedDB version upgrade: the first connection closes on `versionchange`, clears its persistence state, and rejects later reads/writes until explicitly reopened. A fake-indexeddb regression upgrades a second connection to version `7` and verifies the stale client cannot continue reading. This is deterministic concurrency evidence; native multi-tab/browser behavior, interrupted migration, and repair/reopen UX remain open.

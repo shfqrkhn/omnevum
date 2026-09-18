@@ -8,7 +8,7 @@
     {"id": "COMP-002", "from": "schema-1", "to": "schema-1", "case": "same-origin reopen", "expected": "records and tombstones preserved", "status": "TESTED_INITIAL"},
     {"id": "COMP-003", "from": "vault-1", "to": "schema-1", "case": "cross-origin restore", "expected": "IDs, revisions, provenance preserved", "status": "TESTED_INITIAL"},
     {"id": "COMP-004", "from": "older-schema", "to": "current", "case": "future migration", "expected": "explicit migrator or safe refusal; no reset", "status": "TESTED_SAFE_REFUSAL_SPIKE"},
-    {"id": "COMP-005", "from": "current", "to": "current", "case": "interrupted update", "expected": "repair/recovery path and no silent data loss", "status": "PARTIAL_LOCAL_SERVICE_WORKER_REHEARSAL"}
+    {"id": "COMP-005", "from": "current", "to": "current", "case": "interrupted update or stale client", "expected": "repair/recovery path, stale-client fencing, and no silent data loss", "status": "PARTIAL_LOCAL_UPDATE_AND_CLIENT_FENCE"}
   ],
   "rule": "Every schema, Vault, provider, package, and origin change adds a fixture and an explicit migration/rollback disposition before promotion."
 }

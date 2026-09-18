@@ -44,7 +44,8 @@
     "current production preview renders hostile Acquire text literally and completes category diagnostics export",
     "Vault merge preview validates integrity and conflict outcomes without mutation",
     "boot recovery exports a bounded read-only raw-state snapshot when malformed canonical state prevents a portable Vault",
-    "113 unit tests pass across 40 test files after the Safe Presentation Mode increment",
+    "stale IndexedDB clients are fenced after a version upgrade rather than continuing unsafe reads/writes",
+    "114 unit tests pass across 40 test files after the stale-client storage increment",
     "current built-artifact Chromium preview completes the integrated MVP workflow, localized rebrand/reload, and confirmed Vault merge"
   ],
   "unverified": [

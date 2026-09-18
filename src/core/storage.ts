@@ -115,7 +115,19 @@ export class CanonicalStore {
         database.createObjectStore(EFFECT_STORE, { keyPath: "operationId" });
       }
     };
-    this.database = await requestResult(request);
+    const database = await new Promise<IDBDatabase>((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error ?? new Error("IndexedDB request failed"));
+      request.onblocked = () => reject(new Error("Canonical store upgrade is blocked by another tab; close the older tab and retry."));
+    });
+    database.onversionchange = () => {
+      database.close();
+      if (this.database === database) {
+        this.database = null;
+        this.persistence = "UNAVAILABLE";
+      }
+    };
+    this.database = database;
     this.persistence = await this.requestPersistentStorage();
   }
 

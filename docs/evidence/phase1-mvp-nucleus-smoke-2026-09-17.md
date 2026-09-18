@@ -35,7 +35,7 @@ The current `npm run ci` build at source revision `11ebcac` (artifact digest `b7
 
 This is reproducible local Chromium/static-preview evidence for the integrated MVP path only. It does not qualify GitHub Pages, other browser families, WCAG conformance, native quota exhaustion, cross-origin browser-family recovery, external providers, or release readiness.
 
-The current recovery regression also covers the failed-open boundary: malformed raw canonical state cannot be exported as a falsely valid Vault, while the failure shell can offer a bounded read-only recovery snapshot that preserves retained raw records/history for repair. Safe Presentation Mode also selects a known-good profile without rewriting malformed presentation or canonical data. The current run is `113` passing tests across `40` files; browser-native corruption and migration interruption remain open.
+The current recovery regression also covers the failed-open boundary: malformed raw canonical state cannot be exported as a falsely valid Vault, while the failure shell can offer a bounded read-only recovery snapshot that preserves retained raw records/history for repair. Safe Presentation Mode also selects a known-good profile without rewriting malformed presentation or canonical data, and a stale IndexedDB client is fenced after a version upgrade. The current run is `114` passing tests across `40` files; browser-native corruption and migration interruption remain open.
 
 ## Still open
 
