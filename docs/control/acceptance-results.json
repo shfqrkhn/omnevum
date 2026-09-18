@@ -785,8 +785,15 @@
         "line": 3508
       },
       "text": "The user highlights/comments on text and marks an image/PDF region using Annotate/Markup. The annotation remains a separate source-linked record with stable identity and provenance; exporting through a qualified portable annotation mapping preserves the relationship, while source modification that invalidates the anchor produces an explicit stale/orphan/ambiguous state rather than silently moving the annotation.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/annotation.test.ts",
+        "src/core/artifact.test.ts",
+        "src/ui/app.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-source-meaning-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-source-annotation-follow-up"
+      ],
+      "notes": "Current built-artifact evidence proves quote-validated text annotation as a separate platform.annotate record with one active source anchor and no stale/orphaned anchors. Image/PDF regions, portable annotation export mapping, source-change invalidation states, and broader target qualification remain open."
     },
     {
       "id": "OMN-ACC-061",

@@ -62,7 +62,8 @@
     "triage CommandBus regression records an explicit DELETED disposition before archiving a source for reversible Recovery restore; the built UI exposes the separate Delete action",
     "current triage link/route/split/delete transitions use one revision-fenced IndexedDB batch with atomicity regression coverage; the release receipt is bound to source 310d278",
     "current built-artifact Chromium preview exposes proposal-only triage owner/type/action guidance without canonical mutation; the release receipt is bound to source 0aaa935",
-    "bounded automation evaluator emits only proposal-only actions from the explicit admitted semantic-command set and rejects network.fetch/prototype/budget abuse; source bbc902d"
+    "bounded automation evaluator emits only proposal-only actions from the explicit admitted semantic-command set and rejects network.fetch/prototype/budget abuse; source bbc902d",
+    "current built-artifact Chromium preview creates a quote-validated text annotation as a separate platform.annotate record and reports one active anchor with no stale/orphaned anchors; source bbc902d"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",

@@ -18,7 +18,7 @@
     {"id": "relate", "phase": 1, "owner": "platform.relate", "status": "IMPLEMENTED_INITIAL"},
     {"id": "space-scope", "phase": 1, "owner": "platform.space", "status": "IMPLEMENTED_UI_FILTER_OVERLAY"},
     {"id": "evidence", "phase": 1, "owner": "platform.evidence", "status": "IMPLEMENTED_SOURCE_LINK"},
-    {"id": "annotate-markup", "phase": 1, "owner": "platform.annotate", "status": "IMPLEMENTED_ANCHOR_STATES"},
+    {"id": "annotate-markup", "phase": 1, "owner": "platform.annotate", "status": "IMPLEMENTED_ANCHOR_STATES_TEXT_QUOTE_CURRENT_PREVIEW"},
     {"id": "compose-view", "phase": 1, "owner": "platform.compose", "status": "IMPLEMENTED_PERSISTED_NATIVE_DASHBOARD"},
     {"id": "effect-outbox", "phase": 1, "owner": "platform.effect-outbox", "status": "IMPLEMENTED_INITIAL_RUNNER"},
     {"id": "device-input", "phase": 1, "owner": "platform.device-input", "status": "IMPLEMENTED_FILE_CLIPBOARD_BOUNDED"},
