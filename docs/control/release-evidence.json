@@ -3,7 +3,7 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "4c357ff2ed4efb6fc2602f7708652e548c89b0eac4f50fb9c1160e02f35c5515", "sourceRevision": "4f0eed0"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "4c357ff2ed4efb6fc2602f7708652e548c89b0eac4f50fb9c1160e02f35c5515", "sourceRevision": "5b52d83"},
   "artifactDigestMethod": "SHA-256 of sorted UTF-8 lines containing each dist relative path, file SHA-256, and byte length; captured after the full npm run ci build on 2026-09-17.",
   "artifactFiles": [
     {"path": "dist/assets/index-DId-fK--.css", "sha256": "0cf58e9f4284a761d0d3960551240355ad1e5782eeef17af82ccb16a5e077c9f", "bytes": 6080},
