@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "6e6f165d7a422c89ee5c50288414d152f956e9abd0bedf057fae2f1bbd6d74ff",
-        "bytes": 111381
+        "sha256": "ea200966e645bb35cd6ec6cf18e6d7370c1b448b23d454b364871c8698f11ffc",
+        "bytes": 112099
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -144,8 +144,8 @@
       },
       {
         "path": "docs/control/capability-catalogue.json",
-        "sha256": "08992fc5206987a60a3a03b5d052832ee3ff729312e9ec54a06c170ae3f1219c",
-        "bytes": 3558
+        "sha256": "91be9dee35ac691867df162daa522020eb16e3fb1c558b5c34dac0edbe2f2570",
+        "bytes": 3588
       },
       {
         "path": "docs/control/capability-coverage.json",
@@ -159,8 +159,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "d13b7cee2fd81d11733abad46d15257795abdabb54b54ff134f25bb7f41b4d40",
-        "bytes": 2236
+        "sha256": "7a03d94470cbd742fb9996203292f2e4fd6d77795bc1f3914c861ed69b06a59b",
+        "bytes": 2271
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "ddb0875c4e2156b8a90d8b57ce28c87ce95ddcee6450bd8dc190c3036d054f5e",
-        "bytes": 34598
+        "sha256": "3c6ff1ebe4c951b27bd68fec1289642c56a67c47d9e563099ee9b7f5aa19e493",
+        "bytes": 34835
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "f0f8dbabf61eaf71106d30e952832ae264a772fbe0134239a91efbc27bc5b12e",
-        "bytes": 188976
+        "sha256": "c33d483f6cbd6c9c7858b8b11f9b25b705cc42e4b3e2b7e958ca4bc57452d285",
+        "bytes": 190305
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -476,6 +476,16 @@
         "path": "src/core/capability-runtime.ts",
         "sha256": "5678890a7864a49af3eb6d62dffc328a51cc63efd3f4e33cc7958c7f96596f55",
         "bytes": 4080
+      },
+      {
+        "path": "src/core/cleanup.test.ts",
+        "sha256": "afa80c40a61e2db72577cf33f3781508244655fda95c2d583f4744fa1a6f3d33",
+        "bytes": 3693
+      },
+      {
+        "path": "src/core/cleanup.ts",
+        "sha256": "27c33b7241d88e3da2dcc4c974c3064aabf7ee29c94b21641350b75c436b8034",
+        "bytes": 11065
       },
       {
         "path": "src/core/commands.test.ts",

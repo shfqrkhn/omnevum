@@ -999,8 +999,13 @@
         "line": 3510
       },
       "text": "A messy imported dataset is cleaned with previewed transformations, clustering/deduplication, and source/entity reconciliation. The accepted recipe/history is replayable/inspectable, ambiguous matches remain unresolved for review, and the original source plus provenance remain available; no fuzzy rule silently merges distinct canonical people/accounts/assets/records.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/cleanup.ts",
+        "src/core/cleanup.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-bounded-acquire-cleanup-and-reconciliation-follow-up"
+      ],
+      "notes": "Bounded source/unit evidence now covers previewed TRIM_TEXT and NORMALIZE_WHITESPACE transforms, source grouping, deterministic exact-duplicate clustering, stable-key conflicting-entity review, replay fingerprinting, explicit decisions, and rejection of ambiguous/fuzzy or whole-cluster archival. The original CanonicalRecord objects remain unchanged. Browser UI, durable accepted recipe/history records, large-dataset qualification, richer identity/entity adapters, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-062",

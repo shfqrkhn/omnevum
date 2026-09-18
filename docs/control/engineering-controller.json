@@ -35,6 +35,7 @@
     "startup marks invalid derived search as DEGRADED while preserving core startup and Recovery",
     "capability failure reasons redact bearer and credential-shaped values before DOM exposure",
     "Recovery search repair reactivates the owned degraded capability without restarting unrelated modules",
+    "bounded Acquire cleanup previews deterministic transforms, groups source provenance, clusters exact duplicates, keeps conflicting stable entities unresolved, and produces replayable explicit decision receipts without fuzzy merges",
     "History UI exposes field-level revision snapshots without creating a second writable copy",
     "Safe Presentation Mode selects a known-good profile without rewriting malformed presentation or canonical records",
     "persisted Compose/View dashboard projects accessible list, table, chart, and capture boundaries",

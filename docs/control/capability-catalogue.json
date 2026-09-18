@@ -7,7 +7,7 @@
     {"id": "acquire-ingest", "phase": 1, "owner": "platform.acquire", "status": "IMPLEMENTED_INITIAL_BOUNDED"},
     {"id": "triage-clarify", "phase": 1, "owner": "platform.triage", "status": "IMPLEMENTED_STATUS_REFERENCE_LINK_ROUTE_SPLIT_DEFER_SAFE_DIRECT_DELETE_ACTIONS_ATOMIC_PROPOSAL_GUIDANCE_INITIAL"},
     {"id": "track-observe", "phase": 1, "owner": "platform.track", "status": "IMPLEMENTED_INITIAL_QUANTITATIVE"},
-    {"id": "data", "phase": 1, "owner": "platform.data", "status": "IMPLEMENTED_DERIVED_BOUNDED"},
+    {"id": "data", "phase": 1, "owner": "platform.data", "status": "IMPLEMENTED_DERIVED_BOUNDED_CLEANUP_PREVIEW_REPLAY_REVIEW"},
     {"id": "artifact", "phase": 1, "owner": "platform.artifact", "status": "IMPLEMENTED_LOCAL_TEXT_FINISHING_BOUNDED"},
     {"id": "visualize", "phase": 1, "owner": "platform.visualize", "status": "IMPLEMENTED_SUMMARY_SIGNALS"},
     {"id": "analyze-model", "phase": 1, "owner": "platform.analyze", "status": "IMPLEMENTED_DESCRIPTIVE_ONLY"},
