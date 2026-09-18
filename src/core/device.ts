@@ -1,4 +1,4 @@
-export type DeviceCapability = "file" | "clipboard" | "share" | "camera" | "microphone" | "geolocation" | "opfs" | "serviceWorker";
+export type DeviceCapability = "file" | "clipboard" | "share" | "camera" | "microphone" | "geolocation" | "barcode" | "opfs" | "serviceWorker";
 export const MAX_DEVICE_TEXT_BYTES = 5 * 1024 * 1024;
 
 export interface DeviceCapabilities {
@@ -8,6 +8,7 @@ export interface DeviceCapabilities {
   camera: boolean;
   microphone: boolean;
   geolocation: boolean;
+  barcode: boolean;
   opfs: boolean;
   serviceWorker: boolean;
 }
@@ -20,7 +21,16 @@ type NavigatorSurface = {
   serviceWorker?: ServiceWorkerContainer;
 };
 
-type WindowSurface = { showOpenFilePicker?: (...arguments_: never[]) => Promise<unknown> };
+export interface BarcodeDetection {
+  rawValue: string;
+  format: string;
+}
+
+interface BarcodeDetectorSurface {
+  detect(source: Blob): Promise<BarcodeDetection[]>;
+}
+
+type WindowSurface = { showOpenFilePicker?: (...arguments_: never[]) => Promise<unknown>; BarcodeDetector?: new () => BarcodeDetectorSurface };
 type StorageSurface = { getDirectory?: () => Promise<unknown> };
 export interface DeviceEnvironment {
   navigator?: NavigatorSurface;
@@ -41,6 +51,7 @@ export function detectDeviceCapabilities(environment: DeviceEnvironment = {}): D
     camera: Boolean(navigatorValue?.mediaDevices?.getUserMedia),
     microphone: Boolean(navigatorValue?.mediaDevices?.getUserMedia),
     geolocation: Boolean(navigatorValue?.geolocation),
+    barcode: typeof windowValue?.BarcodeDetector === "function",
     opfs: typeof storageValue?.getDirectory === "function",
     serviceWorker: Boolean(navigatorValue?.serviceWorker)
   };
@@ -88,6 +99,24 @@ export class DeviceInputBroker {
 
   public releaseMedia(stream: MediaStream): void {
     stream.getTracks().forEach((track) => track.stop());
+  }
+
+  public async withMedia<T>(kind: "camera" | "microphone", work: (stream: MediaStream) => Promise<T>): Promise<T> {
+    const stream = await this.requestMedia(kind);
+    try {
+      return await work(stream);
+    } finally {
+      this.releaseMedia(stream);
+    }
+  }
+
+  public async scanBarcode(image: Blob): Promise<BarcodeDetection[]> {
+    if (image.size > MAX_DEVICE_TEXT_BYTES) throw new Error("Barcode image exceeds the bounded 5 MiB limit");
+    const runtimeWindow: WindowSurface | undefined = typeof globalThis.window === "undefined" ? undefined : globalThis.window as WindowSurface;
+    const windowValue = this.environment.window ?? runtimeWindow;
+    if (!windowValue?.BarcodeDetector) throw new Error("Barcode/QR input is unavailable on this target; use a manual or file alternative");
+    const detections = await new windowValue.BarcodeDetector().detect(image);
+    return detections.filter((detection) => typeof detection.rawValue === "string" && detection.rawValue.length <= 4096 && typeof detection.format === "string" && detection.format.length <= 80);
   }
 
   public async readLocation(): Promise<GeolocationPosition> {
