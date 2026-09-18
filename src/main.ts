@@ -15,7 +15,10 @@ try {
   const commands = new CommandBus(store);
   const capabilityRuntime = new CapabilityRuntime([
     { id: "core.canonical", critical: true, start: async () => { await store.health(); } },
-    { id: "core.search", start: async () => { await store.getSearchHealth(); } },
+    { id: "core.search", start: async () => {
+      const searchHealth = await store.getSearchHealth();
+      if (!searchHealth.valid) throw new Error(`Search index is ${searchHealth.invalidReason?.toLowerCase() ?? "unavailable"}`);
+    } },
     { id: "core.recovery", critical: true, start: async () => { await store.exportDiagnostics(); } }
   ]);
   await capabilityRuntime.start(undefined);
