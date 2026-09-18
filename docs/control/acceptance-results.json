@@ -1176,9 +1176,10 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up",
         "src/core/device.test.ts#keeps-media-ownership-scoped-and-exposes-browser-native-QR-results-only-when-available",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-deviceinput-broker-ownership-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-deviceinput-boundary-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-deviceinput-boundary-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-in-app-browser-deviceinput-boundary-follow-up"
       ],
-      "notes": "Source/unit evidence plus the current Edge artifact cover capability detection, an explicit user-triggered Device/Input surface, bounded file/clipboard input, manual fallback, browser-native QR detection when exposed, filtered bounded results, and automatic media-track release. The current receipt proves the visible routing/no-retention boundary without invoking permissions or transmitting data. Real camera/microphone/geolocation permission denial/cancellation, hardware capture routing through Artifact/Acquire/Track/Place/Triage, browser/device breadth, assistive technology, and human acceptance remain open."
+      "notes": "Source/unit evidence plus current Edge and in-app-browser artifacts cover capability detection, an explicit user-triggered Device/Input surface, bounded file/clipboard input, manual fallback, browser-native QR detection when exposed, filtered bounded results, and automatic media-track release. The current receipts prove the visible routing/no-retention boundary without invoking permissions or transmitting data. Real camera/microphone/geolocation permission denial/cancellation, hardware capture routing through Artifact/Acquire/Track/Place/Triage, browser/device breadth, assistive technology, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-079",
