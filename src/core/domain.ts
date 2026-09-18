@@ -1,4 +1,4 @@
-import type { CanonicalRecord } from "./model";
+import type { CanonicalRecord, RecordType } from "./model";
 
 export type SpaceId = "personal" | "household" | "work";
 export const SPACE_LABELS: Record<SpaceId, string> = {
@@ -8,6 +8,15 @@ export const SPACE_LABELS: Record<SpaceId, string> = {
 };
 export type TriageStatus = "INBOX" | "REVIEWED" | "DEFERRED" | "CLARIFY";
 export type TriageDisposition = "REFERENCE" | "LINKED" | "ROUTED" | "SPLIT" | "DELETED";
+export type TriageProposalAction = "REVIEW" | "CLARIFY" | "DEFER" | "REFERENCE" | "LINK" | "ROUTE" | "SPLIT" | "DELETE";
+
+export interface TriageProposal {
+  sourceId: string;
+  possibleOwners: string[];
+  possibleTypes: RecordType[];
+  possibleActions: TriageProposalAction[];
+  basis: "AMBIGUOUS_OR_UNRESOLVED";
+}
 
 export function recordText(record: CanonicalRecord): string {
   if (record.recordType === "relationship" && typeof record.data.sourceId === "string" && typeof record.data.targetId === "string") {
@@ -32,6 +41,17 @@ export function recordTriageDisposition(record: CanonicalRecord): TriageDisposit
 export function recordTriageDeferredUntil(record: CanonicalRecord): string | undefined {
   const value = record.data.triageDeferredUntil;
   return typeof value === "string" && Number.isFinite(Date.parse(value)) ? value : undefined;
+}
+
+export function proposeTriage(record: CanonicalRecord): TriageProposal {
+  const possibleTypes: RecordType[] = record.recordType === "note" ? ["note", "task"] : [record.recordType];
+  return {
+    sourceId: record.id,
+    possibleOwners: [...new Set([record.owner, "core.capture"])],
+    possibleTypes,
+    possibleActions: ["REVIEW", "CLARIFY", "DEFER", "REFERENCE", "LINK", "ROUTE", "SPLIT", "DELETE"],
+    basis: "AMBIGUOUS_OR_UNRESOLVED"
+  };
 }
 
 export function isCompletedTask(record: CanonicalRecord): boolean {

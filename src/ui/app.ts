@@ -1,6 +1,6 @@
 import type { CommandBus, TriageRouteTarget, TriageSplitPart } from "../core/commands";
 import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate, type AcquirePreview } from "../core/acquire";
-import { isCompletedTask, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, type SpaceId, type TriageStatus } from "../core/domain";
+import { isCompletedTask, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
 import { resolvePresentationProfile, type PresentationProfile } from "../core/presentation";
@@ -640,6 +640,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   themeToggle.setAttribute("aria-pressed", String(presentation.theme === "dark"));
 
   const typeLabel = (recordType: string): string => recordType === "task" ? copy.task : recordType === "observation" ? copy.observation : recordType === "artifact" ? copy.attachArtifact : recordType === "relationship" ? copy.relationship : copy.note;
+  const triageActionLabel = (action: TriageProposalAction): string => ({ REVIEW: copy.markReviewed, CLARIFY: copy.clarify, DEFER: copy.defer, REFERENCE: copy.reference, LINK: copy.createLink, ROUTE: copy.route, SPLIT: copy.split, DELETE: copy.delete })[action];
   const spaceLabel = (space: SpaceId): string => space === "household" ? copy.household : space === "work" ? copy.work : copy.personal;
 
   const renderSpaceChoices = async (): Promise<void> => {
@@ -829,6 +830,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const text = document.createElement("p");
       const triageStatus = recordTriageStatus(record);
       text.textContent = `${typeLabel(record.recordType)}: ${recordText(record)} (${copy.triageStatus(triageStatus)})`;
+      const proposal = proposeTriage(record);
+      const proposalText = document.createElement("p");
+      proposalText.className = "hint triage-proposal";
+      proposalText.textContent = copy.triageProposal(
+        proposal.possibleOwners.join(", "),
+        proposal.possibleTypes.map((type) => typeLabel(type)).join(", "),
+        proposal.possibleActions.map(triageActionLabel).join(", ")
+      );
       const actions = document.createElement("div");
       actions.className = "triage-actions";
       const updateTriage = (status: TriageStatus, label: string, extraData: Record<string, unknown> = {}): void => {
@@ -976,7 +985,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         }
       });
       actions.append(archive);
-      item.append(text, actions);
+      item.append(text, proposalText, actions);
       reviewList.append(item);
     }
   };

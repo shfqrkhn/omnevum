@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { CanonicalRecord } from "./model";
-import { recordText, recordTriageDeferredUntil, recordTriageDisposition, recordTriageStatus } from "./domain";
+import { proposeTriage, recordText, recordTriageDeferredUntil, recordTriageDisposition, recordTriageStatus } from "./domain";
 
 describe("domain record projections", () => {
   it("renders an evidence claim instead of exposing an opaque relationship label", () => {
@@ -26,5 +26,16 @@ describe("domain record projections", () => {
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "ROUTE" } })).toBeUndefined();
     expect(recordTriageDeferredUntil({ ...base, data: { triageDeferredUntil: "2030-01-01T00:00:00.000Z" } })).toBe("2030-01-01T00:00:00.000Z");
     expect(recordTriageDeferredUntil({ ...base, data: { triageDeferredUntil: "not-a-time" } })).toBeUndefined();
+  });
+
+  it("projects non-committing owner, type, and action proposals for an ambiguous note", () => {
+    const source = { id: "source-1", owner: "core.capture", recordType: "note" } as unknown as CanonicalRecord;
+    expect(proposeTriage(source)).toEqual({
+      sourceId: "source-1",
+      possibleOwners: ["core.capture"],
+      possibleTypes: ["note", "task"],
+      possibleActions: ["REVIEW", "CLARIFY", "DEFER", "REFERENCE", "LINK", "ROUTE", "SPLIT", "DELETE"],
+      basis: "AMBIGUOUS_OR_UNRESOLVED"
+    });
   });
 });
