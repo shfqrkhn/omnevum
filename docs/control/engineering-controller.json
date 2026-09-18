@@ -77,7 +77,7 @@
     "current receipt-bound Edge desktop preview on Microsoft Edge 153.0.4234.32 accepts a synthetic canonical capture and retains it across reload with a healthy derived index; source 307470e",
     "current receipt-bound Edge preview detects a synthetic malformed IndexedDB canonical row, enters the Recovery shell, and completes read-only retained-state export without mutation; source 307470e",
     "current receipt-bound Edge preview performs an offline canonical capture and offline reload persistence with a healthy derived index; source 307470e",
-    "current release receipt is refreshed and independently hash-verified for source ac6f754, artifact digest e6826c947a2df71290b3c1e3eabf8234bc37109e24f79f4d74cc5f71aa60545d, and service-worker cache omnevum-shell-b2275e9d99e196b8",
+    "current release receipt is refreshed and independently hash-verified for source 3b4a11b, artifact digest 8bcf9937e8118d7141d4dda114281b682754f100665a0200637165c1b06cadef, and service-worker cache omnevum-shell-450841040531899c",
     "current receipt-bound Edge preview proves presentation branding updates document.title and theme-color and persists after reload; source bd9e242",
     "current receipt-bound Edge preview at 390x844 records no horizontal overflow, visible labelled controls, sequential keyboard focus, and an empty warning/error console; source bd9e242",
     "current receipt-bound Edge preview accepts a synthetic capture, retains it after reload, and returns to a clean scoped origin; source bd9e242",
@@ -99,6 +99,7 @@
     "bounded local text/inert-HTML document finishing preserves the source Artifact and emits a lineage-linked DERIVED redaction Artifact through the visible Recovery surface; current synthetic Chromium receipt verifies active-content stripping, two payloads, provenance, and clean-origin recovery; source 072630d",
     "CanonicalStore emits exact metadata-only cross-tab invalidations for canonical, setting, and effect writes; the UI refreshes external canonical changes and reloads external presentation changes; source ac6f754",
     "current receipt-bound Chromium two-tab preview on the ac6f754 artifact shows canonical capture, user-defined Space creation, membership projection, zero warning/error logs, and clean-origin recovery; source ac6f754",
+    "EffectRunner claims pending/reconciliation operations with an IndexedDB status compare-and-set so concurrent runners cannot execute one pending operation twice; source 3b4a11b",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [
