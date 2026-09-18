@@ -1,4 +1,4 @@
-import type { CanonicalStore } from "./storage";
+import { EffectStateConflictError, type CanonicalStore } from "./storage";
 import { transitionEffect, type EffectOperation } from "./effect";
 
 export type EffectExecutionResult =
@@ -28,16 +28,15 @@ export class EffectRunner {
       let candidate = operation;
       if (candidate.status === "IN_FLIGHT") {
         candidate = transitionEffect(candidate, "OUTCOME_UNKNOWN", { evidence: [...candidate.evidence, "runner-recovered-in-flight"] });
-        await this.store.updateEffect(candidate);
+        if (!await this.updateIfCurrent(candidate, "IN_FLIGHT")) continue;
         candidate = transitionEffect(candidate, "RECONCILE");
-        await this.store.updateEffect(candidate);
+        if (!await this.updateIfCurrent(candidate, "OUTCOME_UNKNOWN")) continue;
         recovered.push(await this.reconcileOnce(candidate));
         continue;
       }
       if (candidate.expiresAt && Date.parse(candidate.expiresAt) <= Date.now() && (candidate.status === "PENDING" || candidate.status === "FAILED_RETRYABLE" || candidate.status === "RECONCILE")) {
         const expired = transitionEffect(candidate, "EXPIRED", { evidence: [...candidate.evidence, "runner-expired-before-execution"] });
-        await this.store.updateEffect(expired);
-        recovered.push(expired);
+        if (await this.updateIfCurrent(expired, candidate.status)) recovered.push(expired);
         continue;
       }
       if (candidate.nextAttemptAt && Date.parse(candidate.nextAttemptAt) > Date.now()) continue;
@@ -57,12 +56,12 @@ export class EffectRunner {
         await this.guard.authorize(operation);
       } catch {
         const cancelled = transitionEffect(operation, "CANCELLED", { evidence: [...operation.evidence, "effect-guard-denied"] });
-        await this.store.updateEffect(cancelled);
-        return cancelled;
+        if (await this.updateIfCurrent(cancelled, operation.status)) return cancelled;
+        return (await this.store.getEffect(operation.operationId)) ?? operation;
       }
     }
     const inFlight = transitionEffect(operation, "IN_FLIGHT");
-    await this.store.updateEffect(inFlight);
+    if (!await this.updateIfCurrent(inFlight, operation.status)) return (await this.store.getEffect(operation.operationId)) ?? operation;
     let result: EffectExecutionResult;
     try {
       result = await this.executor.execute(inFlight);
@@ -72,7 +71,7 @@ export class EffectRunner {
     const evidence = [...inFlight.evidence, ...(result.evidence ?? [])];
     const patch = { evidence, ...(result.outcome === "SUCCEEDED" && result.remoteIdentity ? { remoteIdentity: result.remoteIdentity } : {}), ...(result.outcome === "FAILED_RETRYABLE" ? { retryCount: inFlight.retryCount + 1 } : {}) };
     const final = transitionEffect(inFlight, result.outcome, patch);
-    await this.store.updateEffect(final);
+    if (!await this.updateIfCurrent(final, "IN_FLIGHT")) return (await this.store.getEffect(operation.operationId)) ?? inFlight;
     return final;
   }
 
@@ -83,25 +82,41 @@ export class EffectRunner {
         await this.guard.authorize(operation);
       } catch {
         const cancelled = transitionEffect(operation, "CANCELLED", { evidence: [...operation.evidence, "reconcile-guard-denied"] });
-        await this.store.updateEffect(cancelled);
-        return cancelled;
+        if (await this.updateIfCurrent(cancelled, operation.status)) return cancelled;
+        return (await this.store.getEffect(operation.operationId)) ?? operation;
       }
     }
+    const inFlight = transitionEffect(operation, "IN_FLIGHT", { evidence: [...operation.evidence, "reconciliation-started"] });
+    if (!await this.updateIfCurrent(inFlight, operation.status)) return (await this.store.getEffect(operation.operationId)) ?? operation;
     let result: EffectExecutionResult;
     try {
-      result = await this.executor.reconcile(operation);
+      result = await this.executor.reconcile(inFlight);
     } catch {
-      const waiting = { ...operation, evidence: [...operation.evidence, "reconcile-threw"] };
-      await this.store.updateEffect(waiting);
-      return waiting;
+      const waiting = transitionEffect(inFlight, "OUTCOME_UNKNOWN", { evidence: [...inFlight.evidence, "reconcile-threw"] });
+      if (!await this.updateIfCurrent(waiting, "IN_FLIGHT")) return (await this.store.getEffect(operation.operationId)) ?? inFlight;
+      const reconcile = transitionEffect(waiting, "RECONCILE");
+      if (!await this.updateIfCurrent(reconcile, "OUTCOME_UNKNOWN")) return (await this.store.getEffect(operation.operationId)) ?? waiting;
+      return reconcile;
     }
     if (result.outcome === "OUTCOME_UNKNOWN") {
-      const waiting = { ...operation, evidence: [...operation.evidence, ...(result.evidence ?? []), "reconciliation-remains-ambiguous"] };
-      await this.store.updateEffect(waiting);
-      return waiting;
+      const waiting = transitionEffect(inFlight, "OUTCOME_UNKNOWN", { evidence: [...inFlight.evidence, ...(result.evidence ?? []), "reconciliation-remains-ambiguous"] });
+      if (!await this.updateIfCurrent(waiting, "IN_FLIGHT")) return (await this.store.getEffect(operation.operationId)) ?? inFlight;
+      const reconcile = transitionEffect(waiting, "RECONCILE");
+      if (!await this.updateIfCurrent(reconcile, "OUTCOME_UNKNOWN")) return (await this.store.getEffect(operation.operationId)) ?? waiting;
+      return reconcile;
     }
-    const next = transitionEffect(operation, result.outcome, { evidence: [...operation.evidence, ...(result.evidence ?? [])], ...(result.outcome === "SUCCEEDED" && result.remoteIdentity ? { remoteIdentity: result.remoteIdentity } : {}) });
-    await this.store.updateEffect(next);
+    const next = transitionEffect(inFlight, result.outcome, { evidence: [...inFlight.evidence, ...(result.evidence ?? [])], ...(result.outcome === "SUCCEEDED" && result.remoteIdentity ? { remoteIdentity: result.remoteIdentity } : {}) });
+    if (!await this.updateIfCurrent(next, "IN_FLIGHT")) return (await this.store.getEffect(operation.operationId)) ?? inFlight;
     return next;
+  }
+
+  private async updateIfCurrent(operation: EffectOperation, expectedStatus: EffectOperation["status"]): Promise<boolean> {
+    try {
+      await this.store.updateEffect(operation, expectedStatus);
+      return true;
+    } catch (error) {
+      if (error instanceof EffectStateConflictError) return false;
+      throw error;
+    }
   }
 }

@@ -36,7 +36,7 @@ describe("EffectRunner", () => {
       }
     });
     const result = await runner.runAvailable();
-    expect(seen).toEqual(["RECONCILE"]);
+    expect(seen).toEqual(["IN_FLIGHT"]);
     expect(result[0]).toMatchObject({ status: "SUCCEEDED", remoteIdentity: "remote-1" });
     expect(await store.getEffect("runner-effect")).toMatchObject({ status: "SUCCEEDED", idempotencyKey: "runner-effect-idempotency" });
     store.close();
@@ -76,6 +76,33 @@ describe("EffectRunner", () => {
     const results = await runner.runAvailable();
     expect(executions).toBe(0);
     expect(results.map((result) => result.status)).toEqual(["EXPIRED", "CANCELLED"]);
+    store.close();
+  });
+
+  it("claims a pending operation atomically so concurrent runners execute it once", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-effect-claim`);
+    await store.open();
+    await store.enqueueEffect(effect());
+    let executions = 0;
+    let started!: () => void;
+    const executionStarted = new Promise<void>((resolve) => { started = resolve; });
+    let release!: () => void;
+    const releaseExecution = new Promise<void>((resolve) => { release = resolve; });
+    const executor = {
+      execute: async () => {
+        executions += 1;
+        started();
+        await releaseExecution;
+        return { outcome: "SUCCEEDED" as const };
+      }
+    };
+    const first = new EffectRunner(store, executor).runAvailable();
+    const second = new EffectRunner(store, executor).runAvailable();
+    await executionStarted;
+    release();
+    await Promise.all([first, second]);
+    expect(executions).toBe(1);
+    expect(await store.getEffect("runner-effect")).toMatchObject({ status: "SUCCEEDED" });
     store.close();
   });
 });

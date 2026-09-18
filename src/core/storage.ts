@@ -63,6 +63,13 @@ export type CanonicalStoreChange =
   | { kind: "SETTING_CHANGED"; settingId: string }
   | { kind: "EFFECT_CHANGED"; operationId: string };
 
+export class EffectStateConflictError extends Error {
+  public constructor() {
+    super("Effect state changed before the operation could be updated");
+    this.name = "EffectStateConflictError";
+  }
+}
+
 export interface CanonicalWrite {
   record: CanonicalRecord;
   artifactBlob?: Blob;
@@ -313,13 +320,25 @@ export class CanonicalStore {
     return operation as EffectOperation;
   }
 
-  public async updateEffect(operation: EffectOperation): Promise<void> {
+  public async updateEffect(operation: EffectOperation, expectedStatus?: EffectOperation["status"]): Promise<void> {
     assertEffectOperation(operation);
     const transaction = this.requireDatabase().transaction(EFFECT_STORE, "readwrite");
-    transaction.objectStore(EFFECT_STORE).put(operation);
+    const effectStore = transaction.objectStore(EFFECT_STORE);
+    let stateConflict = false;
+    const currentRequest = effectStore.get(operation.operationId);
+    currentRequest.onsuccess = () => {
+      const current = currentRequest.result as EffectOperation | undefined;
+      if (expectedStatus !== undefined && current?.status !== expectedStatus) {
+        stateConflict = true;
+        transaction.abort();
+        return;
+      }
+      effectStore.put(operation);
+    };
     try {
       await transactionDone(transaction);
     } catch (error) {
+      if (stateConflict) throw new EffectStateConflictError();
       throw storageWriteError(error);
     }
     this.publishChange({ kind: "EFFECT_CHANGED", operationId: operation.operationId });
