@@ -29,7 +29,7 @@
     {"id": "ai-broker", "phase": 3, "owner": "platform.ai", "status": "CONTRACT_SPIKE_SHARED_CONTEXT_TOOL_PROPOSAL_HARDENED_DISABLED_BY_DEFAULT"},
     {"id": "app-factory", "phase": 5, "owner": "platform.package", "status": "CONTRACT_SPIKE_DECLARATIVE_BASELINE"},
     {"id": "game-factory", "phase": 6, "owner": "platform.game", "status": "CONTRACT_SPIKE_DETERMINISTIC_LIFECYCLE"},
-    {"id": "bounded-automation", "phase": 7, "owner": "platform.automation", "status": "CONTRACT_SPIKE_PROPOSAL_ONLY_ADMITTED_COMMAND_SET"},
+    {"id": "bounded-automation", "phase": 7, "owner": "platform.automation", "status": "IMPLEMENTED_DECLARATIVE_PACKAGE_ADAPTER_PROPOSAL_ONLY"},
     {"id": "extensions", "phase": 8, "owner": "platform.extensions", "status": "DISABLED_UNQUALIFIED"}
   ],
   "reuseRule": "Prefer qualified shared capability or FOSS adapter evidence before bespoke domain machinery; all candidates remain replaceable until admitted."
