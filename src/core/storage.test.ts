@@ -85,6 +85,22 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("commits a canonical write batch atomically when a later revision check fails", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-put-many-atomic`);
+    await store.open();
+    const original = record("record-put-many-original");
+    const candidate = record("record-put-many-candidate");
+    await store.put(original);
+    await expect(store.putMany([
+      { record: candidate },
+      { record: { ...original, revision: 2, data: { text: "stale" } }, expectedPreviousRevision: 99 }
+    ])).rejects.toThrow("revision conflict");
+    expect(await store.get(candidate.id)).toBeUndefined();
+    expect(await store.get(original.id)).toEqual(original);
+    expect(await store.history(candidate.id)).toEqual([]);
+    store.close();
+  });
+
   it("rejects a non-monotonic direct write", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-put-monotonic`);
     await store.open();

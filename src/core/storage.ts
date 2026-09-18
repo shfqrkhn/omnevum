@@ -41,6 +41,12 @@ export interface CanonicalStoreOptions {
   requestPersistentStorage?: () => Promise<boolean | undefined>;
 }
 
+export interface CanonicalWrite {
+  record: CanonicalRecord;
+  artifactBlob?: Blob;
+  expectedPreviousRevision?: number;
+}
+
 export interface DiagnosticsRuntimeState {
   release?: { status: "NOT_PROVIDED" | "IDENTIFIED"; version?: string; sourceRevision?: string; artifactDigest?: string };
   serviceWorker?: { status: "NOT_PROVIDED" | "AVAILABLE" | "UNAVAILABLE"; controlled: boolean; activeState?: string; updateWaiting: boolean };
@@ -164,23 +170,40 @@ export class CanonicalStore {
   }
 
   public async put(record: CanonicalRecord, artifactBlob?: Blob, expectedPreviousRevision?: number): Promise<void> {
-    assertCanonicalRecord(record);
+    await this.putMany([{
+      record,
+      ...(artifactBlob ? { artifactBlob } : {}),
+      ...(expectedPreviousRevision !== undefined ? { expectedPreviousRevision } : {})
+    }]);
+  }
+
+  public async putMany(writes: CanonicalWrite[]): Promise<void> {
+    if (writes.length === 0) return;
+    writes.forEach(({ record }) => assertCanonicalRecord(record));
     await this.reclaimDerivedStateUnderPressure();
     const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE], "readwrite");
     const recordStore = transaction.objectStore(RECORD_STORE);
-    const currentRequest = recordStore.get(record.id);
+    const currentRequest = recordStore.getAll();
     let revisionConflict = false;
     currentRequest.onsuccess = () => {
-      const current = currentRequest.result as CanonicalRecord | undefined;
-      if ((expectedPreviousRevision !== undefined && (!current || current.revision !== expectedPreviousRevision)) || (expectedPreviousRevision === undefined && current && record.revision <= current.revision)) {
-        revisionConflict = true;
-        transaction.abort();
-        return;
+      const currentById = new Map<string, CanonicalRecord>(
+        (currentRequest.result as CanonicalRecord[]).map((current) => [current.id, current])
+      );
+      for (const write of writes) {
+        const current = currentById.get(write.record.id);
+        if ((write.expectedPreviousRevision !== undefined && (!current || current.revision !== write.expectedPreviousRevision)) || (write.expectedPreviousRevision === undefined && current && write.record.revision <= current.revision)) {
+          revisionConflict = true;
+          transaction.abort();
+          return;
+        }
+        currentById.set(write.record.id, write.record);
       }
-      recordStore.put(record);
-      transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
-      transaction.objectStore(HISTORY_STORE).put({ id: `${record.id}:${record.revision}`, recordId: record.id, revision: record.revision, recordedAt: new Date().toISOString(), record } satisfies HistoryEntry);
-      if (artifactBlob) transaction.objectStore(ARTIFACT_STORE).put({ id: record.id, blob: artifactBlob });
+      for (const write of writes) {
+        recordStore.put(write.record);
+        transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
+        transaction.objectStore(HISTORY_STORE).put({ id: `${write.record.id}:${write.record.revision}`, recordId: write.record.id, revision: write.record.revision, recordedAt: new Date().toISOString(), record: write.record } satisfies HistoryEntry);
+        if (write.artifactBlob) transaction.objectStore(ARTIFACT_STORE).put({ id: write.record.id, blob: write.artifactBlob });
+      }
     };
     try {
       await transactionDone(transaction);

@@ -40,18 +40,10 @@ export class RevisionConflictError extends Error {
 export class CommandBus {
   public constructor(private readonly store: CanonicalStore) {}
 
-  public async get(id: string, includeDeleted = false): Promise<CanonicalRecord | undefined> {
-    return this.store.get(id, includeDeleted);
-  }
-
-  public async findBySourceId(sourceId: string): Promise<CanonicalRecord[]> {
-    return this.store.findByProvenance(sourceId);
-  }
-
-  public async create(input: CreateRecordInput): Promise<CanonicalRecord> {
+  private makeRecord(input: CreateRecordInput): CanonicalRecord {
     if (!input.owner.trim()) throw new Error("A canonical owner is required");
     const now = new Date().toISOString();
-    const record: CanonicalRecord = {
+    return {
       id: createOpaqueId(),
       recordType: input.recordType,
       owner: input.owner,
@@ -66,6 +58,22 @@ export class CommandBus {
       deleted: false,
       data: input.data
     };
+  }
+
+  private nextRevision(current: CanonicalRecord, data: Record<string, unknown>, deleted = current.deleted): CanonicalRecord {
+    return { ...current, data, modifiedAt: new Date().toISOString(), revision: current.revision + 1, deleted };
+  }
+
+  public async get(id: string, includeDeleted = false): Promise<CanonicalRecord | undefined> {
+    return this.store.get(id, includeDeleted);
+  }
+
+  public async findBySourceId(sourceId: string): Promise<CanonicalRecord[]> {
+    return this.store.findByProvenance(sourceId);
+  }
+
+  public async create(input: CreateRecordInput): Promise<CanonicalRecord> {
+    const record = this.makeRecord(input);
     await this.store.put(record);
     return record;
   }
@@ -122,13 +130,7 @@ export class CommandBus {
     const current = await this.store.get(id, true);
     if (!current) throw new Error("Canonical record not found");
     if (expectedRevision !== undefined && current.revision !== expectedRevision) throw new RevisionConflictError();
-    const updated: CanonicalRecord = {
-      ...current,
-      data,
-      modifiedAt: new Date().toISOString(),
-      revision: current.revision + 1,
-      deleted: false
-    };
+    const updated = this.nextRevision(current, data, false);
     await this.store.put(updated, undefined, current.revision);
     return updated;
   }
@@ -136,14 +138,14 @@ export class CommandBus {
   public async archive(id: string): Promise<void> {
     const current = await this.store.get(id, true);
     if (!current) return;
-    await this.store.put({ ...current, deleted: true, modifiedAt: new Date().toISOString(), revision: current.revision + 1 }, undefined, current.revision);
+    await this.store.put(this.nextRevision(current, current.data, true), undefined, current.revision);
   }
 
   public async restore(id: string): Promise<CanonicalRecord> {
     const current = await this.store.get(id, true);
     if (!current) throw new Error("Canonical record not found");
     if (!current.deleted) return current;
-    const restored = { ...current, deleted: false, modifiedAt: new Date().toISOString(), revision: current.revision + 1, data: { ...current.data, restoreIntent: "EXPLICIT_USER_RESTORE", restoredFromRevision: current.revision } };
+    const restored = this.nextRevision(current, { ...current.data, restoreIntent: "EXPLICIT_USER_RESTORE", restoredFromRevision: current.revision }, false);
     await this.store.put(restored, undefined, current.revision);
     return restored;
   }
@@ -171,8 +173,18 @@ export class CommandBus {
     if (expectedRevision !== undefined && source.revision !== expectedRevision) throw new RevisionConflictError();
     const label = relation.trim().slice(0, 120) || "related";
     const existing = (await this.store.list()).find((record) => record.recordType === "relationship" && record.data.sourceId === sourceId && record.data.targetId === targetId && record.data.relation === label);
-    const relationship = existing ?? await this.relate(sourceId, targetId, label);
-    await this.update(sourceId, { ...source.data, triageStatus: "REVIEWED", triageDisposition: "LINKED", triageLinkId: relationship.id }, expectedRevision ?? source.revision);
+    const relationship = existing ?? this.makeRecord({
+      recordType: "relationship",
+      owner: "platform.relate",
+      truthClass: "USER_OBSERVATION",
+      sensitivity: source.sensitivity === "SHARED" && target.sensitivity === "SHARED" ? "SHARED" : "PRIVATE",
+      data: { text: `${source.id} -> ${target.id}: ${label}`, sourceId, targetId, relation: label, triageStatus: "REVIEWED" }
+    });
+    const linked = this.nextRevision(source, { ...source.data, triageStatus: "REVIEWED", triageDisposition: "LINKED", triageLinkId: relationship.id }, false);
+    await this.store.putMany([
+      ...(existing ? [] : [{ record: relationship }]),
+      { record: linked, expectedPreviousRevision: expectedRevision ?? source.revision }
+    ]);
     return relationship;
   }
 
@@ -180,7 +192,7 @@ export class CommandBus {
     const source = await this.store.get(sourceId, true);
     if (!source || source.deleted) throw new Error("The triage source must be an active canonical record");
     if (expectedRevision !== undefined && source.revision !== expectedRevision) throw new RevisionConflictError();
-    const routed = await this.create({
+    const routed = this.makeRecord({
       recordType: target,
       owner: "core.capture",
       truthClass: source.truthClass,
@@ -190,8 +202,13 @@ export class CommandBus {
       data: { ...source.data, ...(target === "task" && source.data.status !== "DONE" ? { status: "OPEN" } : {}), triageStatus: "REVIEWED", triageDisposition: "ROUTED", triageSourceId: source.id }
     });
     const routedSource = { ...source.data, triageStatus: "REVIEWED", triageDisposition: "ROUTED", triageRoutedTo: routed.id };
-    const updated = await this.update(source.id, routedSource, expectedRevision ?? source.revision);
-    await this.archive(updated.id);
+    const updated = this.nextRevision(source, routedSource, false);
+    const archived = this.nextRevision(updated, updated.data, true);
+    await this.store.putMany([
+      { record: routed },
+      { record: updated, expectedPreviousRevision: expectedRevision ?? source.revision },
+      { record: archived, expectedPreviousRevision: updated.revision }
+    ]);
     return routed;
   }
 
@@ -224,7 +241,7 @@ export class CommandBus {
         children.push(existingChild);
         continue;
       }
-      children.push(await this.create({
+      children.push(this.makeRecord({
         recordType: part.target,
         owner: "core.capture",
         truthClass: source.truthClass,
@@ -234,8 +251,13 @@ export class CommandBus {
         data: { ...sourceData, text: part.text, ...(part.target === "task" ? { status: source.data.status === "DONE" ? "DONE" : "OPEN" } : {}), triageStatus: "REVIEWED", triageDisposition: "SPLIT", triageSourceId: source.id, triageSplitSourceId: source.id, triageSplitIndex: index, triageSplitCount: normalized.length }
       }));
     }
-    const updated = await this.update(source.id, { ...source.data, triageStatus: "REVIEWED", triageDisposition: "SPLIT", triageSplitChildren: children.map((child) => child.id) }, expectedRevision ?? source.revision);
-    await this.archive(updated.id);
+    const updated = this.nextRevision(source, { ...source.data, triageStatus: "REVIEWED", triageDisposition: "SPLIT", triageSplitChildren: children.map((child) => child.id) }, false);
+    const archived = this.nextRevision(updated, updated.data, true);
+    await this.store.putMany([
+      ...children.filter((child) => !existingByIndex.has(child.data.triageSplitIndex as number)).map((child) => ({ record: child })),
+      { record: updated, expectedPreviousRevision: expectedRevision ?? source.revision },
+      { record: archived, expectedPreviousRevision: updated.revision }
+    ]);
     return children;
   }
 
@@ -253,8 +275,12 @@ export class CommandBus {
     const source = await this.store.get(sourceId, true);
     if (!source || source.deleted) throw new Error("The triage source must be an active canonical record");
     if (expectedRevision !== undefined && source.revision !== expectedRevision) throw new RevisionConflictError();
-    const updated = await this.update(sourceId, { ...source.data, triageStatus: "REVIEWED", triageDisposition: "DELETED" }, expectedRevision ?? source.revision);
-    await this.archive(updated.id);
+    const updated = this.nextRevision(source, { ...source.data, triageStatus: "REVIEWED", triageDisposition: "DELETED" }, false);
+    const archived = this.nextRevision(updated, updated.data, true);
+    await this.store.putMany([
+      { record: updated, expectedPreviousRevision: expectedRevision ?? source.revision },
+      { record: archived, expectedPreviousRevision: updated.revision }
+    ]);
   }
 
   public async undo(id: string): Promise<CanonicalRecord> {
