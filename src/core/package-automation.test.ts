@@ -36,6 +36,8 @@ const rule: AutomationRule = {
 describe("package-facing bounded automation", () => {
   it("parses a bounded package rule and emits proposal-only actions", () => {
     const adapter = parsePackageAutomationDocument(manifest, JSON.stringify(rule));
+    expect(Object.isFrozen(adapter.rule)).toBe(true);
+    expect(Object.isFrozen(adapter.rule.actions)).toBe(true);
     expect(adapter.preview({ record: { kind: "task" } })).toEqual([{ command: "record.update", arguments: { field: "priority", value: 3 }, ruleId: "sample.app.review", requiresNormalCommandPath: true }]);
   });
 

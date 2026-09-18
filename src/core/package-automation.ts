@@ -20,12 +20,20 @@ export function createPackageAutomationAdapter(manifest: PackageManifest, rule: 
   assertAutomationRule(rule);
   if (!rule.ruleId.startsWith(`${manifest.packageId}.`)) throw new Error("Automation rule ID must be package-scoped");
   if (rule.actions.some((action) => !manifest.commands.consumes.includes(action.command))) throw new Error("Automation command is not declared by the package");
-  const frozenRule = structuredClone(rule);
+  const frozenRule = freezeRule(structuredClone(rule));
   return {
     packageId: manifest.packageId,
     rule: frozenRule,
     preview: (context) => proposeRuleActions(frozenRule, structuredClone(context)).map((proposal) => ({ ...proposal, arguments: structuredClone(proposal.arguments) }))
   };
+}
+
+function freezeRule<T extends object>(value: T): T {
+  Object.freeze(value);
+  for (const child of Object.values(value)) {
+    if (typeof child === "object" && child !== null && !Object.isFrozen(child)) freezeRule(child);
+  }
+  return value;
 }
 
 export function parsePackageAutomationDocument(manifest: PackageManifest, document: string): PackageAutomationAdapter {
