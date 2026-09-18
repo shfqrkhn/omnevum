@@ -501,9 +501,10 @@
       "evidence": [
         "src/core/place.test.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-source-meaning-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-track-place-and-compose-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-track-place-and-compose-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-gpx-acquire-follow-up"
       ],
-      "notes": "The current built preview captures a validated GeoJSON Point through the shared Place/Geo owner and preserves it as a canonical observation; the current artifact also saves a coordinate Place record through the visible form and retains it beside Track records. GPX/timeline reuse, location-tracking policy, and broader import/target qualification remain open."
+      "notes": "The built preview captures a validated GeoJSON Point through the shared Place/Geo owner and preserves it as a canonical observation; the current artifact also stages and accepts a bounded GPX fixture through Acquire, routes a waypoint to platform.place and a track point to platform.time, and preserves coordinates/timestamp/source identity. Multi-track timeline composition, location-tracking policy, and broader import/target qualification remain open."
     },
     {
       "id": "OMN-ACC-034",
@@ -604,9 +605,9 @@
       "evidence": [
         "src/core/track.test.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-track-place-and-compose-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-track-place-and-compose-follow-up"
       ],
-      "notes": "The built preview covers Track capture and derived dashboard rendering; the current artifact saves two observations through one reusable definition path and keeps them as platform.track records. Mobile/touch qualification, multi-view permission breadth, and specialist-domain mapping remain open."
+      "notes": "The historical built preview covers Track capture and derived dashboard rendering; the superseded artifact saved two observations through one reusable definition path and kept them as platform.track records. Mobile/touch qualification, multi-view permission breadth, and specialist-domain mapping remain open."
     },
     {
       "id": "OMN-ACC-043",
@@ -670,9 +671,9 @@
       "evidence": [
         "src/core/history.test.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#observed-in-the-production-preview",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-historyversion-revert-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-historyversion-revert-follow-up"
       ],
-      "notes": "Local history/diff and command-path undo are covered; the current Chromium artifact now exposes a visible Revert to revision action that creates a new canonical revision and restores the prior task state. Domain retention policy, richer multi-revision UX, and target qualification remain open."
+      "notes": "Local history/diff and command-path undo are covered; a superseded Chromium artifact exposed a visible Revert to revision action that created a new canonical revision and restored the prior task state. Domain retention policy, richer multi-revision UX, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-048",

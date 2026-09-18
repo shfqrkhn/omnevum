@@ -77,7 +77,7 @@
     "current receipt-bound Edge desktop preview on Microsoft Edge 153.0.4234.32 accepts a synthetic canonical capture and retains it across reload with a healthy derived index; source 307470e",
     "current receipt-bound Edge preview detects a synthetic malformed IndexedDB canonical row, enters the Recovery shell, and completes read-only retained-state export without mutation; source 307470e",
     "current receipt-bound Edge preview performs an offline canonical capture and offline reload persistence with a healthy derived index; source 307470e",
-    "current release receipt is refreshed and independently hash-verified for source 393a324, artifact digest e07788f247ba31afc3a3c0b37b2681e6cb3abf2d60d52553877241425da6f9b0, and service-worker cache omnevum-shell-fc3a70e8de1cdefd",
+    "current release receipt is refreshed and independently hash-verified for source f55f1d6, artifact digest 8791ef02c800df52907a8eb449ad15a82594b5c7ecc8055feef583defe8de661, and service-worker cache omnevum-shell-44f61fec9fae09c2",
     "current receipt-bound Edge preview proves presentation branding updates document.title and theme-color and persists after reload; source bd9e242",
     "current receipt-bound Edge preview at 390x844 records no horizontal overflow, visible labelled controls, sequential keyboard focus, and an empty warning/error console; source bd9e242",
     "current receipt-bound Edge preview accepts a synthetic capture, retains it after reload, and returns to a clean scoped origin; source bd9e242",
@@ -88,7 +88,8 @@
     "historical receipt-bound Chromium preview reported Failed to fetch for offline network-dependent sync while retaining local capture/health, then restored network and cleaned the scoped origin; source c548ccf",
     "historical receipt-bound Chromium preview attached a 46-byte fixture through the visible Artifact file chooser, retained one platform.artifact payload, exposed it through shared selectors, and returned to a clean scoped origin; source c548ccf",
     "historical receipt-bound Chromium preview reused one Track definition for two observations, captured a platform.place coordinate, rendered a safe-field Compose list/table/chart projection, and returned to a clean scoped origin; source c548ccf",
-    "current receipt-bound Chromium preview exposes History/Version diffs and a visible Revert to revision action that restores prior task state through a new canonical revision, then returns to a clean scoped origin; source 393a324",
+    "historical receipt-bound Chromium preview exposed History/Version diffs and a visible Revert to revision action that restored prior task state through a new canonical revision, then returned to a clean scoped origin; source 393a324",
+    "current receipt-bound Chromium preview stages and accepts a bounded GPX fixture, routes its waypoint and track point to platform.place/platform.time with preserved coordinates/timestamp/source identity, and returns to a clean scoped origin; source f55f1d6",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [
