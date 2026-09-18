@@ -11,6 +11,7 @@ describe("purpose-bound sharing grants", () => {
     const source = await commands.create({ recordType: "note", owner: "core.capture", data: { text: "source" } });
     const other = await commands.create({ recordType: "note", owner: "core.capture", data: { text: "other" } });
     const grant = await createShareGrant(commands, { grantedTo: "person:friend", purpose: "shared planning", space: "personal", recordIds: [source.id] });
+    expect(grant.data.triageStatus).toBe("REVIEWED");
     expect(canUseShareGrant(grant, [source.id])).toBe(true);
     expect(canUseShareGrant(grant, [source.id, other.id])).toBe(false);
     const revoked = await revokeShareGrant(commands, grant.id);

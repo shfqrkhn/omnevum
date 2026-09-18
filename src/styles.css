@@ -59,6 +59,9 @@ main { display: grid; gap: 1rem; padding-bottom: 2rem; }
 label { display: block; margin-bottom: 0.45rem; font-weight: 700; }
 textarea { width: 100%; resize: vertical; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--text); padding: 0.85rem; }
 select, input[type="search"], input[type="text"], input[type="number"] { width: 100%; min-height: 44px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--text); padding: 0.7rem 0.85rem; }
+select[multiple] { min-height: 9rem; }
+.check-row { display: flex; align-items: center; gap: 0.55rem; }
+.check-row input { width: 1.15rem; height: 1.15rem; accent-color: var(--accent); }
 .form-row, .section-heading, .recovery-row { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; }
 .form-row { margin-top: 0.8rem; }
 .search-form { display: grid; gap: 0.2rem; }

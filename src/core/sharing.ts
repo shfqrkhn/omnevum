@@ -20,6 +20,7 @@ export interface ShareGrantData {
   createdAt: string;
   expiresAt?: string;
   revokedAt?: string;
+  triageStatus: "REVIEWED";
 }
 
 export async function createShareGrant(commands: CommandBus, input: ShareGrantInput): Promise<CanonicalRecord> {
@@ -29,7 +30,7 @@ export async function createShareGrant(commands: CommandBus, input: ShareGrantIn
   if (!grantedTo || !purpose || recordIds.length === 0) throw new Error("Share grant requires recipient, purpose, and records");
   if (input.expiresAt && !Number.isFinite(Date.parse(input.expiresAt))) throw new Error("Share grant expiry is invalid");
   const createdAt = new Date().toISOString();
-  const data: ShareGrantData = { kind: "share-grant", grantedTo, purpose, space: input.space, recordIds, status: "ACTIVE", createdAt, ...(input.expiresAt ? { expiresAt: input.expiresAt } : {}) };
+  const data: ShareGrantData = { kind: "share-grant", grantedTo, purpose, space: input.space, recordIds, status: "ACTIVE", createdAt, triageStatus: "REVIEWED", ...(input.expiresAt ? { expiresAt: input.expiresAt } : {}) };
   return commands.create({ recordType: "relationship", owner: "platform.share", truthClass: "USER_OBSERVATION", data: { text: `Share grant for ${grantedTo}: ${purpose}`, ...data } });
 }
 

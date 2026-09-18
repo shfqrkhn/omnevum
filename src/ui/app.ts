@@ -21,6 +21,8 @@ import { readPath } from "../core/data";
 import { assessTextAnchor, createTextAnnotation } from "../core/annotation";
 import { createEvidenceLink, type EvidenceRelation } from "../core/evidence";
 import { makePlaceData, parseGeoJsonPoint } from "../core/place";
+import { projectForShare } from "../core/share";
+import { createShareGrant, revokeShareGrant } from "../core/sharing";
 
 export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
@@ -342,6 +344,35 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <p id="knowledge-status" class="hint" role="status"></p>
       </section>
 
+      <section id="sharing" class="panel" aria-labelledby="sharing-heading">
+        <p class="eyebrow">${copy.sharing}</p>
+        <h2 id="sharing-heading">${copy.sharingHeading}</h2>
+        <form id="share-form" class="relationship-form">
+          <label for="share-recipient">${copy.shareRecipient}</label>
+          <input id="share-recipient" name="recipient" type="text" maxlength="160" required />
+          <label for="share-purpose">${copy.sharePurpose}</label>
+          <input id="share-purpose" name="purpose" type="text" maxlength="500" required />
+          <label for="share-expiry">${copy.shareExpiry}</label>
+          <input id="share-expiry" name="expiresAt" type="datetime-local" />
+          <label for="share-space">${copy.space}</label>
+          <select id="share-space" name="space">
+            <option value="personal">${copy.personal}</option>
+            <option value="household">${copy.household}</option>
+            <option value="work">${copy.work}</option>
+          </select>
+          <label for="share-records">${copy.selectRecords}</label>
+          <select id="share-records" name="records" multiple size="6"></select>
+          <label class="check-row" for="share-include-private"><input id="share-include-private" type="checkbox" /> ${copy.includePrivate}</label>
+          <p class="hint">${copy.sharingHint}</p>
+          <div class="form-row">
+            <button id="share-grant-submit" type="submit" disabled>${copy.createGrant}</button>
+            <button id="share-export" class="secondary" type="button" disabled>${copy.exportProjection}</button>
+          </div>
+          <p id="share-status" class="hint" role="status"></p>
+        </form>
+        <ul id="share-grant-list" class="record-list"></ul>
+      </section>
+
       <section id="focus" class="panel" aria-labelledby="focus-heading">
         <p class="eyebrow">${copy.timeObserve}</p>
         <h2 id="focus-heading">${copy.focusHeading}</h2>
@@ -492,6 +523,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const placeGeoJson = root.querySelector<HTMLTextAreaElement>("#place-geojson");
   const placeStatus = root.querySelector<HTMLElement>("#place-status");
   const knowledgeStatus = root.querySelector<HTMLElement>("#knowledge-status");
+  const shareForm = root.querySelector<HTMLFormElement>("#share-form");
+  const shareRecipient = root.querySelector<HTMLInputElement>("#share-recipient");
+  const sharePurpose = root.querySelector<HTMLInputElement>("#share-purpose");
+  const shareExpiry = root.querySelector<HTMLInputElement>("#share-expiry");
+  const shareSpace = root.querySelector<HTMLSelectElement>("#share-space");
+  const shareRecords = root.querySelector<HTMLSelectElement>("#share-records");
+  const shareIncludePrivate = root.querySelector<HTMLInputElement>("#share-include-private");
+  const shareGrantSubmit = root.querySelector<HTMLButtonElement>("#share-grant-submit");
+  const shareExport = root.querySelector<HTMLButtonElement>("#share-export");
+  const shareStatus = root.querySelector<HTMLElement>("#share-status");
+  const shareGrantList = root.querySelector<HTMLUListElement>("#share-grant-list");
   const focusToggle = root.querySelector<HTMLButtonElement>("#focus-toggle");
   const focusStatus = root.querySelector<HTMLElement>("#focus-status");
   const reminderForm = root.querySelector<HTMLFormElement>("#reminder-form");
@@ -523,7 +565,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productName || !localeInput || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
 
@@ -833,6 +875,63 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     knowledgeStatus.textContent = copy.knowledgeStatus(evidence, annotations, active, stale, orphaned, places);
   };
 
+  const selectedShareIds = (): string[] => [...shareRecords.selectedOptions].map((option) => option.value);
+
+  const updateShareActions = (): void => {
+    const hasSelection = selectedShareIds().length > 0;
+    shareGrantSubmit.disabled = !hasSelection;
+    shareExport.disabled = !hasSelection;
+  };
+
+  const renderShareChoices = async (): Promise<void> => {
+    const selected = new Set(selectedShareIds());
+    const records = (await store.list()).filter((record) => record.owner !== "platform.space" && record.owner !== "platform.share");
+    shareRecords.replaceChildren();
+    for (const record of records) {
+      const option = document.createElement("option");
+      option.value = record.id;
+      option.textContent = `${typeLabel(record.recordType)}: ${recordText(record).slice(0, 70)}`;
+      option.selected = selected.has(record.id);
+      shareRecords.append(option);
+    }
+    updateShareActions();
+  };
+
+  const renderShareGrants = async (): Promise<void> => {
+    const grants = (await store.list()).filter((record) => record.owner === "platform.share" && record.data.kind === "share-grant").sort((left, right) => right.modifiedAt.localeCompare(left.modifiedAt));
+    shareGrantList.replaceChildren();
+    for (const grant of grants) {
+      const item = document.createElement("li");
+      item.className = "record-item";
+      const content = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = `${typeof grant.data.grantedTo === "string" ? grant.data.grantedTo : "recipient"} - ${grant.data.status === "ACTIVE" ? "ACTIVE" : "REVOKED"}`;
+      const detail = document.createElement("p");
+      detail.textContent = typeof grant.data.purpose === "string" ? grant.data.purpose : recordText(grant);
+      const meta = document.createElement("small");
+      meta.textContent = `${Array.isArray(grant.data.recordIds) ? grant.data.recordIds.length : 0} record(s)${typeof grant.data.expiresAt === "string" ? ` - expires ${formatDateTime(presentation.locale, grant.data.expiresAt)}` : ""}`;
+      content.append(title, detail, meta);
+      if (grant.data.status === "ACTIVE") {
+        const revoke = document.createElement("button");
+        revoke.type = "button";
+        revoke.className = "icon-button";
+        revoke.textContent = copy.revoke;
+        revoke.addEventListener("click", async () => {
+          try {
+            await revokeShareGrant(commands, grant.id);
+            shareStatus.textContent = copy.grantRevoked;
+            await renderRecords(searchQuery.value);
+          } catch (error) {
+            shareStatus.textContent = describeError(error, "Share grant could not be revoked.");
+          }
+        });
+        item.append(revoke);
+      }
+      item.prepend(content);
+      shareGrantList.append(item);
+    }
+  };
+
   const renderArchived = async (): Promise<void> => {
     const records = (await scopedRecords(true)).filter((record) => record.deleted).sort((left, right) => right.modifiedAt.localeCompare(left.modifiedAt));
     archiveList.replaceChildren();
@@ -957,6 +1056,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     await renderRelationshipChoices();
     await renderKnowledgeChoices();
     await renderKnowledgeStatus();
+    await renderShareChoices();
+    await renderShareGrants();
     const healthBefore = await store.health();
     if (!healthBefore.searchIndexValid) await store.rebuildSearchIndex();
     const healthAfter = await store.health();
@@ -1239,6 +1340,43 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       await renderRecords(searchQuery.value);
     } catch (error) {
       placeStatus.textContent = describeError(error, "Place was not saved; canonical records were not changed.");
+    }
+  });
+
+  shareRecords.addEventListener("change", updateShareActions);
+
+  shareForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const recordIds = selectedShareIds();
+    if (recordIds.length === 0) {
+      shareStatus.textContent = copy.shareSelectionRequired;
+      return;
+    }
+    const space = shareSpace.value === "household" || shareSpace.value === "work" ? shareSpace.value : "personal";
+    try {
+      await createShareGrant(commands, { grantedTo: shareRecipient.value, purpose: sharePurpose.value, space, recordIds, ...(shareExpiry.value ? { expiresAt: new Date(shareExpiry.value).toISOString() } : {}) });
+      shareStatus.textContent = copy.grantSaved;
+      shareRecipient.value = "";
+      sharePurpose.value = "";
+      shareExpiry.value = "";
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      shareStatus.textContent = describeError(error, "Share grant was not created; canonical records were not changed.");
+    }
+  });
+
+  shareExport.addEventListener("click", async () => {
+    const recordIds = selectedShareIds();
+    if (recordIds.length === 0) {
+      shareStatus.textContent = copy.shareSelectionRequired;
+      return;
+    }
+    try {
+      const projection = projectForShare(await store.list(), recordIds, shareIncludePrivate.checked);
+      downloadJson("omnevum-share-projection.json", projection);
+      shareStatus.textContent = copy.projectionSaved(projection.records.length, projection.omittedRecordCount);
+    } catch (error) {
+      shareStatus.textContent = describeError(error, "Bounded share projection failed; canonical records were not changed.");
     }
   });
 
