@@ -611,8 +611,14 @@
         "line": 3478
       },
       "text": "The game factory implements a nontrivial browser game using a qualified FOSS engine behind an Omnevum adapter, then upgrades or substitutes the engine in an isolated candidate while preserving Omnevum package/save/lifecycle contracts and rerunning game/browser/mobile/recovery evidence.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/game.ts",
+        "src/core/game.test.ts",
+        "src/core/package-contract.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up"
+      ],
+      "notes": "The deterministic GameSession/package contract proves declared input, pause/resume, save/load, and lifecycle boundaries. A nontrivial browser game, qualified FOSS engine adapter, isolated candidate upgrade, Recovery integration, and target evidence remain open."
     },
     {
       "id": "OMN-ACC-046",
@@ -709,8 +715,14 @@
         "line": 3494
       },
       "text": "A fresh AI engineer defines an ordinary record-oriented first-party package using package/domain schema plus Omnevum capability declarations and obtains a generated baseline list/detail/form/capture experience with responsive, accessible, localized, themed behavior. The generated UI contains no direct-store or permission bypass and can be replaced by a specialized hand-composed workflow without data migration.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/package-contract.ts",
+        "src/core/package-contract.test.ts",
+        "src/core/compose.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up"
+      ],
+      "notes": "The package contract validates declarative manifests, canonical ownership, command collision, lifecycle status, and a generated baseline form/list view. Fresh-agent generation, detail/capture wiring, responsive/accessibility/localization/theme qualification, and migration replacement evidence remain open."
     },
     {
       "id": "OMN-ACC-054",
@@ -1016,8 +1028,13 @@
         "line": 3544
       },
       "text": "Camera/photo, microphone/audio, file/share/clipboard, geolocation, and barcode/QR capture are exercised through the Device/Input broker on supported profiles. Permission denial/cancellation releases resources and degrades to qualified manual/file alternatives; no module retains ambient camera/mic/location authority, and captured data routes through Artifact/Acquire/Track/Place/Triage rather than a private device database.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/device.ts",
+        "src/core/device.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up"
+      ],
+      "notes": "Source/unit evidence covers capability detection, explicit broker access, bounded file/clipboard input, and manual fallback. Real camera/microphone/geolocation permission denial/cancellation, barcode/QR, capture routing, browser/device targets, and accessibility evidence remain open."
     },
     {
       "id": "OMN-ACC-079",
@@ -1064,8 +1081,14 @@
         "line": 3552
       },
       "text": "If executable third-party extension support is claimed, a qualified isolation substrate passes adversarial tests for global/prototype escape, network/storage access, CPU/memory abuse, message validation, update revocation and capability leakage. If it does not, the release still supports declarative extensions but truthfully leaves executable third-party packages disabled.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/extension-policy.ts",
+        "src/core/extension-policy.test.ts",
+        "src/core/package-contract.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-game-device-and-extension-contract-follow-up"
+      ],
+      "notes": "The accepted baseline admits declarative extensions and explicitly disables unqualified executable third-party packages. No executable isolation substrate is claimed; adversarial sandbox, update-revocation, and target qualification remain open if that profile changes."
     },
     {
       "id": "OMN-ACC-083",

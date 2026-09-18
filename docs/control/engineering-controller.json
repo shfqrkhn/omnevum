@@ -66,7 +66,8 @@
     "current built-artifact Chromium preview creates a quote-validated text annotation as a separate platform.annotate record and reports one active anchor with no stale/orphaned anchors; source bbc902d",
     "clean CI regenerates a lockfile-bound FOSS attribution/source-obligation receipt and fails the license gate on stale or policy-critical metadata findings; source scripts/generate-control.mjs and scripts/license-audit.mjs",
     "current Effect/Outbox and credential tests prove crash recovery through reconciliation, no-blind-replay, retry/expiry/guard behavior, bounded payloads, secret-free metadata, and revocation; shipped external connector qualification remains open",
-    "current Artifact regression proves one canonical payload can serve two relationship references and survive derived search-index rebuild; preview/OCR/target qualification remains open"
+    "current Artifact regression proves one canonical payload can serve two relationship references and survive derived search-index rebuild; preview/OCR/target qualification remains open",
+    "current package/game/device/extension contract tests prove bounded declarative package and game lifecycle seams, explicit Device/Input access, and executable-extension disablement; browser package/game/device qualification remains open"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",
@@ -83,6 +84,6 @@
     "provider-backed or consumer-cloud sync, transport authentication/credential-key brokering, offline rejoin UI, and external-effect replay evidence",
     "MVP release and later phases"
   ],
-  "nextAction": "Execute the Pages workflow on the configured remote repository, then run the Phase 0 support/accessibility/offline/update and native fault-injection matrix, including failed-open repair and recovery-snapshot handling, before promoting the MVP gate; keep the MiniSearch adapter target qualification open and do not treat workflow configuration or local preview as deployment proof.",
+  "nextAction": "No Git remote is configured in this workspace, so Pages deployment proof is blocked until the owner supplies/configures the intended remote. Until then, run the Phase 0 support/accessibility/offline/update and native fault-injection matrix locally, including failed-open repair and recovery-snapshot handling; keep MiniSearch adapter qualification open and do not treat workflow configuration or local preview as deployment proof.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }

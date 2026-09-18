@@ -283,3 +283,9 @@ The current credential/key boundary is covered by `src/core/credential.test.ts` 
 The current `src/core/artifact.test.ts#keeps-one-artifact-payload-shared-by-multiple-references-while-rebuilding-derived-search` regression creates one canonical `platform.artifact` payload, references that same Artifact from two separate `platform.relate` records, invalidates and rebuilds the derived search index, and verifies the exact payload remains readable without a duplicate Artifact record. `npm run ci` passed with `41` test files and `132` tests.
 
 This proves the bounded canonical Artifact/reference and derived-index-rebuild invariant at source/unit level. Browser attachment/relationship evidence, preview/OCR adapters, large-file cancellation/resource bounds, hostile-rendering qualification, and cross-target release evidence remain open.
+
+## Current package, game, device, and extension contract follow-up
+
+The current source contracts cover four bounded seams: `src/core/package-contract.test.ts` proves declarative package admission, generated baseline form/list views, canonical-type collision prevention, disablement, and retirement; `src/core/game.test.ts` proves declared-action admission, deterministic input, pause/resume, save/load, and incompatible-save rejection; `src/core/device.test.ts` proves capability detection, explicit file/clipboard/share/location access, manual fallback, media-boundary shape, and 5 MiB input limits; `src/core/extension-policy.test.ts` proves declarative admission and explicit `DISABLED_UNQUALIFIED` status for executable third-party extensions.
+
+These are source/unit contract increments only. A nontrivial browser game/package generated UI, fresh-agent creation/resume, real device permission-denial/cancellation flows, barcode/QR routing, isolated candidate upgrade, and target qualification remain open.
