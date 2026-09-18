@@ -140,6 +140,19 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("applies an allowed-id scope before derived search tokenization", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-scoped-search`);
+    await store.open();
+    const allowed = record("record-scoped-allowed");
+    const denied = { ...record("record-scoped-denied"), data: { text: "shared sentinel" } };
+    await store.put({ ...allowed, data: { text: "shared sentinel" } });
+    await store.put(denied);
+
+    expect((await store.search("sentinel", new Set([allowed.id]))).map((item) => item.id)).toEqual([allowed.id]);
+    expect(await store.search("sentinel", new Set())).toEqual([]);
+    store.close();
+  });
+
   it("detects malformed derived search state and rebuilds it without changing canonical data", async () => {
     const databaseName = `omnevum-test-${Date.now()}-search-corruption`;
     const store = new CanonicalStore(databaseName);

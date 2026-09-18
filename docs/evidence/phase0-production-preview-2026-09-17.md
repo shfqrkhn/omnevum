@@ -289,3 +289,9 @@ This proves the bounded canonical Artifact/reference and derived-index-rebuild i
 The current source contracts cover four bounded seams: `src/core/package-contract.test.ts` proves declarative package admission, generated baseline form/list views, canonical-type collision prevention, disablement, and retirement; `src/core/game.test.ts` proves declared-action admission, deterministic input, pause/resume, save/load, and incompatible-save rejection; `src/core/device.test.ts` proves capability detection, explicit file/clipboard/share/location access, manual fallback, media-boundary shape, and 5 MiB input limits; `src/core/extension-policy.test.ts` proves declarative admission and explicit `DISABLED_UNQUALIFIED` status for executable third-party extensions.
 
 These are source/unit contract increments only. A nontrivial browser game/package generated UI, fresh-agent creation/resume, real device permission-denial/cancellation flows, barcode/QR routing, isolated candidate upgrade, and target qualification remain open.
+
+## Current scoped-search boundary follow-up
+
+`CanonicalStore.search(query, allowedIds)` now filters derived search documents before MiniSearch tokenization and ranking. The UI computes the active Space projection first, passes its canonical IDs into the search owner, and uses the same bounded result count for the visible status. `src/core/storage.test.ts#applies-an-allowed-id-scope-before-derived-search-tokenization` proves an allowed record is returned while an out-of-scope record with the same token is never included; an empty allowed set returns no result.
+
+This closes the current text-search projection boundary at source/unit and UI-owner level. Vector/analytical caches, cross-tab permission invalidation, external share/search routes, target accessibility, and full release qualification remain open.

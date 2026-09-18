@@ -784,8 +784,15 @@
         "line": 3504
       },
       "text": "A source permission or Space/Scope access change invalidates or filters affected full-text/vector/analytical derived projections so stale indexes, embeddings, query caches, or analytical tables cannot continue exposing data that the current authorized projection no longer includes.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/storage.ts",
+        "src/core/storage.test.ts#applies-an-allowed-id-scope-before-derived-search-tokenization",
+        "src/core/space.ts",
+        "src/ui/app.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-scoped-search-boundary-follow-up"
+      ],
+      "notes": "Scoped text search now applies authorized canonical IDs before derived-index tokenization, and the UI computes Space scope before searching. Vector/analytical cache invalidation, cross-tab permission changes, external routes, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-059",

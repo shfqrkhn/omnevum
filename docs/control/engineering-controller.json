@@ -67,7 +67,8 @@
     "clean CI regenerates a lockfile-bound FOSS attribution/source-obligation receipt and fails the license gate on stale or policy-critical metadata findings; source scripts/generate-control.mjs and scripts/license-audit.mjs",
     "current Effect/Outbox and credential tests prove crash recovery through reconciliation, no-blind-replay, retry/expiry/guard behavior, bounded payloads, secret-free metadata, and revocation; shipped external connector qualification remains open",
     "current Artifact regression proves one canonical payload can serve two relationship references and survive derived search-index rebuild; preview/OCR/target qualification remains open",
-    "current package/game/device/extension contract tests prove bounded declarative package and game lifecycle seams, explicit Device/Input access, and executable-extension disablement; browser package/game/device qualification remains open"
+    "current package/game/device/extension contract tests prove bounded declarative package and game lifecycle seams, explicit Device/Input access, and executable-extension disablement; browser package/game/device qualification remains open",
+    "scoped CanonicalStore search applies authorized IDs before derived-index tokenization and the UI derives those IDs from Space projection; vector/analytical/external permission invalidation remains open"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",

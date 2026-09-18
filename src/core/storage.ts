@@ -292,11 +292,12 @@ export class CanonicalStore {
     return (operations as EffectOperation[]).filter((operation) => status === undefined || operation.status === status).sort((left, right) => left.createdAt.localeCompare(right.createdAt));
   }
 
-  public async search(query: string): Promise<CanonicalRecord[]> {
+  public async search(query: string, allowedIds?: ReadonlySet<string>): Promise<CanonicalRecord[]> {
     await this.ensureSearchIndex();
     const transaction = this.requireDatabase().transaction(SEARCH_STORE, "readonly");
     const documents = (await requestResult(transaction.objectStore(SEARCH_STORE).getAll())).filter(isSearchDocument);
-    const matches = new Map(searchDocuments(documents, query).map((document) => [document.id, document]));
+    const scopedDocuments = allowedIds ? documents.filter((document) => allowedIds.has(document.id)) : documents;
+    const matches = new Map(searchDocuments(scopedDocuments, query).map((document) => [document.id, document]));
     const records = await this.list();
     return records.filter((record) => matches.has(record.id)).sort((left, right) => (matches.get(right.id)?.modifiedAt ?? "").localeCompare(matches.get(left.id)?.modifiedAt ?? ""));
   }

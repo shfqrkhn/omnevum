@@ -1176,9 +1176,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     return details;
   };
 
-  const renderRecords = async (query = ""): Promise<void> => {
-    const candidateRecords = query.trim() ? await store.search(query) : await store.list();
-    const records = activeSpace ? (await spaceService.project(candidateRecords, activeSpace)).filter((record) => record.owner !== "platform.space") : candidateRecords.filter((record) => record.owner !== "platform.space");
+  const renderRecords = async (query = ""): Promise<number> => {
+    const allRecords = await store.list();
+    const allowedIds = activeSpace ? new Set((await spaceService.project(allRecords, activeSpace)).map((record) => record.id)) : undefined;
+    const candidateRecords = query.trim() ? await store.search(query, allowedIds) : allRecords;
+    const records = candidateRecords.filter((record) => record.owner !== "platform.space" && (!allowedIds || allowedIds.has(record.id)));
     recordList.replaceChildren();
     recordCount.textContent = formatNumber(presentation.locale, records.length);
     emptyState.hidden = records.length > 0;
@@ -1256,6 +1258,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const healthAfter = await store.health();
     healthStatus.textContent = copy.healthMessage(healthAfter.activeRecords, healthAfter.archivedRecords, healthAfter.historyEntries, healthAfter.artifactPayloads, healthAfter.searchIndexValid ? copy.healthy : copy.degraded, healthAfter.storage?.pressure);
     if (!archivePanel.hidden) await renderArchived();
+    return records.length;
   };
 
   captureForm.addEventListener("submit", async (event) => {
@@ -1414,9 +1417,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     event.preventDefault();
     const query = searchQuery.value.trim();
     try {
-      await renderRecords(query);
+      const resultCount = await renderRecords(query);
       const health = await store.getSearchHealth();
-      searchStatus.textContent = query ? copy.resultMessage((await store.search(query)).length, health.valid ? copy.healthy : copy.degraded) : copy.showingAll;
+      searchStatus.textContent = query ? copy.resultMessage(resultCount, health.valid ? copy.healthy : copy.degraded) : copy.showingAll;
     } catch (error) {
       searchStatus.textContent = describeError(error, "Search failed; canonical data was not changed.");
     }
