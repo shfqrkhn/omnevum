@@ -38,3 +38,13 @@ The Phase 0 shell uses Vite 8.3.0, TypeScript 7.0.2, Vitest 5.0.1, and native DO
 - No currentness register existed before this increment; `docs/control/upstream.json` is the initial snapshot.
 - No target-device, accessibility-assistive-technology, security, migration, or production deployment evidence exists yet.
 
+## Standards currentness refresh (2026-09-18)
+
+The authoritative standards pages were rechecked before further Phase 0 qualification:
+
+- [WCAG 2.2 Recommendation](https://www.w3.org/TR/WCAG22/) remains the current published WCAG 2.2 Recommendation; [the W3C errata page](https://www.w3.org/WAI/WCAG22/errata/) records 2026 editorial updates. The project therefore retains WCAG 2.2 AA as a qualification target, but does not infer conformance from the standard alone.
+- [Web Application Manifest](https://www.w3.org/TR/appmanifest/) is a current W3C Working Draft (13 August 2026). Manifest fields remain user-agent/host behavior, so installed-name/icon/splash outcomes stay `PLATFORM_LIMITED` until exercised on a claimed host.
+- [Service Workers](https://www.w3.org/TR/service-workers/) remains a current W3C Nightly/CRD snapshot (23 July 2026). Its lifecycle and user-agent termination model reinforce the existing requirement to qualify activation, update, rollback, and offline behavior on each claimed target rather than treating a local preview as deployment proof.
+- [IndexedDB terminology and browser behavior](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology) was reviewed as compatibility context. IndexedDB availability does not prove quota, eviction, migration-interruption, or cross-browser recovery behavior.
+
+This refresh changes no runtime authority or support claim. It records source currentness only; target/browser, assistive-technology, native fault, deployment, and human-acceptance evidence remain separately required.

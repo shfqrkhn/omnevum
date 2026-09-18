@@ -169,8 +169,8 @@
       },
       {
         "path": "docs/control/currentness-radar.json",
-        "sha256": "4910e030732ca284f95ec30f3583234aa8dd1b38679e198924374dd606f4da30",
-        "bytes": 2023
+        "sha256": "54d8674fdb5129129f274fd8b52c47941cd3932ecbfa88f53dc99270005a9b3f",
+        "bytes": 2584
       },
       {
         "path": "docs/control/decision-log.json",
@@ -274,8 +274,8 @@
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
-        "sha256": "a33f9b5be03ca72a19736c581746955985ba7196cd29d40544e5dd5d9fe459e0",
-        "bytes": 2928
+        "sha256": "3ea8c7333eb5ffe82cc8ace4427c2d4ebb502f8583fd23459f30d050d85defd3",
+        "bytes": 4502
       },
       {
         "path": "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
