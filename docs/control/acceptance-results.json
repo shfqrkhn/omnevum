@@ -370,7 +370,7 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-checkout-fresh-agent-resume-benchmark-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-receipt-bound-edge-factory-qualification-follow-up"
       ],
-      "notes": "The generated integrity-manifested Recovery bundle references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths. At exact detached revision 98752b8, the clean-checkout benchmark reported FRESH_AGENT_NPM_CI_PASS, RECOVERY_AUDIT_PASS files=166, FRESH_AGENT_CI_PASS, FACTORY_INTERRUPTION_EXPECTED_STOP_PASS, FACTORY_INTERRUPTION_RESUME_PASS, FRESH_AGENT_FACTORY_INTERRUPTION_PASS, and clean-clone=true original-conversation=false after verifying canonical IDs/status plus game seed/state. The worktree is removed after the complete CI and interruption/resume gates."
+      "notes": "The generated integrity-manifested Recovery bundle references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths. At exact detached revision 6af19ac, the clean-checkout benchmark reported FRESH_AGENT_NPM_CI_PASS, RECOVERY_AUDIT_PASS files=166, FRESH_AGENT_CI_PASS, FACTORY_INTERRUPTION_EXPECTED_STOP_PASS, FACTORY_INTERRUPTION_RESUME_PASS, FRESH_AGENT_FACTORY_INTERRUPTION_PASS, and clean-clone=true original-conversation=false after verifying canonical IDs/status plus game seed/state. The worktree is removed after the complete CI and interruption/resume gates."
     },
     {
       "id": "OMN-ACC-022",
