@@ -486,9 +486,10 @@
         "src/core/commands.ts",
         "src/core/storage.test.ts#preserves-a-bounded-artifact-payload-through-vault-export-and-restore",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-artifact-multi-reference-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-artifact-attachment-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-artifact-attachment-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-artifact-attachment-follow-up"
       ],
-      "notes": "Source/unit evidence proves one canonical Artifact payload can be referenced by two relationship records and survive derived search-index rebuild plus Vault payload round-trip. The historical Chromium artifact also accepts a 46-byte fixture through the visible file chooser, retains one platform.artifact payload, exposes the same record through shared selectors, and returns to a clean scoped origin. Preview/OCR adapters, heavy-work cancellation/resource bounds, hostile rendering, and target qualification remain open."
+      "notes": "Source/unit evidence proves one canonical Artifact payload can be referenced by two relationship records and survive derived search-index rebuild plus Vault payload round-trip. The current Chromium artifact accepts a 37-byte fixture through the visible file chooser, retains one platform.artifact record plus one payload, exposes the same record through shared selectors, and returns to a clean scoped origin. Preview/OCR/PDF/image adapters, heavy-work cancellation/resource bounds, hostile rendering, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-033",
