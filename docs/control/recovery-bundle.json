@@ -189,7 +189,7 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "4c130e898e7f5ab253c18e6bd3f64217e5c7de8392b02bff14e4c2dcf3267c57",
+        "sha256": "1195a53e207997cb3ef582ab974200faaa128f7192c6fe5f120b3dd649dfaf4e",
         "bytes": 25338
       },
       {
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "c946274228a77f9a9d4e7e8fee7f2a825d96357c74294b6bc3ffaed5ed238b8b",
+        "sha256": "c114b17941ded7d171bdcf8d0a33b8009acc7e101b7fdc72e5dbbfc98020d02c",
         "bytes": 2431
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "cbdafc47f33e2b9a8d66786032a268c4bb116fc912a08b7732bdf7d9d6ccb1c3",
-        "bytes": 135963
+        "sha256": "279dacdc0e780290a78d7a2f4ea0e78643dfa1cfcee0da69327b0bcac10bf154",
+        "bytes": 136012
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
