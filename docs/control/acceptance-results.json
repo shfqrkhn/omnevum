@@ -945,7 +945,7 @@
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-bounded-local-document-finishing-follow-up"
       ],
-      "notes": "A bounded local text/inert-HTML redaction path is implemented behind Artifact ownership. It preserves the source, emits a lineage-linked DERIVED Artifact, and fails closed on unsupported, truncated, oversized, unmatched, and cancelled input. Built-artifact browser evidence, qualified PDF/office/editor adapters, accessibility/target qualification, and FOSS/round-trip evidence remain open."
+      "notes": "A bounded local text/inert-HTML redaction path is implemented behind Artifact ownership and is exercised on the current local Chromium artifact with a synthetic hostile HTML fixture. It preserves the source, strips active HTML, emits a lineage-linked DERIVED Artifact, and fails closed on unsupported, truncated, oversized, unmatched, and cancelled input. Normal OS file-picker/human interaction, qualified PDF/office/editor adapters, broader accessibility/target qualification, and FOSS/round-trip evidence remain open."
     },
     {
       "id": "OMN-ACC-067",
