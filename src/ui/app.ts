@@ -836,7 +836,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const healthBefore = await store.health();
     if (!healthBefore.searchIndexValid) await store.rebuildSearchIndex();
     const healthAfter = await store.health();
-    healthStatus.textContent = copy.healthMessage(healthAfter.activeRecords, healthAfter.archivedRecords, healthAfter.historyEntries, healthAfter.artifactPayloads, healthAfter.searchIndexValid ? copy.healthy : copy.degraded);
+    healthStatus.textContent = copy.healthMessage(healthAfter.activeRecords, healthAfter.archivedRecords, healthAfter.historyEntries, healthAfter.artifactPayloads, healthAfter.searchIndexValid ? copy.healthy : copy.degraded, healthAfter.storage?.pressure);
     if (!archivePanel.hidden) await renderArchived();
   };
 

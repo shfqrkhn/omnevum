@@ -4,7 +4,7 @@
   "status": "PHASE1_CONTRACT_SPIKE_UNQUALIFIED",
   "authority": "MPES Sections 18, 19, 21, 22, and 23",
   "items": [
-    {"id": "RISK-001", "risk": "canonical data loss or reset", "control": "transactional IndexedDB, Vault restore, migration receipts, fault injection", "evidence": "src/core/storage.test.ts", "status": "PARTIAL"},
+    {"id": "RISK-001", "risk": "canonical data loss or reset", "control": "transactional IndexedDB, Vault restore, migration receipts, derived-state fault injection, and explicit quota guidance", "evidence": "src/core/storage.test.ts; docs/evidence/phase0-production-preview-2026-09-17.md#storage-fault-recovery-follow-up", "status": "PARTIAL"},
     {"id": "RISK-002", "risk": "stale import resurrects deleted meaning", "control": "revision/tombstone precedence and sync qualification", "evidence": "src/core/storage.test.ts; future sync tests", "status": "PARTIAL"},
     {"id": "RISK-003", "risk": "untrusted imported/rendered content executes", "control": "inert parsing, sanitizer fixtures, worker/resource bounds, no authority escalation", "evidence": "not yet available", "status": "OPEN"},
     {"id": "RISK-004", "risk": "credential or AI context crosses owner boundary", "control": "credential/key broker, context broker, capability handles, command admission", "evidence": "src/core/credential.test.ts; src/core/ai.test.ts; contract spike only", "status": "PARTIAL_OPEN"},

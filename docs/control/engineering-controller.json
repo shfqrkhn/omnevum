@@ -37,20 +37,22 @@
     "production preview service worker is activated and controls the page; stamped cache identity, offline reload/mutation, 390x844 labelled keyboard focus, and no browser warnings are evidenced",
     "Device/Input broker mediates bounded file and clipboard Acquire staging through the existing preview and canonical command path",
     "local service-worker update/rollback rehearsal precaches the new generation, retains the prior cache, and serves an offline rollback capture",
-    "106 unit tests pass across 40 test files after the bounded file/clipboard Acquire increment"
+    "derived-search corruption is detected and rebuilt without changing canonical records",
+    "injected storage pressure reclaims only derived state, exposes persistence status, and preserves canonical records",
+    "108 unit tests pass across 40 test files after the storage fault/recovery increment"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad decision beyond the recorded harvest-reference route",
     "SelfStore/remoteStorage storage decision beyond the recorded contract spike",
     "production static-host, browser-version, responsive, and assistive-technology evidence",
     "production static-host service-worker update/rollback and cross-origin deployment proof",
-    "full Phase 0 acceptance gate and fault injection",
+    "full Phase 0 acceptance gate, native quota/canonical-migration fault injection, and recovery matrix",
     "security/untrusted-content/credential boundary evidence",
     "static-host deployment, smoke, and rollback proof",
     "richer Time/Track/Compose capability contracts and target qualification",
     "provider-backed sync, credential/key broker, and external-effect replay evidence",
     "MVP release and later phases"
   ],
-  "nextAction": "Run the Phase 0 support/accessibility/offline/update and fault-injection matrix, then exercise the MVP outcomes in a clean static-host profile before promoting the MVP gate; keep the MiniSearch adapter target qualification open.",
+  "nextAction": "Run the Phase 0 support/accessibility/offline/update and native fault-injection matrix, then exercise the MVP outcomes in a clean static-host profile before promoting the MVP gate; keep the MiniSearch adapter target qualification open.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }

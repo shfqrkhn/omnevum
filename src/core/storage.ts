@@ -4,7 +4,7 @@ import { VAULT_FORMAT_VERSION } from "./model";
 import { isSearchDocument, makeSearchDocument, SEARCH_INDEX_VERSION, searchDocuments, type SearchDocument, type SearchIndexMeta } from "./search";
 import { assertEffectOperation, type EffectOperation } from "./effect";
 import { withVaultIntegrity, verifyVaultIntegrity } from "./vault";
-import { assertCanonicalRecord, assertVaultDocument, isHistoryEntry } from "./validation";
+import { assertCanonicalRecord, assertVaultDocument, isCanonicalRecord, isHistoryEntry } from "./validation";
 import { isViewDefinition, VIEW_SETTING } from "./compose";
 
 const RECORD_STORE = "records";
@@ -30,15 +30,31 @@ function transactionDone(transaction: IDBTransaction): Promise<void> {
   });
 }
 
+export interface StorageEstimateResult {
+  usageBytes: number;
+  quotaBytes: number;
+}
+
+export interface CanonicalStoreOptions {
+  databaseFactory?: IDBFactory;
+  estimateStorage?: () => Promise<StorageEstimateResult | undefined>;
+  requestPersistentStorage?: () => Promise<boolean | undefined>;
+}
+
+type PersistenceState = "GRANTED" | "DENIED" | "UNAVAILABLE";
+
 export class CanonicalStore {
   private database: IDBDatabase | null = null;
+  private persistence: PersistenceState = "UNAVAILABLE";
 
-  public constructor(private readonly databaseName = "omnevum-canonical-v1") {}
+  public constructor(private readonly databaseName = "omnevum-canonical-v1", private readonly options: CanonicalStoreOptions = {}) {}
 
   public async open(): Promise<void> {
     if (this.database) return;
 
-    const request = indexedDB.open(this.databaseName, 6);
+    const databaseFactory = this.options.databaseFactory ?? globalThis.indexedDB;
+    if (!databaseFactory) throw new Error("IndexedDB is unavailable on this target");
+    const request = databaseFactory.open(this.databaseName, 6);
     request.onupgradeneeded = () => {
       const database = request.result;
       if (!database.objectStoreNames.contains(RECORD_STORE)) {
@@ -64,6 +80,7 @@ export class CanonicalStore {
       }
     };
     this.database = await requestResult(request);
+    this.persistence = await this.requestPersistentStorage();
   }
 
   public close(): void {
@@ -91,6 +108,7 @@ export class CanonicalStore {
 
   public async put(record: CanonicalRecord, artifactBlob?: Blob, expectedPreviousRevision?: number): Promise<void> {
     assertCanonicalRecord(record);
+    await this.reclaimDerivedStateUnderPressure();
     const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE], "readwrite");
     const recordStore = transaction.objectStore(RECORD_STORE);
     const currentRequest = recordStore.get(record.id);
@@ -111,7 +129,7 @@ export class CanonicalStore {
       await transactionDone(transaction);
     } catch (error) {
       if (revisionConflict) throw new Error("Canonical revision conflict");
-      throw error;
+      throw storageWriteError(error);
     }
   }
 
@@ -123,7 +141,11 @@ export class CanonicalStore {
     transaction.objectStore(HISTORY_STORE).clear();
     transaction.objectStore(ARTIFACT_STORE).clear();
     transaction.objectStore(EFFECT_STORE).clear();
-    await transactionDone(transaction);
+    try {
+      await transactionDone(transaction);
+    } catch (error) {
+      throw storageWriteError(error);
+    }
   }
 
   public async history(recordId?: string): Promise<HistoryEntry[]> {
@@ -142,7 +164,11 @@ export class CanonicalStore {
   public async setSetting<T>(id: string, value: T): Promise<void> {
     const transaction = this.requireDatabase().transaction(SETTINGS_STORE, "readwrite");
     transaction.objectStore(SETTINGS_STORE).put({ id, value, modifiedAt: new Date().toISOString() });
-    await transactionDone(transaction);
+    try {
+      await transactionDone(transaction);
+    } catch (error) {
+      throw storageWriteError(error);
+    }
   }
 
   public async getArtifact(id: string): Promise<Blob | undefined> {
@@ -155,7 +181,11 @@ export class CanonicalStore {
     assertEffectOperation(operation);
     const transaction = this.requireDatabase().transaction(EFFECT_STORE, "readwrite");
     transaction.objectStore(EFFECT_STORE).put(operation);
-    await transactionDone(transaction);
+    try {
+      await transactionDone(transaction);
+    } catch (error) {
+      throw storageWriteError(error);
+    }
   }
 
   public async getEffect(operationId: string): Promise<EffectOperation | undefined> {
@@ -169,7 +199,11 @@ export class CanonicalStore {
     assertEffectOperation(operation);
     const transaction = this.requireDatabase().transaction(EFFECT_STORE, "readwrite");
     transaction.objectStore(EFFECT_STORE).put(operation);
-    await transactionDone(transaction);
+    try {
+      await transactionDone(transaction);
+    } catch (error) {
+      throw storageWriteError(error);
+    }
   }
 
   public async listEffects(status?: EffectOperation["status"]): Promise<EffectOperation[]> {
@@ -188,19 +222,36 @@ export class CanonicalStore {
   }
 
   public async getSearchHealth(): Promise<SearchIndexMeta> {
-    const meta = await requestResult(this.requireDatabase().transaction(SEARCH_META_STORE, "readonly").objectStore(SEARCH_META_STORE).get("default"));
-    if (!meta || meta.version !== SEARCH_INDEX_VERSION || typeof meta.valid !== "boolean") return { id: "default", version: SEARCH_INDEX_VERSION, valid: false };
-    return meta as SearchIndexMeta;
+    const database = this.requireDatabase();
+    const meta = await requestResult(database.transaction(SEARCH_META_STORE, "readonly").objectStore(SEARCH_META_STORE).get("default"));
+    if (!meta || meta.version !== SEARCH_INDEX_VERSION || typeof meta.valid !== "boolean") return { id: "default", version: SEARCH_INDEX_VERSION, valid: false, invalidReason: "MISSING" };
+    if (!meta.valid) return meta as SearchIndexMeta;
+
+    const [rawRecords, rawDocuments] = await Promise.all([
+      requestResult(database.transaction(RECORD_STORE, "readonly").objectStore(RECORD_STORE).getAll()),
+      requestResult(database.transaction(SEARCH_STORE, "readonly").objectStore(SEARCH_STORE).getAll())
+    ]);
+    if (!rawRecords.every(isCanonicalRecord)) return { id: "default", version: SEARCH_INDEX_VERSION, valid: false, invalidReason: "CANONICAL_INVALID" };
+    if (!rawDocuments.every(isSearchDocument)) return { id: "default", version: SEARCH_INDEX_VERSION, valid: false, invalidReason: "MALFORMED" };
+    const expected = rawRecords.filter((record) => !record.deleted).map(makeSearchDocument);
+    const actual = rawDocuments as SearchDocument[];
+    const actualById = new Map(actual.map((document) => [document.id, document]));
+    const consistent = actual.length === expected.length && actualById.size === actual.length && expected.every((document) => {
+      const candidate = actualById.get(document.id);
+      return candidate?.terms === document.terms && candidate.modifiedAt === document.modifiedAt;
+    });
+    return consistent ? meta as SearchIndexMeta : { id: "default", version: SEARCH_INDEX_VERSION, valid: false, invalidReason: "STALE" };
   }
 
   public async health(): Promise<StoreHealth> {
-    const [records, history, search, artifacts, effects, storage] = await Promise.all([
+    const storage = await this.readStorageHealth();
+    const reclaimedDerivedState = storage?.pressure === "ELEVATED" ? await this.reclaimDerivedState() : false;
+    const [records, history, search, artifacts, effects] = await Promise.all([
       this.list(true),
       this.history(),
       this.getSearchHealth(),
       requestResult(this.requireDatabase().transaction(ARTIFACT_STORE, "readonly").objectStore(ARTIFACT_STORE).getAll()),
-      this.listEffects(),
-      storageEstimate()
+      this.listEffects()
     ]);
     return {
       activeRecords: records.filter((record) => !record.deleted).length,
@@ -209,7 +260,7 @@ export class CanonicalStore {
       artifactPayloads: artifacts.length,
       pendingEffects: effects.filter((effect) => effect.status === "PENDING" || effect.status === "IN_FLIGHT" || effect.status === "FAILED_RETRYABLE" || effect.status === "OUTCOME_UNKNOWN" || effect.status === "RECONCILE").length,
       searchIndexValid: search.valid,
-      ...(storage ? { storage } : {})
+      ...(storage ? { storage: { ...storage, reclaimedDerivedState } } : {})
     };
   }
 
@@ -247,6 +298,7 @@ export class CanonicalStore {
   public async importVault(input: unknown): Promise<{ imported: number; skipped: number; conflicts: number }> {
     assertVaultDocument(input);
     await verifyVaultIntegrity(input);
+    await this.reclaimDerivedStateUnderPressure();
     const importedComposeViews = input.presentation?.composeViews;
     if (importedComposeViews !== undefined && (!Array.isArray(importedComposeViews) || importedComposeViews.length > 40 || !importedComposeViews.every(isViewDefinition))) throw new Error("Vault contains invalid Compose views");
     const existing = new Map((await this.list(true)).map((record) => [record.id, record]));
@@ -300,7 +352,11 @@ export class CanonicalStore {
       }
     }
     searchMetaStore.put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
-    await transactionDone(transaction);
+    try {
+      await transactionDone(transaction);
+    } catch (error) {
+      throw storageWriteError(error);
+    }
     return { imported, skipped, conflicts };
   }
 
@@ -308,11 +364,12 @@ export class CanonicalStore {
     await this.rebuildSearchIndexInternal();
   }
 
-  public async reclaimDerivedState(): Promise<void> {
+  public async reclaimDerivedState(): Promise<boolean> {
     const transaction = this.requireDatabase().transaction([SEARCH_STORE, SEARCH_META_STORE], "readwrite");
     transaction.objectStore(SEARCH_STORE).clear();
-    transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false } satisfies SearchIndexMeta);
+    transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false, invalidReason: "PRESSURE_RECLAIM" } satisfies SearchIndexMeta);
     await transactionDone(transaction);
+    return true;
   }
 
   public async exportDiagnostics(): Promise<{
@@ -359,6 +416,31 @@ export class CanonicalStore {
     if (!this.database) throw new Error("CanonicalStore is not open");
     return this.database;
   }
+
+  private async reclaimDerivedStateUnderPressure(): Promise<void> {
+    const storage = await this.readStorageHealth();
+    if (storage?.pressure === "ELEVATED") await this.reclaimDerivedState();
+  }
+
+  private async readStorageHealth(): Promise<Omit<NonNullable<StoreHealth["storage"]>, "reclaimedDerivedState"> | undefined> {
+    const estimate = await (this.options.estimateStorage?.() ?? defaultStorageEstimate());
+    if (!estimate || estimate.quotaBytes <= 0 || !Number.isFinite(estimate.usageBytes) || !Number.isFinite(estimate.quotaBytes)) return undefined;
+    return {
+      usageBytes: estimate.usageBytes,
+      quotaBytes: estimate.quotaBytes,
+      pressure: estimate.usageBytes / estimate.quotaBytes >= 0.8 ? "ELEVATED" : "NORMAL",
+      persistence: this.persistence
+    };
+  }
+
+  private async requestPersistentStorage(): Promise<PersistenceState> {
+    try {
+      const result = await (this.options.requestPersistentStorage?.() ?? defaultRequestPersistentStorage());
+      return result === undefined ? "UNAVAILABLE" : result ? "GRANTED" : "DENIED";
+    } catch {
+      return "DENIED";
+    }
+  }
 }
 
 export interface StoreHealth {
@@ -368,13 +450,25 @@ export interface StoreHealth {
   artifactPayloads: number;
   pendingEffects: number;
   searchIndexValid: boolean;
-  storage?: { usageBytes: number; quotaBytes: number; pressure: "NORMAL" | "ELEVATED" };
+  storage?: { usageBytes: number; quotaBytes: number; pressure: "NORMAL" | "ELEVATED"; persistence: PersistenceState; reclaimedDerivedState: boolean };
 }
 
-async function storageEstimate(): Promise<StoreHealth["storage"]> {
+async function defaultStorageEstimate(): Promise<StorageEstimateResult | undefined> {
   const estimate = typeof globalThis.navigator === "undefined" ? undefined : await globalThis.navigator.storage?.estimate();
   if (!estimate || typeof estimate.usage !== "number" || typeof estimate.quota !== "number" || estimate.quota <= 0) return undefined;
-  return { usageBytes: estimate.usage, quotaBytes: estimate.quota, pressure: estimate.usage / estimate.quota >= 0.8 ? "ELEVATED" : "NORMAL" };
+  return { usageBytes: estimate.usage, quotaBytes: estimate.quota };
+}
+
+async function defaultRequestPersistentStorage(): Promise<boolean | undefined> {
+  const persist = typeof globalThis.navigator === "undefined" ? undefined : globalThis.navigator.storage?.persist;
+  if (typeof persist !== "function") return undefined;
+  return persist.call(globalThis.navigator.storage);
+}
+
+function storageWriteError(error: unknown): Error {
+  const name = error && typeof error === "object" && "name" in error ? String((error as { name?: unknown }).name) : "";
+  if (name === "QuotaExceededError") return new Error("Storage quota is exhausted. Export a Vault, then retry after replaceable state is reclaimed.");
+  return error instanceof Error ? error : new Error("IndexedDB write failed");
 }
 
 function stableJson(value: unknown): string {

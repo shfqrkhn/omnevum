@@ -113,6 +113,54 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("detects malformed derived search state and rebuilds it without changing canonical data", async () => {
+    const databaseName = `omnevum-test-${Date.now()}-search-corruption`;
+    const store = new CanonicalStore(databaseName);
+    await store.open();
+    const original = record("record-search-corruption");
+    await store.put(original);
+    await store.search("hello");
+
+    const request = indexedDB.open(databaseName, 6);
+    const database = await new Promise<IDBDatabase>((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error ?? new Error("IndexedDB open failed"));
+    });
+    const transaction = database.transaction(["searchDocuments", "searchMeta"], "readwrite");
+    transaction.objectStore("searchDocuments").put({ id: original.id, terms: 42, modifiedAt: original.modifiedAt });
+    transaction.objectStore("searchMeta").put({ id: "default", version: 2, valid: true });
+    await new Promise<void>((resolve, reject) => {
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error ?? new Error("IndexedDB corruption injection failed"));
+      transaction.onabort = () => reject(transaction.error ?? new Error("IndexedDB corruption injection aborted"));
+    });
+    database.close();
+
+    expect(await store.getSearchHealth()).toMatchObject({ valid: false, invalidReason: "MALFORMED" });
+    expect(await store.search("hello")).toEqual([original]);
+    expect(await store.getSearchHealth()).toMatchObject({ valid: true });
+    expect(await store.get(original.id)).toEqual(original);
+    store.close();
+  });
+
+  it("reclaims only derived state under injected quota pressure and exposes persistence state", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-quota-pressure`, {
+      estimateStorage: async () => ({ usageBytes: 90, quotaBytes: 100 }),
+      requestPersistentStorage: async () => true
+    });
+    await store.open();
+    const original = record("record-quota-pressure");
+    await store.put(original);
+    await store.search("hello");
+    expect((await store.getSearchHealth()).valid).toBe(true);
+
+    const health = await store.health();
+    expect(health.storage).toMatchObject({ pressure: "ELEVATED", persistence: "GRANTED", reclaimedDerivedState: true });
+    expect(await store.get(original.id)).toEqual(original);
+    expect(await store.getSearchHealth()).toMatchObject({ valid: false, invalidReason: "PRESSURE_RECLAIM" });
+    store.close();
+  });
+
   it("retains revision history and restores an earlier revision through the command owner", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-history`);
     await store.open();

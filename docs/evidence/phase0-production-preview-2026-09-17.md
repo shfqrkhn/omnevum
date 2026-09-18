@@ -50,6 +50,12 @@ The tracked local harness `node scripts/service-worker-rehearsal-server.mjs --ol
 
 Switching the harness back to `old` and updating again reactivated `v1`, removed the newer shell cache, and left the old root/CSS/JavaScript entries usable. With the network emulated offline, the rolled-back shell reloaded, accepted `script rollback offline capture`, and retained it after network restoration. Browser error/warning inspection remained empty. This is a local static Chromium lifecycle rehearsal; it does not prove a GitHub Pages rollout/rollback, browser-family support, release promotion, or human acceptance.
 
+## Storage fault/recovery follow-up
+
+The canonical-store fault seam now exercises two bounded Phase 0 failure modes under Vitest/fake-indexeddb. A malformed derived search document is injected while its metadata claims validity; `getSearchHealth()` reports `MALFORMED`, the normal search owner rebuilds the derived index, and the canonical record remains unchanged. A deterministic 90/100 storage estimate is injected; health reports `ELEVATED`, derived search state is reclaimed, canonical records remain readable, persistence state is exposed, and the UI health copy directs the user toward Vault export. The full run passes `40` test files and `108` tests.
+
+This is deterministic local fault evidence, not a claim that a real browser quota exhaustion or canonical-store corruption was observed. Native browser quota behavior, interrupted canonical migration, cross-browser recovery, and production support remain open.
+
 ## Limits
 
-This receipt establishes only a local production-preview activation/offline-reload smoke at one Chromium-based browser surface and one mobile viewport. It does not establish GitHub Pages routing, service-worker update/rollback, browser-family support, responsive/accessibility conformance, core offline mutations/degradation, or release readiness. Those remain open in the support, risk, and completion registers.
+This receipt establishes only a local production-preview activation/offline-reload and update/rollback rehearsal at one Chromium-based browser surface and one mobile viewport, plus deterministic storage fault tests. It does not establish GitHub Pages routing, browser-family support, full responsive/accessibility conformance, native browser quota exhaustion, interrupted canonical migration, or release readiness. Those remain open in the support, risk, and completion registers.

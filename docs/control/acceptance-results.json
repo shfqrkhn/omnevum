@@ -119,8 +119,12 @@
         "line": 3404
       },
       "text": "Search index corruption is injected; Omnevum reports degradation, rebuilds the derived index, and canonical data remains intact.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/storage.test.ts#detects-malformed-derived-search-state",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#storage-fault-recovery-follow-up"
+      ],
+      "notes": "Deterministic fake-indexeddb injection is covered; native browser corruption and full target qualification remain open."
     },
     {
       "id": "OMN-ACC-009",
@@ -129,8 +133,12 @@
         "line": 3406
       },
       "text": "Storage quota pressure is injected; replaceable state is reclaimed before canonical data and the user receives explicit storage/backup guidance.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/storage.test.ts#reclaims-only-derived-state-under-injected-quota-pressure",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#storage-fault-recovery-follow-up"
+      ],
+      "notes": "Deterministic pressure injection reclaims derived search state and exposes Vault guidance; native browser quota exhaustion remains open."
     },
     {
       "id": "OMN-ACC-010",
@@ -209,8 +217,11 @@
         "line": 3422
       },
       "text": "An update/migration is intentionally interrupted. Omnevum does not silently reset data and offers a tested recovery/repair path.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#service-worker-update-rollback-rehearsal"
+      ],
+      "notes": "Local static Chromium service-worker update/rollback is rehearsed; canonical migration interruption and production deployment remain open."
     },
     {
       "id": "OMN-ACC-018",

@@ -14,6 +14,7 @@ export interface SearchIndexMeta {
   version: typeof SEARCH_INDEX_VERSION;
   valid: boolean;
   rebuiltAt?: string;
+  invalidReason?: "MISSING" | "MALFORMED" | "STALE" | "CANONICAL_INVALID" | "PRESSURE_RECLAIM";
 }
 
 function values(value: unknown): string[] {
