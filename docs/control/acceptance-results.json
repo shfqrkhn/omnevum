@@ -193,9 +193,10 @@
       "evidence": [
         "src/core/storage.test.ts#reclaims-only-derived-state-under-injected-quota-pressure",
         "docs/evidence/phase0-production-preview-2026-09-17.md#storage-fault-recovery-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-storage-persistence-notice-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-storage-persistence-notice-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-explicit-storage-persistence-retry-follow-up"
       ],
-      "notes": "Deterministic pressure injection reclaims derived search state and the current built artifact exposes localized persistence state plus Vault guidance; native browser quota exhaustion remains open."
+      "notes": "Deterministic pressure injection reclaims derived search state and the current built artifact exposes localized persistence state, an explicit retry action, and Vault guidance; native browser quota exhaustion remains open."
     },
     {
       "id": "OMN-ACC-010",
@@ -470,9 +471,10 @@
         "src/core/storage.test.ts#keeps-canonical-records-on-the-indexeddb-fallback-when-optional-persistence-apis-are-unavailable",
         "src/core/device.test.ts#retains-manual-file-fallback-when-richer-apis-are-absent",
         "docs/evidence/phase0-production-preview-2026-09-17.md#optional-opfs-fallback-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-storage-persistence-notice-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-storage-persistence-notice-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-explicit-storage-persistence-retry-follow-up"
       ],
-      "notes": "IndexedDB remains the canonical structured-record fallback when optional persistence/OPFS APIs are unavailable; browser-row behavior, native quota limits, and large-file capability qualification remain open."
+      "notes": "IndexedDB remains the canonical structured-record fallback when optional persistence/OPFS APIs are unavailable; the current artifact also exposes an explicit persistence retry; browser-row behavior, native quota limits, and large-file capability qualification remain open."
     },
     {
       "id": "OMN-ACC-027",
