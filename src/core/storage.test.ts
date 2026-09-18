@@ -249,6 +249,19 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("keeps canonical records on the IndexedDB fallback when optional persistence APIs are unavailable", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-indexeddb-fallback`, {
+      estimateStorage: async () => undefined,
+      requestPersistentStorage: async () => undefined
+    });
+    await store.open();
+    const original = record("record-indexeddb-fallback");
+    await store.put(original);
+    expect(await store.get(original.id)).toEqual(original);
+    expect((await store.health()).storage).toBeUndefined();
+    store.close();
+  });
+
   it("retains revision history and restores an earlier revision through the command owner", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-history`);
     await store.open();
