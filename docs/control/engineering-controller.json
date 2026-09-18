@@ -10,6 +10,7 @@
   },
   "verified": [
     "workspace baseline reconciled",
+    "structure audit now rejects forbidden root/docs entries, unindexed evidence, missing generated controls, duplicate canonical dataset declarations, broken relocations, and live retired paths",
     "initial static PWA shell implemented",
     "canonical IndexedDB store implemented",
     "Vault export/import validation implemented",

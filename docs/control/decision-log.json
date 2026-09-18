@@ -30,7 +30,7 @@
       "why": "SelfStore has the strongest portable archive, crypto, target, merge, Recovery, and test seams; remoteStorage.js adds a useful open endpoint protocol but requires external service/auth/CORS and cannot be the static-core dependency.",
       "alternatives": ["bespoke sync only", "adopt SelfStore immediately", "make remoteStorage mandatory"],
       "revisitWhen": "Contract, security, quota, crash, migration, provider, and cross-origin tests pass on representative Vault fixtures.",
-      "evidence": ["docs/evidence/phase0-upstream-characterization-2026-09-17.md", "docs/control/effect-outbox-policy.json", "docs/control/credential-key-policy.json"]
+      "evidence": ["docs/evidence/phase0-upstream-characterization-2026-09-17.md", "docs/evidence/phase2-contract-spike-2026-09-17.md", "docs/control/effect-outbox-policy.json", "docs/control/credential-key-policy.json"]
     }
   ]
 }

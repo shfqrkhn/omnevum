@@ -1,11 +1,15 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(fileURLToPath(new URL(".", import.meta.url)), "..");
 const entries = readdirSync(root, { withFileTypes: true });
 const documentationRoots = entries.filter((entry) => entry.isDirectory() && ["docs", ".docs"].includes(entry.name)).map((entry) => entry.name);
+const allowedRootFiles = new Set([".gitignore", "AGENTS.md", "README.md", "index.html", "package-lock.json", "package.json", "tsconfig.json", "vite.config.ts"]);
+const allowedRootDirectories = new Set([".git", ".github", "docs", "dist", "node_modules", "public", "scripts", "src", "coverage", ".vite"]);
+const allowedDocsFiles = new Set(["README.md", "Omni_3.32.0.md", "Omnevum-MPES-v0.12.0-converged.md"]);
+const allowedDocsDirectories = new Set(["control", "evidence"]);
 const required = [
   "AGENTS.md",
   "README.md",
@@ -43,6 +47,10 @@ const required = [
 
 const failures = [];
 if (documentationRoots.length !== 1 || documentationRoots[0] !== "docs") failures.push(`documentation roots=${documentationRoots.join(",") || "none"}`);
+for (const entry of entries) {
+  if (entry.isFile() && !allowedRootFiles.has(entry.name)) failures.push(`forbidden root file ${entry.name}`);
+  if (entry.isDirectory() && !allowedRootDirectories.has(entry.name)) failures.push(`forbidden root directory ${entry.name}`);
+}
 for (const path of required) if (!existsSync(join(root, path))) failures.push(`missing ${path}`);
 
 for (const path of ["docs/control/control-manifest.json", "docs/control/requirements.json", "docs/control/acceptance-scenarios.json", "docs/control/acceptance-results.json", "docs/control/dependency-sbom.json", "docs/control/foss-compliance.json"]) {
@@ -57,6 +65,30 @@ if (existsSync(manifestPath)) {
   const listed = new Set([...(manifest.generatedFiles ?? []), ...(manifest.maintainedRegisters ?? [])]);
   for (const entry of readdirSync(join(root, "docs/control"))) {
     if (entry.endsWith(".json") && !listed.has(entry)) failures.push(`unindexed control file docs/control/${entry}`);
+  }
+  for (const generated of manifest.generatedFiles ?? []) {
+    if (typeof generated !== "string" || !existsSync(join(root, "docs/control", generated))) failures.push(`missing generated control file ${generated}`);
+  }
+  const canonicalDatasets = Array.isArray(manifest.canonicalDatasets) ? manifest.canonicalDatasets : [];
+  const canonicalIds = new Set();
+  const canonicalPaths = new Set();
+  for (const dataset of canonicalDatasets) {
+    if (typeof dataset?.id !== "string" || typeof dataset?.path !== "string") {
+      failures.push("invalid canonical dataset declaration");
+      continue;
+    }
+    if (canonicalIds.has(dataset.id)) failures.push(`duplicate canonical dataset id ${dataset.id}`);
+    if (canonicalPaths.has(dataset.path)) failures.push(`duplicate canonical dataset path ${dataset.path}`);
+    canonicalIds.add(dataset.id);
+    canonicalPaths.add(dataset.path);
+    if (!existsSync(join(root, dataset.path))) failures.push(`missing canonical dataset ${dataset.path}`);
+  }
+  for (const relocation of manifest.relocations ?? []) {
+    if (typeof relocation?.from !== "string" || typeof relocation?.to !== "string" || !existsSync(join(root, relocation.to))) failures.push(`broken relocation ${JSON.stringify(relocation)}`);
+  }
+  for (const retiredPath of manifest.retiredPaths ?? []) {
+    if (typeof retiredPath !== "string") failures.push("invalid retired path declaration");
+    else if (existsSync(join(root, retiredPath))) failures.push(`retired path still exists ${retiredPath}`);
   }
   for (const [key, item] of Object.entries(manifest.source ?? {})) {
     if (typeof item !== "object" || item === null || typeof item.path !== "string" || typeof item.sha256 !== "string") {
@@ -73,6 +105,19 @@ if (existsSync(manifestPath)) {
 }
 
 const docsEntries = readdirSync(join(root, "docs"), { withFileTypes: true });
+for (const entry of docsEntries) {
+  if (entry.isFile() && !allowedDocsFiles.has(entry.name)) failures.push(`unindexed docs root file docs/${entry.name}`);
+  if (entry.isDirectory() && !allowedDocsDirectories.has(entry.name)) failures.push(`unindexed docs root directory docs/${entry.name}`);
+}
+const walk = (directory) => readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+  const path = join(directory, entry.name);
+  return entry.isDirectory() ? walk(path) : [path];
+});
+const controlText = walk(join(root, "docs/control")).filter((path) => path.endsWith(".json")).map((path) => readFileSync(path, "utf8")).join("\n");
+for (const path of walk(join(root, "docs/evidence"))) {
+  const relativePath = relative(root, path).replaceAll("\\", "/");
+  if (!controlText.includes(relativePath)) failures.push(`unindexed evidence ${relativePath}`);
+}
 if (docsEntries.some((entry) => entry.isFile() && entry.name.toLowerCase() === "current_state.md")) {
   failures.push("state-bound current_state.md must be generated by a verified receipt path");
 }

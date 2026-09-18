@@ -197,6 +197,14 @@ writeJson("control-manifest.json", {
     "engineering-controller.json",
     "completion-ledger.json"
   ],
+  canonicalDatasets: [
+    { id: "omni-doctrine", path: source.omni.path },
+    { id: "mpes", path: source.mpes.path },
+    { id: "package-manifest", path: source.package.path },
+    { id: "lockfile", path: source.lockfile.path }
+  ],
+  relocations: [],
+  retiredPaths: [],
   counts: { requirements: requirements.length, acceptanceScenarios: acceptance.length, lockedPackages: lockedPackages.length }
 });
 

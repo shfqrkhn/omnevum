@@ -50,6 +50,26 @@
     "engineering-controller.json",
     "completion-ledger.json"
   ],
+  "canonicalDatasets": [
+    {
+      "id": "omni-doctrine",
+      "path": "docs/Omni_3.32.0.md"
+    },
+    {
+      "id": "mpes",
+      "path": "docs/Omnevum-MPES-v0.12.0-converged.md"
+    },
+    {
+      "id": "package-manifest",
+      "path": "package.json"
+    },
+    {
+      "id": "lockfile",
+      "path": "package-lock.json"
+    }
+  ],
+  "relocations": [],
+  "retiredPaths": [],
   "counts": {
     "requirements": 393,
     "acceptanceScenarios": 98,
