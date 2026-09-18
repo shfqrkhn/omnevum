@@ -1076,6 +1076,12 @@ On 2026-09-18, source revision `8d0fa37` added `src/core/package-automation-regi
 
 `src/core/package-automation-registry.test.ts` passes three focused lifecycle regressions covering enabled-trigger filtering, rule disable/enable, package disable/retirement suppression, unavailable-package rejection, and duplicate registration. OMN-ACC-049 remains `PARTIAL`; durable persistence, UI editing, normal command-path integration, browser/target qualification, and human acceptance remain open.
 
+## Current confirmed automation proposal router follow-up
+
+On 2026-09-18, source revision `2de7dba` added `src/core/proposal-router.ts`. The router requires an explicit confirmation flag and an authorized record-ID set, rejects canonical authority-field updates and out-of-scope IDs, and sends supported `record.update`, `triage.defer`, `triage.link`, `triage.route`, and `triage.delete` proposals through existing `CommandBus` owners with revision fencing. Unsupported structured commands fail closed rather than gaining an ad hoc executor.
+
+`src/core/proposal-router.test.ts` passes three focused regressions for confirmation/scope enforcement, safe update plus authority-field rejection, and triage routing plus unsupported-command rejection. This is partial normal command-path source evidence only; UI confirmation/permission integration, durable rule storage/editor, broader command coverage, browser/target qualification, and human acceptance remain open.
+
 ## Current clean-agent reconstruction at package-automation revision follow-up
 
 At exact detached source revision `10f4ef5c41ec1be153a87f2b5f18d71a34f3d552` on 2026-09-18, `npm run benchmark:fresh-agent` created and removed a clean temporary worktree without the original conversation. It completed `npm ci`, `npm run audit:recovery`, the complete `npm run ci`, and the two-process factory interruption/resume benchmark. The run reported `FRESH_AGENT_NPM_CI_PASS`, `FRESH_AGENT_RECOVERY_AUDIT_PASS`, `FRESH_AGENT_CI_PASS`, `FACTORY_INTERRUPTION_EXPECTED_STOP_PASS`, `FACTORY_INTERRUPTION_RESUME_PASS`, `FRESH_AGENT_FACTORY_INTERRUPTION_PASS`, and `FRESH_AGENT_RESUME_PASS` with `clean-clone=true` and `original-conversation=false`; the clean suite passed with `49` test files, `193` tests passed, and `1` skipped.

@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "57a35874f32c7e8064a7c300d2e09f1dd0af8f521bd72083c00f09687884e253",
-        "bytes": 116717
+        "sha256": "0b4c8648b71c1b7d6d8b12f2a6202016c2486ac4d24ccc1fdb160fb3a823a0bd",
+        "bytes": 117016
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -144,8 +144,8 @@
       },
       {
         "path": "docs/control/capability-catalogue.json",
-        "sha256": "2a59b3ed3c33c666d81656490c4f06b5724b40e7890e3fcadd6cb0de6bdcd39f",
-        "bytes": 3610
+        "sha256": "66fb1f30d4c2f2707531f2b33bcee6bf92dc752a1ff53c43752ab2d17cddb230",
+        "bytes": 3602
       },
       {
         "path": "docs/control/capability-coverage.json",
@@ -159,8 +159,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "db843bd7bde8413eac2e70bf0dd43c60bd2062480c5250663f49893b8bb2d2f8",
-        "bytes": 2617
+        "sha256": "b9e2dcd805a6a18a30cf3f941b0199af04255a29bf0cc42f843990837b1ae551",
+        "bytes": 2631
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "5f18a9bf5fc18bf92cfcd92185fca436e987707019baa10ab86acd763459afd7",
-        "bytes": 38824
+        "sha256": "5a6f1a62993487159bd2c80c5127baed6e930b5ab581a53c49e935f77ac71a53",
+        "bytes": 38940
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "bf1ce8ba17c0596148105e1764035156afa4cf1da2d16256e3e2628b976a7669",
-        "bytes": 208189
+        "sha256": "aff4f716642d44c82ddb2a2d2bb03537011e59a9949c9b295bc6d52b2b8deb16",
+        "bytes": 209153
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -756,6 +756,16 @@
         "path": "src/core/presentation.ts",
         "sha256": "edd12cefdeba5ae565bccbd1e2282318b5e0047f47a2171f81f0d95598461426",
         "bytes": 8702
+      },
+      {
+        "path": "src/core/proposal-router.test.ts",
+        "sha256": "5e0a5dcf4dd2b2316322c65c33ed6310936e289d59339a4a94a469238fcd94fe",
+        "bytes": 3341
+      },
+      {
+        "path": "src/core/proposal-router.ts",
+        "sha256": "ebd859f698e34e326b61d8e6aeb3b34c5e5696bcdb2b0d5c8385e2215312955e",
+        "bytes": 4621
       },
       {
         "path": "src/core/quantity.test.ts",
