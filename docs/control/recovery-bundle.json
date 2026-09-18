@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "dbad3b5df25bde739f24721007cc5c1a9a4e4d7b2384dfd7b590a0c3011f93b0",
-        "bytes": 109973
+        "sha256": "3d690966bb4ad3b97a62e59e053b3b5072fbdc629694b481359590a2139b403c",
+        "bytes": 110230
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "06de9eda1a8a50120f32b9bb5ddeb7c845a7d68a6541e688a8ce3c3d144e51e9",
-        "bytes": 33855
+        "sha256": "d5f62dfb278d2df7716cb6e3659296968533a979933a2b440552ac79fb5b8aa8",
+        "bytes": 34293
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "e85ced4753014ae24f23e40e5b137ccaecd4818ab4fda9de77e53f14bbdcbbe3",
+        "sha256": "d89ee5fc4b47a3dcfcf33010543dcb5d8835b9f3b6bdaffcddaea9ba861a5c5d",
         "bytes": 2432
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "4ffc9742b4866d976a6f1b66bbf5ac747500a5340e104ee2863a42c6a14c8895",
-        "bytes": 183721
+        "sha256": "3a8c10ef0cebb633d483c8e1417bb06d7d33b98637240c117134104bbc848532",
+        "bytes": 185511
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -294,8 +294,8 @@
       },
       {
         "path": "index.html",
-        "sha256": "b23312dc12a9e5f9d0ae5e82ea7af85bc19e3258d6e81030b368aa6f100a3ce5",
-        "bytes": 787
+        "sha256": "5350c4413147312ff4027aba2d3f5312bdc1af157e0c908ccf41037db405171c",
+        "bytes": 832
       },
       {
         "path": "package-lock.json",
@@ -394,13 +394,18 @@
       },
       {
         "path": "scripts/static-audit.mjs",
-        "sha256": "319f4a139ffb97f0f33287030df706edf6b09486b90d76978156253c07e7e42e",
-        "bytes": 5304
+        "sha256": "c7faefd517a02d87ec789e853ddb44e7fa3d8fb36f6e9580f3c861af4d45db39",
+        "bytes": 5491
       },
       {
         "path": "scripts/structure-audit.mjs",
         "sha256": "ba8bd6e9a4bf0acbc83b90e1fbd3de6c700c92bdff613b159d064659ac4cc6b1",
         "bytes": 7134
+      },
+      {
+        "path": "scripts/sync-loopback-fixture.mjs",
+        "sha256": "d8dbcd79ce4a8fd3ae0e705f61042b04d28b6b91939efbc1ac922cb371175ef3",
+        "bytes": 3721
       },
       {
         "path": "src/core/acquire.test.ts",
