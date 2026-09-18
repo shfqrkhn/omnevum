@@ -77,7 +77,7 @@
     "current receipt-bound Edge desktop preview on Microsoft Edge 153.0.4234.32 accepts a synthetic canonical capture and retains it across reload with a healthy derived index; source 307470e",
     "current receipt-bound Edge preview detects a synthetic malformed IndexedDB canonical row, enters the Recovery shell, and completes read-only retained-state export without mutation; source 307470e",
     "current receipt-bound Edge preview performs an offline canonical capture and offline reload persistence with a healthy derived index; source 307470e",
-    "current release receipt is refreshed and independently hash-verified for source f55f1d6, artifact digest 8791ef02c800df52907a8eb449ad15a82594b5c7ecc8055feef583defe8de661, and service-worker cache omnevum-shell-44f61fec9fae09c2",
+    "current release receipt is refreshed and independently hash-verified for source 072630d, artifact digest 377f379083b484e4931a8b3b149ba6e6604620de58f501e47b4096a3c83c7328, and service-worker cache omnevum-shell-e94145f2052b9c98",
     "current receipt-bound Edge preview proves presentation branding updates document.title and theme-color and persists after reload; source bd9e242",
     "current receipt-bound Edge preview at 390x844 records no horizontal overflow, visible labelled controls, sequential keyboard focus, and an empty warning/error console; source bd9e242",
     "current receipt-bound Edge preview accepts a synthetic capture, retains it after reload, and returns to a clean scoped origin; source bd9e242",
@@ -96,6 +96,7 @@
     "bounded Artifact adapters now inspect PDF/image/HTML/text input without active execution, mark derived text and OCR limits explicitly, honor cancellation, and retain PDF Acquire payloads idempotently; source 673030e",
     "provider-neutral JsonEndpointEffectExecutor now sends typed idempotent operations through the credential broker, bounds remote responses, and routes ambiguous outcomes to explicit reconciliation; source f96f77a",
     "Device/Input broker now detects optional BarcodeDetector/QR support, filters bounded results, and releases media tracks through a scoped finally helper; source 6c7218a",
+    "bounded local text/inert-HTML document finishing preserves the source Artifact and emits a lineage-linked DERIVED redaction Artifact through the visible Recovery surface; source 072630d",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [
@@ -112,6 +113,7 @@
     "mixed-language Vault import/summary and AI/tool language-neutral semantic-ID qualification",
     "provider-backed or consumer-cloud sync, transport authentication/credential-key brokering, offline rejoin UI, and external-effect replay evidence",
     "presentation target/accessibility breadth, icon/logo assets, installed-host metadata behavior, and future profile schema migration compatibility",
+    "built-artifact browser receipt and qualified broader document/office adapter evidence for local document finishing",
     "MVP release and later phases"
   ],
   "nextAction": "No Git remote is configured in this workspace, so Pages deployment proof is blocked until the owner supplies/configures the intended remote. Until then, run the Phase 0 support/accessibility/offline/update and native fault-injection matrix locally, including failed-open repair and recovery-snapshot handling; keep MiniSearch adapter qualification open and do not treat workflow configuration or local preview as deployment proof.",

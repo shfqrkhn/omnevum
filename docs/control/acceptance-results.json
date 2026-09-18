@@ -941,8 +941,11 @@
         "line": 3520
       },
       "text": "The user performs a representative local document-finishing workflow such as annotate/fill/sign/mark, redact, page reorder, merge/split, compress, or convert using qualified browser-native FOSS. Omnevum preserves the original source by default, emits a derived Artifact with provenance, works without uploading the content, and does not misrepresent a visual signature/mark as a separately qualified legal/cryptographic signature.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-bounded-local-document-finishing-follow-up"
+      ],
+      "notes": "A bounded local text/inert-HTML redaction path is implemented behind Artifact ownership. It preserves the source, emits a lineage-linked DERIVED Artifact, and fails closed on unsupported, truncated, oversized, unmatched, and cancelled input. Built-artifact browser evidence, qualified PDF/office/editor adapters, accessibility/target qualification, and FOSS/round-trip evidence remain open."
     },
     {
       "id": "OMN-ACC-067",
