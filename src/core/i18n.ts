@@ -183,3 +183,65 @@ const timeCopy: Record<PresentationLocale, TimeCopy> = {
 export function getTimeCopy(locale: PresentationLocale): TimeCopy {
   return timeCopy[locale];
 }
+
+export interface DeviceInputCopy {
+  heading: string;
+  hint: string;
+  capabilities: string;
+  share: string;
+  location: string;
+  camera: string;
+  microphone: string;
+  barcode: string;
+  manualFallback: string;
+  noDataRetained: string;
+  ready: string;
+  shared: string;
+  locationStaged: string;
+  mediaGranted: (kind: string) => string;
+  barcodeFound: (count: number) => string;
+  currentLocation: string;
+}
+
+const deviceInputCopy: Record<PresentationLocale, DeviceInputCopy> = {
+  "en-CA": {
+    heading: "Device / Input",
+    hint: "Access is requested only after an explicit action. Captured values route through Acquire or Place; camera and microphone streams are released immediately.",
+    capabilities: "Available capabilities",
+    share: "Share app link",
+    location: "Use current location",
+    camera: "Check camera",
+    microphone: "Check microphone",
+    barcode: "Scan image / QR",
+    manualFallback: "Use the manual or file fallback when this capability is unavailable.",
+    noDataRetained: "No device data was retained by this check.",
+    ready: "Device/Input broker ready.",
+    shared: "Share sheet opened; no canonical data changed.",
+    locationStaged: "Location staged in the Place form; review and save it explicitly.",
+    mediaGranted: (kind) => `${kind} access granted and released; no media was retained.`,
+    barcodeFound: (count) => `Found ${count} code(s); the first result was staged through Acquire.`,
+    currentLocation: "Current location"
+  },
+  "fr-CA": {
+    heading: "Appareil / entree",
+    hint: "L'acces est demande seulement apres une action explicite. Les valeurs passent par Acquisition ou Lieu; les flux camera et microphone sont liberes immediatement.",
+    capabilities: "Capacites disponibles",
+    share: "Partager le lien de l'application",
+    location: "Utiliser la position actuelle",
+    camera: "Verifier la camera",
+    microphone: "Verifier le microphone",
+    barcode: "Scanner une image / QR",
+    manualFallback: "Utilisez le remplacement manuel ou fichier quand cette capacite est indisponible.",
+    noDataRetained: "Aucune donnee de l'appareil n'a ete conservee par cette verification.",
+    ready: "Le courtier Appareil/entree est pret.",
+    shared: "La feuille de partage est ouverte; aucune donnee canonique n'a change.",
+    locationStaged: "La position est preparee dans le formulaire Lieu; verifiez-la et enregistrez-la explicitement.",
+    mediaGranted: (kind) => `Acces ${kind} accorde puis libere; aucun media n'a ete conserve.`,
+    barcodeFound: (count) => `${count} code(s) trouve(s); le premier resultat est passe par Acquisition.`,
+    currentLocation: "Position actuelle"
+  }
+};
+
+export function getDeviceInputCopy(locale: PresentationLocale): DeviceInputCopy {
+  return deviceInputCopy[locale];
+}

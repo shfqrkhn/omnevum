@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDateTime, formatNumber, getInstalledMetadataStatus, getUiCopy, localeDirection } from "./i18n";
+import { formatDateTime, formatNumber, getDeviceInputCopy, getInstalledMetadataStatus, getUiCopy, localeDirection } from "./i18n";
 
 describe("presentation localization contract", () => {
   it("keeps claimed locales offline and exposes direction/formatting", () => {
@@ -15,5 +15,11 @@ describe("presentation localization contract", () => {
     expect(getInstalledMetadataStatus("en-CA", true)).toContain("re-add");
     expect(getInstalledMetadataStatus("fr-CA", false)).toContain("PLATFORM_LIMITED");
     expect(getInstalledMetadataStatus("fr-CA", false)).toContain("identite technique d'installation");
+  });
+
+  it("keeps Device/Input guidance localized and explicit about retention", () => {
+    expect(getDeviceInputCopy("en-CA").hint).toContain("explicit action");
+    expect(getDeviceInputCopy("en-CA").mediaGranted("camera")).toContain("released");
+    expect(getDeviceInputCopy("fr-CA").locationStaged).toContain("enregistrez-la");
   });
 });

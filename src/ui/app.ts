@@ -3,7 +3,7 @@ import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate
 import { inspectArtifact } from "../core/artifact";
 import { redactTextArtifact } from "../core/document";
 import { isCompletedTask, isSpaceId, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, SPACE_LABELS, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
-import { captureKindLabel, formatDateTime, formatNumber, getInstalledMetadataStatus, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
+import { captureKindLabel, formatDateTime, formatNumber, getDeviceInputCopy, getInstalledMetadataStatus, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
 import { DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationHomeWidgetId, type PresentationProfile, type PresentationSectionId } from "../core/presentation";
 import { TrackService } from "../core/track";
@@ -56,6 +56,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const presentationResolution = resolvePresentationProfile(rawPresentation, safePresentationMode);
   let presentation: PresentationProfile = presentationResolution.profile;
   const copy = getUiCopy(presentation.locale);
+  const deviceCopy = getDeviceInputCopy(presentation.locale);
   const recoveryCopy = getRecoveryCopy(presentation.locale);
   const timeCopy = getTimeCopy(presentation.locale);
   const factoryPreviewMode = new URLSearchParams(window.location.search).get("factory-preview") === "1";
@@ -230,6 +231,21 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <ul id="acquire-preview" class="record-list"></ul>
           <button id="accept-staged" class="secondary" type="button" disabled>${copy.acceptStaged}</button>
         </form>
+        <div class="relationship-form device-input-panel">
+          <h3>${deviceCopy.heading}</h3>
+          <p class="hint">${deviceCopy.hint}</p>
+          <p id="device-capabilities" class="hint" role="status"></p>
+          <div class="form-row">
+            <button id="device-share" class="secondary" type="button">${deviceCopy.share}</button>
+            <button id="device-location" class="secondary" type="button">${deviceCopy.location}</button>
+            <button id="device-camera" class="secondary" type="button">${deviceCopy.camera}</button>
+            <button id="device-microphone" class="secondary" type="button">${deviceCopy.microphone}</button>
+            <label class="file-button secondary" for="device-barcode-input">${deviceCopy.barcode}</label>
+            <input id="device-barcode-input" type="file" accept="image/*" />
+          </div>
+          <p class="hint">${deviceCopy.manualFallback}</p>
+          <p id="device-input-status" class="hint" role="status">${deviceCopy.ready}</p>
+        </div>
       </section>
 
       <section id="track" class="panel" aria-labelledby="track-heading">
@@ -640,6 +656,13 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const acquireText = root.querySelector<HTMLTextAreaElement>("#acquire-text");
   const acquireFile = root.querySelector<HTMLInputElement>("#acquire-file");
   const acquireClipboard = root.querySelector<HTMLButtonElement>("#acquire-clipboard");
+  const deviceCapabilities = root.querySelector<HTMLElement>("#device-capabilities");
+  const deviceShare = root.querySelector<HTMLButtonElement>("#device-share");
+  const deviceLocation = root.querySelector<HTMLButtonElement>("#device-location");
+  const deviceCamera = root.querySelector<HTMLButtonElement>("#device-camera");
+  const deviceMicrophone = root.querySelector<HTMLButtonElement>("#device-microphone");
+  const deviceBarcodeInput = root.querySelector<HTMLInputElement>("#device-barcode-input");
+  const deviceInputStatus = root.querySelector<HTMLElement>("#device-input-status");
   const acquireStatus = root.querySelector<HTMLElement>("#acquire-status");
   const acquirePreview = root.querySelector<HTMLUListElement>("#acquire-preview");
   const acceptStaged = root.querySelector<HTMLButtonElement>("#accept-staged");
@@ -814,7 +837,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const effectRunDialogMessage = root.querySelector<HTMLElement>("#effect-run-dialog-message");
   const effectRunDialogCancel = root.querySelector<HTMLButtonElement>("#effect-run-dialog-cancel");
   const effectRunDialogConfirm = root.querySelector<HTMLButtonElement>("#effect-run-dialog-confirm");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
@@ -835,6 +858,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const spaceService = new SpaceService(store, commands);
   const viewRegistry = new ViewRegistry(store);
   const deviceInput = new DeviceInputBroker();
+  const deviceCapabilitySnapshot = deviceInput.capabilities();
+  const availableDeviceCapabilities = Object.entries(deviceCapabilitySnapshot).filter(([, available]) => available).map(([id]) => id);
+  deviceCapabilities.textContent = `${deviceCopy.capabilities}: ${availableDeviceCapabilities.length > 0 ? availableDeviceCapabilities.join(", ") : deviceCopy.manualFallback}`;
+  deviceShare.disabled = !deviceCapabilitySnapshot.share;
+  deviceLocation.disabled = !deviceCapabilitySnapshot.geolocation;
+  deviceCamera.disabled = !deviceCapabilitySnapshot.camera;
+  deviceMicrophone.disabled = !deviceCapabilitySnapshot.microphone;
+  deviceBarcodeInput.disabled = !deviceCapabilitySnapshot.barcode;
   let stagedCandidates: AcquireCandidate[] = [];
   let activeSpace: SpaceId | undefined;
   const spaceLabels = new Map<SpaceId, string>(Object.entries(SPACE_LABELS));
@@ -2151,6 +2182,62 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       await stageAcquireText(text.trim());
     } catch (error) {
       acquireStatus.textContent = error instanceof Error ? error.message : "Clipboard staging failed";
+    }
+  });
+
+  deviceShare.addEventListener("click", async () => {
+    try {
+      await deviceInput.shareText(`${presentation.productName}: ${copy.lede}`, window.location.href);
+      deviceInputStatus.textContent = deviceCopy.shared;
+    } catch (error) {
+      deviceInputStatus.textContent = describeError(error, deviceCopy.manualFallback);
+    }
+  });
+
+  deviceLocation.addEventListener("click", async () => {
+    try {
+      const position = await deviceInput.readLocation();
+      placeLabel.value = deviceCopy.currentLocation;
+      placeLatitude.value = String(position.coords.latitude);
+      placeLongitude.value = String(position.coords.longitude);
+      placeGeoJson.value = "";
+      placeStatus.textContent = deviceCopy.locationStaged;
+      deviceInputStatus.textContent = deviceCopy.locationStaged;
+      placeLabel.focus();
+    } catch (error) {
+      deviceInputStatus.textContent = describeError(error, deviceCopy.manualFallback);
+    }
+  });
+
+  const checkMedia = async (kind: "camera" | "microphone", label: string): Promise<void> => {
+    try {
+      await deviceInput.withMedia(kind, async () => undefined);
+      deviceInputStatus.textContent = deviceCopy.mediaGranted(label);
+    } catch (error) {
+      deviceInputStatus.textContent = describeError(error, deviceCopy.manualFallback);
+    }
+  };
+  deviceCamera.addEventListener("click", () => { void checkMedia("camera", deviceCopy.camera); });
+  deviceMicrophone.addEventListener("click", () => { void checkMedia("microphone", deviceCopy.microphone); });
+
+  deviceBarcodeInput.addEventListener("change", async () => {
+    const file = deviceBarcodeInput.files?.[0];
+    if (!file) return;
+    try {
+      const detections = await deviceInput.scanBarcode(file);
+      if (detections.length === 0) {
+        deviceInputStatus.textContent = `${deviceCopy.noDataRetained} No supported code was found.`;
+        return;
+      }
+      const firstDetection = detections[0];
+      if (!firstDetection) return;
+      acquireText.value = firstDetection.rawValue;
+      await stageAcquireText(firstDetection.rawValue);
+      deviceInputStatus.textContent = deviceCopy.barcodeFound(detections.length);
+    } catch (error) {
+      deviceInputStatus.textContent = describeError(error, deviceCopy.manualFallback);
+    } finally {
+      deviceBarcodeInput.value = "";
     }
   });
 
