@@ -44,7 +44,8 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-target-follow-up"
       ],
       "notes": "Fresh local static Chromium evidence covers the core no-account create/reload path; GitHub Pages, supported mobile rows, and full onboarding qualification remain open."
     },
@@ -71,7 +72,8 @@
       "text": "The user changes branding from Omnevum to JohnOS, changes logo/theme/lens labels, upgrades Omnevum, and retains personal branding without changing canonical record identities.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-target-follow-up"
       ],
       "notes": "Built-artifact Chromium evidence covers JohnOS in-app branding, theme, and reload persistence without semantic-count loss; logo/lens-label customization and upgrade/installed-host qualification remain open."
     },
@@ -85,7 +87,8 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-browser-smoke-2026-09-17.md",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#phase-0-follow-up-run"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#phase-0-follow-up-run",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-target-follow-up"
       ],
       "notes": "Theme switching was observed in the development smoke and the production preview exposed the labelled presentation control and complete mobile accessibility tree at 390x844. WCAG conformance and all target rows remain unverified."
     },

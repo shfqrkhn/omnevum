@@ -46,6 +46,7 @@
     "boot recovery exports a bounded read-only raw-state snapshot when malformed canonical state prevents a portable Vault",
     "stale IndexedDB clients are fenced after a version upgrade rather than continuing unsafe reads/writes",
     "GitHub Pages deployment workflow runs the locked CI/build gate and uploads only the built dist artifact; live deployment remains unverified",
+    "current receipt-bound built artifact completes Chromium capture, theme, and reload persistence on a fresh local static origin",
     "114 unit tests pass across 40 test files after the stale-client storage increment",
     "current built-artifact Chromium preview completes the integrated MVP workflow, localized rebrand/reload, and confirmed Vault merge"
   ],

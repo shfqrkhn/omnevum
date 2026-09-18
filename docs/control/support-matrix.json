@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "support-matrix",
-  "status": "EVIDENCE_PENDING",
+  "status": "PARTIAL_LOCAL_PREVIEW_AND_WORKFLOW",
   "authority": "MPES Sections 6, 22, and 28; no row is a claim until tested",
   "profiles": [
     {
@@ -9,7 +9,7 @@
       "hosting": "GitHub Pages or equivalent static HTTPS",
       "required": ["shell", "canonical-records", "search", "vault-export-import", "recovery", "offline-core"],
       "forbiddenAssumptions": ["application-backend", "server-database", "mandatory-account", "mutable-cdn-code", "backend-held-secret"],
-      "status": "IN_PROGRESS"
+      "status": "PARTIAL_LOCAL_PREVIEW_AND_WORKFLOW"
     },
     {
       "id": "enhanced-static",
@@ -25,10 +25,10 @@
     }
   ],
   "browserRows": [
-    {"id": "chromium-mobile", "family": "Chromium", "versionPolicy": "supported-current-row-to-freeze", "status": "NOT_RUN"},
+    {"id": "chromium-mobile", "family": "Chromium", "versionPolicy": "supported-current-row-to-freeze", "status": "PARTIAL_LOCAL_STATIC_PREVIEW", "evidence": "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-target-follow-up"},
     {"id": "safari-mobile", "family": "Safari/WebKit", "versionPolicy": "supported-current-row-to-freeze", "status": "NOT_RUN"},
     {"id": "firefox-mobile", "family": "Firefox", "versionPolicy": "supported-current-row-to-freeze", "status": "NOT_RUN"},
-    {"id": "chromium-desktop", "family": "Chromium desktop", "versionPolicy": "supported-current-row-to-freeze", "status": "NOT_RUN"}
+    {"id": "chromium-desktop", "family": "Chromium desktop", "versionPolicy": "supported-current-row-to-freeze", "status": "PARTIAL_LOCAL_STATIC_PREVIEW", "evidence": "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-target-follow-up"}
   ],
   "capabilityColumns": [
     "base-path-routing",

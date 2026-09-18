@@ -99,3 +99,7 @@ CanonicalStore now fences a live client when another client requests an IndexedD
 ## GitHub Pages deployment path
 
 The repository now contains `.github/workflows/pages.yml`, which uses the official GitHub Pages custom-workflow shape: locked install, full `npm run ci`, top-level `dist/` Pages artifact, protected `github-pages` environment, and `pages:write`/`id-token:write` deployment permissions. This proves the repository deployment path is executable in principle, not that a remote workflow ran. The live Pages URL, routing, clean-origin smoke, rollback, browser matrix, and release promotion remain unverified until the configured remote repository executes the workflow.
+
+## Current built-artifact target follow-up
+
+The artifact bound by `docs/control/release-evidence.json` (`sourceRevision: 4f0eed0`, digest `4c357ff2ed4efb6fc2602f7708652e548c89b0eac4f50fb9c1160e02f35c5515`, worker cache `omnevum-shell-979360cae1e7c0b4`) was served from `dist/` at `http://127.0.0.1:4201/` in the Codex In-app Browser Chromium surface. A fresh origin loaded the current shell, accepted a synthetic capture, switched the presentation theme, and retained the canonical record and presentation state after reload. This extends local current-artifact evidence only; it does not qualify GitHub Pages, Safari/WebKit, Firefox, assistive technology, native quota, or deployment rollback.
