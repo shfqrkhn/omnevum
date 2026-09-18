@@ -167,9 +167,10 @@
         "src/core/data.test.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-capture-search-reload-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capture-search-reload-receipt-after-lifecycle-fix"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capture-search-reload-receipt-after-lifecycle-fix",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-same-origin-cross-tab-invalidation-follow-up"
       ],
-      "notes": "Compose and derived-data projections are exercised locally without a second writable owner; broader authorized-lens and permission-boundary qualification remains open."
+      "notes": "Compose and derived-data projections are exercised locally without a second writable owner; the current two-client receipt also proves bidirectional same-origin canonical refresh without a second writable owner. Broader authorized-lens and permission-boundary qualification remains open."
     },
     {
       "id": "OMN-ACC-008",
@@ -931,11 +932,12 @@
         "src/core/space.ts",
         "src/ui/app.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-scoped-search-boundary-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-same-origin-cross-tab-invalidation-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-cross-tab-canonical-invalidation-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-cross-tab-space-revocation-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-cross-tab-membership-revocation-follow-up"
       ],
-      "notes": "Scoped text search now applies authorized canonical IDs before derived-index tokenization, the UI computes Space scope before searching, and exact metadata-only BroadcastChannel events refresh external canonical views without carrying record content. Current local Chromium two-tab receipts cover canonical capture, user-defined Space creation, membership projection, whole-Space revocation with stale-scope reset, and individual membership revocation with zero scoped results while retaining the Space and source ownership; multi-user permission revocation, vector/analytical cache invalidation, external routes, and target qualification remain open."
+      "notes": "Scoped text search now applies authorized canonical IDs before derived-index tokenization, the UI computes Space scope before searching, and exact metadata-only BroadcastChannel events refresh external canonical views without carrying record content. Current local Chromium two-tab receipts cover bidirectional canonical capture refresh, user-defined Space creation, membership projection, whole-Space revocation with stale-scope reset, and individual membership revocation with zero scoped results while retaining the Space and source ownership; multi-user permission revocation, vector/analytical cache invalidation, external routes, and target qualification remain open."
     },
     {
       "id": "OMN-ACC-059",
