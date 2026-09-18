@@ -49,12 +49,12 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-current-artifact-capture-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-capture-receipt-refresh",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-exact-build-persistence-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-current-artifact-capture-reload-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-capture-search-reload-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-current-artifact-capturereload-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-capturesearchreload-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-two-domain-workflow-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-narrow-profile-responsive-and-offline-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-narrow-profile-responsive-and-offline-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capture-search-reload-receipt-after-lifecycle-fix",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capturesearchreload-receipt-after-lifecycle-fix",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-built-artifact-target-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-narrowoffline-artifact-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-local-origin-capture-search-reload-and-keyboard-follow-up"
@@ -79,8 +79,8 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-offline-network-capability-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-narrow-profile-responsive-and-offline-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-narrow-profile-responsive-and-offline-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-capture-search-reload-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capture-search-reload-receipt-after-lifecycle-fix",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-capturesearchreload-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capturesearchreload-receipt-after-lifecycle-fix",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-built-artifact-target-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-narrowoffline-artifact-follow-up"
       ],
@@ -166,8 +166,8 @@
         "src/core/compose.test.ts",
         "src/core/data.test.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-capture-search-reload-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capture-search-reload-receipt-after-lifecycle-fix",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-capturesearchreload-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capturesearchreload-receipt-after-lifecycle-fix",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-same-origin-cross-tab-invalidation-follow-up"
       ],
       "notes": "Compose and derived-data projections are exercised locally without a second writable owner; the current two-client receipt also proves bidirectional same-origin canonical refresh without a second writable owner. Broader authorized-lens and permission-boundary qualification remains open."
@@ -182,7 +182,7 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/storage.test.ts#detects-malformed-derived-search-state",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#storage-fault-recovery-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#storage-faultrecovery-follow-up"
       ],
       "notes": "Deterministic fake-indexeddb injection is covered; native browser corruption and full target qualification remain open."
     },
@@ -196,7 +196,7 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/storage.test.ts#reclaims-only-derived-state-under-injected-quota-pressure",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#storage-fault-recovery-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#storage-faultrecovery-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-storage-persistence-notice-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-explicit-storage-persistence-retry-follow-up"
       ],
@@ -314,7 +314,7 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-failed-open-recovery-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#service-worker-update-rollback-rehearsal",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#service-worker-updaterollback-rehearsal",
         "src/core/storage.test.ts#exports-a-read-only-recovery-snapshot-when-canonical-state-is-malformed",
         "src/core/storage.test.ts#repairs-malformed-canonical-state-from-a-retained-snapshot-without-losing-valid-records",
         "src/core/storage.test.ts#fences-a-stale-client-after-another-client-upgrades-the-database",
@@ -326,7 +326,7 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-recovery-fault-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-recovery-repair-completion-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-recovery-repair-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-built-artifact-service-worker-update-rollback-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-built-artifact-service-worker-updaterollback-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-touch-profile-recovery-follow-up"
       ],
       "notes": "Local static Chromium service-worker update/rollback on the exact current artifact, malformed-state recovery snapshot, explicit repair-from-snapshot preserving valid records, deterministic stale-client fencing, an aborted IndexedDB upgrade followed by exact-record reopen, exact-current-artifact Edge recovery-shell/read-only-export/repair interaction, and a current 390x844 touch-capable Recovery interaction are covered; native quota/corruption behavior, browser-family breadth, accessibility, and production deployment remain open."
@@ -688,7 +688,7 @@
         "src/core/track.test.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
         "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-track-place-and-compose-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-track-and-compose-view-browser-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-track-and-composeview-browser-follow-up"
       ],
       "notes": "The current built preview now saves one reusable Track definition with two platform.track observations and a safe-field form/list/table/chart dashboard that survives reload; physical mobile/touch, multi-view permission breadth, and specialist-domain mapping remain open."
     },
@@ -775,8 +775,7 @@
       "evidence": [
         "src/core/compose.test.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-track-place-and-compose-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-track-and-compose-view-browser-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-track-and-composeview-browser-follow-up"
       ],
       "notes": "The current artifact proves a safe-field declarative form/list/table/chart dashboard over three platform.track records with reload persistence and bounded canonical counts. Configurable layout breadth, compact/expanded accessibility qualification, update survival, and qualified AI creation remain open."
     },

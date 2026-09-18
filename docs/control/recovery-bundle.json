@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "8904ea19ff9f7d4781669b98ba4fa55d2af52b1097eb63802bdb29e86f3ed71e",
-        "bytes": 108485
+        "sha256": "6abc5f4806592bf348e9130ee12a6472a4eaf1f4b92f315de51abb0a97b77d5e",
+        "bytes": 108335
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -239,8 +239,8 @@
       },
       {
         "path": "docs/control/risk-threat-register.json",
-        "sha256": "d36293b29394a276fbb2db52f6589fefc7a45f900960abda8f01f9b286c458d3",
-        "bytes": 2928
+        "sha256": "68c7722bb3f8413843e25b45ffbfda8ecdeca8cabf756038aa1b7d5f1d149c48",
+        "bytes": 2927
       },
       {
         "path": "docs/control/support-matrix.json",
@@ -379,8 +379,8 @@
       },
       {
         "path": "scripts/reference-audit.mjs",
-        "sha256": "86d2831fda3659bbd8b2f144fa9be80910019065699fa4dc8047bbc9908ba928",
-        "bytes": 2105
+        "sha256": "4edbfb79dbf2582765f6340db5eeb36dbfb3a78b44a24ce7594761ded024c9df",
+        "bytes": 3331
       },
       {
         "path": "scripts/service-worker-rehearsal-server.mjs",
