@@ -43,6 +43,7 @@
     "Acquire rejects embedded-credential and oversized URLs and retains hostile-looking text as inert data",
     "privacy-minimized diagnostics expose category-level runtime states without canonical content",
     "current production preview renders hostile Acquire text literally and completes category diagnostics export",
+    "current exact-artifact Chromium offline profile captures, searches, reloads, and retains a canonical record with a healthy derived index and empty browser warning/error log",
     "Vault merge preview validates integrity and conflict outcomes without mutation",
     "boot recovery exports a bounded read-only raw-state snapshot when malformed canonical state prevents a portable Vault",
     "boot recovery offers an explicit repair-from-snapshot path that retains valid canonical records and marks derived search state for rebuild",
