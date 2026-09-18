@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "license-provenance-state",
-  "status": "INVENTORY_RECORDED_PENDING_REVIEW",
+  "status": "AUTOMATED_METADATA_GATE_PASS_REVIEW_OPEN",
   "authority": "MPES Sections 13.5 and 22.7; tool output is evidence, not legal truth",
   "canonicalInputs": ["docs/control/upstream.json", "docs/control/dependency-sbom.json", "package.json", "package-lock.json"],
   "requiredEvidence": ["exact-source-identity", "license-text-or-legal-reference", "copyright-notices", "source-obligations", "distribution-policy", "security-currentness"],
@@ -11,5 +11,6 @@
     "Copyleft or ambiguous obligations require isolation/compliance evidence or explicit rejection before release.",
     "Automated ORT, ScanCode, REUSE/SPDX, or equivalent results are reviewed rather than treated as legal truth."
   ],
+  "automatedGate": {"command": "npm run audit:licenses", "status": "PASS", "scope": "all node_modules entries in package-lock.json", "evidence": "scripts/license-audit.mjs; docs/evidence/phase0-dependency-check-2026-09-17.md"},
   "releaseBlockers": ["unreviewed-license", "missing-notice", "missing-corresponding-source-where-required", "unresolved-provenance"]
 }
