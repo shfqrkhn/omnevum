@@ -83,6 +83,7 @@
     "current receipt-bound Edge preview accepts a synthetic capture, retains it after reload, and returns to a clean scoped origin; source bd9e242",
     "current receipt-bound Edge preview performs an offline canonical capture and offline reload persistence with a healthy derived index, empty app-origin diagnostics, and clean scoped-origin restoration; source bd9e242",
     "current receipt-bound Edge preview repairs a synthetic malformed canonical row from the retained snapshot, preserves the valid record, removes the malformed row, rebuilds derived state, and returns to a clean scoped origin; source bd9e242",
+    "current receipt-bound Chromium preview accepts a synthetic capture, retains it after reload with a healthy derived index, reports no app-origin warnings/errors, and returns to a clean scoped origin; source bd9e242",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [

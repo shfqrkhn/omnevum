@@ -28,7 +28,7 @@
     {"id": "chromium-mobile", "family": "Chromium", "versionPolicy": "supported-current-row-to-freeze", "status": "PARTIAL_LOCAL_STATIC_PREVIEW", "evidence": "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-responsive-and-keyboard-follow-up"},
     {"id": "safari-mobile", "family": "Safari/WebKit", "versionPolicy": "supported-current-row-to-freeze", "status": "NOT_RUN"},
     {"id": "firefox-mobile", "family": "Firefox", "versionPolicy": "supported-current-row-to-freeze", "status": "NOT_RUN"},
-    {"id": "chromium-desktop", "family": "Chromium desktop", "versionPolicy": "supported-current-row-to-freeze", "status": "PARTIAL_LOCAL_STATIC_PREVIEW", "evidence": "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-current-artifact-capture-follow-up"}
+    {"id": "chromium-desktop", "family": "Chromium desktop", "versionPolicy": "supported-current-row-to-freeze", "status": "PARTIAL_LOCAL_STATIC_PREVIEW", "evidence": "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-chromium-capture-receipt-refresh"}
   ],
   "capabilityColumns": [
     "base-path-routing",
