@@ -3,7 +3,7 @@ import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate
 import { isCompletedTask, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
-import { DEFAULT_PRESENTATION, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_SECTION_IDS, parsePresentationProfile, resolvePresentationProfile, type PresentationHomeWidgetId, type PresentationProfile, type PresentationSectionId } from "../core/presentation";
+import { DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationHomeWidgetId, type PresentationProfile, type PresentationSectionId } from "../core/presentation";
 import { TrackService } from "../core/track";
 import { makeReminderData, reconcileReminders } from "../core/time";
 import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/crypto";
@@ -150,6 +150,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           </fieldset>
           <div class="form-row">
             <button id="reset-presentation" class="secondary" type="button">${copy.resetPresentation}</button>
+            <button id="export-presentation-profile" class="secondary" type="button">${copy.exportPresentationProfile}</button>
+            <label class="file-button secondary" for="presentation-profile-input">${copy.importPresentationProfile}</label>
+            <input id="presentation-profile-input" type="file" accept="application/json,.json" />
           </div>
           <p id="presentation-status" class="hint" role="status">${copy.presentationHint}</p>
         </form>
@@ -634,6 +637,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const navigationOptions = root.querySelector<HTMLElement>("#navigation-options");
   const homeWidgetOptions = root.querySelector<HTMLElement>("#home-widget-options");
   const resetPresentation = root.querySelector<HTMLButtonElement>("#reset-presentation");
+  const exportPresentationProfileButton = root.querySelector<HTMLButtonElement>("#export-presentation-profile");
+  const presentationProfileInput = root.querySelector<HTMLInputElement>("#presentation-profile-input");
   const primaryNavList = root.querySelector<HTMLOListElement>("#primary-nav-list");
   const homeLabel = root.querySelector<HTMLElement>("#home-label");
   const recordsLabel = root.querySelector<HTMLElement>("#records-label");
@@ -659,7 +664,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
 
@@ -1886,6 +1891,38 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       presentationStatus.textContent = `${copy.resetPresentation}. ${copy.presentationHint}`;
     } catch (error) {
       presentationStatus.textContent = describeError(error, "Presentation reset failed; canonical data was not changed.");
+    }
+  });
+
+  exportPresentationProfileButton.addEventListener("click", () => {
+    try {
+      downloadJson("omnevum-presentation-profile.json", makePresentationProfileDocument(presentation));
+      presentationStatus.textContent = copy.presentationProfileExported;
+    } catch (error) {
+      presentationStatus.textContent = describeError(error, "Presentation profile export failed; canonical data was not changed.");
+    }
+  });
+
+  presentationProfileInput.addEventListener("change", async () => {
+    const file = presentationProfileInput.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      if (new TextEncoder().encode(text).byteLength > MAX_PRESENTATION_PROFILE_JSON_BYTES) throw new Error("Presentation profile exceeds the bounded 256 KiB import limit");
+      const imported = parsePresentationProfileDocument(JSON.parse(text));
+      const localeChanged = imported.locale !== presentation.locale;
+      await store.setSetting("presentation", imported);
+      presentation = imported;
+      if (localeChanged) {
+        await mountApp(root, store, commands);
+        return;
+      }
+      applyPresentationProfile();
+      presentationStatus.textContent = copy.presentationProfileImported;
+    } catch (error) {
+      presentationStatus.textContent = describeError(error, "Presentation profile import failed; the stored profile and canonical data were not changed.");
+    } finally {
+      presentationProfileInput.value = "";
     }
   });
 

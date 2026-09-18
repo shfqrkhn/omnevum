@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_PRESENTATION, isPresentationProfile, parsePresentationProfile, resolvePresentationProfile } from "./presentation";
+import { DEFAULT_PRESENTATION, isPresentationProfile, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile } from "./presentation";
 import { CanonicalStore } from "./storage";
 
 describe("presentation profile", () => {
@@ -45,6 +45,20 @@ describe("presentation profile", () => {
   it("distinguishes a recoverable profile from malformed stored settings", () => {
     expect(isPresentationProfile({ schemaVersion: 1, productName: "JohnOS", theme: "dark", locale: "en-CA" })).toBe(true);
     expect(isPresentationProfile({ productName: "JohnOS", theme: "dark", locale: "en-CA" })).toBe(false);
+  });
+
+  it("round-trips a versioned presentation profile document", () => {
+    const profile = parsePresentationProfile({ productName: "JohnOS", theme: "dark", locale: "fr-CA", labels: { home: "Today", capture: "Inbox", records: "Journal" } });
+    const document = makePresentationProfileDocument(profile, "2026-09-18T00:00:00.000Z");
+    expect(document).toMatchObject({ format: "OMNEVUM_PRESENTATION_PROFILE", version: 1, exportedAt: "2026-09-18T00:00:00.000Z" });
+    expect(parsePresentationProfileDocument(document)).toEqual(profile);
+  });
+
+  it("rejects malformed or stale presentation profile documents", () => {
+    expect(() => parsePresentationProfileDocument(null)).toThrow("Presentation profile document is invalid");
+    expect(() => parsePresentationProfileDocument({ format: "OMNEVUM_PRESENTATION_PROFILE", version: 2, exportedAt: "2026-09-18T00:00:00.000Z", profile: DEFAULT_PRESENTATION })).toThrow("Presentation profile document is invalid");
+    expect(() => parsePresentationProfileDocument({ format: "OMNEVUM_PRESENTATION_PROFILE", version: 1, exportedAt: "not-a-date", profile: DEFAULT_PRESENTATION })).toThrow("Presentation profile document is invalid");
+    expect(() => parsePresentationProfileDocument({ format: "OMNEVUM_PRESENTATION_PROFILE", version: 1, exportedAt: "2026-09-18T00:00:00.000Z", profile: { ...DEFAULT_PRESENTATION, productName: "" } })).toThrow("Presentation profile payload is invalid");
   });
 
   it("uses a known-good safe profile without rewriting malformed presentation or canonical data", async () => {

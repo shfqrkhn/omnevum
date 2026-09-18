@@ -4,6 +4,10 @@ export type PresentationDensity = "comfortable" | "compact";
 export type PresentationTypeface = "system" | "serif" | "mono";
 export type PresentationIconography = "labels" | "glyphs";
 
+export const PRESENTATION_PROFILE_FORMAT = "OMNEVUM_PRESENTATION_PROFILE" as const;
+export const PRESENTATION_PROFILE_VERSION = 1 as const;
+export const MAX_PRESENTATION_PROFILE_JSON_BYTES = 256 * 1024;
+
 export const PRESENTATION_SECTION_IDS = [
   "home-summary", "capture", "acquire", "track", "domains", "search", "spaces", "compose", "review",
   "relate", "knowledge", "sharing", "sync", "focus", "reminders", "records", "recovery", "presentation"
@@ -25,6 +29,13 @@ export interface PresentationProfile {
   labels: { home: string; capture: string; records: string };
   navigation: { visible: PresentationSectionId[]; order: PresentationSectionId[] };
   homeWidgets: PresentationHomeWidgetId[];
+}
+
+export interface PresentationProfileDocument {
+  format: typeof PRESENTATION_PROFILE_FORMAT;
+  version: typeof PRESENTATION_PROFILE_VERSION;
+  exportedAt: string;
+  profile: PresentationProfile;
 }
 
 const DEFAULT_SECTION_ORDER: PresentationSectionId[] = [...PRESENTATION_SECTION_IDS];
@@ -134,4 +145,24 @@ export function resolvePresentationProfile(value: unknown, safeMode: boolean): P
     safeMode,
     storedProfileValid: value === undefined || isPresentationProfile(value)
   };
+}
+
+export function makePresentationProfileDocument(profile: PresentationProfile, exportedAt = new Date().toISOString()): PresentationProfileDocument {
+  if (!isPresentationProfile(profile)) throw new Error("Presentation profile is invalid");
+  return {
+    format: PRESENTATION_PROFILE_FORMAT,
+    version: PRESENTATION_PROFILE_VERSION,
+    exportedAt,
+    profile: structuredClone(profile)
+  };
+}
+
+export function parsePresentationProfileDocument(value: unknown): PresentationProfile {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) throw new Error("Presentation profile document is invalid");
+  const candidate = value as Record<string, unknown>;
+  if (candidate.format !== PRESENTATION_PROFILE_FORMAT || candidate.version !== PRESENTATION_PROFILE_VERSION || typeof candidate.exportedAt !== "string" || !Number.isFinite(Date.parse(candidate.exportedAt))) {
+    throw new Error("Presentation profile document is invalid");
+  }
+  if (!isPresentationProfile(candidate.profile)) throw new Error("Presentation profile payload is invalid");
+  return parsePresentationProfile(candidate.profile);
 }
