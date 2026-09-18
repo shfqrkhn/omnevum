@@ -32,6 +32,8 @@ try {
   console.log("FRESH_AGENT_RECOVERY_AUDIT_PASS");
   runNpm(["run", "ci"], worktree, { capture: false });
   console.log("FRESH_AGENT_CI_PASS");
+  runNpm(["run", "benchmark:factory-interruption"], worktree, { capture: false });
+  console.log("FRESH_AGENT_FACTORY_INTERRUPTION_PASS");
   console.log(`FRESH_AGENT_RESUME_PASS revision=${resumedRevision} clean-clone=true original-conversation=false`);
 } finally {
   if (added) run(git, ["worktree", "remove", "--force", worktree], root, { capture: false });

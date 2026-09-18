@@ -14,6 +14,7 @@
     "preview:effect-fixture": "node scripts/preview-effect-fixture.mjs",
     "benchmark:fresh-agent": "node scripts/fresh-agent-resume-benchmark.mjs",
     "benchmark:factory": "vitest run src/core/factory.test.ts",
+    "benchmark:factory-interruption": "node scripts/factory-interruption-benchmark.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
