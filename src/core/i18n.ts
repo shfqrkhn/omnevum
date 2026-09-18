@@ -106,6 +106,17 @@ export function getUiCopy(locale: PresentationLocale): UiCopy {
   return locale === "fr-CA" ? french : english;
 }
 
+export function getInstalledMetadataStatus(locale: PresentationLocale, standalone: boolean): string {
+  if (locale === "fr-CA") {
+    return standalone
+      ? "PLATFORM_LIMITED: cette installation peut avoir capture le nom, l'icone et l'ecran de demarrage controles par le navigateur ou le systeme. Si ces metadonnees restent anciennes, utilisez le parcours de rafraichissement, de re-ajout ou de reinstallation pris en charge par l'hote; ce profil ne modifie ni les donnees canoniques ni l'identite technique d'installation."
+      : "PLATFORM_LIMITED: le navigateur ou le systeme peut capturer le nom, l'icone et l'ecran de demarrage au moment de l'installation. Pour une future installation, utilisez le parcours pris en charge par l'hote; ce profil ne modifie ni les donnees canoniques ni l'identite technique d'installation.";
+  }
+  return standalone
+    ? "PLATFORM_LIMITED: this installation may have captured the browser/OS-controlled name, icon, and splash at install time. If those metadata stay stale, use the host-supported refresh, re-add, or reinstall path; this profile changes neither canonical data nor technical install identity."
+    : "PLATFORM_LIMITED: the browser/OS may capture the name, icon, and splash at install time. For a future install, use the host-supported path; this profile changes neither canonical data nor technical install identity.";
+}
+
 export function localeDirection(locale: PresentationLocale): "ltr" | "rtl" {
   return locale === "fr-CA" ? "ltr" : "ltr";
 }

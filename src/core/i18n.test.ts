@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDateTime, formatNumber, getUiCopy, localeDirection } from "./i18n";
+import { formatDateTime, formatNumber, getInstalledMetadataStatus, getUiCopy, localeDirection } from "./i18n";
 
 describe("presentation localization contract", () => {
   it("keeps claimed locales offline and exposes direction/formatting", () => {
@@ -8,5 +8,12 @@ describe("presentation localization contract", () => {
     expect(localeDirection("en-CA")).toBe("ltr");
     expect(formatNumber("en-CA", 1234)).toContain("1");
     expect(formatDateTime("en-CA", "not-a-date")).toBe("not-a-date");
+  });
+
+  it("reports the installed-host metadata boundary without widening identity authority", () => {
+    expect(getInstalledMetadataStatus("en-CA", true)).toContain("PLATFORM_LIMITED");
+    expect(getInstalledMetadataStatus("en-CA", true)).toContain("re-add");
+    expect(getInstalledMetadataStatus("fr-CA", false)).toContain("PLATFORM_LIMITED");
+    expect(getInstalledMetadataStatus("fr-CA", false)).toContain("identite technique d'installation");
   });
 });
