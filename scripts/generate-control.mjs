@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -168,7 +169,7 @@ writeJson("foss-compliance.json", {
   ]
 });
 
-const generatedFiles = ["requirements.json", "acceptance-scenarios.json", "acceptance-results.json", "dependency-sbom.json", "foss-compliance.json", "control-manifest.json"];
+const generatedFiles = ["requirements.json", "acceptance-scenarios.json", "acceptance-results.json", "dependency-sbom.json", "foss-compliance.json", "control-manifest.json", "recovery-bundle.json"];
 writeJson("control-manifest.json", {
   schemaVersion: 1,
   kind: "control-manifest",
@@ -206,6 +207,54 @@ writeJson("control-manifest.json", {
   relocations: [],
   retiredPaths: [],
   counts: { requirements: requirements.length, acceptanceScenarios: acceptance.length, lockedPackages: lockedPackages.length }
+});
+
+const gitRevision = (() => {
+  try {
+    return execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim() || "NO_GIT_CONTEXT";
+  } catch {
+    return "NO_GIT_CONTEXT";
+  }
+})();
+const repositoryFiles = (() => {
+  try {
+    return execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard"], { cwd: root, encoding: "utf8" })
+      .split(/\r?\n/)
+      .map((path) => path.trim().replaceAll("\\", "/"))
+      .filter((path) => path && !path.startsWith("node_modules/") && !path.startsWith("dist/") && path !== "docs/control/control-manifest.json" && path !== "docs/control/recovery-bundle.json")
+      .sort();
+  } catch {
+    return ["AGENTS.md", "README.md", "package.json", "package-lock.json", "vite.config.ts", "tsconfig.json", "docs/Omni_3.32.0.md", "docs/Omnevum-MPES-v0.12.0-converged.md"];
+  }
+})();
+const integrityFiles = repositoryFiles.filter((path) => existsSync(join(root, path))).map((path) => {
+  const bytes = readFileSync(join(root, path));
+  return { path, sha256: sha256(bytes), bytes: bytes.byteLength };
+});
+writeJson("recovery-bundle.json", {
+  schemaVersion: 1,
+  kind: "engineering-recovery-bundle",
+  generatedBy,
+  authority: "MPES Sections 20.5, 20.9, and 20.10; integrity manifest is a generated projection",
+  source,
+  repository: { revision: gitRevision, pathsAreRepositoryRelative: true, secretsIncluded: false },
+  restoreProcedure: [
+    "Read docs/Omni_3.32.0.md and docs/Omnevum-MPES-v0.12.0-converged.md before changing scope.",
+    "Inspect docs/control/completion-ledger.json, engineering-controller.json, release-evidence.json, acceptance-results.json, support-matrix.json, and risk-threat-register.json.",
+    "Run npm ci, npm run audit:recovery, and npm run ci from a clean checkout before resuming implementation.",
+    "Use docs/evidence/ as dated receipts and update the canonical control register in the same verified increment.",
+    "Re-establish any external authority or credentials in the current environment; no credential, lease, or pending effect is restored as active by this bundle."
+  ],
+  canonicalReferences: {
+    authority: ["docs/Omni_3.32.0.md", "docs/Omnevum-MPES-v0.12.0-converged.md"],
+    controls: ["docs/control/control-manifest.json", "docs/control/requirements.json", "docs/control/acceptance-scenarios.json", "docs/control/acceptance-results.json", "docs/control/phase0-acceptance.json", "docs/control/mvp-acceptance.json", "docs/control/support-matrix.json", "docs/control/owner-registry.json", "docs/control/capability-catalogue.json", "docs/control/effect-outbox-policy.json", "docs/control/credential-key-policy.json", "docs/control/capability-coverage.json", "docs/control/upstream.json", "docs/control/patch-fork-delta.json", "docs/control/license-provenance.json", "docs/control/currentness-radar.json", "docs/control/compatibility-matrix.json", "docs/control/risk-threat-register.json", "docs/control/migration-register.json", "docs/control/release-evidence.json", "docs/control/engineering-controller.json", "docs/control/completion-ledger.json"],
+    evidence: ["docs/evidence/"],
+    implementation: ["src/main.ts", "src/core/", "src/ui/", "public/sw.js", "scripts/"],
+    tests: ["src/**/*.test.ts", "npm run ci"]
+  },
+  releaseState: "docs/control/release-evidence.json",
+  pendingExternalEffects: "docs/control/effect-outbox-policy.json and the shipped Recovery ledger are authoritative; this bundle contains no effect payload, credential, token, lease, or private path.",
+  integrity: { algorithm: "SHA-256 of repository-relative file bytes", excludes: ["docs/control/control-manifest.json", "docs/control/recovery-bundle.json"], files: integrityFiles }
 });
 
 console.log(`CONTROL_GENERATION_PASS requirements=${requirements.length} acceptance=${acceptance.length} packages=${lockedPackages.length} mpes=${source.mpes.sha256}`);

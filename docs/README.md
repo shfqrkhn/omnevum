@@ -6,6 +6,8 @@ Authority order for this project is external authority and owner direction, then
 - `Omnevum-MPES-v0.12.0-converged.md` is the controlling product and engineering baseline.
 - `control/` contains machine-readable generated projections and active registers.
 - `evidence/` contains dated research and verification receipts.
+- `control/recovery-bundle.json` is a generated, integrity-checked resume manifest; it contains repository-relative references and hashes, never secrets or live credentials.
 
 The MPES is a design baseline, not proof of implementation or release. Generated projections never replace the canonical MPES.
 
+To resume from a clean checkout, read the two authority documents and the controller/ledger registers, then run `npm ci`, `npm run audit:recovery`, and `npm run ci`. The recovery audit verifies the current source revision and every manifest hash before work continues.

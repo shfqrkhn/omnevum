@@ -41,6 +41,7 @@ const required = [
   "docs/control/risk-threat-register.json",
   "docs/control/migration-register.json",
   "docs/control/release-evidence.json",
+  "docs/control/recovery-bundle.json",
   "docs/control/engineering-controller.json",
   "docs/control/completion-ledger.json"
 ];
@@ -53,7 +54,7 @@ for (const entry of entries) {
 }
 for (const path of required) if (!existsSync(join(root, path))) failures.push(`missing ${path}`);
 
-for (const path of ["docs/control/control-manifest.json", "docs/control/requirements.json", "docs/control/acceptance-scenarios.json", "docs/control/acceptance-results.json", "docs/control/dependency-sbom.json", "docs/control/foss-compliance.json"]) {
+for (const path of ["docs/control/control-manifest.json", "docs/control/requirements.json", "docs/control/acceptance-scenarios.json", "docs/control/acceptance-results.json", "docs/control/dependency-sbom.json", "docs/control/foss-compliance.json", "docs/control/recovery-bundle.json"]) {
   if (!existsSync(join(root, path))) continue;
   const value = JSON.parse(readFileSync(join(root, path), "utf8"));
   if (value.generatedBy !== "scripts/generate-control.mjs") failures.push(`unidentified generated file ${path}`);
