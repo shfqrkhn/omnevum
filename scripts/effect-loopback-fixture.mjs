@@ -6,7 +6,8 @@ if (!Number.isInteger(requestedPort) || requestedPort < 0 || requestedPort > 65_
 
 const state = createEffectLoopbackState();
 const requiredBearer = process.env.OMNEVUM_EFFECT_FIXTURE_BEARER;
-const server = createServer(createEffectLoopbackHandler(state, requiredBearer ? { requiredBearer } : {}));
+const ambiguousFirstPost = process.env.OMNEVUM_EFFECT_FIXTURE_AMBIGUOUS_FIRST_POST === "1";
+const server = createServer(createEffectLoopbackHandler(state, { ...(requiredBearer ? { requiredBearer } : {}), ambiguousFirstPost }));
 
 server.listen(requestedPort, "localhost", () => {
   const address = server.address();

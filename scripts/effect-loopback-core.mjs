@@ -32,6 +32,11 @@ export function createEffectLoopbackHandler(state, options = {}) {
         const remoteIdentity = `loopback-${state.created + 1}`;
         state.identities.set(idempotencyKey, remoteIdentity);
         state.created += 1;
+        if (options.ambiguousFirstPost === true && requestUrl.searchParams.get("ambiguous") === "1") {
+          log({ event: "POST_RESPONSE_AMBIGUOUS", idempotencyKey, remoteIdentity, posts: state.posts, created: state.created });
+          writeJson(response, 200, { accepted: true }, corsHeaders);
+          return;
+        }
         log({ event: "POST_RESPONSE_LOST", idempotencyKey, remoteIdentity, posts: state.posts, created: state.created });
         response.destroy();
         return;
