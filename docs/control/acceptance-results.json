@@ -1160,7 +1160,10 @@
       },
       "text": "The engineering factory completes the same representative stateful work item under two materially different qualified agent hosts, with at least one current FOSS/open host when practical and at least one current subscription-backed official agent when the owner has that entitlement. The durable controller/evidence lets work resume after switching hosts without replaying owner decisions from chat.",
       "status": "UNKNOWN",
-      "evidence": []
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-fresh-agent-resume-benchmark-after-deviceinput-safety-increment"
+      ],
+      "notes": "The current clean-checkout benchmark proves durable controller/evidence reconstruction and interruption/resume without original conversation state on one qualified host. A materially different second agent host, including the owner-entitled subscription-backed route where applicable, remains unqualified."
     },
     {
       "id": "OMN-ACC-078",
