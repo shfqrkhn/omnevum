@@ -1,13 +1,14 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(fileURLToPath(new URL(".", import.meta.url)), "..");
 const git = process.platform === "win32" ? "git.exe" : "git";
-const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+const npmCli = process.env.npm_execpath ?? (process.platform === "win32" ? join(dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js") : undefined);
 const run = (command, args, cwd, options = {}) => execFileSync(command, args, { cwd, encoding: "utf8", stdio: options.capture === false ? "inherit" : "pipe" });
+const runNpm = (args, cwd, options = {}) => npmCli ? run(process.execPath, [npmCli, ...args], cwd, options) : run("npm", args, cwd, options);
 const sourceRevision = run(git, ["rev-parse", "HEAD"], root).trim();
 const status = run(git, ["status", "--porcelain"], root).trim();
 if (status) throw new Error("Fresh-agent benchmark requires a clean source checkout");
@@ -25,11 +26,11 @@ try {
   const resumedRevision = run(git, ["rev-parse", "HEAD"], worktree).trim();
   if (resumedRevision !== sourceRevision) throw new Error("Fresh worktree revision differs from source revision");
   console.log(`FRESH_AGENT_RESUME_START source=${sourceRevision} ledger=${ledger.status}`);
-  run(npm, ["ci"], worktree, { capture: false });
+  runNpm(["ci"], worktree, { capture: false });
   console.log("FRESH_AGENT_NPM_CI_PASS");
-  run(npm, ["run", "audit:recovery"], worktree, { capture: false });
+  runNpm(["run", "audit:recovery"], worktree, { capture: false });
   console.log("FRESH_AGENT_RECOVERY_AUDIT_PASS");
-  run(npm, ["run", "ci"], worktree, { capture: false });
+  runNpm(["run", "ci"], worktree, { capture: false });
   console.log("FRESH_AGENT_CI_PASS");
   console.log(`FRESH_AGENT_RESUME_PASS revision=${resumedRevision} clean-clone=true original-conversation=false`);
 } finally {
