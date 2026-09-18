@@ -156,6 +156,19 @@ export class CommandBus {
     });
   }
 
+  public async linkTriage(sourceId: string, targetId: string, relation = "related", expectedRevision?: number): Promise<CanonicalRecord> {
+    if (sourceId === targetId) throw new Error("A record cannot link to itself");
+    const source = await this.store.get(sourceId, true);
+    const target = await this.store.get(targetId);
+    if (!source || source.deleted || !target) throw new Error("Both triage records must be active canonical records");
+    if (expectedRevision !== undefined && source.revision !== expectedRevision) throw new RevisionConflictError();
+    const label = relation.trim().slice(0, 120) || "related";
+    const existing = (await this.store.list()).find((record) => record.recordType === "relationship" && record.data.sourceId === sourceId && record.data.targetId === targetId && record.data.relation === label);
+    const relationship = existing ?? await this.relate(sourceId, targetId, label);
+    await this.update(sourceId, { ...source.data, triageStatus: "REVIEWED", triageDisposition: "LINKED", triageLinkId: relationship.id }, expectedRevision ?? source.revision);
+    return relationship;
+  }
+
   public async undo(id: string): Promise<CanonicalRecord> {
     const current = await this.store.get(id, true);
     if (!current) throw new Error("Canonical record not found");

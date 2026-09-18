@@ -809,7 +809,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   };
 
   const renderReview = async (): Promise<void> => {
-    const records = (await scopedRecords()).filter((record) => recordTriageStatus(record) !== "REVIEWED");
+    const scoped = await scopedRecords();
+    const records = scoped.filter((record) => recordTriageStatus(record) !== "REVIEWED");
+    const linkTargets = scoped.filter((record) => record.recordType !== "relationship");
     reviewList.replaceChildren();
     reviewCount.textContent = formatNumber(presentation.locale, records.length);
     reviewEmpty.hidden = records.length > 0;
@@ -841,6 +843,30 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       updateTriage("DEFERRED", copy.defer);
       updateTriage("CLARIFY", copy.clarify);
       updateTriage("REVIEWED", copy.reference, { triageDisposition: "REFERENCE" });
+      const targets = linkTargets.filter((target) => target.id !== record.id);
+      if (targets.length > 0) {
+        const targetSelect = document.createElement("select");
+        targetSelect.setAttribute("aria-label", copy.targetRecord);
+        for (const target of targets) {
+          const option = document.createElement("option");
+          option.value = target.id;
+          option.textContent = `${typeLabel(target.recordType)}: ${recordText(target).slice(0, 70)}`;
+          targetSelect.append(option);
+        }
+        const link = document.createElement("button");
+        link.type = "button";
+        link.className = "icon-button";
+        link.textContent = copy.createLink;
+        link.addEventListener("click", async () => {
+          try {
+            await commands.linkTriage(record.id, targetSelect.value, "related", record.revision);
+            await renderRecords(searchQuery.value);
+          } catch (error) {
+            triageStatusMessage.textContent = describeError(error, "Triage link failed; canonical data was not changed.");
+          }
+        });
+        actions.append(targetSelect, link);
+      }
       const archive = document.createElement("button");
       archive.type = "button";
       archive.className = "icon-button";

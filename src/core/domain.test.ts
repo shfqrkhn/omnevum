@@ -19,6 +19,7 @@ describe("domain record projections", () => {
   it("recognizes only the explicit reference disposition", () => {
     const base = { recordType: "note", data: {} } as unknown as CanonicalRecord;
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "REFERENCE" } })).toBe("REFERENCE");
+    expect(recordTriageDisposition({ ...base, data: { triageDisposition: "LINKED" } })).toBe("LINKED");
     expect(recordTriageDisposition({ ...base, data: { triageDisposition: "ROUTE" } })).toBeUndefined();
   });
 });

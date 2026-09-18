@@ -57,4 +57,19 @@ describe("CommandBus", () => {
     expect(relationship.data).toMatchObject({ sourceId: source.id, targetId: target.id, relation: "supports" });
     store.close();
   });
+
+  it("links a triage item idempotently and closes it without copying the source", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-triage-link`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const source = await commands.create({ recordType: "note", owner: "core.capture", data: { text: "inbox", triageStatus: "INBOX" } });
+    const target = await commands.create({ recordType: "note", owner: "core.capture", data: { text: "existing", triageStatus: "REVIEWED" } });
+    const relationship = await commands.linkTriage(source.id, target.id, "supports", source.revision);
+    const linked = await store.get(source.id);
+    expect(linked?.data).toMatchObject({ triageStatus: "REVIEWED", triageDisposition: "LINKED", triageLinkId: relationship.id });
+    expect((await store.list()).filter((record) => record.recordType === "relationship")).toHaveLength(1);
+    await commands.linkTriage(source.id, target.id, "supports", linked?.revision);
+    expect((await store.list()).filter((record) => record.recordType === "relationship")).toHaveLength(1);
+    store.close();
+  });
 });
