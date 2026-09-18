@@ -86,9 +86,10 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-target-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-target-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-presentation-and-locale-profile-follow-up"
       ],
-      "notes": "Built-artifact Chromium evidence covers JohnOS in-app branding, theme, and reload persistence without semantic-count loss; logo/lens-label customization and upgrade/installed-host qualification remain open."
+      "notes": "Built-artifact Chromium evidence covers JohnOS in-app branding, current-artifact French locale, custom labels/icons, theme, and reload persistence without semantic-count loss; logo/lens-label customization and upgrade/installed-host qualification remain open."
     },
     {
       "id": "OMN-ACC-004",
@@ -133,7 +134,8 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/i18n.test.ts",
-        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run"
+        "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-presentation-and-locale-profile-follow-up"
       ],
       "notes": "French Canadian formatting/localization and reload persistence are covered locally; full measurement-presentation breadth, long-string/RTL/pseudolocalization, and target-matrix qualification remain open."
     },
@@ -392,9 +394,10 @@
         "src/core/presentation.test.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-personalization-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-metadata-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-presentation-profile-portability-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-presentation-profile-portability-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-presentation-and-locale-profile-follow-up"
       ],
-      "notes": "The historical built preview proves bounded declarative branding, terminology, navigation visibility/order controls, Home composition, typeface, icon treatment, density, theme contract, document metadata binding, standalone profile export/import, reload persistence, Recovery reachability, and unchanged canonical counts. Target accessibility/browser breadth, icon/logo assets, installed-host metadata, profile migration across future schemas, and release qualification remain open."
+      "notes": "Current and historical built previews prove bounded declarative branding, terminology, navigation visibility/order controls, Home composition, typeface, icon treatment, density, locale/theme contract, document metadata binding, standalone profile export/import, reload persistence, Recovery reachability, and unchanged canonical counts. Target accessibility/browser breadth, icon/logo assets, installed-host metadata, profile migration across future schemas, and release qualification remain open."
     },
     {
       "id": "OMN-ACC-024",
@@ -406,7 +409,8 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-presentation-and-locale-profile-follow-up"
       ],
       "notes": "Local built-preview evidence covers controlled in-app rebranding and persistence; installed metadata behavior and the explicit PLATFORM_LIMITED path remain open."
     },
