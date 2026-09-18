@@ -211,3 +211,11 @@ The current `npm run ci` build at source revision `59e2775` is bound in `docs/co
 On a fresh origin at `http://127.0.0.1:4222/` in the Codex In-app Browser Chromium surface, `Defer this mixed item until later` was captured and deferred using the visible `Defer until` control. The item left the inbox while health reported `1 active, 0 archived, 2 revision snapshot(s), 0 artifact payload(s); search index healthy.` A second item was deferred to a past local time; the review surface immediately re-presented it as `Due now triage item (deferred)`, while the future item remained hidden. The command regression verifies explicit due-time storage, stale-disposition clearing, and invalid-time rejection.
 
 This is bounded source/unit and fresh-origin local Chromium interaction evidence only. It does not qualify closed-app/background delivery, external reminder companions, broader accessibility/target coverage, or complete triage acceptance.
+
+## Current built-artifact safe direct-capture follow-up
+
+The current `npm run build` artifact at source revision `183a9b8` is bound in `docs/control/release-evidence.json` by artifact digest `0c1ad17ce5a26c5058a33b49950bf6fe4bbe982694afc0eed61056b1098cbcf2`; its stamped service-worker cache is `omnevum-shell-4e5c8343e378f13d`. The Capture form now defaults to `triageStatus: INBOX` and exposes a visible, unchecked `Safe direct route (explicit)` control. Only checking that control assigns `REVIEWED`; the choice is reset after capture and does not alter canonical ownership or provenance.
+
+On a fresh origin at `http://127.0.0.1:4223/` in the Codex In-app Browser Chromium surface, an unchecked `Default inbox sentinel` capture produced one visible inbox item. A second `Unambiguous direct sentinel` capture with the checkbox selected produced two active Notes while the review count remained one and the default item stayed in the inbox. Health reported `2 active, 0 archived, 2 revision snapshot(s), 0 artifact payload(s); search index healthy.`
+
+This is bounded source/unit and fresh-origin local Chromium interaction evidence only. It does not qualify an automated ambiguity classifier, richer proposal UI, broader accessibility/target coverage, or complete triage acceptance.

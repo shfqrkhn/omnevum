@@ -57,7 +57,8 @@
     "current receipt-bound Chromium preview retains mixed English/French source text, searches an English token under fr-CA UI, persists locale/text after reload, and returns zero console warnings/errors",
     "current receipt-bound Chromium single-origin preview pulls one bounded remote sentinel through JsonEndpointTransport, imports it through the canonical store, pushes the merged replica, and returns zero console warnings/errors",
     "current receipt-bound Chromium preview splits an ambiguous triage source into bounded canonical note parts, archives the staging source, clears the inbox, preserves source provenance, and exercises task-part output in the command regression",
-    "current receipt-bound Chromium preview defers a triage source to an explicit future due time, hides it until due, then re-surfaces a due item on the same origin without claiming background delivery"
+    "current receipt-bound Chromium preview defers a triage source to an explicit future due time, hides it until due, then re-surfaces a due item on the same origin without claiming background delivery",
+    "current receipt-bound Chromium preview keeps default captures in the inbox and, only when the visible Safe direct route checkbox is selected, creates an unambiguous capture as REVIEWED outside the inbox"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",
