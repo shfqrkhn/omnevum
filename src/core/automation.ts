@@ -28,6 +28,8 @@ export interface AutomationProposal {
   requiresNormalCommandPath: true;
 }
 
+export const ADMITTED_AUTOMATION_COMMANDS = ["record.create", "record.update", "triage.defer", "triage.link", "triage.route", "triage.split", "triage.delete"] as const;
+
 const MAX_RULE_NODES = 1000;
 const MAX_RULE_DEPTH = 64;
 const MAX_RULE_ACTIONS = 20;
@@ -107,5 +109,5 @@ function isAction(value: unknown): value is AutomationAction {
   if (typeof value !== "object" || value === null) return false;
   const candidate = value as Record<string, unknown>;
   const argumentsValue = candidate.arguments;
-  return typeof candidate.command === "string" && /^[a-z][a-z0-9._-]{1,80}$/.test(candidate.command) && typeof argumentsValue === "object" && argumentsValue !== null && !Array.isArray(argumentsValue) && Object.keys(argumentsValue).length <= MAX_RULE_ARGUMENTS && Object.entries(argumentsValue as Record<string, unknown>).every(([key, item]) => /^[a-zA-Z][a-zA-Z0-9_.-]{0,80}$/.test(key) && (item === null || (typeof item === "string" && item.length <= MAX_RULE_TEXT) || (typeof item === "number" && Number.isFinite(item)) || typeof item === "boolean"));
+  return typeof candidate.command === "string" && ADMITTED_AUTOMATION_COMMANDS.includes(candidate.command as typeof ADMITTED_AUTOMATION_COMMANDS[number]) && typeof argumentsValue === "object" && argumentsValue !== null && !Array.isArray(argumentsValue) && Object.keys(argumentsValue).length <= MAX_RULE_ARGUMENTS && Object.entries(argumentsValue as Record<string, unknown>).every(([key, item]) => /^[a-zA-Z][a-zA-Z0-9_.-]{0,80}$/.test(key) && (item === null || (typeof item === "string" && item.length <= MAX_RULE_TEXT) || (typeof item === "number" && Number.isFinite(item)) || typeof item === "boolean"));
 }
