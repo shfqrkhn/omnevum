@@ -36,4 +36,14 @@ describe("capability runtime", () => {
     await expect(runtime.run("core.recovery", () => "not started")).rejects.toThrow("unavailable");
     expect(() => runtime.disable("unknown", "no such module")).toThrow("unknown");
   });
+
+  it("redacts reusable credential-shaped details from visible failure reasons", async () => {
+    const runtime = new CapabilityRuntime([{ id: "optional.connector", start: () => { throw new Error("Bearer raw-secret access_token=token-value"); } }]);
+
+    const [status] = await runtime.start(undefined);
+
+    expect(status?.reason).toBe("Bearer [redacted] access_token=[redacted]");
+    expect(JSON.stringify(status)).not.toContain("raw-secret");
+    expect(JSON.stringify(status)).not.toContain("token-value");
+  });
 });

@@ -75,5 +75,9 @@ function isModuleId(value: string): boolean {
 
 function safeReason(error: unknown): string {
   const raw = typeof error === "string" ? error : error instanceof Error ? error.message : "capability failure";
-  return raw.replace(/[\u0000\r\n]+/g, " ").trim().slice(0, MAX_REASON_LENGTH) || "capability failure";
+  const scrubbed = raw
+    .replace(/\bBearer\s+[^\s,;]+/gi, "Bearer [redacted]")
+    .replace(/([?&](?:access[_-]?token|refresh[_-]?token|password|secret|private[_-]?key|authorization|cookie|session[_-]?token)=)[^&\s]+/gi, "$1[redacted]")
+    .replace(/\b(?:access[_-]?token|refresh[_-]?token|password|secret|private[_-]?key|authorization|cookie|session[_-]?token)\s*[:=]\s*[^\s,;]+/gi, (match) => `${match.slice(0, match.search(/[:=]/))}=[redacted]`);
+  return scrubbed.replace(/[\u0000\r\n]+/g, " ").trim().slice(0, MAX_REASON_LENGTH) || "capability failure";
 }
