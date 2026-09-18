@@ -64,7 +64,8 @@
     "current built-artifact Chromium preview exposes proposal-only triage owner/type/action guidance without canonical mutation; the release receipt is bound to source 0aaa935",
     "bounded automation evaluator emits only proposal-only actions from the explicit admitted semantic-command set and rejects network.fetch/prototype/budget abuse; source bbc902d",
     "current built-artifact Chromium preview creates a quote-validated text annotation as a separate platform.annotate record and reports one active anchor with no stale/orphaned anchors; source bbc902d",
-    "clean CI regenerates a lockfile-bound FOSS attribution/source-obligation receipt and fails the license gate on stale or policy-critical metadata findings; source scripts/generate-control.mjs and scripts/license-audit.mjs"
+    "clean CI regenerates a lockfile-bound FOSS attribution/source-obligation receipt and fails the license gate on stale or policy-critical metadata findings; source scripts/generate-control.mjs and scripts/license-audit.mjs",
+    "current Effect/Outbox and credential tests prove crash recovery through reconciliation, no-blind-replay, retry/expiry/guard behavior, bounded payloads, secret-free metadata, and revocation; shipped external connector qualification remains open"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",
