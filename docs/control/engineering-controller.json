@@ -114,6 +114,7 @@
     "external-effect run confirmation is now an app-owned localized accessible dialog with Escape cancellation and focus restoration; the loopback fixture also proves localhost-only CORS preflight behavior; source 7686754",
     "current release receipt is refreshed and independently hash-verified for source 7686754, artifact digest d433fcaab3450e02d73860ae61262e18c54eb0a32d1628f6fc72abf2818c2f81, and service-worker cache omnevum-shell-97edb5c16fe1fbd4",
     "current same-origin Edge preview reaches the opt-in response-loss fixture, records one POST/creation and one idempotency-key reconciliation, and leaves no effect pending; source 3525922; provider, credentialed, and deployment qualification remain open",
+    "fresh-agent resume benchmark creates a clean detached worktree, runs npm ci, recovery audit, and full CI without original conversation state, and removes the worktree; source eb4b250; nontrivial app/game interruption remains open",
     "generated engineering Recovery bundle references authority, controls, evidence, implementation, tests, release state, and restore procedure with 156 hash-verified repository files and no secrets; generation base e09de22",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
@@ -133,7 +134,7 @@
     "provider-backed or consumer-cloud sync, transport authentication/credential-key brokering, offline rejoin UI, browser-side post-revocation, and live external-effect replay evidence",
     "presentation target/accessibility breadth, icon/logo assets, installed-host metadata behavior, and future profile schema migration compatibility",
     "built-artifact browser receipt and qualified broader document/office adapter evidence for local document finishing",
-    "intentional interrupted nontrivial app/game fresh-agent resume benchmark and MVP release/later phases"
+    "intentional interrupted nontrivial app/game factory benchmark and MVP release/later phases"
   ],
   "nextAction": "No Git remote is configured in this workspace, so Pages deployment proof is blocked until the owner supplies/configures the intended remote. Until then, run the Phase 0 support/accessibility/offline/update and native fault-injection matrix locally, including failed-open repair and recovery-snapshot handling; qualify MiniSearch on target memory/latency, browser-side post-revocation of the persisted authorization context, a live external duplicate-outcome receipt, remaining permission/projection/recovery and human-acceptance evidence. The shipped Effect/Outbox path is now explicit and receipt-bound for local staging, context revalidation, and ambiguity handling; do not treat workflow configuration or local preview as deployment proof.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."

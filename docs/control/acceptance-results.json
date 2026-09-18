@@ -343,9 +343,11 @@
       "evidence": [
         "docs/control/recovery-bundle.json",
         "scripts/recovery-audit.mjs",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-integrity-manifested-engineering-recovery-bundle-follow-up"
+        "scripts/fresh-agent-resume-benchmark.mjs",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-integrity-manifested-engineering-recovery-bundle-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-checkout-fresh-agent-resume-benchmark-follow-up"
       ],
-      "notes": "The generated integrity-manifested Recovery bundle now references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths, and the recovery audit verifies 156 current file hashes plus the exact Git revision. The intentionally interrupted nontrivial app/game fresh-agent resume benchmark remains open."
+      "notes": "The generated integrity-manifested Recovery bundle references the authority, control, evidence, source, tests, release, and restore procedure without secrets or absolute private paths. The fresh-agent benchmark creates a detached clean worktree, runs npm ci, recovery audit, and the complete CI gate without conversation state, and verifies cleanup; the manifest verifies 161 current file hashes plus an exact retained Git revision. The intentionally interrupted nontrivial app/game factory benchmark remains open."
     },
     {
       "id": "OMN-ACC-022",
