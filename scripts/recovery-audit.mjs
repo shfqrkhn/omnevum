@@ -38,7 +38,14 @@ if (!existsSync(bundlePath)) {
   }
   try {
     const revision = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
-    if (bundle.repository?.revision !== revision) failures.push(`stale repository revision ${bundle.repository?.revision}`);
+    if (bundle.repository?.revisionPolicy !== "generation-base-commit-must-ancestor-of-current") failures.push("unsupported recovery revision policy");
+    if (bundle.repository?.revision !== revision) {
+      try {
+        execFileSync("git", ["merge-base", "--is-ancestor", bundle.repository?.revision, revision], { cwd: root, stdio: "ignore" });
+      } catch {
+        failures.push(`recovery generation revision is not an ancestor of HEAD ${bundle.repository?.revision}`);
+      }
+    }
   } catch {
     if (bundle.repository?.revision !== "NO_GIT_CONTEXT") failures.push("repository revision cannot be verified");
   }

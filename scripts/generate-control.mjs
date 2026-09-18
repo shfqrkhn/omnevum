@@ -237,7 +237,7 @@ writeJson("recovery-bundle.json", {
   generatedBy,
   authority: "MPES Sections 20.5, 20.9, and 20.10; integrity manifest is a generated projection",
   source,
-  repository: { revision: gitRevision, pathsAreRepositoryRelative: true, secretsIncluded: false },
+  repository: { revision: gitRevision, revisionPolicy: "generation-base-commit-must-ancestor-of-current", pathsAreRepositoryRelative: true, secretsIncluded: false },
   restoreProcedure: [
     "Read docs/Omni_3.32.0.md and docs/Omnevum-MPES-v0.12.0-converged.md before changing scope.",
     "Inspect docs/control/completion-ledger.json, engineering-controller.json, release-evidence.json, acceptance-results.json, support-matrix.json, and risk-threat-register.json.",

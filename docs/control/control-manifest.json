@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "a7b94d95b7e6a0f5ff7f1d48bb2872f1dfbaf95d285b82cf44f57991aaf8369e"
+      "sha256": "0c6230f7ed79bdfb8c6d092c3c7c9200c6b47354e0876a7a3c3bc42af044feba"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -27,7 +27,8 @@
     "acceptance-results.json",
     "dependency-sbom.json",
     "foss-compliance.json",
-    "control-manifest.json"
+    "control-manifest.json",
+    "recovery-bundle.json"
   ],
   "maintainedRegisters": [
     "decision-log.json",
