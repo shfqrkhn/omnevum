@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "583e940286d4726cc0a8be8b087622fbc2ba64c52bddf9b0c4ca89a7b6aafa3c",
-        "bytes": 104728
+        "sha256": "275740a93657aa5aaccd2f2075c2625ae19a530eef6773aa7bee2ad3665a2876",
+        "bytes": 105315
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "b325046e22943c9695edfe96f420c5a818622b4a32fc3a18bc065a3b37488648",
-        "bytes": 28292
+        "sha256": "69a3267ef304ef70ec97bd3b39fca546db05bd7232728dda8c0f8f4c26dfc21e",
+        "bytes": 28771
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "7f69a585cb5b6d5b366fa2f75b4d14d8ed75ff6bf60e503fde2029481cc76885",
+        "sha256": "56def45995b4f3420c80db767f9c47d65c77cc300fd3915fa2c16653ba0f2d6e",
         "bytes": 2431
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "6b68731711f48aa7aca6a32e56f9e1545bc969e737a5840c7b73d314f186b189",
-        "bytes": 156534
+        "sha256": "30df14a64950b04c1c3dcd3bbf36ae0f2f08f297a299bcc987711023e12cc96a",
+        "bytes": 159329
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -334,18 +334,18 @@
       },
       {
         "path": "scripts/effect-loopback-core.d.mts",
-        "sha256": "07f7390ee445fa7cea8d74ab447007f75828f18f5cb1618816f078fda1ab7f3c",
-        "bytes": 556
+        "sha256": "56cadccbacfcb10bdf38295c4b05a9d97d4b43ab2e06d06b3caed3c5c5a1695d",
+        "bytes": 586
       },
       {
         "path": "scripts/effect-loopback-core.mjs",
-        "sha256": "7523cf021aee9531a25c908efcc73ea1869c3334db20b2208176d3f112dd17ee",
-        "bytes": 3990
+        "sha256": "d7cc2cd9e740875f3c7c910a181d26fde75e085fad057f6d7fbd05f85bef63e8",
+        "bytes": 4319
       },
       {
         "path": "scripts/effect-loopback-fixture.mjs",
-        "sha256": "bfe9aebfd65ae4a6876eb0267e9734e778c9a087b1259b9457afbb4c31b9b3f6",
-        "bytes": 973
+        "sha256": "6bd2513bcb141ec9f7eaa1e102eec11ce5e2297bdee7eff6169dfd6f757a902e",
+        "bytes": 1094
       },
       {
         "path": "scripts/factory-interruption-benchmark.mjs",
@@ -904,8 +904,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "0da11c99c389483cc0f7fcd04d2d2db32f75e067025befe64f6a2dd25c339f2b",
-        "bytes": 159082
+        "sha256": "2bc98fdce009f377d34e08566343ec61253fbe554a458532f82bedf22da167a7",
+        "bytes": 164322
       },
       {
         "path": "tsconfig.json",
@@ -914,8 +914,8 @@
       },
       {
         "path": "vite.config.ts",
-        "sha256": "156cd52d596f1ff7211a660b2101751e3e7c3f62e17ef3ae06a6fc8e33b16632",
-        "bytes": 1309
+        "sha256": "89d4f6490ae6199f6894ab9328b89c5414d659f1817134b62b0b3f287b31fe63",
+        "bytes": 1416
       }
     ]
   }
