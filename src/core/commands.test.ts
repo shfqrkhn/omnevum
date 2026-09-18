@@ -72,4 +72,18 @@ describe("CommandBus", () => {
     expect((await store.list()).filter((record) => record.recordType === "relationship")).toHaveLength(1);
     store.close();
   });
+
+  it("routes a triage item into an explicit task owner while archiving the staging source", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-triage-route`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const source = await commands.create({ recordType: "note", owner: "core.capture", data: { text: "route me", triageStatus: "CLARIFY" } });
+    const routed = await commands.routeTriage(source.id, "task", source.revision);
+    expect(routed.recordType).toBe("task");
+    expect(routed.data).toMatchObject({ text: "route me", status: "OPEN", triageStatus: "REVIEWED", triageDisposition: "ROUTED", triageSourceId: source.id });
+    expect(routed.provenance.sourceId).toBe(source.id);
+    expect((await store.get(source.id, true))?.deleted).toBe(true);
+    expect((await store.list()).map((record) => record.id)).toEqual([routed.id]);
+    store.close();
+  });
 });

@@ -23,6 +23,8 @@ export interface DerivedArtifactInput {
   space?: string;
 }
 
+export type TriageRouteTarget = "note" | "task";
+
 export class RevisionConflictError extends Error {
   public constructor(message = "Canonical record changed; reload before retrying") {
     super(message);
@@ -167,6 +169,25 @@ export class CommandBus {
     const relationship = existing ?? await this.relate(sourceId, targetId, label);
     await this.update(sourceId, { ...source.data, triageStatus: "REVIEWED", triageDisposition: "LINKED", triageLinkId: relationship.id }, expectedRevision ?? source.revision);
     return relationship;
+  }
+
+  public async routeTriage(sourceId: string, target: TriageRouteTarget, expectedRevision?: number): Promise<CanonicalRecord> {
+    const source = await this.store.get(sourceId, true);
+    if (!source || source.deleted) throw new Error("The triage source must be an active canonical record");
+    if (expectedRevision !== undefined && source.revision !== expectedRevision) throw new RevisionConflictError();
+    const routed = await this.create({
+      recordType: target,
+      owner: "core.capture",
+      truthClass: source.truthClass,
+      sensitivity: source.sensitivity,
+      provenance: { source: "USER_INPUT", sourceId: source.id },
+      ...(source.subjectId ? { subjectId: source.subjectId } : {}),
+      data: { ...source.data, ...(target === "task" && source.data.status !== "DONE" ? { status: "OPEN" } : {}), triageStatus: "REVIEWED", triageDisposition: "ROUTED", triageSourceId: source.id }
+    });
+    const routedSource = { ...source.data, triageStatus: "REVIEWED", triageDisposition: "ROUTED", triageRoutedTo: routed.id };
+    const updated = await this.update(source.id, routedSource, expectedRevision ?? source.revision);
+    await this.archive(updated.id);
+    return routed;
   }
 
   public async undo(id: string): Promise<CanonicalRecord> {

@@ -1,4 +1,4 @@
-import type { CommandBus } from "../core/commands";
+import type { CommandBus, TriageRouteTarget } from "../core/commands";
 import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate, type AcquirePreview } from "../core/acquire";
 import { isCompletedTask, recordSpace, recordText, recordTriageStatus, type SpaceId, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getRecoveryCopy, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
@@ -867,6 +867,28 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         });
         actions.append(targetSelect, link);
       }
+      const routeSelect = document.createElement("select");
+      routeSelect.setAttribute("aria-label", copy.route);
+      for (const [value, label] of [["note", copy.note], ["task", copy.task]] as const) {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        routeSelect.append(option);
+      }
+      const route = document.createElement("button");
+      route.type = "button";
+      route.className = "icon-button";
+      route.textContent = copy.route;
+      route.addEventListener("click", async () => {
+        try {
+          const target: TriageRouteTarget = routeSelect.value === "task" ? "task" : "note";
+          await commands.routeTriage(record.id, target, record.revision);
+          await renderRecords(searchQuery.value);
+        } catch (error) {
+          triageStatusMessage.textContent = describeError(error, "Triage route failed; canonical data was not changed.");
+        }
+      });
+      actions.append(routeSelect, route);
       const archive = document.createElement("button");
       archive.type = "button";
       archive.className = "icon-button";
