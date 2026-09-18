@@ -50,7 +50,7 @@
     "115 unit tests pass across 41 test files after the source-meaning workbench increment",
     "current built-artifact Chromium preview completes the integrated MVP workflow, localized rebrand/reload, and confirmed Vault merge",
     "current receipt-bound Chromium preview completes Evidence link creation, quote-validated source annotation, GeoJSON Point Place capture, reload persistence, and zero console warnings/errors",
-    "current receipt-bound Chromium preview proves grant-bound private-share omission, explicit private inclusion, purpose-bound grant creation/revocation, revoked-export disablement, reload persistence, and zero console warnings/errors"
+    "current receipt-bound Chromium preview proves grant-bound private-share omission, explicit private inclusion, declared-Space enforcement, purpose-bound grant creation/revocation, revoked-export disablement, reload persistence, and zero console warnings/errors"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final currentness/support qualification beyond the recorded harvest-reference decision",

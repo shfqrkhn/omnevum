@@ -118,11 +118,11 @@ This is current local Chromium/static-preview evidence for the source-meaning sl
 
 ## Current built-artifact sharing follow-up
 
-The exact `npm run ci` artifact at source revision `9cf2c13` (artifact digest `f1ec23bd07fede41deb9fd13da9fb8477e8f274a22fee8f582f0485c323dec88`, worker cache `omnevum-shell-fc6bc769dfc8a123`) was served on the clean local static origin `http://127.0.0.1:4206/` in the Codex In-app Browser Chromium surface. With synthetic records, the Share / disclose workbench:
+The exact `npm run ci` artifact at source revision `6c872c8` (artifact digest `6dd97c1814a8e4b4c8e7c36043bb13c44a27a3c55bf2813195397c1c136eefc9`, worker cache `omnevum-shell-42a84fd68e3032e8`) was served on the clean local static origin `http://127.0.0.1:4207/` in the Codex In-app Browser Chromium surface. With synthetic records, the Share / disclose workbench:
 
 - exported zero records when two private records were selected and the private-inclusion checkbox was off, reporting both omitted records;
 - exported both selected records only after the explicit private-inclusion checkbox was enabled;
-- created a purpose-bound `platform.share` grant for `person:reviewer` covering both selected records;
+- created a purpose-bound `platform.share` grant for `person:reviewer` covering both selected records in its declared Personal Space;
 - exported zero records until explicit private inclusion was enabled, then exported both records through the selected active grant;
 - revoked the grant through the canonical command path, which disabled future export, then reloaded with the revoked grant and source records present; no browser warning/error console entries were returned.
 
