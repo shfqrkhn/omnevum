@@ -8,6 +8,21 @@ function record(): CanonicalRecord {
 }
 
 describe("bounded remote sync transport", () => {
+  it("binds the browser fetch when no request override is supplied", async () => {
+    const expected = record();
+    const previousFetch = globalThis.fetch;
+    globalThis.fetch = async (_input, init) => init?.method === "PUT"
+      ? new Response(null, { status: 204 })
+      : new Response(JSON.stringify({ format: "OMNEVUM_REPLICA", version: 1, records: [expected] }), { status: 200, headers: { "content-type": "application/json" } });
+    try {
+      const transport = new JsonEndpointTransport("http://localhost/replica");
+      await expect(transport.pull()).resolves.toEqual([expected]);
+      await expect(transport.push([expected])).resolves.toBeUndefined();
+    } finally {
+      globalThis.fetch = previousFetch;
+    }
+  });
+
   it("uses an explicit HTTPS endpoint and validates pulled records", async () => {
     let pushed = "";
     const expected = record();

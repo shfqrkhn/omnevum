@@ -10,7 +10,7 @@ export type FetchLike = (input: string | URL, init?: RequestInit) => Promise<Res
 export class JsonEndpointTransport implements SyncTransport {
   private readonly endpoint: URL;
 
-  public constructor(endpoint: string, private readonly request: FetchLike = fetch) {
+  public constructor(endpoint: string, private readonly request: FetchLike = (input, init) => fetch(input, init)) {
     this.endpoint = parseEndpoint(endpoint);
   }
 
