@@ -53,7 +53,8 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-capture-search-reload-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-two-domain-workflow-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-narrow-profile-responsive-and-offline-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-narrow-profile-responsive-and-offline-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-narrow-profile-responsive-and-offline-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capture-search-reload-receipt-after-lifecycle-fix"
       ],
       "notes": "Fresh local static Chromium, current-artifact in-app-browser, and exact-current-artifact Edge evidence cover the core no-account create/search/reload path plus two current-artifact domain owners; GitHub Pages, supported mobile rows, and full onboarding qualification remain open."
     },
@@ -75,7 +76,8 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-offline-network-capability-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-narrow-profile-responsive-and-offline-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-narrow-profile-responsive-and-offline-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-capture-search-reload-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-capture-search-reload-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capture-search-reload-receipt-after-lifecycle-fix"
       ],
       "notes": "Fresh local static origins reloaded the cached shell offline, created canonical notes offline, and preserved them after network restoration; the historical receipt-bound Edge artifact repeated offline mutation/reload with a healthy derived index and empty app-origin diagnostics, while the historical Chromium artifact reported Failed to fetch for offline sync and kept local capture usable. GitHub Pages, Safari/Firefox, assistive technology, native fault behavior, and external provider qualification still require qualification."
     },
@@ -154,7 +156,8 @@
         "src/core/compose.test.ts",
         "src/core/data.test.ts",
         "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md#current-built-artifact-integrated-run",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-capture-search-reload-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-integrated-capture-search-reload-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capture-search-reload-receipt-after-lifecycle-fix"
       ],
       "notes": "Compose and derived-data projections are exercised locally without a second writable owner; broader authorized-lens and permission-boundary qualification remains open."
     },

@@ -751,3 +751,11 @@ This qualifies local package-state Recovery integration and interrupted app/game
 Source revisions `9eb3c3182a0876c237e0d7130deb4626ddd35882` and `ab78721647c2d801c62b9b34fbad24b39ac4022d` close a lifecycle/privacy regression found after package-state Recovery was added: the user-visible clear-canonical operation now removes package-owned save state together with canonical records, history, artifacts, and effects while intentionally preserving presentation settings, and the confirmation copy names package saves in both claimed locales. `src/core/storage.test.ts` proves the package state is absent after clear and the presentation profile remains.
 
 The exact rebuilt artifact is bound by artifact digest `b7a0f13a18d471ab53e0b5c98a0c4aab21991fe279f07c27fbd4aef04aa67b17` and service-worker cache `omnevum-shell-d5e488ec4d1f56f8`. This is a local lifecycle regression receipt; it does not change the outstanding target, deployment, provider, engine, legal, or human-acceptance gates.
+
+## Current built-artifact capture/search/reload receipt after lifecycle fix
+
+On 2026-09-18, the exact current artifact (`ab78721`, artifact digest `b7a0f13a18d471ab53e0b5c98a0c4aab21991fe279f07c27fbd4aef04aa67b17`, service-worker cache `omnevum-shell-d5e488ec4d1f56f8`) was served with `npm run preview -- --host 127.0.0.1 --port 4257` at `http://127.0.0.1:4257/?current-artifact=ab78721` in the Codex In-app Browser on a fresh local origin.
+
+The visible flow captured `Current artifact lifecycle receipt 2026-09-18`, reported `1 active, 0 archived, 1 revision snapshot(s), 0 artifact payload(s); search index healthy.`, exposed the item in proposal-only Triage, and returned one `artifact lifecycle receipt` result with a healthy derived index. After a full reload, the canonical record remained visible, the health status again reported one active record and a healthy search index, and the app-origin warning/error log remained empty.
+
+This is current-artifact local Capture -> canonical record -> Triage/Search -> reload evidence only. It does not qualify deployment, mobile/browser-family breadth, assistive technology, native fault behavior, provider integration, or human acceptance; OMN-ACC-001, OMN-ACC-002, and OMN-ACC-007 remain `PARTIAL`.
