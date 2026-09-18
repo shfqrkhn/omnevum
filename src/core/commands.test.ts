@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CommandBus, RevisionConflictError } from "./commands";
+import { previewCleanup, reconstructCleanupHistory, type CleanupRecipe } from "./cleanup";
 import { CanonicalStore } from "./storage";
 
 describe("CommandBus", () => {
@@ -128,6 +129,36 @@ describe("CommandBus", () => {
     expect(deleted?.deleted).toBe(true);
     expect(deleted?.data).toMatchObject({ triageStatus: "REVIEWED", triageDisposition: "DELETED" });
     expect(await store.list()).toEqual([]);
+    store.close();
+  });
+
+  it("applies cleanup through the canonical command path and stores replayable history", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-cleanup-apply`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const recipe: CleanupRecipe = { schemaVersion: 1, recipeId: "ui-cleanup", name: "UI cleanup", operations: [{ kind: "TRIM_TEXT" }, { kind: "NORMALIZE_WHITESPACE" }] };
+    const first = await commands.create({ recordType: "note", owner: "platform.acquire", truthClass: "IMPORTED_RECORD", provenance: { source: "IMPORT", sourceId: "source:a" }, data: { text: "  Same   note ", sourceFields: { externalId: "A-1" } } });
+    const duplicate = await commands.create({ recordType: "note", owner: "platform.acquire", truthClass: "IMPORTED_RECORD", provenance: { source: "IMPORT", sourceId: "source:b" }, data: { text: "Same note", sourceFields: { externalId: "B-1" } } });
+    const conflicting = await commands.create({ recordType: "note", owner: "platform.acquire", truthClass: "IMPORTED_RECORD", provenance: { source: "IMPORT", sourceId: "source:c" }, data: { text: "Different note", sourceFields: { externalId: "A-1" } } });
+    const preview = previewCleanup([first, duplicate, conflicting], recipe);
+    const exact = preview.proposals.find((proposal) => proposal.kind === "EXACT_DUPLICATE");
+    const ambiguous = preview.proposals.find((proposal) => proposal.kind === "AMBIGUOUS_MATCH");
+    expect(exact).toBeDefined();
+    expect(ambiguous).toBeDefined();
+    const historyRecords = await commands.applyCleanup(preview, [
+      { proposalId: "cleanup:transform:" + first.id, action: "APPLY_TRANSFORM" },
+      { proposalId: exact!.proposalId, action: "ARCHIVE_EXACT_DUPLICATE", archiveRecordIds: [duplicate.id] },
+      { proposalId: ambiguous!.proposalId, action: "MARK_REVIEW" }
+    ]);
+    const updated = await store.get(first.id);
+    expect(updated?.data.text).toBe("Same note");
+    expect((await store.get(duplicate.id, true))?.deleted).toBe(true);
+    expect((await store.get(conflicting.id))?.data.cleanupReview).toEqual(expect.objectContaining({ replayFingerprint: preview.replayFingerprint }));
+    const historyId = String(historyRecords[0]?.data.historyId);
+    const history = reconstructCleanupHistory(await store.list(true), historyId);
+    expect(history?.receipt.replayFingerprint).toBe(preview.replayFingerprint);
+    expect(history?.outcome.archivedRecordIds).toEqual([duplicate.id]);
+    expect((await store.exportVault()).records.filter((record) => record.data.kind === "cleanup-history")).toHaveLength(historyRecords.length);
     store.close();
   });
 });

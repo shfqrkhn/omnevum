@@ -3,6 +3,9 @@ import type { CanonicalRecord } from "./model";
 export const MAX_CLEANUP_RECORDS = 10_000;
 export const MAX_CLEANUP_OPERATIONS = 8;
 export const MAX_CLEANUP_CLUSTERS = 2_000;
+export const CLEANUP_HISTORY_OWNER = "platform.data";
+export const CLEANUP_HISTORY_KIND = "cleanup-history";
+export const MAX_CLEANUP_HISTORY_CHUNK_BYTES = 60_000;
 
 export type CleanupOperation =
   | { kind: "TRIM_TEXT" }
@@ -65,6 +68,32 @@ export interface CleanupReceipt {
   replayFingerprint: string;
 }
 
+export interface CleanupHistoryPayload {
+  schemaVersion: 1;
+  historyId: string;
+  acceptedAt: string;
+  receipt: CleanupReceipt;
+  outcome: {
+    updatedRecordIds: string[];
+    archivedRecordIds: string[];
+    reviewRecordIds: string[];
+  };
+}
+
+export interface CleanupHistoryChunk {
+  historyId: string;
+  chunkIndex: number;
+  chunkCount: number;
+  payload: string;
+  recipeId: string;
+  acceptedAt: string;
+  inputCount: number;
+  decisionCount: number;
+  updatedCount: number;
+  archivedCount: number;
+  reviewCount: number;
+}
+
 interface TransformedRecord {
   record: CanonicalRecord;
   data: Record<string, unknown>;
@@ -76,7 +105,7 @@ export function previewCleanup(records: CanonicalRecord[], recipe: CleanupRecipe
   validateRecipe(recipe);
   if (records.length > MAX_CLEANUP_RECORDS) throw new Error("Cleanup input exceeds the bounded 10,000-record limit");
 
-  const activeRecords = records.filter((record) => !record.deleted);
+  const activeRecords = records.filter((record) => !record.deleted && !isCleanupHistoryRecord(record));
   const transformed = activeRecords.map((record) => transformRecord(record, recipe));
   const proposals: CleanupProposal[] = [];
   const sourceGroups = new Map<string, string[]>();
@@ -166,6 +195,56 @@ export function replayCleanup(records: CanonicalRecord[], recipe: CleanupRecipe)
   return previewCleanup(records, recipe);
 }
 
+export function isCleanupHistoryRecord(record: CanonicalRecord): boolean {
+  return record.owner === CLEANUP_HISTORY_OWNER && record.data.kind === CLEANUP_HISTORY_KIND;
+}
+
+export function makeCleanupHistoryChunks(plan: CleanupApplyPlan, historyId: string, acceptedAt: string): CleanupHistoryChunk[] {
+  if (!historyId.trim() || !Number.isFinite(Date.parse(acceptedAt))) throw new Error("Cleanup history identity is invalid");
+  const payload: CleanupHistoryPayload = {
+    schemaVersion: 1,
+    historyId,
+    acceptedAt,
+    receipt: structuredClone(plan.receipt),
+    outcome: {
+      updatedRecordIds: plan.updates.map(({ recordId }) => recordId),
+      archivedRecordIds: [...plan.archiveRecordIds],
+      reviewRecordIds: [...plan.reviewRecordIds]
+    }
+  };
+  const serialized = JSON.stringify(payload);
+  const pieces = splitUtf8(serialized, MAX_CLEANUP_HISTORY_CHUNK_BYTES);
+  return pieces.map((piece, chunkIndex) => ({
+    historyId,
+    chunkIndex,
+    chunkCount: pieces.length,
+    payload: piece,
+    recipeId: plan.receipt.recipe.recipeId,
+    acceptedAt,
+    inputCount: plan.receipt.inputRecordIds.length,
+    decisionCount: plan.receipt.decisions.length,
+    updatedCount: plan.updates.length,
+    archivedCount: plan.archiveRecordIds.length,
+    reviewCount: plan.reviewRecordIds.length
+  }));
+}
+
+export function reconstructCleanupHistory(records: CanonicalRecord[], historyId: string): CleanupHistoryPayload | undefined {
+  const chunks = records
+    .filter((record) => isCleanupHistoryRecord(record) && record.data.historyId === historyId)
+    .sort((left, right) => Number(left.data.chunkIndex) - Number(right.data.chunkIndex));
+  if (chunks.length === 0) return undefined;
+  const chunkCount = Number(chunks[0]?.data.chunkCount);
+  if (!Number.isInteger(chunkCount) || chunkCount < 1 || chunks.length !== chunkCount || chunks.some((record, index) => Number(record.data.chunkIndex) !== index || typeof record.data.payload !== "string")) return undefined;
+  try {
+    const parsed: unknown = JSON.parse(chunks.map((record) => String(record.data.payload)).join(""));
+    if (!parsed || typeof parsed !== "object" || (parsed as { schemaVersion?: unknown }).schemaVersion !== 1 || (parsed as { historyId?: unknown }).historyId !== historyId) return undefined;
+    return parsed as CleanupHistoryPayload;
+  } catch {
+    return undefined;
+  }
+}
+
 export function applyCleanupDecisions(records: CanonicalRecord[], preview: CleanupPreview, decisions: CleanupDecision[]): CleanupApplyPlan {
   const byId = new Map(records.map((record) => [record.id, record]));
   const proposals = new Map(preview.proposals.map((proposal) => [proposal.proposalId, proposal]));
@@ -248,4 +327,20 @@ function fingerprint(value: unknown): string {
     if (!child || typeof child !== "object" || Array.isArray(child)) return child;
     return Object.fromEntries(Object.entries(child as Record<string, unknown>).sort(([left], [right]) => left.localeCompare(right)));
   });
+}
+
+function splitUtf8(value: string, maxBytes: number): string[] {
+  const pieces: string[] = [];
+  let current = "";
+  for (const character of value) {
+    const candidate = current + character;
+    if (current && new TextEncoder().encode(candidate).byteLength > maxBytes) {
+      pieces.push(current);
+      current = character;
+    } else {
+      current = candidate;
+    }
+  }
+  if (current || pieces.length === 0) pieces.push(current);
+  return pieces;
 }

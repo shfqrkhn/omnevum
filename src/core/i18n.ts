@@ -7,7 +7,7 @@ export interface UiCopy {
   home: string; currentPicture: string; activeRecordCount: string; visualize: string; signals: string; openTasks: string; completedTasks: string; focusMinutes: string; relationships: string; personalization: string; makeItYours: string; onboardingHeading: string; onboardingHint: string; onboardingCapture: string; onboardingReview: string; onboardingRecovery: string; onboardingStart: string; onboardingDismiss: string;
   derivedStatus: (records: number, sourceIds: number, groups: number) => string;
   appName: string; language: string; english: string; french: string; save: string; presentationHint: string; tagline: string; density: string; comfortable: string; compact: string; typeface: string; systemTypeface: string; serifTypeface: string; monoTypeface: string; iconography: string; labelIconography: string; glyphIconography: string; homeLabel: string; captureLabel: string; recordsLabel: string; navigationSections: string; navigationHint: string; homeWidgets: string; homeWidgetsHint: string; resetPresentation: string; exportPresentationProfile: string; importPresentationProfile: string; presentationProfileExported: string; presentationProfileImported: string;
-  capture: string; getItOut: string; kind: string; note: string; task: string; observation: string; space: string; acquireHeading: string; stageImport: string; acquireFile: string; readClipboard: string; acceptStaged: string; acquirePlaceholder: string; acquireHint: string; stagedMessage: (count: number, warnings: number) => string;
+  capture: string; getItOut: string; kind: string; note: string; task: string; observation: string; space: string; acquireHeading: string; stageImport: string; acquireFile: string; readClipboard: string; acceptStaged: string; acquirePlaceholder: string; acquireHint: string; stagedMessage: (count: number, warnings: number) => string; cleanupHeading: string; cleanupHint: string; cleanupImportedOnly: string; cleanupTrim: string; cleanupWhitespace: string; cleanupPreview: string; cleanupApply: string; cleanupStatus: (records: number, sources: number, proposals: number) => string; cleanupEmpty: string; cleanupTransform: string; cleanupDuplicate: string; cleanupAmbiguous: string; cleanupArchive: string; cleanupMarkReview: string; cleanupApplied: (updated: number, archived: number, review: number) => string; cleanupHistory: string; cleanupHistoryEmpty: string; cleanupHistoryEntry: (recipe: string, acceptedAt: string, inputs: number, updated: number, archived: number, review: number, chunks: number) => string;
   personal: string; household: string; work: string; captureContent: string; capturePlaceholder: string;
   captureHint: string; safeDirectRoute: string; safeDirectRouteHint: string; saveCapture: string; searchExplore: string; findCaptures: string; searchTerms: string;
   scopeWithoutCopying: string; spaceName: string; createSpace: string; spaceCreated: (space: string) => string; removeSpace: string; removeSpaceConfirmation: (space: string) => string; assignToSpace: string; filterSpace: string; allSpaces: string; addMembership: string; membershipCreated: (space: string) => string; activeMemberships: string; removeMembership: string; removeMembershipConfirmation: (record: string, space: string) => string; membershipRemoved: (space: string) => string; spaceRemoved: (space: string) => string; spaceAccessRevoked: (space: string) => string;
@@ -58,8 +58,72 @@ const onboardingFrench: Pick<UiCopy, "onboardingHeading" | "onboardingHint" | "o
   onboardingDismiss: "Masquer le guide"
 };
 
+interface CleanupCopy {
+  cleanupHeading: string;
+  cleanupHint: string;
+  cleanupImportedOnly: string;
+  cleanupTrim: string;
+  cleanupWhitespace: string;
+  cleanupPreview: string;
+  cleanupApply: string;
+  cleanupStatus: (records: number, sources: number, proposals: number) => string;
+  cleanupEmpty: string;
+  cleanupTransform: string;
+  cleanupDuplicate: string;
+  cleanupAmbiguous: string;
+  cleanupArchive: string;
+  cleanupMarkReview: string;
+  cleanupApplied: (updated: number, archived: number, review: number) => string;
+  cleanupHistory: string;
+  cleanupHistoryEmpty: string;
+  cleanupHistoryEntry: (recipe: string, acceptedAt: string, inputs: number, updated: number, archived: number, review: number, chunks: number) => string;
+}
+
+const cleanupEnglish: CleanupCopy = {
+  cleanupHeading: "Clean imported data",
+  cleanupHint: "Preview safe transforms and review duplicate/entity matches before changing canonical records. Original source and provenance stay available; no fuzzy merge is offered.",
+  cleanupImportedOnly: "Imported records only",
+  cleanupTrim: "Trim text",
+  cleanupWhitespace: "Normalize whitespace",
+  cleanupPreview: "Preview cleanup",
+  cleanupApply: "Apply selected decisions",
+  cleanupStatus: (records, sources, proposals) => `${records} input record(s), ${sources} source group(s), ${proposals} proposal(s).`,
+  cleanupEmpty: "No cleanup proposals for this input.",
+  cleanupTransform: "Transform",
+  cleanupDuplicate: "Exact duplicate",
+  cleanupAmbiguous: "Ambiguous entity",
+  cleanupArchive: "Archive selected duplicate(s)",
+  cleanupMarkReview: "Keep unresolved for review",
+  cleanupApplied: (updated, archived, review) => `Cleanup applied: ${updated} transformed, ${archived} archived, ${review} marked for review.`,
+  cleanupHistory: "Cleanup history",
+  cleanupHistoryEmpty: "No accepted cleanup recipe is stored yet.",
+  cleanupHistoryEntry: (recipe, acceptedAt, inputs, updated, archived, review, chunks) => `${recipe} at ${acceptedAt}: ${inputs} input(s), ${updated} transformed, ${archived} archived, ${review} review marker(s), ${chunks} receipt chunk(s).`
+};
+
+const cleanupFrench: CleanupCopy = {
+  cleanupHeading: "Nettoyer les donnees importees",
+  cleanupHint: "Previsualisez les transformations sures et verifiez les doublons/entites avant de modifier les dossiers canoniques. La source et la provenance restent disponibles; aucune fusion floue n'est offerte.",
+  cleanupImportedOnly: "Dossiers importes seulement",
+  cleanupTrim: "Rogner le texte",
+  cleanupWhitespace: "Normaliser les espaces",
+  cleanupPreview: "Previsualiser le nettoyage",
+  cleanupApply: "Appliquer les decisions choisies",
+  cleanupStatus: (records, sources, proposals) => `${records} dossier(s) d'entree, ${sources} groupe(s) source, ${proposals} proposition(s).`,
+  cleanupEmpty: "Aucune proposition de nettoyage pour cette entree.",
+  cleanupTransform: "Transformation",
+  cleanupDuplicate: "Doublon exact",
+  cleanupAmbiguous: "Entite ambigue",
+  cleanupArchive: "Archiver les doublons choisis",
+  cleanupMarkReview: "Garder l'ambiguite pour revue",
+  cleanupApplied: (updated, archived, review) => `Nettoyage applique: ${updated} transforme(s), ${archived} archive(s), ${review} marque(s) pour revue.`,
+  cleanupHistory: "Historique du nettoyage",
+  cleanupHistoryEmpty: "Aucune recette de nettoyage acceptee n'est encore stockee.",
+  cleanupHistoryEntry: (recipe, acceptedAt, inputs, updated, archived, review, chunks) => `${recipe} a ${acceptedAt}: ${inputs} entree(s), ${updated} transformee(s), ${archived} archivee(s), ${review} marque(s) pour revue, ${chunks} bloc(s) de recu.`
+};
+
 const english: UiCopy = {
   ...onboardingEnglish,
+  ...cleanupEnglish,
   documentFinishHeading: "Finish a text Artifact locally",
   documentFinishSource: "Source Artifact",
   documentFinishTerms: "Terms to redact (comma-separated)",
@@ -92,6 +156,7 @@ const english: UiCopy = {
 const french: UiCopy = {
   ...english,
   ...onboardingFrench,
+  ...cleanupFrench,
   documentFinishHeading: "Finaliser localement un artefact texte",
   documentFinishSource: "Artefact source",
   documentFinishTerms: "Termes a redacter (separes par des virgules)",

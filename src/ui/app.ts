@@ -34,6 +34,7 @@ import { JsonEndpointEffectExecutor, JsonEndpointTransport } from "../core/remot
 import { SyncEngine, SyncFailure } from "../core/sync";
 import { createRecordAppDefinition } from "../core/factory";
 import { FACTORY_PREVIEW_APP_TITLE, FACTORY_PREVIEW_FIELDS, FACTORY_PREVIEW_GAME, FACTORY_PREVIEW_MANIFEST, factoryPreviewGameAdapter, type FactoryPreviewGamePayload } from "../core/factory-preview";
+import { isCleanupHistoryRecord, previewCleanup, reconstructCleanupHistory, type CleanupDecision, type CleanupPreview, type CleanupRecipe } from "../core/cleanup";
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -249,6 +250,30 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <p id="acquire-status" class="hint" role="status"></p>
           <ul id="acquire-preview" class="record-list"></ul>
           <button id="accept-staged" class="secondary" type="button" disabled>${copy.acceptStaged}</button>
+          <div class="relationship-form" id="cleanup-panel">
+            <h3>${copy.cleanupHeading}</h3>
+            <p class="hint">${copy.cleanupHint}</p>
+            <label class="check-row" for="cleanup-imported-only"><input id="cleanup-imported-only" type="checkbox" checked /> ${copy.cleanupImportedOnly}</label>
+            <div class="form-row">
+              <label class="check-row" for="cleanup-trim"><input id="cleanup-trim" type="checkbox" checked /> ${copy.cleanupTrim}</label>
+              <label class="check-row" for="cleanup-whitespace"><input id="cleanup-whitespace" type="checkbox" checked /> ${copy.cleanupWhitespace}</label>
+            </div>
+            <div class="form-row">
+              <button id="cleanup-preview" class="secondary" type="button">${copy.cleanupPreview}</button>
+              <button id="cleanup-apply" type="button" disabled>${copy.cleanupApply}</button>
+            </div>
+            <p id="cleanup-status" class="hint" role="status"></p>
+            <div id="cleanup-preview-output" hidden>
+              <p id="cleanup-summary" class="hint"></p>
+              <ul id="cleanup-sources" class="record-list"></ul>
+              <ul id="cleanup-proposals" class="record-list"></ul>
+            </div>
+            <details>
+              <summary>${copy.cleanupHistory}</summary>
+              <ul id="cleanup-history-list" class="record-list"></ul>
+              <p id="cleanup-history-empty" class="empty-state">${copy.cleanupHistoryEmpty}</p>
+            </details>
+          </div>
         </form>
         <div class="relationship-form device-input-panel">
           <h3>${deviceCopy.heading}</h3>
@@ -686,6 +711,18 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const acquireStatus = root.querySelector<HTMLElement>("#acquire-status");
   const acquirePreview = root.querySelector<HTMLUListElement>("#acquire-preview");
   const acceptStaged = root.querySelector<HTMLButtonElement>("#accept-staged");
+  const cleanupImportedOnly = root.querySelector<HTMLInputElement>("#cleanup-imported-only");
+  const cleanupTrim = root.querySelector<HTMLInputElement>("#cleanup-trim");
+  const cleanupWhitespace = root.querySelector<HTMLInputElement>("#cleanup-whitespace");
+  const cleanupPreviewButton = root.querySelector<HTMLButtonElement>("#cleanup-preview");
+  const cleanupApplyButton = root.querySelector<HTMLButtonElement>("#cleanup-apply");
+  const cleanupStatus = root.querySelector<HTMLElement>("#cleanup-status");
+  const cleanupPreviewOutput = root.querySelector<HTMLElement>("#cleanup-preview-output");
+  const cleanupSummary = root.querySelector<HTMLElement>("#cleanup-summary");
+  const cleanupSources = root.querySelector<HTMLUListElement>("#cleanup-sources");
+  const cleanupProposals = root.querySelector<HTMLUListElement>("#cleanup-proposals");
+  const cleanupHistoryList = root.querySelector<HTMLUListElement>("#cleanup-history-list");
+  const cleanupHistoryEmpty = root.querySelector<HTMLElement>("#cleanup-history-empty");
   const trackForm = root.querySelector<HTMLFormElement>("#track-form");
   const trackName = root.querySelector<HTMLInputElement>("#track-name");
   const trackValue = root.querySelector<HTMLInputElement>("#track-value");
@@ -860,7 +897,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const effectRunDialogMessage = root.querySelector<HTMLElement>("#effect-run-dialog-message");
   const effectRunDialogCancel = root.querySelector<HTMLButtonElement>("#effect-run-dialog-cancel");
   const effectRunDialogConfirm = root.querySelector<HTMLButtonElement>("#effect-run-dialog-confirm");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
@@ -890,6 +927,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   deviceMicrophone.disabled = !deviceCapabilitySnapshot.microphone;
   deviceBarcodeInput.disabled = !deviceCapabilitySnapshot.barcode;
   let stagedCandidates: AcquireCandidate[] = [];
+  let cleanupPreviewState: CleanupPreview | undefined;
   let activeSpace: SpaceId | undefined;
   const spaceLabels = new Map<SpaceId, string>(Object.entries(SPACE_LABELS));
   const requestConfirmation = (message: string, title = copy.confirmationHeading, confirmLabel = copy.confirm): Promise<boolean> => new Promise((resolve) => {
@@ -1227,10 +1265,141 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     showAcquirePreview(preview);
   };
 
+  const cleanupRecipe = (): CleanupRecipe => {
+    const operations: CleanupRecipe["operations"] = [];
+    if (cleanupTrim.checked) operations.push({ kind: "TRIM_TEXT" });
+    if (cleanupWhitespace.checked) operations.push({ kind: "NORMALIZE_WHITESPACE" });
+    if (operations.length === 0) throw new Error("Choose at least one cleanup operation");
+    return { schemaVersion: 1, recipeId: "acquire.safe-text-v1", name: "Acquire safe text cleanup", operations };
+  };
+
+  const cleanupInputRecords = async (): Promise<Awaited<ReturnType<CanonicalStore["list"]>>> => {
+    const records = await store.list();
+    return records.filter((record) => record.owner !== "platform.space" && !isCleanupHistoryRecord(record) && (!cleanupImportedOnly.checked || record.provenance.source === "IMPORT"));
+  };
+
+  const cleanupProposalLabel = (kind: CleanupPreview["proposals"][number]["kind"]): string => kind === "TRANSFORM" ? copy.cleanupTransform : kind === "EXACT_DUPLICATE" ? copy.cleanupDuplicate : copy.cleanupAmbiguous;
+
+  const renderCleanupPreview = async (preview: CleanupPreview): Promise<void> => {
+    const records = await store.list(true);
+    const recordsById = new Map(records.map((record) => [record.id, record]));
+    cleanupPreviewOutput.hidden = false;
+    cleanupSummary.textContent = copy.cleanupStatus(preview.recordIds.length, preview.sourceGroups.length, preview.proposals.length);
+    cleanupSources.replaceChildren();
+    for (const source of preview.sourceGroups) {
+      const item = document.createElement("li");
+      item.className = "record-item";
+      item.textContent = `${source.sourceId}: ${source.recordIds.length} record(s)`;
+      cleanupSources.append(item);
+    }
+    cleanupProposals.replaceChildren();
+    if (preview.proposals.length === 0) {
+      const empty = document.createElement("li");
+      empty.className = "empty-state";
+      empty.textContent = copy.cleanupEmpty;
+      cleanupProposals.append(empty);
+    }
+    for (const proposal of preview.proposals) {
+      const item = document.createElement("li");
+      item.className = "record-item";
+      item.dataset.cleanupProposalId = proposal.proposalId;
+      item.dataset.cleanupProposalKind = proposal.kind;
+      const content = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = `${cleanupProposalLabel(proposal.kind)} - ${proposal.recordIds.join(", ")}`;
+      const reason = document.createElement("p");
+      reason.textContent = proposal.reason;
+      const sources = document.createElement("small");
+      sources.textContent = `Source(s): ${proposal.sourceIds.join(", ")}`;
+      content.append(title, reason, sources);
+      item.append(content);
+      if (proposal.kind === "TRANSFORM") {
+        const label = document.createElement("label");
+        label.className = "check-row";
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.checked = true;
+        input.dataset.cleanupTransform = proposal.proposalId;
+        label.append(input, document.createTextNode(`${proposal.beforeText ?? ""} -> ${proposal.afterText ?? ""}`));
+        item.append(label);
+      } else if (proposal.kind === "EXACT_DUPLICATE") {
+        const fieldset = document.createElement("fieldset");
+        const legend = document.createElement("legend");
+        legend.textContent = copy.cleanupArchive;
+        fieldset.append(legend);
+        for (const recordId of proposal.recordIds) {
+          const label = document.createElement("label");
+          label.className = "check-row";
+          const input = document.createElement("input");
+          input.type = "checkbox";
+          input.dataset.cleanupArchiveId = recordId;
+          const sourceRecord = recordsById.get(recordId);
+          label.append(input, document.createTextNode(`${recordId}: ${sourceRecord ? recordText(sourceRecord) : "record unavailable"}`));
+          fieldset.append(label);
+        }
+        item.append(fieldset);
+      } else {
+        const label = document.createElement("label");
+        label.className = "check-row";
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.checked = true;
+        input.dataset.cleanupReview = proposal.proposalId;
+        label.append(input, document.createTextNode(copy.cleanupMarkReview));
+        item.append(label);
+      }
+      cleanupProposals.append(item);
+    }
+    cleanupApplyButton.disabled = preview.proposals.length === 0;
+  };
+
+  const readCleanupDecisions = (): CleanupDecision[] => {
+    const decisions: CleanupDecision[] = [];
+    cleanupProposals.querySelectorAll<HTMLInputElement>("input[data-cleanup-transform]:checked").forEach((input) => decisions.push({ proposalId: input.dataset.cleanupTransform ?? "", action: "APPLY_TRANSFORM" }));
+    cleanupProposals.querySelectorAll<HTMLElement>('[data-cleanup-proposal-kind="EXACT_DUPLICATE"]').forEach((item) => {
+      const proposalId = item.dataset.cleanupProposalId ?? "";
+      const archiveRecordIds = [...item.querySelectorAll<HTMLInputElement>("input[data-cleanup-archive-id]:checked")].map((input) => input.dataset.cleanupArchiveId).filter((id): id is string => Boolean(id));
+      if (archiveRecordIds.length > 0) decisions.push({ proposalId, action: "ARCHIVE_EXACT_DUPLICATE", archiveRecordIds });
+    });
+    cleanupProposals.querySelectorAll<HTMLInputElement>("input[data-cleanup-review]:checked").forEach((input) => decisions.push({ proposalId: input.dataset.cleanupReview ?? "", action: "MARK_REVIEW" }));
+    return decisions;
+  };
+
+  const renderCleanupHistory = async (): Promise<void> => {
+    const records = await store.list(true);
+    const groups = new Map<string, typeof records>();
+    for (const record of records.filter(isCleanupHistoryRecord)) {
+      const historyId = typeof record.data.historyId === "string" ? record.data.historyId : record.id;
+      const group = groups.get(historyId) ?? [];
+      group.push(record);
+      groups.set(historyId, group);
+    }
+    cleanupHistoryList.replaceChildren();
+    cleanupHistoryEmpty.hidden = groups.size > 0;
+    for (const group of [...groups.values()].sort((left, right) => String(right[0]?.data.acceptedAt ?? "").localeCompare(String(left[0]?.data.acceptedAt ?? "")))) {
+      const first = group[0];
+      if (!first) continue;
+      const historyId = typeof first.data.historyId === "string" ? first.data.historyId : first.id;
+      const item = document.createElement("li");
+      item.className = "record-item";
+      const details = document.createElement("details");
+      const summary = document.createElement("summary");
+      summary.textContent = copy.cleanupHistoryEntry(String(first.data.recipeId ?? "recipe"), String(first.data.acceptedAt ?? ""), Number(first.data.inputCount ?? 0), Number(first.data.updatedCount ?? 0), Number(first.data.archivedCount ?? 0), Number(first.data.reviewCount ?? 0), Number(first.data.chunkCount ?? group.length));
+      details.append(summary);
+      const payload = reconstructCleanupHistory(records, historyId);
+      const fingerprint = document.createElement("p");
+      fingerprint.className = "hint";
+      fingerprint.textContent = payload ? `Replay fingerprint: ${payload.receipt.replayFingerprint}` : "Receipt is incomplete or invalid; source records were not silently changed by this view.";
+      details.append(fingerprint);
+      item.append(details);
+      cleanupHistoryList.append(item);
+    }
+  };
+
   const scopedRecords = async (includeDeleted = false): Promise<Awaited<ReturnType<CanonicalStore["list"]>>> => {
     const records = await store.list(includeDeleted);
     const visible = activeSpace ? await spaceService.project(records, activeSpace) : records;
-    return visible.filter((record) => record.owner !== "platform.space");
+    return visible.filter((record) => record.owner !== "platform.space" && !isCleanupHistoryRecord(record));
   };
 
   const refreshCapabilityStatus = (): void => {
@@ -1302,7 +1471,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       item.append(label, meta, remove);
       spaceList.append(item);
     }
-    const records = (await store.list()).filter((record) => record.owner !== "platform.space");
+    const records = (await store.list()).filter((record) => record.owner !== "platform.space" && !isCleanupHistoryRecord(record));
     const recordsById = new Map(records.map((record) => [record.id, record]));
     spaceMembershipList.replaceChildren();
     for (const membership of (await spaceService.memberships()).filter(isSpaceMembership)) {
@@ -1372,7 +1541,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       return;
     }
     let records = await scopedRecords();
-    if (view.space) records = (await spaceService.project(await store.list(), view.space)).filter((record) => record.owner !== "platform.space");
+    if (view.space) records = (await spaceService.project(await store.list(), view.space)).filter((record) => record.owner !== "platform.space" && !isCleanupHistoryRecord(record));
     const viewForProjection = structuredClone(view);
     delete viewForProjection.space;
     records = projectView(viewForProjection, records).slice(0, 100);
@@ -1698,7 +1867,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   };
 
   const renderRelationshipChoices = async (): Promise<void> => {
-    const records = (await store.list()).filter((record) => record.recordType !== "relationship");
+    const records = (await store.list()).filter((record) => record.recordType !== "relationship" && !isCleanupHistoryRecord(record));
     for (const select of [relateSource, relateTarget]) {
       const previous = select.value;
       select.replaceChildren();
@@ -1715,7 +1884,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   };
 
   const renderKnowledgeChoices = async (): Promise<void> => {
-    const records = (await store.list()).filter((record) => record.owner !== "platform.space");
+    const records = (await store.list()).filter((record) => record.owner !== "platform.space" && !isCleanupHistoryRecord(record));
     const fill = (select: HTMLSelectElement, previous: string): void => {
       select.replaceChildren();
       for (const record of records) {
@@ -1744,7 +1913,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     let stale = 0;
     let orphaned = 0;
     let places = 0;
-    for (const record of records) {
+    for (const record of records.filter((candidate) => !isCleanupHistoryRecord(candidate))) {
       if (record.owner === "platform.evidence") evidence += 1;
       if (record.owner === "platform.place") places += 1;
       if (record.owner !== "platform.annotate") continue;
@@ -1769,7 +1938,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
 
   const renderShareChoices = async (): Promise<void> => {
     const selected = new Set(selectedShareIds());
-    const records = (await store.list()).filter((record) => record.owner !== "platform.space" && record.owner !== "platform.share");
+    const records = (await store.list()).filter((record) => record.owner !== "platform.space" && record.owner !== "platform.share" && !isCleanupHistoryRecord(record));
     shareRecords.replaceChildren();
     for (const record of records) {
       const option = document.createElement("option");
@@ -2164,7 +2333,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
     const allowedIds = activeSpace ? new Set((await spaceService.project(allRecords, activeSpace)).map((record) => record.id)) : undefined;
     const candidateRecords = query.trim() ? await store.search(query, allowedIds) : allRecords;
-    const records = candidateRecords.filter((record) => record.owner !== "platform.space" && (!allowedIds || allowedIds.has(record.id)));
+    const records = candidateRecords.filter((record) => record.owner !== "platform.space" && !isCleanupHistoryRecord(record) && (!allowedIds || allowedIds.has(record.id)));
     recordList.replaceChildren();
     recordCount.textContent = formatNumber(presentation.locale, records.length);
     emptyState.hidden = records.length > 0;
@@ -2238,6 +2407,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     await renderKnowledgeStatus();
     await renderShareChoices();
     await renderShareGrants();
+    await renderCleanupHistory();
     const healthBefore = await store.health();
     if (!healthBefore.searchIndexValid) {
       await store.rebuildSearchIndex();
@@ -2372,6 +2542,40 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       await renderRecords(searchQuery.value);
     } catch (error) {
       acquireStatus.textContent = describeError(error, "Staged records were not accepted");
+    }
+  });
+
+  cleanupPreviewButton.addEventListener("click", async () => {
+    try {
+      const records = await cleanupInputRecords();
+      const preview = previewCleanup(records, cleanupRecipe());
+      cleanupPreviewState = preview;
+      await renderCleanupPreview(preview);
+      cleanupStatus.textContent = copy.cleanupStatus(preview.recordIds.length, preview.sourceGroups.length, preview.proposals.length);
+    } catch (error) {
+      cleanupPreviewState = undefined;
+      cleanupApplyButton.disabled = true;
+      cleanupStatus.textContent = describeError(error, "Cleanup preview failed; canonical data was not changed.");
+    }
+  });
+
+  cleanupApplyButton.addEventListener("click", async () => {
+    if (!cleanupPreviewState) return;
+    const decisions = readCleanupDecisions();
+    if (decisions.length === 0) {
+      cleanupStatus.textContent = "Choose at least one explicit cleanup decision.";
+      return;
+    }
+    if (!await requestConfirmation("Apply the selected cleanup decisions? Original source records remain in revision history; ambiguous entities are not merged.", copy.cleanupApply)) return;
+    try {
+      const historyRecords = await commands.applyCleanup(cleanupPreviewState, decisions);
+      const first = historyRecords[0];
+      cleanupStatus.textContent = copy.cleanupApplied(Number(first?.data.updatedCount ?? 0), Number(first?.data.archivedCount ?? 0), Number(first?.data.reviewCount ?? 0));
+      cleanupPreviewState = undefined;
+      cleanupApplyButton.disabled = true;
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      cleanupStatus.textContent = describeError(error, "Cleanup was not applied; canonical data was not changed.");
     }
   });
 

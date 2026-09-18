@@ -4,6 +4,7 @@ import type { CanonicalRecord, RecordType } from "./model";
 import { CURRENT_SCHEMA_VERSION } from "./model";
 import { CanonicalStore } from "./storage";
 import { scrubSensitiveValue } from "./safety";
+import { applyCleanupDecisions, CLEANUP_HISTORY_KIND, CLEANUP_HISTORY_OWNER, makeCleanupHistoryChunks, type CleanupDecision, type CleanupPreview } from "./cleanup";
 
 export interface CreateRecordInput {
   recordType: RecordType;
@@ -84,6 +85,40 @@ export class CommandBus {
     const record = this.makeRecord(input);
     await this.store.put(record);
     return record;
+  }
+
+  public async applyCleanup(preview: CleanupPreview, decisions: CleanupDecision[]): Promise<CanonicalRecord[]> {
+    if (decisions.length === 0) throw new Error("Choose at least one cleanup decision");
+    const records = await this.store.list(true);
+    const plan = applyCleanupDecisions(records, preview, decisions);
+    const currentById = new Map(records.map((record) => [record.id, record]));
+    const updatedData = new Map(plan.updates.map(({ recordId, data }) => [recordId, data]));
+    const touchedIds = new Set([...updatedData.keys(), ...plan.archiveRecordIds, ...plan.reviewRecordIds]);
+    const historyId = createOpaqueId("cleanup");
+    const acceptedAt = new Date().toISOString();
+    const writes = [...touchedIds].sort().map((recordId) => {
+      const current = currentById.get(recordId);
+      if (!current || current.deleted) throw new Error("Cleanup decision references a missing or archived record");
+      const data = updatedData.get(recordId) ?? structuredClone(current.data);
+      if (plan.reviewRecordIds.includes(recordId)) {
+        data.cleanupReview = { historyId, replayFingerprint: plan.receipt.replayFingerprint, markedAt: acceptedAt };
+      }
+      const archived = plan.archiveRecordIds.includes(recordId);
+      return { record: this.nextRevision(current, data, archived), expectedPreviousRevision: current.revision };
+    });
+    const historyRecords = makeCleanupHistoryChunks(plan, historyId, acceptedAt).map((chunk, index) => this.makeRecord({
+      recordType: "note",
+      owner: CLEANUP_HISTORY_OWNER,
+      truthClass: "DERIVED",
+      provenance: { source: "USER_INPUT", sourceId: historyId },
+      data: {
+        text: `Cleanup history ${chunk.recipeId} (${index + 1}/${chunk.chunkCount})`,
+        kind: CLEANUP_HISTORY_KIND,
+        ...chunk
+      }
+    }));
+    await this.store.putMany([...writes, ...historyRecords.map((record) => ({ record }))]);
+    return historyRecords;
   }
 
   public async createArtifact(input: ArtifactInput): Promise<CanonicalRecord> {
