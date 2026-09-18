@@ -340,7 +340,7 @@ The exact artifact at source revision `307470e` and digest `3c1f8257df41e5e53089
 
 After reload on the same origin, the sentinel remained present, the record count remained `1`, and the same healthy-index line was visible. This qualifies current-artifact Edge desktop capture/reload persistence only. It does not qualify Edge offline behavior, mobile/responsive/accessibility conformance, Safari/WebKit or Firefox, native fault injection, deployment, or release readiness.
 
-## Current built-artifact Edge offline follow-up
+## Historical built-artifact Edge offline follow-up
 
 The exact artifact at source revision `307470e`, digest `3c1f8257df41e5e5308920d7febb5684f5a50b0f1442cc687d8360a80e98f592`, and worker cache `omnevum-shell-0b6250547b9cf87e` was exercised at `http://127.0.0.1:4229/` in Microsoft Edge `153.0.4234.32`. CDP network emulation was set offline after the shell was loaded. Through the normal Capture form, a synthetic `Current Edge offline qualification sentinel` was written locally; the UI reported `3 active, 0 archived, 3 revision snapshot(s), 0 artifact payload(s); search index healthy.` The shell was then reloaded while offline and retained the sentinel and the healthy derived index. Network emulation was restored afterward, and Edge app-origin warning/error logs were empty.
 
@@ -363,3 +363,9 @@ The temporary viewport override was cleared and the origin reloaded to the defau
 The same current artifact (`bd9e242`, digest `21573b205032581c9efa72bb6a70fdfc693c9785204774216808e1541d676e3c`, service-worker cache `omnevum-shell-bb5235f9801ca7f8`) was served at `http://127.0.0.1:4229/` in Microsoft Edge `153.0.4234.32`. The normal Capture form accepted `Current artifact Edge capture sentinel`; the UI reported `1 active, 0 archived, 1 revision snapshot(s), 0 artifact payload(s); search index healthy.` After reload, the sentinel remained visible, the active and record counts remained `1`, and the same healthy-index state remained visible. The synthetic IndexedDB database was then deleted through the scoped browser test origin and a reload verified zero active/record counts and no sentinel residue.
 
 This qualifies current-artifact Edge desktop capture/reload persistence and test-origin cleanup only. It does not qualify production deployment, other browsers, assistive technology, native quota/corruption/migration behavior, or release readiness.
+
+## Current built-artifact Edge offline receipt refresh
+
+The current artifact (`bd9e242`, digest `21573b205032581c9efa72bb6a70fdfc693c9785204774216808e1541d676e3c`, service-worker cache `omnevum-shell-bb5235f9801ca7f8`) was exercised at `http://127.0.0.1:4229/` in Microsoft Edge `153.0.4234.32`. CDP network emulation was set offline after the shell loaded. The normal Capture form wrote `Current artifact Edge offline sentinel` locally; the UI reported `1 active, 0 archived, 1 revision snapshot(s), 0 artifact payload(s); search index healthy.` Reload while offline retained the sentinel and the healthy index. Network emulation was restored, application-origin warning/error diagnostics remained empty, and the synthetic IndexedDB origin was deleted and reloaded to zero records.
+
+This qualifies current-artifact Edge offline mutation/reload persistence only. It does not qualify production static hosting, Safari/WebKit, Firefox, assistive technology, native quota/corruption/migration, or explicit degradation of network-dependent capabilities.

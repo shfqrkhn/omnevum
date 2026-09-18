@@ -81,6 +81,7 @@
     "current receipt-bound Edge preview proves presentation branding updates document.title and theme-color and persists after reload; source bd9e242",
     "current receipt-bound Edge preview at 390x844 records no horizontal overflow, visible labelled controls, sequential keyboard focus, and an empty warning/error console; source bd9e242",
     "current receipt-bound Edge preview accepts a synthetic capture, retains it after reload, and returns to a clean scoped origin; source bd9e242",
+    "current receipt-bound Edge preview performs an offline canonical capture and offline reload persistence with a healthy derived index, empty app-origin diagnostics, and clean scoped-origin restoration; source bd9e242",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
   "unverified": [
