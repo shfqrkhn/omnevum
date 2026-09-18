@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "effect-outbox-policy",
-  "status": "IMPLEMENTED_INITIAL_RUNNER_RECONCILE",
+  "status": "IMPLEMENTED_INITIAL_RUNNER_RECONCILE_RETRY_POLICY",
   "authority": "MPES Section 5.26",
   "states": ["PENDING", "IN_FLIGHT", "SUCCEEDED", "FAILED_RETRYABLE", "FAILED_TERMINAL", "CANCELLED", "EXPIRED", "OUTCOME_UNKNOWN", "RECONCILE"],
   "requiredFields": ["operationId", "owner", "originatingCommand", "purpose", "destination", "payloadOrReference", "idempotencyKey", "createdAt", "expiresAt", "status", "retryPolicy", "credentialHandle", "remoteIdentity", "evidence"],
@@ -13,7 +13,8 @@
     "Never persist raw credentials or retain sensitive payloads indefinitely by queue default.",
     "Background Sync may accelerate replay but is never required for correctness.",
     "An interrupted IN_FLIGHT operation is promoted to OUTCOME_UNKNOWN and RECONCILE before an executor is allowed to run it again.",
-    "RECONCILE uses a distinct adapter port; without one, the operation remains visibly RECONCILE and is never silently replayed."
+    "RECONCILE uses a distinct adapter port; without one, the operation remains visibly RECONCILE and is never silently replayed.",
+    "FAILED_RETRYABLE outcomes persist bounded exponential backoff and retryCount; reaching maxAttempts becomes FAILED_TERMINAL with explicit evidence."
   ],
   "qualification": "State-machine, crash, revocation, duplicate, expiry, and reconciliation tests required before any external effect ships."
 }

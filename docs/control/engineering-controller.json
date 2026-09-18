@@ -102,6 +102,7 @@
     "current receipt-bound Chromium two-tab preview on the 44675df artifact revokes an active user-defined Space, resets the other tab from the stale scope to All Spaces, retains the canonical record, and clears the temporary test state; source 44675df",
     "current receipt-bound Chromium two-tab preview on the 80d52fa artifact removes an individual Space membership, leaves the Space available, filters the scoped projection to zero records in the other tab, and clears the temporary test state; source 80d52fa",
     "EffectRunner claims pending/reconciliation operations with an IndexedDB status compare-and-set so concurrent runners cannot execute one pending operation twice; source 3b4a11b",
+    "EffectRunner persists bounded exponential retry backoff and transitions retry exhaustion to FAILED_TERMINAL with explicit evidence; source bba3b14",
     "CredentialKeyBroker.authorizeEffect is the canonical guard for credential-bound EffectRunner operations, and revocation cancels a pending operation before executor use; source 7986327",
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit"
   ],
@@ -123,6 +124,6 @@
     "built-artifact browser receipt and qualified broader document/office adapter evidence for local document finishing",
     "MVP release and later phases"
   ],
-  "nextAction": "No Git remote is configured in this workspace, so Pages deployment proof is blocked until the owner supplies/configures the intended remote. Until then, run the Phase 0 support/accessibility/offline/update and native fault-injection matrix locally, including failed-open repair and recovery-snapshot handling; qualify MiniSearch on target memory/latency and complete the remaining permission, projection, connector, recovery, and human-acceptance evidence. Do not treat workflow configuration or local preview as deployment proof.",
+  "nextAction": "No Git remote is configured in this workspace, so Pages deployment proof is blocked until the owner supplies/configures the intended remote. Until then, run the Phase 0 support/accessibility/offline/update and native fault-injection matrix locally, including failed-open repair and recovery-snapshot handling; qualify MiniSearch on target memory/latency and complete the remaining permission, projection, connector, recovery, and human-acceptance evidence. The Effect/Outbox retry policy is now bounded and receipt-bound in source/unit evidence; do not treat workflow configuration or local preview as deployment proof.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }
