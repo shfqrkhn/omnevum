@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "33d397bf4d2ec2c67f695ca27f48f2246f943166beecb171d2629d0f0b391388",
-        "bytes": 101092
+        "sha256": "a7eb515c4ba1289ef8c5a35465bd1ed9e518088ca9fd6e9ea8ed37eeb8586771",
+        "bytes": 101644
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/decision-log.json",
-        "sha256": "61eddf27bdd5450fe27dda6ac0c02a9a84a30e4f04fa9ca6f21f962f5b1250c9",
-        "bytes": 2764
+        "sha256": "d0f4aa05fd57eb72f0db8260c9829f4634a77898050ce94a944a6fe05142b6ab",
+        "bytes": 3988
       },
       {
         "path": "docs/control/dependency-sbom.json",

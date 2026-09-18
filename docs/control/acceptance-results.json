@@ -479,8 +479,13 @@
         "line": 3446
       },
       "text": "The user/owner requests a solution-shaped feature. The engineering system records or demonstrably applies XY analysis, finds a simpler existing/shared/FOSS/integration route that satisfies the underlying outcome, and avoids unnecessary new subsystem code without dropping material requested behavior.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/control/decision-log.json#OMN-DEC-004",
+        "src/core/device.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-deviceinput-boundary-follow-up"
+      ],
+      "notes": "The Device/Input outcome was explicitly routed through the existing broker plus Acquire/Place owners after comparing ambient per-module APIs, a private device database, and a universal import subsystem. This proves one representative XY decision; broader owner-requested feature decisions and replacement-cost comparisons remain open."
     },
     {
       "id": "OMN-ACC-030",

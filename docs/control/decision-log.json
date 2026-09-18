@@ -31,6 +31,16 @@
       "alternatives": ["bespoke sync only", "adopt SelfStore immediately", "make remoteStorage mandatory"],
       "revisitWhen": "Contract, security, quota, crash, migration, provider, and cross-origin tests pass on representative Vault fixtures.",
       "evidence": ["docs/evidence/phase0-upstream-characterization-2026-09-17.md", "docs/evidence/phase2-contract-spike-2026-09-17.md", "docs/control/effect-outbox-policy.json", "docs/control/credential-key-policy.json"]
+    },
+    {
+      "id": "OMN-DEC-004",
+      "title": "Device/Input outcome route",
+      "status": "DECIDED_FOR_PHASE0",
+      "decision": "Expose user-triggered browser Device/Input actions through one bounded broker, stage captured values through the existing Acquire/Place owners, release media immediately, and retain manual/file fallback; do not create a device-owned database.",
+      "why": "The user outcome is explicit capture and truthful degradation, not ambient authority or another canonical store. Reusing Acquire/Place preserves one action spine, provenance, and canonical ownership while avoiding a bespoke subsystem.",
+      "alternatives": ["ambient device APIs in each domain module", "private camera/location database", "new universal device-import subsystem"],
+      "revisitWhen": "Permission-denial, hardware capture routing, target breadth, assistive-technology, and human acceptance evidence expose a contract gap.",
+      "evidence": ["src/core/device.ts", "src/core/device.test.ts", "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-deviceinput-boundary-follow-up", "docs/evidence/phase0-production-preview-2026-09-17.md#current-in-app-browser-deviceinput-boundary-follow-up"]
     }
   ]
 }
