@@ -1068,7 +1068,13 @@ This adds current target behavioral evidence for accent normalization, multiling
 
 On 2026-09-18, source revision `9a78396` added `src/core/package-automation.ts`, a package-scoped adapter for the already-bounded declarative automation evaluator. It accepts only non-executable package trust classes, requires the explicit `automation.proposal` permission, requires every emitted command to be declared by the package, enforces package-scoped rule IDs, bounds JSON documents to 32,000 bytes, and deep-clones rule/context/proposal data at the boundary. The adapter returns proposal-only actions; execution, storage, credentials, network access, and confirmation bypass remain outside its authority.
 
-`src/core/package-automation.test.ts` passes focused regressions for a valid package proposal, missing permission, package-scope mismatch, undeclared commands, executable trust rejection, malformed JSON, and the document-size budget. This advances OMN-ACC-049 to `PARTIAL` on source/unit evidence. A UI editor, persistence and lifecycle ownership, normal CommandBus/permission/confirmation integration, browser/target qualification, and human acceptance remain open; no execution or package sandbox claim is made.
+`src/core/package-automation.test.ts` passes focused regressions for a valid package proposal, missing permission, package-scope mismatch, undeclared commands, executable trust rejection, malformed JSON, and the document-size budget. This advances OMN-ACC-049 to `PARTIAL` on source/unit evidence. A UI editor, durable persistence, normal CommandBus/permission/confirmation integration, browser/target qualification, and human acceptance remain open; no execution or package sandbox claim is made.
+
+## Current package automation lifecycle follow-up
+
+On 2026-09-18, source revision `8d0fa37` added `src/core/package-automation-registry.ts`. The registry requires an installed enabled package before rule registration, bounds each package to 50 rules, rejects duplicate rule IDs, supports explicit rule disable/enable metadata, and checks package lifecycle status at every preview so disabled or retired packages cannot emit stale proposals. It returns only proposal envelopes; it does not persist rules, execute commands, hold credentials, access network/storage, or bypass permission/confirmation.
+
+`src/core/package-automation-registry.test.ts` passes three focused lifecycle regressions covering enabled-trigger filtering, rule disable/enable, package disable/retirement suppression, unavailable-package rejection, and duplicate registration. OMN-ACC-049 remains `PARTIAL`; durable persistence, UI editing, normal command-path integration, browser/target qualification, and human acceptance remain open.
 
 ## Current clean-agent reconstruction at package-automation revision follow-up
 

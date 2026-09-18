@@ -828,9 +828,11 @@
         "src/core/automation.test.ts",
         "src/core/package-automation.ts",
         "src/core/package-automation.test.ts",
+        "src/core/package-automation-registry.ts",
+        "src/core/package-automation-registry.test.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-automation-proposal-boundary-follow-up"
       ],
-      "notes": "Source/unit evidence proves bounded data-only evaluation, prototype-path rejection, resource budgets, explicit admitted semantic-command IDs, and proposal-only output. Source revision 9a78396 adds a package-scoped declarative adapter that validates explicit automation.proposal permission, declared commands, package-scoped rule IDs, and a bounded JSON document before emitting proposals. A UI editor, persistence/lifecycle, normal command/confirmation integration, and broader package qualification remain open."
+      "notes": "Source/unit evidence proves bounded data-only evaluation, prototype-path rejection, resource budgets, explicit admitted semantic-command IDs, and proposal-only output. Source revision 9a78396 adds a package-scoped declarative adapter; source revision 8d0fa37 adds an in-memory lifecycle registry that suppresses proposals for disabled or retired packages and supports explicit rule disable/enable. A UI editor, durable persistence, normal CommandBus/permission/confirmation integration, browser/target qualification, and broader package qualification remain open."
     },
     {
       "id": "OMN-ACC-050",

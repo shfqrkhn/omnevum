@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "bab432f96876dca382aa307ffc9a6d0d11945ca48230dd08bfbf8056589b09c1",
-        "bytes": 116477
+        "sha256": "4721882ff5e712af5cfefb925f3786e5b7f98d468e4de3d837ec25b3e10f7708",
+        "bytes": 116635
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -144,8 +144,8 @@
       },
       {
         "path": "docs/control/capability-catalogue.json",
-        "sha256": "fa22ad50c8bf1a62841ba93a0766b939ea1627b5638e8431edf26edbc49c02a6",
-        "bytes": 3608
+        "sha256": "2a59b3ed3c33c666d81656490c4f06b5724b40e7890e3fcadd6cb0de6bdcd39f",
+        "bytes": 3610
       },
       {
         "path": "docs/control/capability-coverage.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "406206342ec11d27892e280b98c44fbcc62a2ac87340890fcab53683fda91435",
-        "bytes": 38659
+        "sha256": "5162b3466982b71462201990f6dc2873d7d2f2629408e9b8ed2b386d668eb08d",
+        "bytes": 38762
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "dd3a460913ce6bf1cccb6ce9bc8e324d484d403c4d8e846eb0edcaec34861d4a",
-        "bytes": 207109
+        "sha256": "32bc0fdc60aefde3bec7dc9e29b5faed1081bb7f8fa8d332edb975cbe869b19c",
+        "bytes": 208101
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -706,6 +706,16 @@
         "path": "src/core/money.ts",
         "sha256": "672231aabd0b88f05b794cc30c75f854cbf78b7606632fc16f25d81ce9920af6",
         "bytes": 2582
+      },
+      {
+        "path": "src/core/package-automation-registry.test.ts",
+        "sha256": "05199d92ecdb613a4a4aa203bbf7553112b4b89f6eaaf12bd3debf5a29a61eba",
+        "bytes": 3445
+      },
+      {
+        "path": "src/core/package-automation-registry.ts",
+        "sha256": "112318f49e6bea691d8ff392cf537e72fe715667f3b1626e7381c0e58de80687",
+        "bytes": 4617
       },
       {
         "path": "src/core/package-automation.test.ts",
