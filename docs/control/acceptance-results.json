@@ -346,6 +346,7 @@
       "text": "A fresh AI engineer creates a nontrivial stateful module using only the public Omnevum app contract and normal repository interfaces.",
       "status": "PARTIAL",
       "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-factory-appgame-follow-up",
         "src/core/factory.ts",
         "src/core/factory-preview.ts",
         "src/core/factory-interruption.test.ts",
@@ -362,6 +363,7 @@
       "text": "A fresh AI engineer creates a nontrivial game using the same package/lifecycle infrastructure and proves save/resume, touch input, responsive behavior, and Recovery.",
       "status": "PARTIAL",
       "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-factory-appgame-follow-up",
         "src/core/factory.ts",
         "src/core/factory-preview.ts",
         "src/core/storage.ts",
@@ -828,6 +830,7 @@
       "text": "A fresh AI engineer defines an ordinary record-oriented first-party package using package/domain schema plus Omnevum capability declarations and obtains a generated baseline list/detail/form/capture experience with responsive, accessible, localized, themed behavior. The generated UI contains no direct-store or permission bypass and can be replaced by a specialized hand-composed workflow without data migration.",
       "status": "PARTIAL",
       "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-factory-appgame-follow-up",
         "src/core/package-contract.ts",
         "src/core/package-contract.test.ts",
         "src/core/compose.ts",

@@ -135,7 +135,8 @@
     "primary NeumanOS, Kurumi, SelfStore, and remoteStorage.js heads were revalidated on 2026-09-18 with unchanged accepted identities; dispositions remain explicit",
     "declared npm currentness was rechecked on 2026-09-18 with npm outdated returning no candidates; RADAR-006 records the bounded result while future-change evaluation remains open",
     "current Chromium failed-open Recovery receipt on the exact current artifact exports retained state, repairs one synthetic malformed canonical row after explicit confirmation, retains one valid record and history entry, resumes with a healthy derived index, and records no app diagnostic logs; source 1b13183; native quota, update-interruption, browser-family, deployment, and human acceptance remain open",
-    "current Chromium source-module MiniSearch benchmark on 10,000 multilingual documents and five queries reports p50 34.2ms, p95 36.4ms, max 36.4ms, at least 2,500 matches per query, and bounded diagnostic heap metrics; source 72c21d7; mobile/device, full-Vault, quota, and second-engine qualification remain open"
+    "current Chromium source-module MiniSearch benchmark on 10,000 multilingual documents and five queries reports p50 34.2ms, p95 36.4ms, max 36.4ms, at least 2,500 matches per query, and bounded diagnostic heap metrics; source 72c21d7; mobile/device, full-Vault, quota, and second-engine qualification remain open",
+    "current Chromium factory receipt on the exact current artifact generates and reloads a Reading Log record, saves and reload-loads Constellation package state at position 2 with one star, and returns empty app diagnostic logs; source b572ed9; fresh-AI authorship, touch/mobile, engine substitution, Recovery-on-device, deployment, and human acceptance remain open"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final target/support qualification beyond the recorded harvest-reference decision",
