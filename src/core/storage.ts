@@ -77,6 +77,15 @@ export interface RecoverySnapshot {
   };
 }
 
+export interface RecoveryRepairResult {
+  retainedRecords: number;
+  removedRecords: number;
+  retainedHistory: number;
+  removedHistory: number;
+  retainedArtifactPayloads: number;
+  skippedArtifactPayloads: number;
+}
+
 type PersistenceState = "GRANTED" | "DENIED" | "UNAVAILABLE";
 
 export class CanonicalStore {
@@ -351,6 +360,49 @@ export class CanonicalStore {
     }
   }
 
+  public async repairFromRecoverySnapshot(input: unknown): Promise<RecoveryRepairResult> {
+    if (!isRecoverySnapshot(input)) throw new Error("Recovery snapshot is invalid");
+    const snapshot = input;
+    const records = snapshot.records.filter(isCanonicalRecord);
+    const recordIds = new Set(records.map((record) => record.id));
+    const history = snapshot.history.filter(isHistoryEntry).filter((entry) => recordIds.has(entry.recordId));
+    const artifacts: Array<{ id: string; blob: Blob }> = [];
+    let skippedArtifactPayloads = 0;
+    for (const artifact of snapshot.artifacts) {
+      if (!isRecoveryArtifact(artifact) || !recordIds.has(artifact.id) || !records.some((record) => record.id === artifact.id && record.recordType === "artifact")) {
+        skippedArtifactPayloads += 1;
+        continue;
+      }
+      try {
+        const blob = base64ToBlob(artifact.dataBase64, artifact.mimeType);
+        if (blob.size > MAX_PORTABLE_ARTIFACT_BYTES) throw new Error("Artifact exceeds the bounded portable Vault limit");
+        artifacts.push({ id: artifact.id, blob });
+      } catch {
+        skippedArtifactPayloads += 1;
+      }
+    }
+
+    const transaction = this.requireDatabase().transaction([RECORD_STORE, SEARCH_STORE, SEARCH_META_STORE, HISTORY_STORE, ARTIFACT_STORE], "readwrite");
+    transaction.objectStore(RECORD_STORE).clear();
+    transaction.objectStore(SEARCH_STORE).clear();
+    transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false, invalidReason: "RECOVERY_REPAIR" } satisfies SearchIndexMeta);
+    transaction.objectStore(HISTORY_STORE).clear();
+    transaction.objectStore(ARTIFACT_STORE).clear();
+    records.forEach((record) => transaction.objectStore(RECORD_STORE).put(record));
+    history.forEach((entry) => transaction.objectStore(HISTORY_STORE).put(entry));
+    artifacts.forEach((artifact) => transaction.objectStore(ARTIFACT_STORE).put(artifact));
+    await transactionDone(transaction);
+
+    return {
+      retainedRecords: records.length,
+      removedRecords: snapshot.records.length - records.length,
+      retainedHistory: history.length,
+      removedHistory: snapshot.history.length - history.length,
+      retainedArtifactPayloads: artifacts.length,
+      skippedArtifactPayloads
+    };
+  }
+
   private async exportRecoverySnapshot(): Promise<RecoverySnapshot> {
     const database = this.requireDatabase();
     const [records, history] = await Promise.all([
@@ -617,6 +669,26 @@ function rawArtifactMimeType(candidate: { data?: unknown }, blob: Blob): string 
   const data = candidate.data;
   const mimeType = data && typeof data === "object" && !Array.isArray(data) ? (data as { mimeType?: unknown }).mimeType : undefined;
   return typeof mimeType === "string" && mimeType.length > 0 && mimeType.length <= 255 ? mimeType : blob.type || "application/octet-stream";
+}
+
+function isRecoverySnapshot(value: unknown): value is RecoverySnapshot {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+    && (value as { format?: unknown }).format === "OMNEVUM_RECOVERY_SNAPSHOT"
+    && (value as { version?: unknown }).version === 1
+    && Array.isArray((value as { records?: unknown }).records)
+    && Array.isArray((value as { history?: unknown }).history)
+    && Array.isArray((value as { artifacts?: unknown }).artifacts);
+}
+
+function isRecoveryArtifact(value: unknown): value is VaultArtifact {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+    && typeof (value as { id?: unknown }).id === "string"
+    && (value as { id: string }).id.length > 0
+    && (value as { id: string }).id.length <= 160
+    && typeof (value as { mimeType?: unknown }).mimeType === "string"
+    && (value as { mimeType: string }).mimeType.length > 0
+    && (value as { mimeType: string }).mimeType.length <= 255
+    && typeof (value as { dataBase64?: unknown }).dataBase64 === "string";
 }
 
 function importDisposition(record: CanonicalRecord, current: CanonicalRecord | undefined): "IMPORT" | "SKIP" | "CONFLICT" {

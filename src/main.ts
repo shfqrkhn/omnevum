@@ -35,6 +35,7 @@ try {
         <div class="form-row">
           <button id="retry-storage" type="button">Retry</button>
           <button id="export-failure-state" class="secondary" type="button">Export retained state</button>
+          <button id="repair-failure-state" class="secondary" type="button">Repair from retained snapshot</button>
         </div>
         <p id="failure-status" class="hint" role="status"></p>
       </section>
@@ -58,6 +59,21 @@ try {
       if (status) status.textContent = isVault ? "Retained Vault exported; canonical records were not changed." : "Read-only recovery snapshot exported; canonical state was not changed. Repair or restore it before resuming writes.";
     } catch (exportError) {
       if (status) status.textContent = exportError instanceof Error ? exportError.message : "Recovery export failed";
+    }
+  });
+  root.querySelector<HTMLButtonElement>("#repair-failure-state")?.addEventListener("click", async () => {
+    const status = root.querySelector<HTMLElement>("#failure-status");
+    try {
+      const retainedState = await store.exportRetainedState();
+      if (retainedState.format !== "OMNEVUM_RECOVERY_SNAPSHOT") {
+        if (status) status.textContent = "The retained state is already a valid Vault; use Retry to reopen it.";
+        return;
+      }
+      if (!window.confirm("Repair the canonical store from valid records in the retained snapshot? Malformed rows will be removed after this read-only snapshot remains available.")) return;
+      const result = await store.repairFromRecoverySnapshot(retainedState);
+      if (status) status.textContent = `Recovery repair retained ${result.retainedRecords} record(s), removed ${result.removedRecords} malformed record(s), and retained ${result.retainedHistory} history entr${result.retainedHistory === 1 ? "y" : "ies"}. Reload to resume normal operation.`;
+    } catch (repairError) {
+      if (status) status.textContent = repairError instanceof Error ? repairError.message : "Recovery repair failed";
     }
   });
 }

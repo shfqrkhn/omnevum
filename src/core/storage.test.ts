@@ -184,6 +184,35 @@ describe("CanonicalStore", () => {
     store.close();
   });
 
+  it("repairs malformed canonical state from a retained snapshot without losing valid records", async () => {
+    const databaseName = `omnevum-test-${Date.now()}-recovery-repair`;
+    const store = new CanonicalStore(databaseName);
+    await store.open();
+    const original = record("record-recovery-repair");
+    await store.put(original);
+
+    const request = indexedDB.open(databaseName, 6);
+    const database = await new Promise<IDBDatabase>((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error ?? new Error("IndexedDB open failed"));
+    });
+    const transaction = database.transaction("records", "readwrite");
+    transaction.objectStore("records").put({ id: "broken-repair-record", recordType: "note" });
+    await new Promise<void>((resolve, reject) => {
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error ?? new Error("IndexedDB corruption injection failed"));
+      transaction.onabort = () => reject(transaction.error ?? new Error("IndexedDB corruption injection aborted"));
+    });
+    database.close();
+
+    const retainedState = await store.exportRetainedState();
+    if (retainedState.format !== "OMNEVUM_RECOVERY_SNAPSHOT") throw new Error("Expected a recovery snapshot");
+    await expect(store.repairFromRecoverySnapshot({ ...retainedState, records: [...retainedState.records, { invalid: true }] })).resolves.toMatchObject({ retainedRecords: 1, removedRecords: 2 });
+    expect(await store.list()).toEqual([original]);
+    await expect(store.exportVault()).resolves.toMatchObject({ records: [original] });
+    store.close();
+  });
+
   it("fences a stale client after another client upgrades the database", async () => {
     const databaseName = `omnevum-test-${Date.now()}-versionchange`;
     const store = new CanonicalStore(databaseName);
