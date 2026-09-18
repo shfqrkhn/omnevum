@@ -22,8 +22,8 @@
     }
   },
   "repository": {
-    "revision": "77e8aebf3e523572f79175b150f171024674508b",
-    "revisionPolicy": "generation-base-commit-must-ancestor-of-current",
+    "revision": "e09de2224a60ebe25c8fadc41085245649f5f2ab",
+    "revisionPolicy": "generation-base-commit-retained-until-divergence",
     "pathsAreRepositoryRelative": true,
     "secretsIncluded": false
   },
@@ -334,8 +334,8 @@
       },
       {
         "path": "scripts/generate-control.mjs",
-        "sha256": "7c35e2edd587f5756cd5d63adc1845fa23526096f6f785a5a442fcdc70e7cfad",
-        "bytes": 13768
+        "sha256": "bd10f3f49c88c6b143e775c7f67c486484829ce2c09cfc5dac785a32c8df9c2c",
+        "bytes": 14384
       },
       {
         "path": "scripts/license-audit.mjs",
@@ -344,8 +344,8 @@
       },
       {
         "path": "scripts/recovery-audit.mjs",
-        "sha256": "affe9f11d994009fe9eeaf648fadb1f563cafd75b32342bad5c7d6aea8d63b6e",
-        "bytes": 3015
+        "sha256": "91e5fb39fd61f8c808fa844c52e6f11d04b4a9a94b1dca4876d08f69002e5fe1",
+        "bytes": 3016
       },
       {
         "path": "scripts/reference-audit.mjs",
