@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "da5bcc38c4ee00644d79debbaa6e04067a2f8e6f88c124f7731bdb32638932b1",
-        "bytes": 103449
+        "sha256": "a349b6236698bbed997963a50959997ff36a0a1bbcf273781a278d1a627fb9bb",
+        "bytes": 103580
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -189,7 +189,7 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "eb04262ace4b0a7e6d24fe2cd6e797db4292b43f0bdf12b01f5fd59a7dc7f1b7",
+        "sha256": "b8326732f7da663f1b49a1e7c4fb9be1dfdb75dc87981783eef984d897d9f48c",
         "bytes": 27192
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "3d5ff37689bac6221042e907b3a663ca7c74160160a5b6b90acc5c4854862509",
-        "bytes": 149008
+        "sha256": "44d95c47b02543c1c499ee78ccb4f76a8cfcaae744dc7e0ca76ca224a68fac34",
+        "bytes": 150080
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
