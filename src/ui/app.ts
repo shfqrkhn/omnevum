@@ -25,6 +25,7 @@ import { createEvidenceLink, type EvidenceRelation } from "../core/evidence";
 import { makePlaceData, parseGeoJsonPoint } from "../core/place";
 import { projectForAuthorizedShare } from "../core/share";
 import { canUseShareGrant, createShareGrant, revokeShareGrant } from "../core/sharing";
+import { transitionEffect } from "../core/effect";
 import { JsonEndpointTransport } from "../core/remote";
 import { SyncEngine, SyncFailure } from "../core/sync";
 
@@ -532,6 +533,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <button type="submit">${copy.documentFinishSubmit}</button>
           <p id="document-finish-status" class="hint" role="status"></p>
         </form>
+        <div class="relationship-form">
+          <h3>${copy.effectOutboxHeading}</h3>
+          <p class="hint">${copy.effectOutboxHint}</p>
+          <ul id="effect-list" class="record-list"></ul>
+        </div>
         <label for="vault-password">${recoveryCopy.password}</label>
         <input id="vault-password" type="password" minlength="8" autocomplete="new-password" />
         <p class="hint">${recoveryCopy.passwordHint}</p>
@@ -680,6 +686,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const archiveList = root.querySelector<HTMLUListElement>("#archive-list");
   const archiveEmpty = root.querySelector<HTMLParagraphElement>("#archive-empty");
   const recoveryStatus = root.querySelector<HTMLElement>("#recovery-status");
+  const effectList = root.querySelector<HTMLUListElement>("#effect-list")!;
   const healthStatus = root.querySelector<HTMLElement>("#health-status");
   const capabilityStatus = root.querySelector<HTMLElement>("#capability-status");
   const themeToggle = root.querySelector<HTMLButtonElement>("#theme-toggle");
@@ -1527,6 +1534,69 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     return details;
   };
 
+  const renderEffects = async (): Promise<void> => {
+    const operations = (await store.listEffects()).filter((operation) => operation.status !== "SUCCEEDED");
+    effectList.replaceChildren();
+    if (operations.length === 0) {
+      const empty = document.createElement("li");
+      empty.className = "empty-state";
+      empty.textContent = copy.effectNoMaterial;
+      effectList.append(empty);
+      return;
+    }
+    for (const operation of operations.slice(-40).reverse()) {
+      const item = document.createElement("li");
+      item.className = "record-item";
+      const content = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = `${operation.status} - ${operation.purpose}`;
+      const destination = document.createElement("p");
+      destination.textContent = operation.destination;
+      const meta = document.createElement("small");
+      const retryAt = operation.nextAttemptAt ? `; next ${formatDateTime(presentation.locale, operation.nextAttemptAt)}` : "";
+      meta.textContent = `attempts ${operation.retryCount}/${operation.retryPolicy.maxAttempts}${retryAt}`;
+      content.append(title, destination, meta);
+      const canCancel = ["PENDING", "FAILED_RETRYABLE", "OUTCOME_UNKNOWN", "RECONCILE"].includes(operation.status);
+      if (canCancel) {
+        const cancel = document.createElement("button");
+        cancel.type = "button";
+        cancel.className = "icon-button";
+        cancel.textContent = copy.effectCancel;
+        cancel.addEventListener("click", async () => {
+          if (!window.confirm(`${copy.effectCancel}?`)) return;
+          try {
+            const cancelled = transitionEffect(operation, "CANCELLED", { evidence: [...operation.evidence, "cancelled-from-recovery-ledger"] });
+            await store.updateEffect(cancelled, operation.status);
+            recoveryStatus.textContent = copy.effectCancelled;
+            await renderEffects();
+          } catch (error) {
+            recoveryStatus.textContent = describeError(error, "Effect cancellation failed; its persisted state was not changed.");
+          }
+        });
+        item.append(cancel);
+      }
+      if (operation.status === "FAILED_RETRYABLE" && operation.retryCount < operation.retryPolicy.maxAttempts) {
+        const retry = document.createElement("button");
+        retry.type = "button";
+        retry.className = "icon-button";
+        retry.textContent = copy.effectRetry;
+        retry.addEventListener("click", async () => {
+          try {
+            const queued = transitionEffect(operation, "PENDING", { nextAttemptAt: undefined, evidence: [...operation.evidence, "manual-retry-requested"] });
+            await store.updateEffect(queued, operation.status);
+            recoveryStatus.textContent = copy.effectRetryQueued;
+            await renderEffects();
+          } catch (error) {
+            recoveryStatus.textContent = describeError(error, "Effect retry could not be queued; its persisted state was not changed.");
+          }
+        });
+        item.append(retry);
+      }
+      item.prepend(content);
+      effectList.append(item);
+    }
+  };
+
   const renderRecords = async (query = ""): Promise<number> => {
     const allRecords = await store.list();
     if (activeSpace) {
@@ -1617,6 +1687,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     if (!healthBefore.searchIndexValid) await store.rebuildSearchIndex();
     const healthAfter = await store.health();
     healthStatus.textContent = copy.healthMessage(healthAfter.activeRecords, healthAfter.archivedRecords, healthAfter.historyEntries, healthAfter.artifactPayloads, healthAfter.searchIndexValid ? copy.healthy : copy.degraded, healthAfter.storage?.pressure);
+    await renderEffects();
     if (!archivePanel.hidden) await renderArchived();
     return records.length;
   };
@@ -2240,6 +2311,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const unsubscribeExternalChanges = store.subscribe((change) => {
     if (change.kind === "SETTING_CHANGED") {
       if (change.settingId === "presentation") window.location.reload();
+      return;
+    }
+    if (change.kind === "EFFECT_CHANGED") {
+      void renderEffects().catch((error) => {
+        recoveryStatus.textContent = describeError(error, "The effect ledger could not refresh after an external change.");
+      });
       return;
     }
     if (change.kind === "CANONICAL_CHANGED" || change.kind === "STORE_CLEARED") {

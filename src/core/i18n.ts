@@ -22,7 +22,7 @@ export interface UiCopy {
   syncHeading: string; syncEndpoint: string; syncRun: string; syncHint: string; syncResult: (imported: number, skipped: number, conflicts: number, tombstones: number) => string; syncPartial: (imported: number, skipped: number, conflicts: number, tombstones: number) => string;
   canonicalRecords: string; recentCaptures: string; recordCount: string; nothingCaptured: string; noMatching: string; historyHeading: string; historyEntry: (revision: number, time: string, changes: string) => string;
   taskDone: string; complete: string; undo: string; revertToRevision: (revision: number) => string; archive: string; archivedRecords: string; showArchived: string;
-  hideArchived: string; noArchived: string; restore: string; recovery: string; keepPortable: string;
+  hideArchived: string; noArchived: string; restore: string; recovery: string; keepPortable: string; effectOutboxHeading: string; effectOutboxHint: string; effectNoMaterial: string; effectCancel: string; effectRetry: string; effectCancelled: string; effectRetryQueued: string;
   recoveryHint: string; exportVault: string; exportDiagnostics: string; repairSearch: string; importVault: string;
   attachArtifact: string; documentFinishHeading: string; documentFinishSource: string; documentFinishTerms: string; documentFinishReplacement: string; documentFinishSubmit: string; documentFinishHint: string; documentFinishSaved: (name: string, count: number) => string; footerPhase0: string; footerOptional: string; themeLight: string; themeDark: string;
   capturePicture: string; atLeastTwo: string; linkCreated: string; showingAll: string; exportMessage: (count: number) => string;
@@ -61,7 +61,8 @@ const english: UiCopy = {
   splitKind: "Part type",
   splitParts: "Split parts",
   splitHint: "One part per line; the original source is retained as an archived provenance record.",
-  splitSaved: (count) => `Split into ${count} canonical record(s); the staging source was archived.`
+  splitSaved: (count) => `Split into ${count} canonical record(s); the staging source was archived.`,
+  effectOutboxHeading: "External effects / Outbox", effectOutboxHint: "Inspect durable effect state without exposing payloads or credentials. A retryable item can be re-queued; ambiguous items require reconciliation before replay.", effectNoMaterial: "No pending or failed external effects.", effectCancel: "Stop replay", effectRetry: "Re-queue retryable effect", effectCancelled: "Effect marked cancelled; no future replay will be attempted.", effectRetryQueued: "Retryable effect re-queued; an external adapter is still required to execute it."
 };
 
 const french: UiCopy = {
@@ -94,7 +95,8 @@ const french: UiCopy = {
   splitKind: "Type de partie",
   splitParts: "Parties a diviser",
   splitHint: "Une partie par ligne; la source originale reste archivee comme provenance.",
-  splitSaved: (count) => `Divise en ${count} dossier(s) canoniques; la source de triage est archivee.`
+  splitSaved: (count) => `Divise en ${count} dossier(s) canoniques; la source de triage est archivee.`,
+  effectOutboxHeading: "Effets externes / Outbox", effectOutboxHint: "Inspectez l'etat durable des effets sans exposer les payloads ni les identifiants. Un effet reessayable peut etre remis en file; les effets ambigus exigent une reconciliation avant la reprise.", effectNoMaterial: "Aucun effet externe en attente ou en echec.", effectCancel: "Arreter la reprise", effectRetry: "Remettre l'effet en file", effectCancelled: "Effet annule; aucune reprise future ne sera tentee.", effectRetryQueued: "Effet reessayable remis en file; un adaptateur externe reste requis pour l'executer."
 };
 
 export function getUiCopy(locale: PresentationLocale): UiCopy {
