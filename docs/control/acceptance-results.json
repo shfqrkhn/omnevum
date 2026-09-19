@@ -1702,8 +1702,11 @@
         "line": 4148
       },
       "text": "With four lenses pinned, all eight default lenses are reached from any primary surface in one interaction through the overflow grid at 320 CSS pixels and at 200% text scaling. An unpinned lens made active remains visible in the bar, no lens becomes unreachable, and the grid ranks, hides, or demotes no lens by usage.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-compact-lens-overflow-receipt"
+      ],
+      "notes": "Current Chromium receipt proves four pinned lenses, one-interaction overflow reachability for all eight identities, active unpinned visibility, equal-prominence buttons, presentation-only pin/active persistence through reload, and the exercised 200% layout at the available viewport. True lens-specific semantics, strict 320px geometry for this surface, browser-family breadth, assistive technology, physical touch, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-112",
