@@ -31,6 +31,7 @@ export class JsonEndpointTransport implements SyncTransport {
 
 export class JsonEndpointEffectExecutor {
   private readonly endpoint: URL;
+  public readonly requiresPreDeliveryApproval = true;
 
   public constructor(endpoint: string, private readonly request: FetchLike = (input, init) => fetch(input, init), private readonly broker?: CredentialKeyBroker) {
     this.endpoint = parseRemoteEndpoint(endpoint);

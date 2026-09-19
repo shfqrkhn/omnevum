@@ -3799,7 +3799,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       supportedSchemas: ["effect-json-v1"],
       credentialBroker: broker
     });
-    const results = await new EffectRunner(store, new JsonEndpointEffectExecutor(endpoint, undefined, broker), guard).runAvailable();
+    const results = await new EffectRunner(store, new JsonEndpointEffectExecutor(endpoint, undefined, broker), guard).runAvailable({ approveDelivery: async () => true });
     const completed = results.find((result) => result.operationId === operation.operationId);
     const persisted = await store.getEffect(operation.operationId);
     if (!completed || completed.status !== "SUCCEEDED" || !persisted || JSON.stringify(persisted).includes("qualification-fixture-secret")) throw new Error(`Credentialed effect preview did not complete without persisting secret material (result ${completed?.status ?? "MISSING"}; persisted ${persisted?.status ?? "MISSING"})`);
@@ -3867,7 +3867,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       credentialBroker: broker
     });
     const runner = new EffectRunner(store, new JsonEndpointEffectExecutor(endpoint, undefined, broker), guard);
-    const firstRun = await runner.runAvailable();
+    const firstRun = await runner.runAvailable({ approveDelivery: async () => true });
     const reconciliation = await runner.runAvailable();
     const completed = reconciliation.find((operation) => operation.purpose === "browser credentialed restart qualification");
     const persistedOperation = completed ? await store.getEffect(completed.operationId) : undefined;
@@ -3902,7 +3902,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         availableSpaces: async () => new Set((await spaceService.listSpaces()).map((space) => space.id)),
         allowedDisclosureClasses: ["PRIVATE"],
         supportedSchemas: ["effect-json-v1"]
-      })).runAvailable();
+      })).runAvailable({ approveDelivery: async (operation) => operation.destination === endpoint });
       const succeeded = results.filter((operation) => operation.status === "SUCCEEDED").length;
       const attention = results.length - succeeded;
       effectRunStatus.textContent = copy.effectRunResult(results.length, succeeded, attention);

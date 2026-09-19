@@ -11,10 +11,16 @@ export interface EffectExecutor {
   execute(operation: EffectOperation): Promise<EffectExecutionResult>;
   reconcile?(operation: EffectOperation): Promise<EffectExecutionResult>;
   supports?(operation: EffectOperation): boolean;
+  /** Immediate transports must be paired with an explicit approval at the runner boundary. */
+  requiresPreDeliveryApproval?: boolean;
 }
 
 export interface EffectExecutionGuard {
   authorize(operation: EffectOperation): Promise<void>;
+}
+
+export interface EffectRunOptions {
+  approveDelivery?: (operation: EffectOperation) => Promise<boolean>;
 }
 
 const runnableStatuses = new Set<EffectOperation["status"]>(["PENDING", "FAILED_RETRYABLE", "RECONCILE"]);
@@ -31,7 +37,7 @@ export class EffectRunner {
     return recovered;
   }
 
-  public async runAvailable(): Promise<EffectOperation[]> {
+  public async runAvailable(options: EffectRunOptions = {}): Promise<EffectOperation[]> {
     const operations = await this.store.listEffects();
     const recovered: EffectOperation[] = [];
     for (const operation of operations) {
@@ -67,7 +73,8 @@ export class EffectRunner {
       }
       if (!this.executor) continue;
       if (!this.supports(candidate)) continue;
-      recovered.push(await this.executeOnce(candidate));
+        const executed = await this.executeOnce(candidate, options);
+        if (executed) recovered.push(executed);
     }
     return recovered;
   }
@@ -80,7 +87,7 @@ export class EffectRunner {
     return candidate;
   }
 
-  private async executeOnce(operation: EffectOperation): Promise<EffectOperation> {
+  private async executeOnce(operation: EffectOperation, options: EffectRunOptions): Promise<EffectOperation | undefined> {
     const executor = this.executor;
     if (!executor) return operation;
     if (this.guard) {
@@ -91,6 +98,9 @@ export class EffectRunner {
         if (await this.updateIfCurrent(cancelled, operation.status)) return cancelled;
         return (await this.store.getEffect(operation.operationId)) ?? operation;
       }
+    }
+    if (executor.requiresPreDeliveryApproval) {
+      if (!options.approveDelivery || !await options.approveDelivery(operation)) return undefined;
     }
     const inFlight = transitionEffect(operation, "IN_FLIGHT", { nextAttemptAt: undefined });
     if (!await this.updateIfCurrent(inFlight, operation.status)) return (await this.store.getEffect(operation.operationId)) ?? operation;

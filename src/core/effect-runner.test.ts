@@ -157,6 +157,27 @@ describe("EffectRunner", () => {
     store.close();
   });
 
+  it("fails closed for an immediate transport until pre-delivery approval is supplied", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-effect-pre-delivery-approval`);
+    await store.open();
+    await store.enqueueEffect(effect());
+    let executions = 0;
+    let approvals = 0;
+    const runner = new EffectRunner(store, {
+      requiresPreDeliveryApproval: true,
+      execute: async () => { executions += 1; return { outcome: "SUCCEEDED" as const }; }
+    });
+
+    await expect(runner.runAvailable()).resolves.toEqual([]);
+    await expect(store.getEffect("runner-effect")).resolves.toMatchObject({ status: "PENDING" });
+    await expect(runner.runAvailable({ approveDelivery: async () => { approvals += 1; return false; } })).resolves.toEqual([]);
+    await expect(store.getEffect("runner-effect")).resolves.toMatchObject({ status: "PENDING" });
+    await expect(runner.runAvailable({ approveDelivery: async (operation) => { approvals += 1; return operation.destination === "test://destination"; } })).resolves.toMatchObject([{ status: "SUCCEEDED" }]);
+    expect(approvals).toBe(2);
+    expect(executions).toBe(1);
+    store.close();
+  });
+
   it("cancels a pending brokered operation after the credential is revoked", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-effect-revocation`);
     await store.open();
