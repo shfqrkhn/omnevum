@@ -1706,8 +1706,11 @@
         "line": 4142
       },
       "text": "A locale using a script poorly served by each built-in family's preferred stack, and a right-to-left locale, are exercised across the primary surfaces in Alpha, Beta, and Gamma. Content renders in a qualified locale-appropriate face with correct directionality and no clipped or overlapping text at 200% scaling; theme identity degrades gracefully rather than forcing an illegible serif, sans-serif, or monospace aesthetic.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-experimental-rtl-presentation-receipt"
+      ],
+      "notes": "An explicitly experimental Arabic profile activates document lang/RTL direction, uses an Arabic-capable offline fallback stack even when serif/mono is selected, preserves compact layout and user text at saved 200% scale, and safely falls back to English for untranslated copy. Full family/theme/320px/other-engine and human acceptance qualification remains open; Arabic is not claimed fully supported."
     },
     {
       "id": "OMN-ACC-109",
