@@ -3877,7 +3877,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   clearCanonicalButton.addEventListener("click", async () => {
     try {
       const impact = await store.getClearImpact();
-      const message = `${recoveryCopy.clearConfirmation}\n\n${recoveryCopy.clearImpact(impact.canonicalRecords, impact.relationships, impact.orphanedRelationships, impact.historyEntries, impact.artifactPayloads, impact.pendingEffects, impact.packageStates, impact.automationRules)}`;
+      const message = `${recoveryCopy.clearConfirmation}\n\n${recoveryCopy.clearImpact(impact)}`;
       if (!await requestConfirmation(message, copy.confirmationHeading)) return;
       clearArchiveUndo();
       await store.clear();

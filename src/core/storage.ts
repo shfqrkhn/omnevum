@@ -137,9 +137,12 @@ export interface CanonicalClearImpact {
   orphanedRelationships: number;
   historyEntries: number;
   artifactPayloads: number;
+  effectOperations: number;
   pendingEffects: number;
   packageStates: number;
   automationRules: number;
+  preservedRelationships: number;
+  reversibilityWindowSeconds: number;
 }
 
 type PersistenceState = "GRANTED" | "DENIED" | "UNAVAILABLE";
@@ -321,9 +324,12 @@ export class CanonicalStore {
       orphanedRelationships,
       historyEntries: history.length,
       artifactPayloads: artifacts.length,
+      effectOperations: effects.length,
       pendingEffects: effects.filter((effect) => ["PENDING", "IN_FLIGHT", "FAILED_RETRYABLE", "OUTCOME_UNKNOWN", "RECONCILE"].includes(effect.status)).length,
       packageStates: packageStates.length,
-      automationRules: automationRules.length
+      automationRules: automationRules.length,
+      preservedRelationships: 0,
+      reversibilityWindowSeconds: 0
     };
   }
 

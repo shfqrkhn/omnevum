@@ -608,7 +608,7 @@ describe("CanonicalStore", () => {
     await store.setPackageState({ packageId: "impact.package", schemaVersion: 1, state: { saved: true } });
     await store.setAutomationRules([automationRule()]);
     await store.enqueueEffect({ operationId: "impact-effect", owner: "platform.test", originatingCommand: "test.command", purpose: "test", destination: "test://destination", payloadOrReference: { value: "safe" }, idempotencyKey: "impact-effect-idempotency", createdAt: new Date().toISOString(), status: "PENDING", retryCount: 0, retryPolicy: { maxAttempts: 3, backoffSeconds: 1 }, evidence: [] });
-    await expect(store.getClearImpact()).resolves.toMatchObject({ canonicalRecords: 4, relationships: 2, orphanedRelationships: 1, historyEntries: 4, artifactPayloads: 0, pendingEffects: 1, packageStates: 1, automationRules: 1 });
+    await expect(store.getClearImpact()).resolves.toMatchObject({ canonicalRecords: 4, relationships: 2, orphanedRelationships: 1, historyEntries: 4, artifactPayloads: 0, effectOperations: 1, pendingEffects: 1, packageStates: 1, automationRules: 1, preservedRelationships: 0, reversibilityWindowSeconds: 0 });
     store.close();
   });
 });
