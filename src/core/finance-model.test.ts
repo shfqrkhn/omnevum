@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseFinanceCsv, type FinanceStatementSource } from "./finance";
-import { allocateFinanceResource, analyzeFinanceGraph, assessFinanceDataQuality, classifyFinanceSource, createFinanceForecast, detectFinanceParserDrift, detectFinanceReviewCases, evaluateFinanceFeedbackLoop, inferFinanceRecurringPatterns, matchFinanceTransfers, planFinanceAllocationAlternatives, projectFinanceGoal, projectFireScenario, propagateFinanceGraph, summarizeFinanceTransactions, type FinanceDependencyGraph } from "./finance-model";
+import { allocateFinanceResource, analyzeFinanceGraph, assessFinanceDataQuality, classifyFinanceSource, createFinanceForecast, detectFinanceParserDrift, detectFinanceReviewCases, evaluateFinanceFeedbackLoop, evaluateFinanceReviewCases, inferFinanceRecurringPatterns, matchFinanceTransfers, planFinanceAllocationAlternatives, projectFinanceGoal, projectFireScenario, propagateFinanceGraph, summarizeFinanceTransactions, type FinanceDependencyGraph } from "./finance-model";
 
 const source: FinanceStatementSource = { sourceId: "source:model", name: "model.csv", sha256: "c".repeat(64), accountId: "checking", currency: "CAD" };
 
@@ -121,5 +121,19 @@ describe("shared Finance/Synergy model", () => {
     const quality = assessFinanceDataQuality({ requiredPeriods: ["2026-01", "2026-02"], availablePeriods: ["2026-01"], unresolvedReviewCases: 1 });
     expect(quality.status).toBe("UNKNOWN");
     expect(quality.limitations).toEqual(["missing periods: 2026-02", "1 unresolved review case(s)"]);
+  });
+
+  it("keeps authenticated or familiar payments distinct from legitimacy and scopes dispositions", () => {
+    const transactions = parseFinanceCsv("Date,Description,Amount,Id\n2026-01-01,Known Merchant,-10.00,known\n2026-01-02,Unknown Beneficiary,-500.00,suspicious\n2026-01-03,Known Merchant,-11.00,known-2\n", source);
+    const evaluation = evaluateFinanceReviewCases(transactions, {
+      [transactions[0]!.id]: { authenticated: true, userInitiated: true, familiarMerchant: true, benignExplanation: "planned household purchase", evidence: ["receipt-1"] },
+      [transactions[1]!.id]: { authenticated: true, userInitiated: true, possibleScamOrCoercion: true, evidence: ["conversation-1"] }
+    }, [{ transactionId: transactions[0]!.id, disposition: "CONFIRMED_LEGITIMATE", scope: { accountId: "checking", merchant: "known merchant" }, reason: "Receipt and household context confirmed this payment", resolvedAt: "2026-01-04T00:00:00.000Z", sourceIds: ["receipt-1"] }], [transactions[1]!.id, "missing-known-issue"]);
+    expect(evaluation.cases.find((review) => review.transactionId === transactions[1]!.id)).toMatchObject({ priority: "URGENT_REVIEW", disposition: "UNRESOLVED" });
+    expect(evaluation.cases.find((review) => review.transactionId === transactions[0]!.id)).toMatchObject({ disposition: "CONFIRMED_LEGITIMATE" });
+    expect(evaluation.metrics.confirmedLegitimateCount).toBe(1);
+    expect(evaluation.metrics.observableMissedKnownIssueCount).toBe(1);
+    expect(evaluation.limitations.join(" ")).toContain("metrics remain limited");
+    expect(evaluation.cases.find((review) => review.transactionId === transactions[1]!.id)?.reasons.join(" ")).toContain("not proof of informed legitimacy");
   });
 });

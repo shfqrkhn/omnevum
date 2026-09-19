@@ -6,6 +6,8 @@ import type { CanonicalRecord } from "./model";
 export const MAX_FINANCE_CSV_BYTES = 5 * 1024 * 1024;
 export const MAX_FINANCE_ROWS = 10_000;
 
+export type FinanceSourceClass = "TRANSACTION_ACCOUNT" | "CREDIT_CARD" | "INVESTMENT" | "DEBT" | "INCOME" | "INSURANCE" | "TAX_BENEFIT" | "RECEIPT" | "UNKNOWN";
+
 export type FinanceTransactionStatus = "PENDING" | "POSTED" | "REVERSED" | "REFUNDED" | "VOIDED" | "CORRECTED" | "UNKNOWN";
 
 export interface FinanceStatementSource {
@@ -14,9 +16,67 @@ export interface FinanceStatementSource {
   sha256: string;
   accountId: string;
   currency: string;
+  sourceClass?: FinanceSourceClass;
   sourceArtifactId?: string;
   openingBalance?: MoneyValue;
   closingBalance?: MoneyValue;
+}
+
+export interface FinanceInvestmentCashFlow {
+  date: string;
+  amount: MoneyValue;
+  kind: "CONTRIBUTION" | "WITHDRAWAL" | "DISTRIBUTION" | "FEE";
+  sourceRow?: number;
+}
+
+export interface FinanceInvestmentPerformanceInput {
+  method: "TIME_WEIGHTED" | "MONEY_WEIGHTED";
+  periodStart: string;
+  periodEnd: string;
+  beginningValue: MoneyValue;
+  endingValue: MoneyValue;
+  externalCashFlows: FinanceInvestmentCashFlow[];
+}
+
+export interface FinanceInvestmentPerformance {
+  method: FinanceInvestmentPerformanceInput["method"];
+  returnRate: number;
+  periodDays: number;
+  assumptions: string[];
+  truthClass: "MODELED";
+}
+
+export interface FinanceStatementFacts {
+  sourceId: string;
+  sourceClass: "CREDIT_CARD" | "INVESTMENT" | "INSURANCE";
+  periodStart?: string;
+  periodEnd?: string;
+  creditCard?: {
+    statementBalance?: MoneyValue;
+    dueDate?: string;
+    minimumDue?: MoneyValue;
+    gracePeriodDays?: number;
+    interestTerms?: string;
+    creditLimit?: MoneyValue;
+    utilization?: number;
+  };
+  investment?: {
+    valuation?: MoneyValue;
+    valuationDate?: string;
+    externalCashFlows: FinanceInvestmentCashFlow[];
+    performance?: FinanceInvestmentPerformance;
+  };
+  insurance?: {
+    premium?: MoneyValue;
+    renewalAt?: string;
+    expiryAt?: string;
+    coveredAmount?: MoneyValue;
+    deductible?: MoneyValue;
+    beneficiary?: string;
+    insuredSubject?: string;
+  };
+  evidence: { truthClass: "OBSERVED"; sourceIds: string[] };
+  limitations: string[];
 }
 
 export interface FinanceRawRow {
@@ -134,6 +194,152 @@ export function parseFinanceCsv(text: string, source: FinanceStatementSource): F
     .map((row) => ({ sourceRow: row.sourceRow, fields: Object.fromEntries(headers.map((header, index) => [header, row.values[index]?.trim() ?? ""])) }));
   if (rows.slice(rows.indexOf(headerRow) + 1).filter((row) => row.values.some((value) => value.trim().length > 0)).length > MAX_FINANCE_ROWS) throw new Error(`Finance statement exceeds the bounded ${MAX_FINANCE_ROWS}-row limit`);
   return normalizeFinanceRows(rawRows, source, "CSV_HEADER_V1");
+}
+
+export function parseFinanceStatementFactsCsv(text: string, source: FinanceStatementSource, sourceClass: FinanceStatementFacts["sourceClass"]): FinanceStatementFacts {
+  assertSource(source);
+  if (new TextEncoder().encode(text).byteLength > MAX_FINANCE_CSV_BYTES) throw new Error("Finance statement exceeds the bounded 5 MiB CSV limit");
+  const delimiter = detectDelimiter(text);
+  const rows = parseDelimited(text, delimiter);
+  const headerRow = rows.find((row) => row.values.some((value) => value.trim().length > 0));
+  if (!headerRow) throw new Error("Finance statement has no header row");
+  const headers = headerRow.values.map(normalizeHeader);
+  if (headers.some((header) => !header) || new Set(headers).size !== headers.length) throw new Error("Finance statement headers must be non-empty and unique");
+  const rawRows = rows.slice(rows.indexOf(headerRow) + 1)
+    .filter((row) => row.values.some((value) => value.trim().length > 0))
+    .slice(0, MAX_FINANCE_ROWS)
+    .map((row) => ({ sourceRow: row.sourceRow, fields: Object.fromEntries(headers.map((header, index) => [header, row.values[index]?.trim() ?? ""])) }));
+  if (rows.slice(rows.indexOf(headerRow) + 1).filter((row) => row.values.some((value) => value.trim().length > 0)).length > MAX_FINANCE_ROWS) throw new Error(`Finance statement exceeds the bounded ${MAX_FINANCE_ROWS}-row limit`);
+  return extractStatementFactsFromRows(rawRows, source, sourceClass);
+}
+
+export function extractFinanceStatementFacts(transactions: readonly FinanceTransaction[], source: FinanceStatementSource, sourceClass: FinanceStatementFacts["sourceClass"]): FinanceStatementFacts {
+  assertSource(source);
+  return extractStatementFactsFromRows(transactions.map((transaction) => ({ sourceRow: transaction.lineage.sourceRow, fields: transaction.lineage.rawFields })), source, sourceClass);
+}
+
+export function computeFinanceInvestmentPerformance(input: FinanceInvestmentPerformanceInput): FinanceInvestmentPerformance {
+  const start = Date.parse(input.periodStart);
+  const end = Date.parse(input.periodEnd);
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) throw new Error("Investment performance period is invalid");
+  if (input.beginningValue.currency !== input.endingValue.currency || input.externalCashFlows.some((flow) => flow.amount.currency !== input.beginningValue.currency)) throw new Error("Investment performance values must use one currency");
+  const beginning = Number(input.beginningValue.amountMinor) / 100;
+  const ending = Number(input.endingValue.amountMinor) / 100;
+  if (!Number.isFinite(beginning) || !Number.isFinite(ending) || beginning <= 0 || ending < 0) throw new Error("Investment performance values must be bounded and non-negative");
+  const periodDays = Math.round((end - start) / 86_400_000);
+  const periodYears = periodDays / 365;
+  const assumptions = [`period ${input.periodStart} to ${input.periodEnd}`, "values are statement observations; performance is modeled", "tax, suitability, and future-return claims are out of scope"];
+  if (input.method === "TIME_WEIGHTED") {
+    if (input.externalCashFlows.length > 0) throw new Error("Time-weighted performance requires sub-period valuations around external cash flows");
+    return { method: input.method, returnRate: ending / beginning - 1, periodDays, assumptions: [...assumptions, "no external cash flows were supplied; simple holding-period return is used"], truthClass: "MODELED" };
+  }
+  const cashFlows = [
+    { years: 0, amount: -beginning },
+    ...input.externalCashFlows.map((flow) => {
+      const flowDate = Date.parse(flow.date);
+      if (!Number.isFinite(flowDate) || flowDate < start || flowDate > end) throw new Error("Investment cash-flow date is outside the performance period");
+      const amount = Number(flow.amount.amountMinor) / 100;
+      if (!Number.isFinite(amount) || amount < 0) throw new Error("Investment cash-flow amount is invalid");
+      const sign = flow.kind === "CONTRIBUTION" || flow.kind === "FEE" ? -1 : 1;
+      return { years: (flowDate - start) / 86_400_000 / 365, amount: sign * amount };
+    }),
+    { years: periodYears, amount: ending }
+  ];
+  let rate = 0.05;
+  for (let iteration = 0; iteration < 100; iteration += 1) {
+    const base = 1 + rate;
+    if (base <= 0) break;
+    let value = 0;
+    let derivative = 0;
+    for (const flow of cashFlows) {
+      const exponent = periodYears - flow.years;
+      const powered = Math.pow(base, exponent);
+      value += flow.amount * powered;
+      derivative += exponent === 0 ? 0 : flow.amount * exponent * Math.pow(base, exponent - 1);
+    }
+    if (Math.abs(value) < 1e-8) return { method: input.method, returnRate: rate, periodDays, assumptions: [...assumptions, "external cash flows use money-weighted annualized IRR with actual/365 timing"], truthClass: "MODELED" };
+    if (!Number.isFinite(derivative) || Math.abs(derivative) < 1e-12) break;
+    const next = rate - value / derivative;
+    if (!Number.isFinite(next) || next <= -0.9999 || next > 100) break;
+    rate = next;
+  }
+  throw new Error("Investment money-weighted performance did not converge within the bounded solver");
+}
+
+function extractStatementFactsFromRows(rows: FinanceRawRow[], source: FinanceStatementSource, sourceClass: FinanceStatementFacts["sourceClass"]): FinanceStatementFacts {
+  const limitations: string[] = [];
+  const first = (...keys: string[]): string | undefined => {
+    const normalizedKeys = keys.map((key) => key.replace(/[^a-z0-9]/giu, "").toLocaleLowerCase("en-CA"));
+    for (const row of rows) for (const key of normalizedKeys) {
+      const value = row.fields[key]?.trim();
+      if (value) return value;
+    }
+    return undefined;
+  };
+  const readMoney = (label: string, ...keys: string[]): MoneyValue | undefined => {
+    const value = first(...keys);
+    if (!value) return undefined;
+    try { return parseMoney(value, source.currency); } catch { limitations.push(`${label} is present but invalid`); return undefined; }
+  };
+  const readDate = (label: string, ...keys: string[]): string | undefined => {
+    const value = first(...keys);
+    if (!value) return undefined;
+    const parsed = Date.parse(value);
+    if (!Number.isFinite(parsed)) { limitations.push(`${label} is present but invalid`); return undefined; }
+    return new Date(parsed).toISOString();
+  };
+  const periodStart = readDate("statement period start", "periodStart", "statementStart", "startDate");
+  const periodEnd = readDate("statement period end", "periodEnd", "statementEnd", "endDate");
+  const facts: FinanceStatementFacts = { sourceId: source.sourceId, sourceClass, ...(periodStart ? { periodStart } : {}), ...(periodEnd ? { periodEnd } : {}), evidence: { truthClass: "OBSERVED", sourceIds: [source.sourceId] }, limitations };
+  if (sourceClass === "CREDIT_CARD") {
+    const statementBalance = readMoney("statement balance", "statementBalance", "balanceOwed", "balance");
+    const minimumDue = readMoney("minimum due", "minimumDue", "minimumPayment", "minPayment");
+    const creditLimit = readMoney("credit limit", "creditLimit", "limit");
+    const dueDate = readDate("payment due date", "dueDate", "paymentDueDate");
+    const graceRaw = first("gracePeriodDays", "graceDays");
+    const gracePeriodDays = graceRaw ? Number(graceRaw) : undefined;
+    if (graceRaw && (gracePeriodDays === undefined || !Number.isInteger(gracePeriodDays) || gracePeriodDays < 0 || gracePeriodDays > 3650)) limitations.push("grace period is present but outside the supported range");
+    const utilizationRaw = first("utilization", "utilizationRate");
+    const parsedUtilization = utilizationRaw ? Number(utilizationRaw.replace(/%$/u, "")) / (utilizationRaw.endsWith("%") ? 100 : 1) : undefined;
+    const utilization = parsedUtilization !== undefined && Number.isFinite(parsedUtilization) && parsedUtilization >= 0 && parsedUtilization <= 1 ? parsedUtilization : undefined;
+    if (utilizationRaw && utilization === undefined) limitations.push("credit utilization is present but invalid");
+    facts.creditCard = { ...(statementBalance ? { statementBalance } : {}), ...(dueDate ? { dueDate } : {}), ...(minimumDue ? { minimumDue } : {}), ...(gracePeriodDays !== undefined && Number.isInteger(gracePeriodDays) && gracePeriodDays >= 0 && gracePeriodDays <= 3650 ? { gracePeriodDays } : {}), ...(first("interestTerms", "interestRate", "apr") ? { interestTerms: first("interestTerms", "interestRate", "apr")!.slice(0, 240) } : {}), ...(creditLimit ? { creditLimit } : {}), ...(utilization !== undefined ? { utilization } : {}) };
+    if (facts.creditCard.statementBalance && facts.creditCard.creditLimit && facts.creditCard.utilization === undefined && BigInt(facts.creditCard.creditLimit.amountMinor) > 0n) facts.creditCard.utilization = Number(BigInt(facts.creditCard.statementBalance.amountMinor)) / Number(BigInt(facts.creditCard.creditLimit.amountMinor));
+  } else if (sourceClass === "INVESTMENT") {
+    const externalCashFlows: FinanceInvestmentCashFlow[] = [];
+    for (const row of rows) {
+      const amountText = row.fields.externalcashflow || row.fields.cashflow || row.fields.flowamount;
+      if (!amountText) continue;
+      let amount: MoneyValue;
+      try { amount = parseMoney(amountText, source.currency); } catch { limitations.push(`investment cash flow row ${row.sourceRow} is invalid`); continue; }
+      const dateText = row.fields.cashflowdate || row.fields.postedat || row.fields.date;
+      const date = dateText && Number.isFinite(Date.parse(dateText)) ? new Date(Date.parse(dateText)).toISOString() : undefined;
+      const kindText = (row.fields.cashflowtype || row.fields.flowtype || "CONTRIBUTION").toUpperCase().replace(/[ -]+/g, "_");
+      const kind = kindText === "WITHDRAWAL" || kindText === "DISTRIBUTION" || kindText === "FEE" ? kindText : "CONTRIBUTION";
+      if (date) externalCashFlows.push({ date, amount, kind, sourceRow: row.sourceRow });
+      else limitations.push(`investment cash flow row ${row.sourceRow} has no valid date`);
+    }
+    const valuation = readMoney("investment valuation", "valuation", "marketValue", "accountValue", "endingValue");
+    const valuationDate = readDate("investment valuation date", "valuationDate", "asOfDate");
+    const methodText = first("performanceMethod", "returnMethod")?.toUpperCase().replace(/[ -]+/g, "_");
+    const method = methodText === "TIME_WEIGHTED" ? "TIME_WEIGHTED" : methodText === "MONEY_WEIGHTED" ? "MONEY_WEIGHTED" : undefined;
+    const beginningValue = readMoney("investment beginning value", "beginningValue", "openingValue");
+    const endingValue = readMoney("investment ending value", "endingValue", "closingValue", "valuation", "marketValue");
+    let performance: FinanceInvestmentPerformance | undefined;
+    if (method && periodStart && periodEnd && beginningValue && endingValue) {
+      try { performance = computeFinanceInvestmentPerformance({ method, periodStart, periodEnd, beginningValue, endingValue, externalCashFlows }); } catch (error) { limitations.push(error instanceof Error ? error.message : "investment performance could not be computed"); }
+    } else if (valuation || externalCashFlows.length > 0) limitations.push("investment performance is withheld until a named method, period, valuation, and compatible cash-flow evidence are supplied");
+    facts.investment = { externalCashFlows, ...(valuation ? { valuation } : {}), ...(valuationDate ? { valuationDate } : {}), ...(performance ? { performance } : {}) };
+  } else {
+    const premium = readMoney("insurance premium", "premium", "annualPremium");
+    const renewalAt = readDate("insurance renewal date", "renewalDate", "renewalAt");
+    const expiryAt = readDate("insurance expiry date", "expiryDate", "expiryAt");
+    const coveredAmount = readMoney("insurance covered amount", "coveredAmount", "coverageLimit", "limit");
+    const deductible = readMoney("insurance deductible", "deductible");
+    facts.insurance = { ...(premium ? { premium } : {}), ...(renewalAt ? { renewalAt } : {}), ...(expiryAt ? { expiryAt } : {}), ...(coveredAmount ? { coveredAmount } : {}), ...(deductible ? { deductible } : {}), ...(first("beneficiary") ? { beneficiary: first("beneficiary")!.slice(0, 240) } : {}), ...(first("insuredSubject", "subject") ? { insuredSubject: first("insuredSubject", "subject")!.slice(0, 240) } : {}) };
+  }
+  facts.limitations = [...new Set(limitations)].sort();
+  return facts;
 }
 
 export function normalizeFinanceRows(rows: FinanceRawRow[], source: FinanceStatementSource, parserProfile: FinanceLineage["parserProfile"] = "STRUCTURED_V1"): FinanceTransaction[] {
@@ -260,6 +466,26 @@ export async function acceptFinanceTransactions(commands: CommandBus, source: Fi
     byProvenance.set(provenanceId, record);
   }
   return { records, created, existing, duplicates: deduplicated.duplicates.length, conflicts };
+}
+
+export async function acceptFinanceStatementFacts(commands: CommandBus, source: FinanceStatementSource, facts: FinanceStatementFacts): Promise<CanonicalRecord> {
+  assertSource(source);
+  const existing = (await commands.list(true)).find((record) => !record.deleted && record.owner === "domain.finance" && record.data.kind === "finance-statement-facts" && record.data.sourceId === source.sourceId);
+  if (existing) return existing;
+  return commands.create({
+    recordType: "observation",
+    owner: "domain.finance",
+    truthClass: "IMPORTED_RECORD",
+    provenance: { source: "IMPORT", sourceId: source.sourceId },
+    data: {
+      text: `${facts.sourceClass} statement facts: ${source.name}`.slice(0, 500),
+      kind: "finance-statement-facts",
+      sourceId: source.sourceId,
+      sourceClass: facts.sourceClass,
+      sourceArtifactId: source.sourceArtifactId ?? source.sourceId,
+      statementFacts: facts
+    }
+  });
 }
 
 export function reconcileFinanceStatement(source: FinanceStatementSource, transactions: FinanceTransaction[]): FinanceReconciliation {

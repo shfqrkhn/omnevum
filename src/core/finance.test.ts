@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { acceptFinanceTransactions, createFinanceSourceId, deduplicateFinanceTransactions, parseFinanceCsv, reconcileFinanceStatement, type FinanceStatementSource } from "./finance";
+import { acceptFinanceStatementFacts, acceptFinanceTransactions, computeFinanceInvestmentPerformance, createFinanceSourceId, deduplicateFinanceTransactions, parseFinanceCsv, parseFinanceStatementFactsCsv, reconcileFinanceStatement, type FinanceStatementSource } from "./finance";
 import { CommandBus } from "./commands";
 import { CanonicalStore } from "./storage";
 
@@ -62,6 +62,38 @@ describe("credential-free Finance statement semantics", () => {
     const incomplete = reconcileFinanceStatement(sourceWithoutClosing, parseFinanceCsv('Date,Description,Amount\n2026-01-02,Cafe,-10.00\n', source));
     expect(incomplete.status).toBe("INCOMPLETE");
     expect(incomplete.expectedClosingBalance).toBeUndefined();
+  });
+
+  it("preserves revolving-credit, investment, and insurance statement facts without overstating performance", () => {
+    const credit = parseFinanceStatementFactsCsv("StatementBalance,DueDate,MinimumDue,GracePeriodDays,InterestTerms,CreditLimit\n500.00,2026-02-15,25.00,21,19.99% APR,1000.00\n", source, "CREDIT_CARD");
+    expect(credit.creditCard).toMatchObject({ statementBalance: { amountMinor: "50000", currency: "CAD" }, dueDate: "2026-02-15T00:00:00.000Z", minimumDue: { amountMinor: "2500" }, gracePeriodDays: 21, interestTerms: "19.99% APR", creditLimit: { amountMinor: "100000" }, utilization: 0.5 });
+    const investment = parseFinanceStatementFactsCsv("PeriodStart,PeriodEnd,BeginningValue,EndingValue,PerformanceMethod,Valuation,ValuationDate\n2026-01-01,2026-12-31,10000.00,11000.00,TIME_WEIGHTED,11000.00,2026-12-31\n", source, "INVESTMENT");
+    expect(investment.investment?.performance).toMatchObject({ method: "TIME_WEIGHTED", periodDays: 364, truthClass: "MODELED" });
+    expect(investment.investment?.performance?.returnRate).toBeCloseTo(0.1, 10);
+    const insurance = parseFinanceStatementFactsCsv("Premium,RenewalDate,ExpiryDate,CoveredAmount,Deductible,Beneficiary,InsuredSubject\n120.00,2026-06-01,2027-06-01,100000.00,500.00,Household,person:self\n", source, "INSURANCE");
+    expect(insurance.insurance).toMatchObject({ premium: { amountMinor: "12000" }, renewalAt: "2026-06-01T00:00:00.000Z", expiryAt: "2027-06-01T00:00:00.000Z", coveredAmount: { amountMinor: "10000000" }, deductible: { amountMinor: "50000" }, beneficiary: "Household", insuredSubject: "person:self" });
+    expect(insurance.limitations).toEqual([]);
+  });
+
+  it("uses named money-weighted performance only when external cash-flow timing is supplied", () => {
+    const performance = computeFinanceInvestmentPerformance({ method: "MONEY_WEIGHTED", periodStart: "2026-01-01", periodEnd: "2026-12-31", beginningValue: { amountMinor: "1000000", currency: "CAD" }, endingValue: { amountMinor: "1100000", currency: "CAD" }, externalCashFlows: [{ date: "2026-07-02", amount: { amountMinor: "100000", currency: "CAD" }, kind: "CONTRIBUTION" }] });
+    expect(performance.method).toBe("MONEY_WEIGHTED");
+    expect(performance.returnRate).toBeGreaterThan(-1);
+    expect(performance.assumptions.join(" ")).toContain("money-weighted");
+    expect(() => computeFinanceInvestmentPerformance({ method: "TIME_WEIGHTED", periodStart: "2026-01-01", periodEnd: "2026-12-31", beginningValue: { amountMinor: "1000000", currency: "CAD" }, endingValue: { amountMinor: "1100000", currency: "CAD" }, externalCashFlows: [{ date: "2026-07-02", amount: { amountMinor: "100000", currency: "CAD" }, kind: "CONTRIBUTION" }] })).toThrow("sub-period valuations");
+  });
+
+  it("persists statement facts idempotently under the source identity", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-finance-facts`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const facts = parseFinanceStatementFactsCsv("StatementBalance,DueDate\n500.00,2026-02-15\n", source, "CREDIT_CARD");
+    const first = await acceptFinanceStatementFacts(commands, source, facts);
+    const second = await acceptFinanceStatementFacts(commands, source, facts);
+    expect(second.id).toBe(first.id);
+    expect((await store.list(true)).filter((record) => record.owner === "domain.finance" && record.data.kind === "finance-statement-facts")).toHaveLength(1);
+    expect(first.data).toMatchObject({ kind: "finance-statement-facts", sourceId: source.sourceId, sourceClass: "CREDIT_CARD" });
+    store.close();
   });
 
   it("accepts normalized rows through domain.finance once and reuses the same source-row owner", async () => {

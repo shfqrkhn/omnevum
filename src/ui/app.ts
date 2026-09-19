@@ -14,9 +14,9 @@ import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/cr
 import { MAX_VAULT_JSON_BYTES, parseVault } from "../core/vault";
 import type { CanonicalStore } from "../core/storage";
 import { captureExpense, captureFinancePlan, captureHealthMeasurement } from "../core/workflows";
-import { acceptFinanceTransactions, createFinanceSourceId, deduplicateFinanceTransactions, parseFinanceCsv, reconcileFinanceStatement, type FinanceStatementSource } from "../core/finance";
+import { acceptFinanceStatementFacts, acceptFinanceTransactions, createFinanceSourceId, deduplicateFinanceTransactions, extractFinanceStatementFacts, parseFinanceCsv, parseFinanceStatementFactsCsv, reconcileFinanceStatement, type FinanceStatementFacts, type FinanceStatementSource } from "../core/finance";
 import { formatMoney, parseMoney } from "../core/money";
-import { summarizeFinanceTransactions } from "../core/finance-model";
+import { classifyFinanceSource, summarizeFinanceTransactions } from "../core/finance-model";
 import { projectFinanceState } from "../core/finance-projection";
 import { projectDataset } from "../core/data";
 import { countRecords, groupCounts } from "../core/analysis";
@@ -4222,8 +4222,20 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const sourceId = createFinanceSourceId(inspection.sha256, accountId, currency);
       const openingBalance = financeImportOpening.value.trim() ? parseMoney(financeImportOpening.value.trim(), currency) : undefined;
       const closingBalance = financeImportClosing.value.trim() ? parseMoney(financeImportClosing.value.trim(), currency) : undefined;
-      const source: FinanceStatementSource = { sourceId, name: file.name, sha256: inspection.sha256, accountId, currency, ...(openingBalance ? { openingBalance } : {}), ...(closingBalance ? { closingBalance } : {}) };
-      const transactions = parseFinanceCsv(await file.text(), source);
+      const text = await file.text();
+      const headerFields = (text.split(/\r?\n/u, 1)[0] ?? "").split(/,|\t/u).map((header) => header.trim());
+      const classification = classifyFinanceSource(file.name, headerFields);
+      const statementClass = classification.sourceClass === "CREDIT_CARD" || classification.sourceClass === "INVESTMENT" || classification.sourceClass === "INSURANCE" ? classification.sourceClass : undefined;
+      const source: FinanceStatementSource = { sourceId, name: file.name, sha256: inspection.sha256, accountId, currency, ...(statementClass ? { sourceClass: statementClass } : {}), ...(openingBalance ? { openingBalance } : {}), ...(closingBalance ? { closingBalance } : {}) };
+      let transactions: Awaited<ReturnType<typeof parseFinanceCsv>> = [];
+      let statementFacts: FinanceStatementFacts | undefined;
+      try {
+        transactions = parseFinanceCsv(text, source);
+        if (statementClass) statementFacts = extractFinanceStatementFacts(transactions, source, statementClass);
+      } catch (error) {
+        if (!statementClass) throw error;
+        statementFacts = parseFinanceStatementFactsCsv(text, source, statementClass);
+      }
       const deduplicated = deduplicateFinanceTransactions(transactions);
       const reconciliation = reconcileFinanceStatement(source, transactions);
       const summary = summarizeFinanceTransactions(transactions, currency);
@@ -4231,10 +4243,13 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       if (!await requestConfirmation(`${preview}\n\n${copy.financeImportHint}`, copy.financeImport)) return;
       const existingArtifact = (await commands.findBySourceId(sourceId)).find((record) => record.recordType === "artifact" && !record.deleted);
       const artifact = existingArtifact ?? await commands.createArtifact({ fileName: file.name, mimeType: file.type || "text/csv", blob: file, sourceId, adapter: inspection.adapter, metadata: inspection.metadata, ...(inspection.derivedText ? { derivedText: inspection.derivedText } : {}) });
-      const result = await acceptFinanceTransactions(commands, { ...source, sourceArtifactId: artifact.id }, transactions);
+      const sourceWithArtifact = { ...source, sourceArtifactId: artifact.id };
+      if (statementFacts) await acceptFinanceStatementFacts(commands, sourceWithArtifact, statementFacts);
+      const result = await acceptFinanceTransactions(commands, sourceWithArtifact, transactions);
       financeChangedIds = result.records.map((record) => record.id);
       financeImportForm.reset();
-      financeImportStatus.textContent = `${copy.financeImportResult(result.created, result.existing, result.duplicates, result.conflicts.length, reconciliation.status)} ${copy.financeAnalysisResult(formatMoney(summary.postedIncome, presentation.locale), formatMoney(summary.postedSpending, presentation.locale), formatMoney(summary.netCashFlow, presentation.locale), formatMoney(summary.pendingNet, presentation.locale), formatMoney(summary.feeSpending, presentation.locale))}`;
+      const factsStatus = statementFacts ? ` Statement facts retained for ${statementFacts.sourceClass}; ${statementFacts.limitations.length} limitation(s) remain explicit.` : "";
+      financeImportStatus.textContent = `${copy.financeImportResult(result.created, result.existing, result.duplicates, result.conflicts.length, reconciliation.status)} ${copy.financeAnalysisResult(formatMoney(summary.postedIncome, presentation.locale), formatMoney(summary.postedSpending, presentation.locale), formatMoney(summary.netCashFlow, presentation.locale), formatMoney(summary.pendingNet, presentation.locale), formatMoney(summary.feeSpending, presentation.locale))}${factsStatus}`;
       await renderRecords(searchQuery.value);
     } catch (error) {
       financeImportStatus.textContent = describeError(error, "Finance statement import failed; no statement rows were accepted.");

@@ -1,5 +1,6 @@
 import { addMoney, parseMoney, subtractMoney, type MoneyValue } from "./money";
-import type { FinanceTransaction } from "./finance";
+import type { FinanceSourceClass, FinanceTransaction } from "./finance";
+export type { FinanceSourceClass } from "./finance";
 
 /**
  * Finance facts deliberately carry a truth class so a projection cannot be
@@ -386,8 +387,6 @@ function absMinor(value: string): string {
   return (minor < 0n ? -minor : minor).toString();
 }
 
-export type FinanceSourceClass = "TRANSACTION_ACCOUNT" | "CREDIT_CARD" | "INVESTMENT" | "DEBT" | "INCOME" | "INSURANCE" | "TAX_BENEFIT" | "RECEIPT" | "UNKNOWN";
-
 export interface FinanceSourceClassification {
   sourceClass: FinanceSourceClass;
   confidence: "HIGH" | "MEDIUM" | "LOW";
@@ -515,6 +514,85 @@ export function detectFinanceReviewCases(transactions: readonly FinanceTransacti
     cases.push({ id: `finance-review:${financeModelKey(transaction.id)}`, transactionId: transaction.id, priority: highImpact ? "HIGH" : reasons.length >= 2 ? "MEDIUM" : "LOW", disposition: "UNRESOLVED", confidence: prior.length < 3 ? "LOW" : reasons.length >= 2 ? "MEDIUM" : "LOW", reasons, sourceIds: [transaction.lineage.sourceId], evidence: { truthClass: "DERIVED", sourceIds: [transaction.id], note: "Signals require user review and do not establish fraud, authorization, or coercion." } });
   }
   return cases.sort((left, right) => left.id.localeCompare(right.id));
+}
+
+export interface FinanceReviewContext {
+  authenticated?: boolean;
+  userInitiated?: boolean;
+  familiarMerchant?: boolean;
+  possibleScamOrCoercion?: boolean;
+  benignExplanation?: string;
+  evidence?: string[];
+}
+
+export interface FinanceReviewResolution {
+  transactionId: string;
+  disposition: Exclude<FinanceReviewDisposition, "UNRESOLVED">;
+  scope: { accountId: string; merchant?: string };
+  reason: string;
+  resolvedAt: string;
+  sourceIds: string[];
+}
+
+export interface FinanceReviewEvaluation {
+  cases: FinanceReviewCase[];
+  metrics: { resolvedCount: number; confirmedLegitimateCount: number; observableMissedKnownIssueCount: number; available: boolean };
+  limitations: string[];
+}
+
+/**
+ * Adds contextual review evidence without treating authentication, initiation,
+ * familiarity, or unusualness as proof of legitimacy or fraud. Resolutions are
+ * scoped to an account/merchant and therefore cannot suppress a materially
+ * different future transaction.
+ */
+export function evaluateFinanceReviewCases(
+  transactions: readonly FinanceTransaction[],
+  contexts: Readonly<Record<string, FinanceReviewContext>> = {},
+  resolutions: readonly FinanceReviewResolution[] = [],
+  knownIssueTransactionIds: readonly string[] = []
+): FinanceReviewEvaluation {
+  const byId = new Map(transactions.map((transaction) => [transaction.id, transaction]));
+  const cases = new Map(detectFinanceReviewCases(transactions).map((review) => [review.transactionId, review]));
+  for (const transaction of transactions) {
+    const context = contexts[transaction.id];
+    if (!context) continue;
+    const review = cases.get(transaction.id);
+    const reasons = [...(review?.reasons ?? [])];
+    if (context.possibleScamOrCoercion) reasons.push("context indicates possible scam or coercion; user initiation/authentication is not proof of informed legitimacy");
+    if (context.authenticated || context.userInitiated || context.familiarMerchant) reasons.push("authentication, user initiation, or merchant familiarity does not establish legitimacy");
+    if (context.benignExplanation?.trim()) reasons.push(`possible benign explanation supplied: ${context.benignExplanation.trim().slice(0, 240)}`);
+    if (reasons.length === 0) continue;
+    const uniqueReasons = [...new Set(reasons)];
+    cases.set(transaction.id, {
+      id: review?.id ?? `finance-review:${financeModelKey(transaction.id)}`,
+      transactionId: transaction.id,
+      priority: context.possibleScamOrCoercion ? "URGENT_REVIEW" : review?.priority ?? "MEDIUM",
+      disposition: review?.disposition ?? "UNRESOLVED",
+      confidence: review?.confidence ?? "LOW",
+      reasons: uniqueReasons,
+      sourceIds: [...new Set([...(review?.sourceIds ?? []), transaction.lineage.sourceId, ...(context.evidence ?? [])])].sort(),
+      evidence: { truthClass: "DERIVED", sourceIds: [transaction.id], note: "Context changes review priority and explanation only; it does not prove authorization, coercion, or fraud." }
+    });
+  }
+  for (const resolution of resolutions) {
+    const transaction = byId.get(resolution.transactionId);
+    const review = cases.get(resolution.transactionId);
+    if (!transaction || !review || transaction.accountId !== resolution.scope.accountId || (resolution.scope.merchant !== undefined && resolution.scope.merchant !== transaction.merchant)) continue;
+    if (!resolution.reason.trim() || !Number.isFinite(Date.parse(resolution.resolvedAt)) || resolution.sourceIds.length === 0) continue;
+    cases.set(transaction.id, { ...review, disposition: resolution.disposition, reasons: [...review.reasons, `user resolution: ${resolution.reason.trim().slice(0, 240)}`], sourceIds: [...new Set([...review.sourceIds, ...resolution.sourceIds])].sort() });
+  }
+  const evaluated = [...cases.values()].sort((left, right) => left.id.localeCompare(right.id));
+  const observableMissedKnownIssueCount = knownIssueTransactionIds.filter((id) => !evaluated.some((review) => review.transactionId === id)).length;
+  const available = resolutions.length >= 3 || knownIssueTransactionIds.length >= 3;
+  return {
+    cases: evaluated,
+    metrics: { resolvedCount: evaluated.filter((review) => review.disposition !== "UNRESOLVED").length, confirmedLegitimateCount: evaluated.filter((review) => review.disposition === "CONFIRMED_LEGITIMATE").length, observableMissedKnownIssueCount, available },
+    limitations: [
+      ...(available ? [] : ["false-positive and observable missed-known-issue metrics remain limited until at least three scoped resolutions or known issues exist"]),
+      ...(evaluated.some((review) => review.priority === "URGENT_REVIEW") ? ["possible scam/coercion remains distinct from confirmed unauthorized activity and requires user review"] : [])
+    ]
+  };
 }
 
 export interface FinanceForecastPoint {
