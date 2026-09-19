@@ -1421,8 +1421,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const decision = registration.waiting ? "WAITING" : "ACTIVATED";
       await persistShellUpdateObservation({ releaseId: status.cacheName, shellVersion: status.cacheName, cacheName: status.cacheName, observedAt: new Date().toISOString(), decision, rollbackPath: updateRollbackPath });
     }
-    updateLedgerPill.textContent = registration.waiting ? copy.updateWaiting : status?.cacheName ? copy.updateActive(status.cacheName) : copy.updateNoWaiting;
-    updateLedgerStatus.textContent = registration.waiting ? copy.updateWaiting : status?.cacheName ? copy.updateActive(status.cacheName) : copy.updateNoWaiting;
+    const waiting = Boolean(registration.waiting);
+    updateActivate.hidden = !waiting;
+    updateLedgerPill.textContent = waiting ? copy.updateWaiting : status?.cacheName ? copy.updateActive(status.cacheName) : copy.updateNoWaiting;
+    updateLedgerStatus.textContent = waiting ? copy.updateWaiting : status?.cacheName ? copy.updateActive(status.cacheName) : copy.updateNoWaiting;
     updateLedgerList.replaceChildren();
     for (const entry of shellUpdateLedger) {
       const item = document.createElement("li");
