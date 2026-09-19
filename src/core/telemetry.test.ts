@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { projectTelemetry, projectTelemetryConsiderations, telemetryFactFingerprint } from "./telemetry";
+import { makeTelemetryPreviewInput, parseTelemetryPreviewMode, projectTelemetry, projectTelemetryConsiderations, telemetryFactFingerprint } from "./telemetry";
 
 describe("persistent runtime telemetry projection", () => {
   it("reports the quiet healthy state without turning it into a score", () => {
@@ -91,5 +91,15 @@ describe("persistent runtime telemetry projection", () => {
       now: new Date("2026-09-19T12:00:00.000Z")
     });
     expect(snapshot.facts.map((fact) => fact.status)).toEqual(["DISABLED", "CURRENT", "BACKLOGGED", "READY", "UNRESOLVED", "NORMAL"]);
+  });
+
+  it("provides loopback-qualified preview inputs for every required escalation state", () => {
+    const now = new Date("2026-09-19T12:00:00.000Z");
+    expect(parseTelemetryPreviewMode("all", true)).toBe("all");
+    expect(parseTelemetryPreviewMode("all", false)).toBeUndefined();
+    expect(parseTelemetryPreviewMode("unknown", true)).toBeUndefined();
+    expect(projectTelemetry(makeTelemetryPreviewInput("healthy", now)).facts.map((fact) => fact.status)).toEqual(["DISABLED", "CURRENT", "CLEAR", "READY", "CLEAR", "NORMAL"]);
+    expect(projectTelemetry(makeTelemetryPreviewInput("all", now)).facts.map((fact) => fact.status)).toEqual(["DISABLED", "STALE", "BACKLOGGED", "DEGRADED", "UNRESOLVED", "ELEVATED"]);
+    expect(projectTelemetry(makeTelemetryPreviewInput("all", now)).attentionCount).toBe(5);
   });
 });

@@ -2,6 +2,7 @@ export type TelemetryFactId = "replication" | "backup" | "outbox" | "capability"
 export type TelemetryHealth = "HEALTHY" | "ATTENTION" | "UNKNOWN";
 export type TelemetryStatus = "READY" | "DISABLED" | "CURRENT" | "STALE" | "CLEAR" | "BACKLOGGED" | "DEGRADED" | "UNRESOLVED" | "NORMAL" | "ELEVATED" | "UNKNOWN";
 export type TelemetryDispositionState = "OPEN" | "DISMISSED";
+export type TelemetryPreviewMode = "healthy" | "backup-stale" | "outbox-backlogged" | "capability-degraded" | "conflict-unresolved" | "storage-elevated" | "all";
 
 export const TELEMETRY_THRESHOLDS_SETTING = "telemetry.thresholds";
 export const TELEMETRY_DISPOSITIONS_SETTING = "telemetry.dispositions";
@@ -17,6 +18,8 @@ export const DEFAULT_TELEMETRY_THRESHOLDS: TelemetryThresholds = {
   pendingEffects: 1,
   unresolvedConflicts: 1
 };
+
+export const TELEMETRY_PREVIEW_MODES: readonly TelemetryPreviewMode[] = ["healthy", "backup-stale", "outbox-backlogged", "capability-degraded", "conflict-unresolved", "storage-elevated", "all"];
 
 export interface TelemetryFact {
   id: TelemetryFactId;
@@ -54,6 +57,30 @@ export interface TelemetryInput {
   storagePressure: "NORMAL" | "ELEVATED" | "UNKNOWN";
   thresholds?: TelemetryThresholds;
   now?: Date;
+}
+
+export function parseTelemetryPreviewMode(value: string | null, loopback: boolean): TelemetryPreviewMode | undefined {
+  return loopback && value && (TELEMETRY_PREVIEW_MODES as readonly string[]).includes(value) ? value as TelemetryPreviewMode : undefined;
+}
+
+export function makeTelemetryPreviewInput(mode: TelemetryPreviewMode, now = new Date()): TelemetryInput {
+  const currentBackup = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
+  const staleBackup = new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000).toISOString();
+  const input: TelemetryInput = {
+    replication: { enabled: false },
+    backup: { lastVerifiedAt: currentBackup },
+    pendingEffects: 0,
+    degradedCapabilities: [],
+    unresolvedConflicts: 0,
+    storagePressure: "NORMAL",
+    now
+  };
+  if (mode === "backup-stale" || mode === "all") input.backup = { lastVerifiedAt: staleBackup };
+  if (mode === "outbox-backlogged" || mode === "all") input.pendingEffects = 2;
+  if (mode === "capability-degraded" || mode === "all") input.degradedCapabilities = ["preview.capability"];
+  if (mode === "conflict-unresolved" || mode === "all") input.unresolvedConflicts = 1;
+  if (mode === "storage-elevated" || mode === "all") input.storagePressure = "ELEVATED";
+  return input;
 }
 
 export function projectTelemetry(input: TelemetryInput): TelemetrySnapshot {

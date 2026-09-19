@@ -44,7 +44,7 @@ import { CORE_AUTOMATION_PACKAGE, type PackageAutomationRuntime } from "../core/
 import type { PackageAutomationProposal } from "../core/package-automation-registry";
 import { shouldAutoShowOnboarding } from "../core/onboarding";
 import { REVIEW_SESSION_SETTING, REVIEW_TEMPLATES, advanceReviewSession, getReviewTemplate, isReviewSession, makeReviewSession, type ReviewSession } from "../core/review";
-import { projectTelemetry, projectTelemetryConsiderations, parseTelemetryDispositions, parseTelemetryThresholds, TELEMETRY_DISPOSITIONS_SETTING, TELEMETRY_THRESHOLDS_SETTING, type TelemetryDispositions, type TelemetryThresholds } from "../core/telemetry";
+import { makeTelemetryPreviewInput, parseTelemetryPreviewMode, projectTelemetry, projectTelemetryConsiderations, parseTelemetryDispositions, parseTelemetryThresholds, TELEMETRY_DISPOSITIONS_SETTING, TELEMETRY_THRESHOLDS_SETTING, type TelemetryDispositions, type TelemetryThresholds } from "../core/telemetry";
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -91,6 +91,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const effectRevocationPreviewMode = new URLSearchParams(window.location.search).get("effect-revocation-preview") === "1";
   const effectCredentialedPreviewMode = new URLSearchParams(window.location.search).get("effect-credentialed-preview") === "1";
   const effectCredentialedRestartPreviewMode = new URLSearchParams(window.location.search).get("effect-credentialed-restart-preview") === "1";
+  const telemetryPreviewMode = parseTelemetryPreviewMode(new URLSearchParams(window.location.search).get("telemetry-preview"), ["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname));
   root.dataset.theme = presentation.theme;
   root.dataset.family = presentation.family;
   root.dataset.density = presentation.density;
@@ -2148,19 +2149,27 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     capabilityStatus.textContent = degradedCapabilities.length === 0 ? copy.local : `${copy.local} - ${degradedCapabilities.length} degraded`;
     capabilityStatus.title = degradedCapabilities.length === 0 ? "Core capabilities are ready." : degradedCapabilities.map((status) => `${status.id}: ${status.reason ?? "degraded"}`).join("; ");
   };
-  const projectHealthTelemetry = (health: Awaited<ReturnType<CanonicalStore["health"]>>): ReturnType<typeof projectTelemetry> => projectTelemetry({
-    replication: { enabled: false },
-    backup: "UNKNOWN",
-    pendingEffects: health.pendingEffects,
-    degradedCapabilities: capabilityRuntime ? capabilityRuntime.snapshot().filter((status) => status.state === "DEGRADED").map((status) => status.id) : "UNKNOWN",
-    unresolvedConflicts: "UNKNOWN",
-    storagePressure: health.storage?.pressure ?? "UNKNOWN",
-    thresholds: telemetryThresholds
-  });
+  const projectHealthTelemetry = (health: Awaited<ReturnType<CanonicalStore["health"]>>): ReturnType<typeof projectTelemetry> => {
+    const input = telemetryPreviewMode ? makeTelemetryPreviewInput(telemetryPreviewMode) : {
+      replication: { enabled: false },
+      backup: "UNKNOWN" as const,
+      pendingEffects: health.pendingEffects,
+      degradedCapabilities: capabilityRuntime ? capabilityRuntime.snapshot().filter((status) => status.state === "DEGRADED").map((status) => status.id) : "UNKNOWN" as const,
+      unresolvedConflicts: "UNKNOWN" as const,
+      storagePressure: health.storage?.pressure ?? "UNKNOWN" as const
+    };
+    const snapshot = projectTelemetry({ ...input, thresholds: telemetryThresholds });
+    if (!telemetryPreviewMode) return snapshot;
+    return {
+      ...snapshot,
+      facts: snapshot.facts.map((fact) => ({ ...fact, evidence: [...fact.evidence, `synthetic loopback preview: ${telemetryPreviewMode}`] }))
+    };
+  };
   const formatHealth = (health: Awaited<ReturnType<CanonicalStore["health"]>>): string => {
     const telemetry = projectHealthTelemetry(health);
     const status = telemetry.facts.map((fact) => fact.status);
-    return `${copy.healthMessage(health.activeRecords, health.archivedRecords, health.historyEntries, health.artifactPayloads, health.searchIndexValid ? copy.healthy : copy.degraded, health.storage?.pressure)} ${copy.telemetryMessage(status[0] ?? "UNKNOWN", status[1] ?? "UNKNOWN", status[2] ?? "UNKNOWN", status[3] ?? "UNKNOWN", status[4] ?? "UNKNOWN", status[5] ?? "UNKNOWN")} ${getStoragePersistenceNotice(presentation.locale, health.storage?.persistence ?? "UNAVAILABLE")}`;
+    const previewNotice = telemetryPreviewMode ? ` Telemetry preview ${telemetryPreviewMode}: synthetic loopback state; canonical data unchanged.` : "";
+    return `${copy.healthMessage(health.activeRecords, health.archivedRecords, health.historyEntries, health.artifactPayloads, health.searchIndexValid ? copy.healthy : copy.degraded, health.storage?.pressure)} ${copy.telemetryMessage(status[0] ?? "UNKNOWN", status[1] ?? "UNKNOWN", status[2] ?? "UNKNOWN", status[3] ?? "UNKNOWN", status[4] ?? "UNKNOWN", status[5] ?? "UNKNOWN")} ${getStoragePersistenceNotice(presentation.locale, health.storage?.persistence ?? "UNAVAILABLE")}${previewNotice}`;
   };
   refreshCapabilityStatus();
 
