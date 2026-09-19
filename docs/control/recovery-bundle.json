@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "e9aef880ade9c0cfc30d4aea73acf869af4185fad3e8bde62efe8537a03f9ac4",
-        "bytes": 177528
+        "sha256": "a388fd99b686fc658d41aaea2feed19ea30dc7c5037f07b75ec80db04937ab72",
+        "bytes": 177842
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "8cd6c3c11c6044f0684d3ce90584af53296e5e88ba5d7f8acdbd1f1c00c657c7",
-        "bytes": 54968
+        "sha256": "76ef7cc99eef7de5e42422491531a8cee363a87ed08b06c3854c5a540fd2057e",
+        "bytes": 55537
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -224,12 +224,12 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "84eb510fd78755966c354e8db5371fe1efeade43325c46b4d5786356e80d0ddb",
-        "bytes": 4269
+        "sha256": "5e42d15f61827bc3f9f3a50f8284295aea7bcf5404c42c4b1a1e45cff69333b0",
+        "bytes": 4392
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "f39574d318c0c67f72fce8ed9eb4e8229897e1c51c3d25b57f662c9c232d0b22",
+        "sha256": "de536228a307226ecdc285d4abb1952c0aa194360fbdd9675f1118df0ff73126",
         "bytes": 2399
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "7caf3f295ec9199c2c3d67e737bff1fce49e3011e6483c303a48c70e9b4cca14",
-        "bytes": 256027
+        "sha256": "83052abfd20ea646140c8e0d56ea18d3d5826f04c566d15d98f946a46b6dd57d",
+        "bytes": 257091
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -889,13 +889,13 @@
       },
       {
         "path": "src/core/storage.test.ts",
-        "sha256": "428845a664d9578114facc09d418504e6c68891c6eddc67ba9a5eb4b587d1abd",
-        "bytes": 31105
+        "sha256": "a8e842a984b17c03c24d706dd8e336871d710886ce3037da4dca504980c31124",
+        "bytes": 31219
       },
       {
         "path": "src/core/storage.ts",
-        "sha256": "08090d55d83ccb45687c4ae7f1325a1db010ff54f1b8d17c52ec22b8aa164c22",
-        "bytes": 48339
+        "sha256": "97e75ecd8f900589954809b3690a36e2fce11e57b1145dbf4a12343d56505309",
+        "bytes": 48394
       },
       {
         "path": "src/core/sync-routes.test.ts",

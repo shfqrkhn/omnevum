@@ -1307,6 +1307,10 @@ On 2026-09-19, `npx vitest run src/core/presentation.test.ts` passed all 12 pres
 
 This reduces the compatible version-1 profile-upgrade uncertainty behind `OMN-ACC-023` and `OMN-ACC-132` at the core-contract level. It does not qualify future schema migrations, exported-file readback, browser-family/installed-host behavior, or human acceptance; the acceptance scenarios remain `PARTIAL`.
 
+## Current v0.17.4 hard-clear removes persisted automation receipt
+
+On 2026-09-19, the current built artifact bound to source `f1fc709`, artifact digest `e0213d11dcc1e40561a5070483468d3f0e02a3a14f6aeb20ad37744ad4cc7915`, and service-worker cache `omnevum-shell-a0c9edcd966c71ed` passed `npm run build`; `npx vitest run src/core/storage.test.ts` passed all 34 storage tests. The hard-clear regression seeds presentation settings, a package save, an installed automation rule, a canonical record, history, and a pending effect, confirms the destructive clear, and verifies that all canonical/recovery stores plus persisted automation rules are empty while presentation settings remain. This closes the prior implementation mismatch where the impact preview counted automation rules but the clear owner did not remove them. The browser impact/cancel receipt remains bound separately above; persistent/restart undo, full transitive graph blast-radius analysis, native/browser breadth, deployment, and human acceptance remain open, so `OMN-ACC-116` remains `PARTIAL`.
+
 ## Current v0.17.4 Chromium canonical clear-impact receipt
 
 On 2026-09-19, the exact current artifact bound to source `059d6ab`, artifact digest `761eb7b1e7982de11d8ddb52febe15c5f2048e69a9d1f3e8c77163ed7d45db74`, and service-worker cache `omnevum-shell-71e51bcf6a033d02` was served from `dist/` at `http://127.0.0.1:4333/` in a fresh Chromium origin. The visible Capture form created two canonical Notes, a visible relationship command created one canonical reference, a local-only external action queued one `PENDING` effect, and the package automation editor installed one proposal-only rule.

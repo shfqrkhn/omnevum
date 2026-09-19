@@ -42,7 +42,8 @@
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-degraded-index-detail-and-explicit-repair-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-strict-detail-geometry-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-deterministic-domain-lens-projection-receipt",
-    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-canonical-clear-impact-receipt"
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-canonical-clear-impact-receipt",
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-hard-clear-removes-persisted-automation-receipt"
   ],
   "focus": [
     "static-host shell and base-path routing",
