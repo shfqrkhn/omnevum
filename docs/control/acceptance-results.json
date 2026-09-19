@@ -1969,9 +1969,10 @@
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-strict-detail-geometry-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-strict-detail-geometry-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-all-family-narrow-target-geometry-receipt"
       ],
-      "notes": "All six family/mode combinations were exercised at a strict 320x844 viewport and a temporary 2x page-scale rehearsal; the accessibility receipt additionally exercises large-target 125% and explicit 200% text scale, and the detail receipt measures the canonical detail surface at 320px/200% with no page overflow. The current runs had no page/body horizontal overflow, no horizontal target clipping, no consequential target below 44x44, and the same canonical sentinel. Physical touch/input profiles, color-only state/CVD, alternate mutation paths, other engines, and human acceptance remain open."
+      "notes": "All six family/mode combinations were exercised at a strict 320x844 viewport and a temporary 2x page-scale rehearsal; the accessibility receipt additionally exercises large-target 125% and explicit 200% text scale, the detail receipt measures the canonical detail surface at 320px/200%, and the current all-family receipt reports 12 runs with 240 visible consequential controls per run, zero page/clipped targets, and zero inter-control overlap after keeping narrow lens navigation in normal flow. The current runs had no page/body horizontal overflow, no horizontal target clipping, no consequential target below 44x44, and the same canonical sentinel. Physical touch/input profiles, color-only state/CVD, alternate mutation paths, other engines, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-132",
