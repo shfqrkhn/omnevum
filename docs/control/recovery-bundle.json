@@ -189,7 +189,7 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "76ef7cc99eef7de5e42422491531a8cee363a87ed08b06c3854c5a540fd2057e",
+        "sha256": "d9b597be646ca52028c3bbf6959a6629e84a7293816ef7ce1c6e3762691a061b",
         "bytes": 55537
       },
       {
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "de536228a307226ecdc285d4abb1952c0aa194360fbdd9675f1118df0ff73126",
+        "sha256": "86c48eb2746dde2a536342967ecc33ce9f863bac1548ebea4a7773aba70265d5",
         "bytes": 2399
       },
       {
@@ -269,7 +269,7 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "83052abfd20ea646140c8e0d56ea18d3d5826f04c566d15d98f946a46b6dd57d",
+        "sha256": "f0e633694d2ad9044af59be453856b3a360e98845844c6c1be6568e90a46bd2e",
         "bytes": 257091
       },
       {
