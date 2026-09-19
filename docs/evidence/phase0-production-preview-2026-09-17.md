@@ -1239,3 +1239,11 @@ On 2026-09-19, the exact rebuilt artifact bound to source `bd0ba10`, artifact di
 The run covered achromatopsia, deuteranopia, protanopia, and tritanopia across Alpha, Beta, and Gamma in both Light and AMOLED Dark modes: 24 runs and all six family/mode combinations. Every run retained `scrollWidth=clientWidth=1265`; the visible Home consideration heading and source/action surface, Capture surface, active Domains surface, `Snooze 24 hours`, and `Dismiss` labels remained present. The emulation was reset to `none` and the persisted presentation was restored to Gamma Light after the matrix.
 
 This advances OMN-ACC-103 with receipt-bound Chromium CVD/monochrome rehearsal and confirms no labelled-surface or geometry loss under the four emulated deficiencies. It does not prove pixel-level state distinguishability for every painted graphic, every active lens/state, physical hardware, other engines, screen readers/assistive technology, or human acceptance; OMN-ACC-103 remains `PARTIAL`.
+
+## Current v0.17.4 Chromium Capture-to-Triage idle receipt
+
+On 2026-09-19, the exact rebuilt artifact bound to source `bd0ba10`, artifact digest `c112aa4c52e79b34312dc974d361a575f4f391aebf1f3f67115b48ca580070be`, and service-worker cache `omnevum-shell-6a36d84cc65a0b90` was served at `http://127.0.0.1:4324/?triage-idle-final=1` in a fresh Chromium origin.
+
+The visible Capture form saved the raw synthetic item `Idle triage proposal receipt 2026-09-19` with the default proposal-only route. Triage showed the raw identity and `(in inbox)`, the statement `Proposal only ... No canonical state changed.`, possible owner/type candidates, and distinct named actions for Mark reviewed, Defer, Clarify, Keep as reference, Create link, Route, Split, Delete, and Archive. After an idle interval of 1.8 seconds, health and the full Triage text were unchanged. A full reload retained the staged proposal and one active canonical staging record; no disposition was invoked.
+
+This advances OMN-ACC-105 to `PARTIAL` for current Chromium proposal-only/no-self-commit behavior and visible distinct command boundaries. It does not qualify dismissed/scroll timeout behavior, suggestion origin/confidence, Device/Input disablement, other engines, deployment, accessibility/human acceptance, or a full commit/defer/discard command receipt; OMN-ACC-105 remains `PARTIAL`.
