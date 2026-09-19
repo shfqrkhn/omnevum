@@ -1593,8 +1593,11 @@
         "line": 4130
       },
       "text": "A deliberately broken or contrast-failing active family/custom presentation profile is loaded. Safe Presentation Mode renders Home, System, and Recovery from the bound Concept Gamma Light or AMOLED Dark baseline of Section 3.6.1 without network access, without parsing the broken profile, without deleting the selected family/profile or canonical data, and reports the substitution; the user can subsequently repair, reset, or discard the profile through an admitted command.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-chromium-safe-presentation-recovery-follow-up"
+      ],
+      "notes": "The receipt-bound Chromium recovery exercise preserves a deliberately malformed presentation and canonical sentinel while selecting the known-good Safe Presentation profile and exposing the exit path. Broader current-artifact, browser-family, accessibility, and deployment qualification remain open."
     },
     {
       "id": "OMN-ACC-103",
@@ -1603,8 +1606,11 @@
         "line": 4132
       },
       "text": "In every built-in family in both Light and AMOLED Dark modes, every consequential state on Home, Capture, and an active lens - including action versus synergy, which share a hue within each pair - remains distinguishable under monochrome and representative color-vision-deficiency simulations because each state carries a non-color label, icon, shape, textual/segmented indicator, or positional carrier.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-non-color-state-carrier-receipt"
+      ],
+      "notes": "Current Chromium evidence proves textual and labelled state carriers across Home, Capture, Triage, and Records without relying on accent hue. All family/mode monochrome and representative CVD breadth, active-lens coverage, other engines, assistive technology, physical touch, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-104",
@@ -1679,8 +1685,11 @@
         "line": 4146
       },
       "text": "Home focus mode is enabled and disabled. Both presentations contain the same items in the same consequence order with the same evidence, uncertainty, why-this-appeared statement, and admitted commands. Focus mode hides no item, gates no advancement, and the preference persists across restart.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-home-focus-mode-receipt"
+      ],
+      "notes": "Current Chromium receipt proves presentation-only Home focus mode enable/disable, preserved consideration semantics and order, enlarged type/targets, and restart persistence. Broader consideration signals, target/accessibility/human acceptance, and deployment remain open."
     },
     {
       "id": "OMN-ACC-111",
