@@ -1666,8 +1666,14 @@
         "line": 4140
       },
       "text": "Persistent telemetry on each primary surface is verified against injected fault states: replication disabled, backup stale, Effect/Outbox backlogged, and a capability degraded. The surface reports the true state or UNKNOWN, never an optimistic assumption, and the telemetry is not rendered as a score, streak, or engagement metric.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/telemetry.ts",
+        "src/core/telemetry.test.ts",
+        "src/ui/app.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-telemetry-projection-and-health-line-receipt"
+      ],
+      "notes": "Source d9366c7 provides one shared telemetry projection for replication, backup, outbox, capability, conflict, and storage facts; targeted telemetry/i18n/storage tests passed 41 tests, and artifact 7388b8a228b04be7b0430987439e6d962aa74b49367f7861c5176f24eed41514 with worker omnevum-shell-bf0f45c3fd008ef8 visibly renders truthful Edge health-line states on a clean localhost origin. Durable backup freshness/conflict persistence, browser-injected all-fault transitions, other targets/assistive technology/touch, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-108",
