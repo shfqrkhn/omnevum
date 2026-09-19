@@ -1936,8 +1936,13 @@
         "line": 4176
       },
       "text": "The application shell is deliberately broken in two ways. In the first, the degraded normal Recovery path renders from baseline tokens, states what failed and what is intact with verified Vault state, and offers repair, baseline-theme, and restore. In the second, where that path itself cannot render, the visually distinct last-resort console is reached through its documented stable route with no theme, language pack, font, module, index, or network available, reports record integrity and Vault state, and completes an immediate export. Neither path deletes the presentation profile, language pack, or canonical data.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "public/recovery.html#OMNEVUM_LAST_RESORT_RECOVERY",
+        "scripts/static-audit.mjs#last-resort-recovery-route",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-last-resort-recovery-console-receipt"
+      ],
+      "notes": "The independent ./recovery.html route is dependency-free, read-only, stable, and browser-qualified on the current Chromium static artifact: it reads an existing v6 IndexedDB store, reports structural record/history/artifact integrity and Vault state, and exports a 1,956-byte recovery snapshot without mutation. The normal degraded Recovery shell already provides repair/baseline/restore paths. Other browser families, deliberate shell/module/theme failures, deployed/offline/native fault matrices, assistive technology, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-126",
