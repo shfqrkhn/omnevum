@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "0fc141dd08d571ec78d1900250aee5189c2e4ebe9157c5b3947eb126647d4db1",
-        "bytes": 199195
+        "sha256": "4aadea6031cb45d08dda5de6ae9be39ff2d56612a0b81992c3407a60d80cb042",
+        "bytes": 199827
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -159,8 +159,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "f7a918a7923b52fed6a418987c301e70439ea3baaf9db379e30d66d1f0561c71",
-        "bytes": 5681
+        "sha256": "37c7e5c82f624a874b86fa9605c8a40c15fa31f6aaa2a198da8cb7598b7ba02a",
+        "bytes": 5874
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "426b606e6616fdc91a2cde5767bd834ff239fd9f881a50205323b139e148f102",
-        "bytes": 63433
+        "sha256": "037984853ffdfa11aa7faa009a491a73878c6805cdaabbd957f5b5a12fb0610e",
+        "bytes": 64046
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "3616d0177161b57bceea70e483ae415e0691d2798db4ad174faba873a9045fea",
+        "sha256": "721eee3a2fa1307f91f4c1aa3d7942a8dfd4cfd350f3d54aa01e28fa03ad378b",
         "bytes": 2433
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "37aadac8084219ac665016dbff957f29fecc69436ab4fafdc31b6fbab93c4cd5",
-        "bytes": 295492
+        "sha256": "05003f23c7a5986e33b7d3103b0008fc55ca3990cfd355862d012d6d27747b52",
+        "bytes": 297961
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -679,23 +679,23 @@
       },
       {
         "path": "src/core/finance-model.test.ts",
-        "sha256": "23fe7c54908debb6797b0437b49dfe49e39cef403cdb55a9cb574053caaa2953",
-        "bytes": 8488
+        "sha256": "2a1b7b98c35f5caab6e1fa03366d4e41b691a3b957c604eaad3877dff2c1f2f5",
+        "bytes": 10075
       },
       {
         "path": "src/core/finance-model.ts",
-        "sha256": "c74c1b993f21b7617b5e8de054cd723deb579c4ae8fcc961b1985bec40d2c886",
-        "bytes": 37449
+        "sha256": "961a6396e71f447137d2a255532abe959d882feef13009c05061b9372a872d97",
+        "bytes": 42218
       },
       {
         "path": "src/core/finance-projection.test.ts",
-        "sha256": "87b0fa96c0e19adfd8ca132b4d78934867ca982d4e2d9cf8426850653db6ab02",
-        "bytes": 6770
+        "sha256": "338339c7b51b7e485ea14c6dc5a8d6624109086bd6604b6d776861a1f6bffc60",
+        "bytes": 8260
       },
       {
         "path": "src/core/finance-projection.ts",
-        "sha256": "9ce94fa49e2ee51273ee843d379053d7aba3310096b5e2069d91e708e94f2453",
-        "bytes": 15180
+        "sha256": "6c957515fff0b5b5a0e0f2f50065eaa920ead5a7b493ccdc086350245a2661f5",
+        "bytes": 15524
       },
       {
         "path": "src/core/finance.test.ts",
@@ -734,8 +734,8 @@
       },
       {
         "path": "src/core/i18n.ts",
-        "sha256": "291e21a273df396851fb8562cfbefd07ffaf0c2205b7608a31bc02fbb18db9ed",
-        "bytes": 96072
+        "sha256": "2518c83cfb2231721d0333479773c9a467dbee7578867b18b6cc44eeab99bcba",
+        "bytes": 96594
       },
       {
         "path": "src/core/id.ts",
@@ -1059,8 +1059,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "551e0b3132174944f3f678ae0340b6f6f536e93892fa8e6c6ed76480e1348d29",
-        "bytes": 290810
+        "sha256": "e0d8b5ace88b225f10835e3bd7d6935f6a755a848e6bb46136d40f3e18262bad",
+        "bytes": 291156
       },
       {
         "path": "tsconfig.json",

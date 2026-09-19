@@ -2040,8 +2040,11 @@
         "line": 4201
       },
       "text": "Chequing shows a credit-card payment and an internal savings/investment transfer while the receiving accounts show corresponding inflows. Finance links the pairs, reconciles the affected statements, excludes the card payment/internal transfers from income/spending totals, preserves the underlying account movements, and leaves an injected unmatched transfer explicitly unresolved.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-transfer-pairing-and-aggregate-exclusion-receipt"
+      ],
+      "notes": "Current projection evidence pairs exact-money cross-account card/internal movements only when bounded date, distinct-account, and transfer-like description signals agree; it excludes confirmed pairs from aggregate income/spending/net cash flow while retaining source lineage and unresolved candidates. Cross-statement balance reconciliation, broader source extraction, refund/reversal pairing, learned transfer rules, and accepted file-upload/confirmation UI remain open."
     },
     {
       "id": "OMN-ACC-137",
