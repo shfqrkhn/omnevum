@@ -154,22 +154,21 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </div>
       </section>
 
-      <section id="onboarding" class="panel onboarding-panel" aria-labelledby="onboarding-heading"${onboardingAutoShown ? "" : " hidden"}>
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">${copy.foundation}</p>
-            <h2 id="onboarding-heading">${copy.onboardingHeading}</h2>
+      <details id="onboarding" class="panel onboarding-panel compact-panel" aria-labelledby="onboarding-heading"${onboardingAutoShown ? "" : " hidden"}>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.foundation}</p><h2 id="onboarding-heading">${copy.onboardingHeading}</h2></span></summary>
+        <div class="onboarding-content">
+          <div class="section-heading">
+            <p class="hint">${copy.onboardingHint}</p>
+            <button id="onboarding-dismiss" class="secondary" type="button">${copy.onboardingDismiss}</button>
           </div>
-          <button id="onboarding-dismiss" class="secondary" type="button">${copy.onboardingDismiss}</button>
+          <ol class="onboarding-steps">
+            <li>${copy.onboardingCapture}</li>
+            <li>${copy.onboardingReview}</li>
+            <li>${copy.onboardingRecovery}</li>
+          </ol>
+          <a class="secondary onboarding-start" href="#capture">${copy.onboardingStart}</a>
         </div>
-        <p>${copy.onboardingHint}</p>
-        <ol class="onboarding-steps">
-          <li>${copy.onboardingCapture}</li>
-          <li>${copy.onboardingReview}</li>
-          <li>${copy.onboardingRecovery}</li>
-        </ol>
-        <a class="secondary onboarding-start" href="#capture">${copy.onboardingStart}</a>
-      </section>
+      </details>
 
       <section id="home-summary" class="panel" aria-labelledby="summary-heading">
         <div class="section-heading">
@@ -1262,7 +1261,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const effectList = root.querySelector<HTMLUListElement>("#effect-list")!;
   const healthStatus = root.querySelector<HTMLElement>("#health-status");
   const capabilityStatus = root.querySelector<HTMLElement>("#capability-status");
-  const onboardingPanel = root.querySelector<HTMLElement>("#onboarding");
+  const onboardingPanel = root.querySelector<HTMLDetailsElement>("#onboarding");
   const onboardingDismiss = root.querySelector<HTMLButtonElement>("#onboarding-dismiss");
   const onboardingShow = root.querySelector<HTMLButtonElement>("#onboarding-show");
   const themeToggle = root.querySelector<HTMLButtonElement>("#theme-toggle");
@@ -2123,6 +2122,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     try {
       await store.setSetting("onboarding.dismissed", true);
       onboardingPanel.hidden = true;
+      onboardingPanel.open = false;
       onboardingShow.hidden = false;
     } catch (error) {
       recoveryStatus.textContent = describeError(error, "The getting-started guide could not be dismissed; canonical data was not changed.");
@@ -2130,6 +2130,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   });
   onboardingShow.addEventListener("click", () => {
     onboardingPanel.hidden = false;
+    onboardingPanel.open = true;
     onboardingShow.hidden = true;
     onboardingDismiss.focus();
   });
