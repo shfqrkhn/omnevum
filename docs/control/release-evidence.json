@@ -3,7 +3,7 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "f0c2e0d61b2cfe767631bbb89f7153408744135ea45ce0a57c178e65027cd01b", "sourceRevision": "7244759", "serviceWorkerCache": "omnevum-shell-02ca9c497f2262f4"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "5b2b1573e95ce26538753d75d15e07b89abf62cb06e4add4bf429a1f86576563", "sourceRevision": "7244759", "serviceWorkerCache": "omnevum-shell-02ca9c497f2262f4"},
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF; captured after the full npm run build on 2026-09-19.",
   "artifactFiles": [
     {"path": "dist/assets/index-BF2iToeV.css", "sha256": "a00f4b0e35d7d363387704bf6b9d592b3a280e330754db2a6e1e3d8b7b8dcd24", "bytes": 10327},
