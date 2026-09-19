@@ -1021,8 +1021,14 @@
         "line": 4038
       },
       "text": "A representative large CSV/JSON/Parquet analytical dataset is queried locally through a qualified browser analytical projection engine such as DuckDB-Wasm without changing canonical ownership. The workload remains usable on the claimed target, cancellation/resource bounds work, required runtime assets are available under the static/offline profile, and remote extension/data fetch is not silently triggered.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/analytical-projection.ts",
+        "src/core/analytical-projection.test.ts",
+        "docs/control/capability-coverage.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-analytical-projection-contract-receipt"
+      ],
+      "notes": "The bounded local tabular seam projects CSV/JSON rows as DERIVED data, supports bounded selection/filtering and AbortSignal cancellation without canonical ownership, and explicitly reports Parquet PLATFORM_LIMITED with remote fetch disabled. A qualified DuckDB-Wasm-class engine, representative large workload, Parquet path, static/offline runtime assets, target performance, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-057",

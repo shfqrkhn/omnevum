@@ -1910,3 +1910,9 @@ This advances `OMN-ACC-064` from `UNKNOWN` to `PARTIAL`. No qualified reusable c
 On 2026-09-19, source revision `59897a6` added the Omnevum-owned bounded semantic graph projection. The focused `src/core/semantic-graph.test.ts` suite passed `3` tests, followed by `npm run typecheck` and `git diff --check`. An authorized record set projects to a JSON-LD-shaped document with explicit source IDs, provenance IDs, sensitivity/disclosure scope, and deterministic triples. Local pattern queries and required-predicate shape validation return `DERIVED` results with source-bound violations; serialized graph data parses back through validation; and graph import produces reviewable `AcquireCandidate` items with `triageStatus: INBOX` and an explicit no-canonical-write boundary.
 
 This advances `OMN-ACC-071` from `UNKNOWN` to `PARTIAL`. No qualified RDF/JSON-LD/SPARQL/SHACL engine, richer ontology/inference, browser target, remote graph, deployment, or human acceptance was performed; those remain open.
+
+## Current v0.17.4 analytical projection contract receipt
+
+On 2026-09-19, source revision `d3bb061` added the Omnevum-owned bounded local analytical projection seam. The focused `src/core/analytical-projection.test.ts` suite passed `3` tests, followed by `npm run typecheck` and `git diff --check`. CSV and JSON scalar rows can be projected locally as `DERIVED` data with `canonicalOwner: NONE`, selected and filtered under row/column/byte bounds, and cancelled through `AbortSignal`; remote extension/data fetch is structurally disabled. Parquet is explicitly characterized as `PLATFORM_LIMITED` rather than parsed or fetched.
+
+This advances `OMN-ACC-056` from `UNKNOWN` to `PARTIAL`. No DuckDB-Wasm-class engine, representative large CSV/JSON/Parquet workload, static/offline analytical assets, target-performance qualification, or human acceptance was performed; those remain open.
