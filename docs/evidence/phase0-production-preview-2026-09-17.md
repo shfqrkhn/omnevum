@@ -1783,7 +1783,7 @@ The source guard is exercised by `npm run audit:static`; typecheck/build and `gi
 
 ## Current v0.17.4 narrow Recovery-summary wrapping receipt
 
-On 2026-09-19, source revision `74f66bd4b31b764707f47b71bf8fe88cb0cf9503` added a narrow-summary constraint so the active update-ledger status pill wraps inside the compact Recovery summary at small widths and high text scale. The exact rebuilt artifact served at `http://127.0.0.1:4361/` has digest `a7fa55b7bf846eebc4cd44ca3b2c917d9d4dc1774bfb2f78b86fc0884dbd464d` and worker cache `omnevum-shell-f545de829b7ff166`.
+On 2026-09-19, source revision `74f66bd4b31b764707f47b71bf8fe88cb0cf9503` added a narrow-summary constraint so the active update-ledger status pill wraps inside the compact Recovery summary at small widths and high text scale. The exact rebuilt artifact served at `http://127.0.0.1:4361/` has digest `f109ed7392fb61c13f86fb287f954fb4722bde213f4afc85a909bcd36c4d44dd` and worker cache `omnevum-shell-f545de829b7ff166`.
 
 With Chromium CDP metrics `320x844` and saved `200%` text scale, Recovery was opened deliberately: all eight Recovery child disclosures remained closed, the update-ledger pill wrapped within the `305px` page, and body/document scroll widths remained `305px` with zero unowned/page-level overflow. After closing Recovery, the compact default again had no open top-level or Recovery child disclosure and zero unowned overflow. The only out-of-viewport descendants remained inside the explicit `#lens-nav-list` horizontal scroller (`273px` client width, `351px` content width). No canonical record was created or changed.
 
