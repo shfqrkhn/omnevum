@@ -19,6 +19,32 @@ export interface PublicClientConfig {
   redirectOrigin: string;
 }
 
+export type ReplicaTransportKind = "VENDOR_FILE" | "OPEN_ENDPOINT";
+
+export interface ReplicaTransportBinding {
+  logicalVaultId: string;
+  canonicalRecordIds: string[];
+  transport: ReplicaTransportKind;
+  adapterId: string;
+  providerObjectId?: string;
+}
+
+export interface LocalReplicaAvailability {
+  logicalVaultId: string;
+  canonicalRecordIds: string[];
+  localCoreUsable: true;
+  remoteState: "AVAILABLE" | "UNREACHABLE";
+}
+
+export function rebindReplicaTransport(binding: ReplicaTransportBinding, transport: ReplicaTransportKind, adapterId: string, providerObjectId?: string): ReplicaTransportBinding {
+  if (!binding.logicalVaultId.trim() || !adapterId.trim() || binding.canonicalRecordIds.some((id) => !id.trim())) throw new Error("Replica identity is incomplete");
+  return { logicalVaultId: binding.logicalVaultId, canonicalRecordIds: [...new Set(binding.canonicalRecordIds)].sort(), transport, adapterId, ...(providerObjectId?.trim() ? { providerObjectId: providerObjectId.trim() } : {}) };
+}
+
+export function markReplicaEndpointUnavailable(binding: ReplicaTransportBinding): LocalReplicaAvailability {
+  return { logicalVaultId: binding.logicalVaultId, canonicalRecordIds: [...binding.canonicalRecordIds].sort(), localCoreUsable: true, remoteState: "UNREACHABLE" };
+}
+
 export class SyncRouteRegistry {
   private readonly routes = new Map<string, SyncRouteDescriptor>();
 

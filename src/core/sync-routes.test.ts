@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CredentialKeyBroker } from "./credential";
-import { defaultSyncRoutes, SyncRouteRegistry, validatePublicClientConfig } from "./sync-routes";
+import { defaultSyncRoutes, markReplicaEndpointUnavailable, rebindReplicaTransport, SyncRouteRegistry, validatePublicClientConfig } from "./sync-routes";
 
 describe("explicit sync route policy", () => {
   it("keeps manual Vault and owner-controlled routes usable without provider secrets", () => {
@@ -21,5 +21,12 @@ describe("explicit sync route policy", () => {
     const metadata = broker.issue("opaque-token", { provider: "test", scope: ["replica.read"], audience: "test", expiresAt: new Date(Date.now() + 60_000).toISOString() });
     expect(metadata).not.toHaveProperty("secret");
     await broker.withSecret(metadata.handleId, "test", async (secret) => expect(secret).toBe("opaque-token"));
+  });
+
+  it("moves one logical replica between transport adapters without changing canonical IDs", () => {
+    const source = { logicalVaultId: "vault-1", canonicalRecordIds: ["record-b", "record-a", "record-a"], transport: "VENDOR_FILE" as const, adapterId: "vendor-file", providerObjectId: "vendor:42" };
+    const moved = rebindReplicaTransport(source, "OPEN_ENDPOINT", "open-endpoint", "endpoint:99");
+    expect(moved).toEqual({ logicalVaultId: "vault-1", canonicalRecordIds: ["record-a", "record-b"], transport: "OPEN_ENDPOINT", adapterId: "open-endpoint", providerObjectId: "endpoint:99" });
+    expect(markReplicaEndpointUnavailable(moved)).toMatchObject({ logicalVaultId: "vault-1", canonicalRecordIds: ["record-a", "record-b"], localCoreUsable: true, remoteState: "UNREACHABLE" });
   });
 });

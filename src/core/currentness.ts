@@ -124,6 +124,29 @@ export interface UpstreamParityEvaluation {
   reasons: string[];
 }
 
+export interface CompatibilityCandidateInput {
+  capabilityId: string;
+  acceptedUpstreamIdentity: string;
+  candidateUpstreamIdentity: string;
+  adapterVersion: string;
+  changedBehavior: boolean;
+  adapterUpdated: boolean;
+  contract: CandidateGateState;
+  migration: CandidateGateState;
+  target: CandidateGateState;
+  regression: CandidateGateState;
+}
+
+export type CompatibilityCandidateDecision = "PROMOTE_COMPATIBLE" | "ADAPT_AND_PROMOTE" | "DEFER" | "REJECT";
+
+export interface CompatibilityCandidateEvaluation {
+  capabilityId: string;
+  decision: CompatibilityCandidateDecision;
+  acceptedRuntimeUnchanged: true;
+  promotionRequired: true;
+  reasons: string[];
+}
+
 type ParsedVersion = { major: number; minor: number; patch: number };
 
 function parseVersion(value: string): ParsedVersion | undefined {
@@ -262,4 +285,17 @@ export function evaluateUpstreamParity(input: UpstreamParityInput): UpstreamPari
   }
   reasons.push("upstream parity or affected regression failed; retain the local path and record the difference");
   return { componentId: input.componentId, decision: "RETAIN_LOCAL_PATH", reasons };
+}
+
+export function evaluateCompatibilityCandidate(input: CompatibilityCandidateInput): CompatibilityCandidateEvaluation {
+  const base = { capabilityId: input.capabilityId, acceptedRuntimeUnchanged: true as const, promotionRequired: true as const };
+  if (!input.capabilityId.trim() || !input.acceptedUpstreamIdentity.trim() || !input.candidateUpstreamIdentity.trim() || !input.adapterVersion.trim()) return { ...base, decision: "REJECT", reasons: ["capability, upstream identities, and adapter version are required"] };
+  const states = { contract: input.contract, migration: input.migration, target: input.target, regression: input.regression };
+  const unknown = Object.entries(states).filter(([, state]) => state === "UNKNOWN");
+  if (unknown.length > 0) return { ...base, decision: "DEFER", reasons: [`compatibility evidence is stale or missing: ${unknown.map(([name]) => name).join(", ")}`] };
+  const failed = Object.entries(states).filter(([, state]) => state === "FAIL");
+  if (failed.length > 0) return { ...base, decision: "REJECT", reasons: [`candidate compatibility failed: ${failed.map(([name]) => name).join(", ")}`] };
+  if (input.changedBehavior && !input.adapterUpdated) return { ...base, decision: "REJECT", reasons: ["changed upstream behavior has no updated Omnevum adapter/migration"] };
+  if (input.changedBehavior) return { ...base, decision: "ADAPT_AND_PROMOTE", reasons: ["changed upstream behavior is covered by the updated adapter/migration and all compatibility gates pass", "explicit promotion is required"] };
+  return { ...base, decision: "PROMOTE_COMPATIBLE", reasons: ["accepted and candidate upstream behavior remains compatible across all gates", "explicit promotion is required"] };
 }

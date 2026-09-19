@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { evaluateCopyleftObligations, evaluateFossEntrant, evaluateFossRemoval, evaluateUpstreamCandidate, evaluateUpstreamParity, evaluateVulnerabilityFastLane, type CopyleftObligationInput, type FossEntrantInput, type FossRemovalInput, type UpstreamCandidateInput, type UpstreamParityInput, type VulnerabilityFastLaneInput } from "./currentness";
+import { evaluateCompatibilityCandidate, evaluateCopyleftObligations, evaluateFossEntrant, evaluateFossRemoval, evaluateUpstreamCandidate, evaluateUpstreamParity, evaluateVulnerabilityFastLane, type CompatibilityCandidateInput, type CopyleftObligationInput, type FossEntrantInput, type FossRemovalInput, type UpstreamCandidateInput, type UpstreamParityInput, type VulnerabilityFastLaneInput } from "./currentness";
 
 const baseCandidate = (): UpstreamCandidateInput => ({
   candidateId: "vite-9.0.0-candidate-2026-09-19",
@@ -35,6 +35,7 @@ const baseAdvisory = (): VulnerabilityFastLaneInput => ({
 const baseRemoval = (): FossRemovalInput => ({ componentId: "optional-parser", retainedInputsAvailable: true, reconstruction: "PASS", boundedLimitationRecorded: false, coreRegressionPass: true, canonicalStatePreserved: true });
 const baseCopyleft = (): CopyleftObligationInput => ({ componentId: "copyleft-parser", license: "MPL-2.0", noticePresent: true, correspondingSourceAvailable: true, isolationOrComplianceProven: true, legalReview: "PASS" });
 const baseParity = (): UpstreamParityInput => ({ componentId: "local-search-patch", upstreamIdentity: "upstream@9.0.0|sha256:fixture", localPatchPresent: true, parity: "PASS", regression: "PASS", migration: "PASS", deltaReduced: true });
+const baseCompatibility = (): CompatibilityCandidateInput => ({ capabilityId: "search-adapter", acceptedUpstreamIdentity: "upstream@8|sha256:accepted", candidateUpstreamIdentity: "upstream@9|sha256:candidate", adapterVersion: "adapter-2", changedBehavior: false, adapterUpdated: false, contract: "PASS", migration: "PASS", target: "PASS", regression: "PASS" });
 
 describe("isolated upstream/FOSS candidate gate", () => {
   it("adopts only an isolated major candidate and keeps promotion explicit", () => {
@@ -111,5 +112,12 @@ describe("isolated upstream/FOSS candidate gate", () => {
     expect(evaluateUpstreamParity(baseParity()).decision).toBe("REMOVE_LOCAL_PATCH");
     expect(evaluateUpstreamParity({ ...baseParity(), parity: "UNKNOWN" as const }).decision).toBe("DEFER");
     expect(evaluateUpstreamParity({ ...baseParity(), parity: "FAIL" as const }).decision).toBe("RETAIN_LOCAL_PATH");
+  });
+
+  it("detects changed upstream behavior before promotion and requires an adapter update", () => {
+    expect(evaluateCompatibilityCandidate(baseCompatibility()).decision).toBe("PROMOTE_COMPATIBLE");
+    expect(evaluateCompatibilityCandidate({ ...baseCompatibility(), changedBehavior: true }).decision).toBe("REJECT");
+    expect(evaluateCompatibilityCandidate({ ...baseCompatibility(), changedBehavior: true, adapterUpdated: true }).decision).toBe("ADAPT_AND_PROMOTE");
+    expect(evaluateCompatibilityCandidate({ ...baseCompatibility(), target: "UNKNOWN" as const }).decision).toBe("DEFER");
   });
 });
