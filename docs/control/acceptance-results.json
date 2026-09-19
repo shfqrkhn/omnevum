@@ -1567,7 +1567,8 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-all-family-200-target-separation-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-responsive-navigation-disclosure-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-by-default-secondary-surface-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-by-default-secondary-surface-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-recovery-disclosure-receipt"
       ],
       "notes": "The current exact artifact covers all Alpha/Beta/Gamma Light/Dark combinations at strict 320x844 with actual saved 100% and 200% text-scale profiles; the current receipt reports 284 effective visible controls per run with no page overflow or page-level clipping. The accessibility-profile receipt additionally covers 125% large-target behavior. True OS/browser text-size settings, physical touch, Assistant availability, vertical reachability, browser-family breadth, assistive technology, and human acceptance remain open."
     },
@@ -1708,7 +1709,8 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-delayed-onboarding-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-delayed-onboarding-disclosure-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-delayed-onboarding-disclosure-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-recovery-disclosure-receipt"
       ],
       "notes": "The current Chromium artifact opens with empty local-only health and no tour panel, exposes only an on-demand guide action, auto-shows the guide after three real canonical captures as a collapsed native disclosure, persists explicit dismissal across reload, and reopens it on demand without changing canonical counts/revisions. Fresh mobile/install breadth, every lens reachability row, production deployment, and human acceptance remain open."
     },
@@ -1877,7 +1879,8 @@
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-in-place-presentation-control-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-default-navigation-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-primary-surface-grid-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-primary-surface-grid-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-recovery-disclosure-receipt"
       ],
       "notes": "The current built Chromium artifact exposes presentation-only density from a persistent sticky topbar, section visibility/order controls from System > Presentation, and an accessible bounded label editor from Home/Capture/Records; each round-trips to the presentation profile, survives reload, and leaves canonical count/revision state unchanged. The current fresh-origin compact profile keeps Capture directly available, moves empty/low-frequency Search, Review, Records, and active-lens content behind native disclosures, auto-opens actionable Review/Records, and uses a two-column desktop workspace without shrinking targets. Compatible profile upgrade, broader target/accessibility/human acceptance, and complete in-place parity for every preference remain open."
     },
