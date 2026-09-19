@@ -35,6 +35,15 @@ describe("credential-free Finance statement semantics", () => {
     expect(result.conflicts).toEqual([{ sourceTransactionId: "tx-1", transactionIds: [first?.id, conflicting?.id], reason: "SOURCE_ID_REUSED_WITH_DIFFERENT_MEANING" }]);
   });
 
+  it("deduplicates an overlapping period when the same source is renamed", () => {
+    const original = parseFinanceCsv('Date,Description,Amount,Id\n2026-01-02,Cafe,-10.00,tx-1\n', source);
+    const renamed = parseFinanceCsv('Date,Description,Amount,Id\n2026-01-02,Cafe,-10.00,tx-1\n', { ...source, sourceId: "source:statement-renamed", name: "renamed.csv", sha256: "b".repeat(64) });
+    const result = deduplicateFinanceTransactions([...original, ...renamed]);
+    expect(result.unique).toHaveLength(1);
+    expect(result.duplicates).toHaveLength(1);
+    expect(result.conflicts).toEqual([]);
+  });
+
   it("reconciles opening plus posted activity to closing and leaves pending value explicit", () => {
     const transactions = parseFinanceCsv('Date,Description,Amount,Status\n2026-01-02,Cafe,-10.00,POSTED\n2026-01-03,Payroll,15.00,POSTED\n2026-01-04,Pending card,-2.00,PENDING\n', source);
     const result = reconcileFinanceStatement(source, transactions);
