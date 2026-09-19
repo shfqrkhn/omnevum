@@ -2317,7 +2317,8 @@
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-finance-projection-and-graph-recomputation-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-finance-projection-and-graph-recomputation-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-allocation-amount-and-resource-reconciliation-receipt"
       ],
       "notes": "Current core and exact built Chromium UI evidence provides typed graph nodes/edges, canonical platform.dependency persistence, visible typed Relate creation, exact-money exclusive versus enabling allocations, over-allocation detection, dynamic goal target/funding pace, and a read-only Finance projection joining canonical transactions, shared goals, typed graph impact, data quality, and review signals. Automatic multi-goal trajectory refresh and full Finance portfolio adapters remain open."
     },
@@ -2364,7 +2365,8 @@
       "text": "A constrained monthly surplus cannot fully fund all active goals. Omnevum detects the shared-resource conflict once, shows the aggregate shortfall and affected goals, and prepares multiple feasible alternatives that preserve user-defined hard constraints. It does not silently lower a goal priority, double-count the same dollar, or optimize to a hidden score.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-allocation-amount-and-resource-reconciliation-receipt"
       ],
       "notes": "Current exact-money allocation tests detect overcommitment and per-goal unmet amounts without reprioritizing goals or double-counting balances. Multiple user-visible alternatives and hard-constraint persistence remain open."
     },
@@ -2392,7 +2394,8 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-finance-projection-and-graph-recomputation-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-finance-projection-and-graph-recomputation-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-allocation-amount-and-resource-reconciliation-receipt"
       ],
       "notes": "Current core impact analysis and the integrated Finance projection deterministically traverse authorized graph nodes, report affected IDs/depth and invalidated derived IDs, quarantine accidental cycles, exclude explanatory/feedback edges from ordinary propagation, and skip invalid endpoints. Three-lens/domain adapters, canonical recomputation orchestration, and one concise user-facing correction/removal explanation remain open."
     },

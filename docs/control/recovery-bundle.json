@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "c862340eab06067e539ca17a14a99f530739cde64df3d05dba41c9761334df50",
-        "bytes": 198364
+        "sha256": "55169401dced0d6bc8ca9e351bbfb31c2223462a8dfefd56f5b4589e4c4ef4eb",
+        "bytes": 198793
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "3ca1112ebcb03f7320b8cc50745fb918ceaf55b0de4104989420990838200cbb",
+        "sha256": "f27f95cf53b797365b2690bbdebc37201170ce70b069a00ca3033ce7e91ac536",
         "bytes": 2433
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "4f7dc37054f24060759a8599fceedcc276baf715b08d895bf7b27427bcd296d3",
-        "bytes": 290569
+        "sha256": "67128a3115f51ece5cd3854e75fe85c6cc291707f84384a2f9bf0d5a2daf4b10",
+        "bytes": 292972
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -559,13 +559,13 @@
       },
       {
         "path": "src/core/dependency-graph.test.ts",
-        "sha256": "552d393881e1088e6070bdeb8868136d66c86d4b51685e85a54d93e428f9159d",
-        "bytes": 8546
+        "sha256": "9967af2ae1bc82bd44287363515a45431a4de62c7fea2cc16385c456d5102200",
+        "bytes": 8658
       },
       {
         "path": "src/core/dependency-graph.ts",
-        "sha256": "072e54f8e17cf07d630c70c01dd54e402c3d9abb82a768c6bd6195fbb918cbed",
-        "bytes": 14131
+        "sha256": "638d63c892399b66aab1af187166a74dfd641b91c2a53444ed4a5e9b89d3206b",
+        "bytes": 15703
       },
       {
         "path": "src/core/device.test.ts",
@@ -684,18 +684,18 @@
       },
       {
         "path": "src/core/finance-model.ts",
-        "sha256": "fa8e8a2ee88542fbb746e8091bce3e359d44af617c8f0a0413af02d1b0bb8d5c",
-        "bytes": 37377
+        "sha256": "c74c1b993f21b7617b5e8de054cd723deb579c4ae8fcc961b1985bec40d2c886",
+        "bytes": 37449
       },
       {
         "path": "src/core/finance-projection.test.ts",
-        "sha256": "39294118abc8f42712fad8cc3e4940a5b1d0b41d93c7bdc99078e96001d9533e",
-        "bytes": 3913
+        "sha256": "10512ab30aa9df7434c07b112e4526d5ac0a39e0596f281237567564a207994b",
+        "bytes": 5617
       },
       {
         "path": "src/core/finance-projection.ts",
-        "sha256": "54e395e936c87ffee7a2b054e6ba073cabfd4c1658488f08b3df533e20f52ce6",
-        "bytes": 11676
+        "sha256": "44905b88f1a10af1845af1f700a88ea1eba3c5b2f71daa1fe03471d3e100c530",
+        "bytes": 13166
       },
       {
         "path": "src/core/finance.test.ts",
@@ -734,8 +734,8 @@
       },
       {
         "path": "src/core/i18n.ts",
-        "sha256": "58d3277df5ce203bee13c561dbf4554579dc4de1c494fb6760755e4868be1dde",
-        "bytes": 92197
+        "sha256": "722f44b102d03080e85d472a48dd2e3f21f92ba62a5252011167724e074ee760",
+        "bytes": 92920
       },
       {
         "path": "src/core/id.ts",
@@ -1059,8 +1059,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "edc42c18c86b7b93e44f160b6e9f87077a83d60a19c463e82b6962b4d25ccdae",
-        "bytes": 283145
+        "sha256": "ba9cbb9ce5a0ee938887dcc65a69444e071df3ae1d5e44b88cbfe2d4e787a444",
+        "bytes": 285250
       },
       {
         "path": "tsconfig.json",
