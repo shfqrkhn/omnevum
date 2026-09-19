@@ -16,6 +16,33 @@ export interface FinanceProjectionOptions {
   forecastVintages?: readonly FinanceForecastVintage[];
 }
 
+export interface FinanceTravelPlanProjection {
+  sourceId: string;
+  label: string;
+  estimatedCost: MoneyValue;
+  dueDate: string;
+  truthClass: FinanceFactClass;
+  sourceIds: string[];
+}
+
+export interface FinanceCompensationProjection {
+  sourceId: string;
+  label: string;
+  monthlyIncome: MoneyValue;
+  effectiveDate: string;
+  truthClass: FinanceFactClass;
+  sourceIds: string[];
+}
+
+export interface FinanceCrossDomainProjection {
+  travelPlans: FinanceTravelPlanProjection[];
+  compensationChanges: FinanceCompensationProjection[];
+  cashFlowByMonth: Record<string, MoneyValue>;
+  affectedFinanceIds: string[];
+  sourceIds: string[];
+  limitations: string[];
+}
+
 export interface FinanceProjection {
   status: "NO_DATA" | "LIMITED" | "READY";
   currency?: string;
@@ -35,6 +62,7 @@ export interface FinanceProjection {
   financeAllocationResults: Array<{ resourceId: string; result: FinanceAllocationResult }>;
   financeGoalPlans: Array<{ recordId: string; plan: FinanceGoalPlan; hardConstraint: boolean }>;
   financeFundingAnalysis?: FinanceFundingAnalysis;
+  crossDomain: FinanceCrossDomainProjection;
   invalidatedFinanceIds: string[];
   forecastVintages: FinanceForecastVintage[];
 }
@@ -80,6 +108,7 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
   const dependencyGraph = projectDependencyGraph([...activeRecords]);
   const dependencyImpact = projectDependencyImpact(dependencyGraph, [...(options.changedIds ?? [])]);
   const financeNodeIds = new Set(activeRecords.filter(isFinanceNode).map((record) => record.id));
+  const crossDomain = projectCrossDomainFinance(activeRecords, dependencyImpact, financeNodeIds);
   const financeGraph: FinanceDependencyGraph = {
     nodes: activeRecords.filter((record) => financeNodeIds.has(record.id)).map((record) => ({ id: record.id, label: financeNodeLabel(record), evidence: { truthClass: financeFactClass(record.truthClass), sourceIds: sourceIdsForRecord(record), note: "Read-only Finance projection over the canonical record." } })).sort((left, right) => left.id.localeCompare(right.id)),
     edges: dependencyGraph.edges.filter((edge) => financeNodeIds.has(edge.sourceId) && financeNodeIds.has(edge.targetId)).map((edge) => ({ id: edge.id, from: edge.sourceId, to: edge.targetId, kind: edge.edgeKind, ...(edge.scenarioId ? { scenarioId: edge.scenarioId } : {}), ...(edge.allocationMode ? { allocationMode: edge.allocationMode } : {}), ...(edge.allocation ? { allocation: edge.allocation } : {}), evidence: { truthClass: financeFactClass(edge.evidence?.truthClass ?? "DERIVED"), sourceIds: edge.evidence?.sourceIds ?? [edge.id], note: "Typed relationship is projected without granting permission or creating a second owner." } })).sort((left, right) => left.id.localeCompare(right.id))
@@ -145,6 +174,7 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
     financeAllocationResults,
     financeGoalPlans,
     ...(financeFundingAnalysis ? { financeFundingAnalysis } : {}),
+    crossDomain,
     invalidatedFinanceIds,
     forecastVintages: [...(options.forecastVintages ?? [])]
   };
@@ -195,7 +225,89 @@ export function toFinanceTransaction(record: CanonicalRecord): FinanceTransactio
 }
 
 function isFinanceNode(record: CanonicalRecord): boolean {
-  return !record.deleted && (record.owner === "domain.finance" || (typeof record.data.kind === "string" && FINANCE_NODE_KINDS.has(record.data.kind)));
+  return !record.deleted && (record.owner === "domain.finance" || (typeof record.data.kind === "string" && FINANCE_NODE_KINDS.has(record.data.kind)) || isAuthorizedCrossDomainProjection(record));
+}
+
+function projectCrossDomainFinance(records: readonly CanonicalRecord[], impact: DependencyImpact, financeNodeIds: ReadonlySet<string>): FinanceCrossDomainProjection {
+  const travelPlans: FinanceTravelPlanProjection[] = [];
+  const compensationChanges: FinanceCompensationProjection[] = [];
+  const cashFlowByMonth = new Map<string, MoneyValue>();
+  const limitations = new Set<string>();
+  for (const record of records) {
+    if (!isAuthorizedCrossDomainProjection(record)) continue;
+    const projection = record.data.financeProjection as Record<string, unknown>;
+    const sourceIds = [record.provenance.sourceId ?? record.id];
+    const truthClass = financeFactClass(record.truthClass);
+    if (record.data.kind === "travel-plan") {
+      const estimatedCost = readExternalMoney(projection, "estimatedCostMinor");
+      const dueDate = readDateOnly(projection.dueDate ?? projection.targetDate);
+      if (!estimatedCost || !dueDate || BigInt(estimatedCost.amountMinor) < 0n) {
+        limitations.add(`${record.id}: travel financial projection is incomplete`);
+        continue;
+      }
+      const item = { sourceId: record.id, label: readExternalLabel(projection, record.data.label, record.id), estimatedCost, dueDate, truthClass, sourceIds } satisfies FinanceTravelPlanProjection;
+      travelPlans.push(item);
+      addMonthlyCashFlow(cashFlowByMonth, dueDate.slice(0, 7), { ...estimatedCost, amountMinor: (-BigInt(estimatedCost.amountMinor)).toString() });
+      continue;
+    }
+    if (record.data.kind === "compensation-change") {
+      const monthlyIncome = readExternalMoney(projection, "monthlyAmountMinor");
+      const effectiveDate = readDateOnly(projection.effectiveDate);
+      if (!monthlyIncome || !effectiveDate || BigInt(monthlyIncome.amountMinor) < 0n) {
+        limitations.add(`${record.id}: compensation financial projection is incomplete`);
+        continue;
+      }
+      const item = { sourceId: record.id, label: readExternalLabel(projection, record.data.label, record.id), monthlyIncome, effectiveDate, truthClass, sourceIds } satisfies FinanceCompensationProjection;
+      compensationChanges.push(item);
+      addMonthlyCashFlow(cashFlowByMonth, effectiveDate.slice(0, 7), monthlyIncome);
+    }
+  }
+  const affectedFinanceIds = impact.affectedIds.filter((id) => financeNodeIds.has(id) && !travelPlans.some((item) => item.sourceId === id) && !compensationChanges.some((item) => item.sourceId === id));
+  return {
+    travelPlans: travelPlans.sort((left, right) => left.sourceId.localeCompare(right.sourceId)),
+    compensationChanges: compensationChanges.sort((left, right) => left.sourceId.localeCompare(right.sourceId)),
+    cashFlowByMonth: Object.fromEntries([...cashFlowByMonth.entries()].sort(([left], [right]) => left.localeCompare(right))),
+    affectedFinanceIds: [...new Set(affectedFinanceIds)].sort(),
+    sourceIds: [...new Set([...travelPlans, ...compensationChanges].flatMap((item) => item.sourceIds))].sort(),
+    limitations: [...limitations].sort()
+  };
+}
+
+function isAuthorizedCrossDomainProjection(record: CanonicalRecord): boolean {
+  if (record.deleted || (record.data.kind !== "travel-plan" && record.data.kind !== "compensation-change")) return false;
+  const projection = record.data.financeProjection;
+  return typeof projection === "object" && projection !== null && (projection as Record<string, unknown>).authorized === true;
+}
+
+function readExternalMoney(projection: Record<string, unknown>, field: string): MoneyValue | undefined {
+  const amount = typeof projection[field] === "string" || typeof projection[field] === "number" ? String(projection[field]) : "";
+  const currency = typeof projection.currency === "string" ? projection.currency : "";
+  if (!/^-?\d+$/.test(amount) || !currency) return undefined;
+  try {
+    const normalized = parseMoney("0", currency).currency;
+    const value = BigInt(amount);
+    if (value < 0n || value > 2n ** 63n - 1n) return undefined;
+    return { amountMinor: value.toString(), currency: normalized };
+  } catch {
+    return undefined;
+  }
+}
+
+function readDateOnly(value: unknown): string | undefined {
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return undefined;
+  const parsed = Date.parse(`${value}T00:00:00Z`);
+  return Number.isFinite(parsed) && new Date(parsed).toISOString().slice(0, 10) === value ? value : undefined;
+}
+
+function readExternalLabel(projection: Record<string, unknown>, fallback: unknown, id: string): string {
+  const label = typeof projection.label === "string" ? projection.label.trim() : typeof fallback === "string" ? fallback.trim() : "";
+  return (label || id).slice(0, 240);
+}
+
+function addMonthlyCashFlow(target: Map<string, MoneyValue>, month: string, value: MoneyValue): void {
+  const key = `${month}:${value.currency}`;
+  const current = target.get(key);
+  target.set(key, current ? addMoney(current, value) : value);
 }
 
 function financeNodeLabel(record: CanonicalRecord): string {

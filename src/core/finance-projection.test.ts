@@ -105,4 +105,27 @@ describe("canonical Finance projection", () => {
     expect(projection.summary?.postedSpending.amountMinor).toBe("500");
     expect(projection.summary?.netCashFlow.amountMinor).toBe("-500");
   });
+
+  it("projects only explicitly authorized Travel and Work financial signals without changing their owners", () => {
+    const travel = record("travel-plan-1", { kind: "travel-plan", label: "Vacation", itinerary: "private itinerary", financeProjection: { authorized: true, estimatedCostMinor: "120000", currency: "CAD", dueDate: "2026-12-15", label: "Vacation budget" } }, { owner: "domain.travel", truthClass: "USER_OBSERVATION" });
+    const compensation = record("work-pay-1", { kind: "compensation-change", title: "Promotion", financeProjection: { authorized: true, monthlyAmountMinor: "500000", currency: "CAD", effectiveDate: "2026-10-01", label: "Monthly compensation" } }, { owner: "domain.work", truthClass: "IMPORTED_RECORD", provenance: { source: "IMPORT", capturedAt: "2026-09-19T00:00:00.000Z", sourceId: "pay-statement-1" } });
+    const ignored = record("travel-plan-2", { kind: "travel-plan", label: "Private trip", estimatedCostMinor: "999999", currency: "CAD", dueDate: "2026-11-01" }, { owner: "domain.travel" });
+    const projection = projectFinanceState([travel, compensation, ignored], { changedIds: [travel.id, compensation.id] });
+    expect(projection.crossDomain.travelPlans).toMatchObject([{ sourceId: travel.id, estimatedCost: { amountMinor: "120000", currency: "CAD" }, dueDate: "2026-12-15" }]);
+    expect(projection.crossDomain.compensationChanges).toMatchObject([{ sourceId: compensation.id, monthlyIncome: { amountMinor: "500000", currency: "CAD" }, effectiveDate: "2026-10-01", sourceIds: ["pay-statement-1"] }]);
+    expect(projection.crossDomain.cashFlowByMonth).toEqual({ "2026-10:CAD": { amountMinor: "500000", currency: "CAD" }, "2026-12:CAD": { amountMinor: "-120000", currency: "CAD" } });
+    expect(projection.crossDomain.sourceIds).toEqual(["pay-statement-1", travel.id]);
+    expect(projection.crossDomain.limitations).toEqual([]);
+    expect(travel.owner).toBe("domain.travel");
+    expect(compensation.owner).toBe("domain.work");
+    expect(projection.transactionCount).toBe(0);
+  });
+
+  it("reports incomplete authorized cross-domain projections without inventing amounts", () => {
+    const travel = record("travel-plan-incomplete", { kind: "travel-plan", financeProjection: { authorized: true, currency: "CAD", dueDate: "not-a-date" } }, { owner: "domain.travel" });
+    const projection = projectFinanceState([travel]);
+    expect(projection.crossDomain.travelPlans).toEqual([]);
+    expect(projection.crossDomain.cashFlowByMonth).toEqual({});
+    expect(projection.crossDomain.limitations).toEqual(["travel-plan-incomplete: travel financial projection is incomplete"]);
+  });
 });

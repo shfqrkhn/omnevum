@@ -2664,6 +2664,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const funding = finance.financeFundingAnalysis;
     const fundingAlternative = funding?.alternatives[0];
     const fundingStatus = funding?.fundingConflict ? copy.financeFundingStatus(formatMoney(funding.aggregateShortfall, presentation.locale), Object.keys(fundingAlternative?.shortfallByGoal ?? {}).length || finance.financeGoalPlans.length, funding.alternatives.length, funding.hardConstraintConflict) : "";
+    const crossDomainStatus = finance.crossDomain.travelPlans.length > 0 || finance.crossDomain.compensationChanges.length > 0 || finance.crossDomain.limitations.length > 0
+      ? copy.financeCrossDomainStatus(finance.crossDomain.travelPlans.length, finance.crossDomain.compensationChanges.length, Object.keys(finance.crossDomain.cashFlowByMonth).length, finance.crossDomain.affectedFinanceIds.length, finance.crossDomain.limitations.length)
+      : "";
     const appendFundingReview = (analysis: NonNullable<typeof funding>): void => {
       if (!analysis.fundingConflict || analysis.alternatives.length === 0) return;
       const goalEntries = new Map(finance.financeGoalPlans.map((entry) => [entry.recordId, entry]));
@@ -2716,18 +2719,18 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       appendFinanceInsight(copy.financePending, formatMoney(finance.summary.pendingNet, presentation.locale));
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
-      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${fundingStatus} ${goalProgress}`;
+      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${goalProgress}`;
       insightsGrid.append(financeStatus);
       if (funding) appendFundingReview(funding);
     } else if (finance.transactionCount === 0 && finance.financeGraph.nodes.length === 0) {
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
-      financeStatus.textContent = copy.financeNoData;
+      financeStatus.textContent = `${copy.financeNoData} ${crossDomainStatus}`;
       insightsGrid.append(financeStatus);
     } else {
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
-      financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${fundingStatus} ${goalProgress}`;
+      financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${goalProgress}`;
       insightsGrid.append(financeStatus);
       if (funding) appendFundingReview(funding);
     }
