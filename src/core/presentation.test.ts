@@ -8,12 +8,21 @@ describe("presentation profile", () => {
     expect(parsePresentationProfile({ productName: "  JohnOS  ", theme: "dark", locale: "fr-FR" })).toMatchObject({
       schemaVersion: 1,
       productName: "JohnOS",
+      family: "gamma",
       theme: "dark",
       locale: "en-CA",
       density: "comfortable",
       typeface: "system",
       iconography: "labels"
     });
+  });
+
+  it("supports the three persisted built-in presentation families", () => {
+    expect(parsePresentationProfile({ productName: "Alpha", family: "alpha" })).toMatchObject({ family: "alpha" });
+    expect(parsePresentationProfile({ productName: "Beta", family: "beta", theme: "dark" })).toMatchObject({ family: "beta", theme: "dark" });
+    expect(parsePresentationProfile({ productName: "Gamma", family: "neon" })).toMatchObject({ family: "gamma" });
+    expect(isPresentationProfile({ ...DEFAULT_PRESENTATION, family: "alpha" })).toBe(true);
+    expect(isPresentationProfile({ ...DEFAULT_PRESENTATION, family: "neon" } as unknown)).toBe(false);
   });
 
   it("never accepts an empty custom name or arbitrary theme", () => {

@@ -1,37 +1,94 @@
 :root {
   color-scheme: light;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #f7f8fa;
-  color: #17202a;
+  background: var(--omn-canvas);
+  color: var(--omn-text-primary);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --bg: #f7f8fa;
-  --surface: #ffffff;
-  --surface-muted: #eef1f5;
-  --text: #17202a;
-  --muted: #52606d;
-  --line: #d9e0e7;
-  --accent: #185adb;
-  --accent-strong: #0f3f9e;
-  --focus: #f2a900;
-  --danger: #a51d2d;
+  --omn-canvas: #EDEFEF;
+  --omn-surface: #FFFFFF;
+  --omn-surface-raised: #F6F8F8;
+  --omn-border: #748A83;
+  --omn-border-strong: #0F5C42;
+  --omn-text-primary: #0A2A1E;
+  --omn-text-secondary: #3A6A54;
+  --omn-action: #0F5C42;
+  --omn-warning: #8A5E0C;
+  --omn-conflict: #952525;
+  --omn-synergy: #0F5C42;
+  --omn-focus: #0A3D8F;
+  --bg: var(--omn-canvas);
+  --surface: var(--omn-surface);
+  --surface-muted: var(--omn-surface-raised);
+  --text: var(--omn-text-primary);
+  --muted: var(--omn-text-secondary);
+  --line: var(--omn-border);
+  --accent: var(--omn-action);
+  --accent-strong: var(--omn-border-strong);
+  --focus: var(--omn-focus);
+  --danger: var(--omn-conflict);
+  --warning: var(--omn-warning);
+  --synergy: var(--omn-synergy);
   --shadow: 0 12px 36px rgba(26, 44, 67, 0.08);
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #000000;
-  --surface: #0d0e10;
-  --surface-muted: #17191d;
-  --text: #f4f6f8;
-  --muted: #b4beca;
-  --line: #30343a;
-  --accent: #79a9ff;
-  --accent-strong: #b2ccff;
-  --focus: #ffd166;
-  --danger: #ff9aa7;
+  --omn-canvas: #000000;
+  --omn-surface: #050505;
+  --omn-surface-raised: #0B0F0D;
+  --omn-border: #58635E;
+  --omn-border-strong: #4FE0B0;
+  --omn-text-primary: #C9F5E5;
+  --omn-text-secondary: #79A794;
+  --omn-action: #4FE0B0;
+  --omn-warning: #E8B657;
+  --omn-conflict: #F08A80;
+  --omn-synergy: #4FE0B0;
+  --omn-focus: #8FC6FF;
   --shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
 }
+
+:root[data-family="alpha"][data-theme="light"] {
+  --omn-canvas: #F2F2EE; --omn-surface: #FFFFFF; --omn-surface-raised: #F7F7F2;
+  --omn-border: #8A8A84; --omn-border-strong: #5E5E59; --omn-text-primary: #111111;
+  --omn-text-secondary: #4F4F4B; --omn-action: #2F2F2F; --omn-warning: #6B4E00;
+  --omn-conflict: #7A1F1F; --omn-synergy: #2F2F2F; --omn-focus: #0A4A7A;
+  --shadow: none;
+}
+:root[data-family="alpha"][data-theme="dark"] {
+  --omn-canvas: #000000; --omn-surface: #0A0A0A; --omn-surface-raised: #141414;
+  --omn-border: #64645E; --omn-border-strong: #8A8A84; --omn-text-primary: #F5F5F0;
+  --omn-text-secondary: #B9B9B2; --omn-action: #EDEDE6; --omn-warning: #E2B340;
+  --omn-conflict: #F08A80; --omn-synergy: #EDEDE6; --omn-focus: #8FC6FF;
+  --shadow: none;
+}
+:root[data-family="beta"][data-theme="light"] {
+  --omn-canvas: #F7F3EC; --omn-surface: #FFFCF7; --omn-surface-raised: #F2ECE3;
+  --omn-border: #91867B; --omn-border-strong: #6B6259; --omn-text-primary: #231F1A;
+  --omn-text-secondary: #6B6259; --omn-action: #3F5F5A; --omn-warning: #8A5A00;
+  --omn-conflict: #8B2E2E; --omn-synergy: #3F5F5A; --omn-focus: #355C8A;
+  --shadow: 0 12px 36px rgba(75, 58, 40, 0.10);
+}
+:root[data-family="beta"][data-theme="dark"] {
+  --omn-canvas: #000000; --omn-surface: #11100E; --omn-surface-raised: #1A1815;
+  --omn-border: #6F665E; --omn-border-strong: #9A8E82; --omn-text-primary: #F5EEE5;
+  --omn-text-secondary: #BEB4A8; --omn-action: #7FC2B5; --omn-warning: #E0B15D;
+  --omn-conflict: #F19A91; --omn-synergy: #7FC2B5; --omn-focus: #8FC6FF;
+  --shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+}
+:root[data-family="gamma"][data-theme="light"] {
+  --omn-canvas: #EDEFEF; --omn-surface: #FFFFFF; --omn-surface-raised: #F6F8F8;
+  --omn-border: #748A83; --omn-border-strong: #0F5C42; --omn-text-primary: #0A2A1E;
+  --omn-text-secondary: #3A6A54; --omn-action: #0F5C42; --omn-warning: #8A5E0C;
+  --omn-conflict: #952525; --omn-synergy: #0F5C42; --omn-focus: #0A3D8F;
+}
+
+:root[data-family="alpha"] .panel, :root[data-family="alpha"] .status-card { border-radius: 8px; box-shadow: none; }
+:root[data-family="beta"] .panel, :root[data-family="beta"] .status-card { border-radius: 20px; }
+:root[data-family="alpha"] .eyebrow { letter-spacing: 0.16em; }
+:root[data-family="beta"] .lede { font-family: Georgia, "Times New Roman", serif; }
+:root[data-family="gamma"] .status-pill, :root[data-family="gamma"] .count { border-radius: 4px; }
 :root[data-theme="dark"] button:not(.secondary):not(.danger-button):not(.icon-button):not(.complete-button) { color: #08101c; }
 
 :root[data-typeface="serif"] { font-family: Georgia, "Times New Roman", serif; }

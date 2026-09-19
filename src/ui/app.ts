@@ -5,7 +5,7 @@ import { redactTextArtifact } from "../core/document";
 import { isCompletedTask, isSpaceId, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, SPACE_LABELS, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getDeviceInputCopy, getInstalledMetadataStatus, getRecoveryCopy, getStoragePersistenceNotice, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CanonicalRecord, type CaptureKind } from "../core/model";
-import { DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationHomeWidgetId, type PresentationProfile, type PresentationSectionId } from "../core/presentation";
+import { DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationFamily, type PresentationHomeWidgetId, type PresentationProfile, type PresentationSectionId } from "../core/presentation";
 import { TrackService } from "../core/track";
 import { makeReminderData, reconcileReminders } from "../core/time";
 import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/crypto";
@@ -63,15 +63,20 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const deviceCopy = getDeviceInputCopy(presentation.locale);
   const recoveryCopy = getRecoveryCopy(presentation.locale);
   const timeCopy = getTimeCopy(presentation.locale);
+  const familyLabels: Record<PresentationFamily, string> = presentation.locale === "fr-CA"
+    ? { alpha: "Concept Alpha - Monastique tactile", beta: "Concept Beta - Editorial humaniste", gamma: "Concept Gamma - Utilitaire industriel" }
+    : { alpha: "Concept Alpha - Tactile Monastic", beta: "Concept Beta - Humanist Editorial", gamma: "Concept Gamma - Industrial Utility" };
   const factoryPreviewMode = new URLSearchParams(window.location.search).get("factory-preview") === "1";
   const effectRevocationPreviewMode = new URLSearchParams(window.location.search).get("effect-revocation-preview") === "1";
   const effectCredentialedPreviewMode = new URLSearchParams(window.location.search).get("effect-credentialed-preview") === "1";
   const effectCredentialedRestartPreviewMode = new URLSearchParams(window.location.search).get("effect-credentialed-restart-preview") === "1";
   root.dataset.theme = presentation.theme;
+  root.dataset.family = presentation.family;
   root.dataset.density = presentation.density;
   root.dataset.typeface = presentation.typeface;
   root.dataset.iconography = presentation.iconography;
   document.documentElement.dataset.theme = presentation.theme;
+  document.documentElement.dataset.family = presentation.family;
   document.documentElement.dataset.typeface = presentation.typeface;
   document.documentElement.lang = presentation.locale;
   document.documentElement.dir = localeDirection(presentation.locale);
@@ -160,6 +165,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           </select>
           <label for="tagline">${copy.tagline}</label>
           <input id="tagline" name="tagline" type="text" maxlength="160" />
+          <label for="family">${presentation.locale === "fr-CA" ? "Famille visuelle" : "Visual family"}</label>
+          <select id="family" name="family">
+            <option value="alpha">${familyLabels.alpha}</option>
+            <option value="beta">${familyLabels.beta}</option>
+            <option value="gamma">${familyLabels.gamma}</option>
+          </select>
           <div class="form-row presentation-grid">
             <div>
               <label for="density">${copy.density}</label>
@@ -858,6 +869,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const productName = root.querySelector<HTMLInputElement>("#product-name");
   const localeInput = root.querySelector<HTMLSelectElement>("#locale");
   const taglineInput = root.querySelector<HTMLInputElement>("#tagline");
+  const familyInput = root.querySelector<HTMLSelectElement>("#family");
   const densityInput = root.querySelector<HTMLSelectElement>("#density");
   const typefaceInput = root.querySelector<HTMLSelectElement>("#typeface");
   const iconographyInput = root.querySelector<HTMLSelectElement>("#iconography");
@@ -938,6 +950,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!factoryPreview || !factoryAppForm || !factoryAppStatus || !factoryAppList || !factoryGameStatus || !factoryGameBoard || !factoryGameMove || !factoryGameCollect || !factoryGamePause || !factoryGameSave || !factoryGameLoad) {
     throw new Error("Omnevum factory preview controls are missing");
   }
+  if (!familyInput) throw new Error("Omnevum presentation family control is missing");
   if (!packageAutomationForm || !packageAutomationRecord || !packageAutomationDocument || !packageAutomationPreviewButton || !packageAutomationStatus || !packageAutomationList || !packageAutomationProposals) {
     throw new Error("Omnevum package-automation controls are missing");
   }
@@ -1224,18 +1237,21 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const isStandaloneDisplayMode = (): boolean => window.matchMedia?.("(display-mode: standalone)").matches === true || (navigator as Navigator & { standalone?: boolean }).standalone === true;
   const applyPresentationProfile = (): void => {
     root.dataset.theme = presentation.theme;
+    root.dataset.family = presentation.family;
     root.dataset.density = presentation.density;
     root.dataset.typeface = presentation.typeface;
     root.dataset.iconography = presentation.iconography;
     document.documentElement.dataset.theme = presentation.theme;
+    document.documentElement.dataset.family = presentation.family;
     document.documentElement.dataset.typeface = presentation.typeface;
     document.title = `${presentation.productName} - ${copy.productHeading}`;
     const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-    if (themeColor) themeColor.content = presentation.theme === "dark" ? "#000000" : "#f7f8fa";
+    if (themeColor) themeColor.content = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() || (presentation.theme === "dark" ? "#000000" : "#f7f8fa");
     productLabel.textContent = `${presentation.productName} ${copy.foundation}`;
     productTagline.textContent = presentation.tagline || copy.lede;
     productName.value = presentation.productName;
     taglineInput.value = presentation.tagline;
+    familyInput.value = presentation.family;
     localeInput.value = presentation.locale;
     densityInput.value = presentation.density;
     typefaceInput.value = presentation.typeface;
@@ -3127,6 +3143,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         ...presentation,
         productName: nextName,
         tagline: taglineInput.value,
+        family: familyInput.value,
         locale: nextLocale,
         density: densityInput.value,
         typeface: typefaceInput.value,
