@@ -26,6 +26,20 @@ describe("source-preserving Artifact transformations", () => {
     expect(html.warnings).toContain("Active HTML content was stripped; extracted text is inert and was never executed.");
   });
 
+  it("keeps mutation-XSS and DOM-clobbering-style markup on the text-only presentation path", async () => {
+    const hostile = await inspectArtifact(new Blob([
+      "<!doctype html><form id=app><input name=innerHTML><svg><script>alert(1)</script></svg>",
+      "<img src=x onerror=alert(2)><a href=javascript:alert(3)>Visible receipt</a>",
+      "<!--><script>document.body.innerHTML = '<p>clobbered</p>'</script>"
+    ]), "mutation-xss.html", "text/html");
+    expect(hostile.adapter).toBe("HTML");
+    expect(hostile.metadata).toMatchObject({ activeContentStripped: true });
+    expect(hostile.derivedText?.text).toContain("Visible receipt");
+    expect(hostile.derivedText?.text).not.toMatch(/<\s*(?:script|form|svg|img)\b/iu);
+    expect(hostile.derivedText?.text).not.toContain("document.body");
+    expect(hostile.warnings).toContain("Active HTML content was stripped; extracted text is inert and was never executed.");
+  });
+
   it("keeps hostile spreadsheet formulas, markup, links, and macros inert while preserving the source", async () => {
     const csv = await inspectArtifact(new Blob([
       "merchant,amount,note\n=HYPERLINK(\"https://evil.example\"),=1+1,<svg onload=alert(1)>"
