@@ -2000,8 +2000,11 @@
         "line": 4195
       },
       "text": "Finance receives a mixed batch containing at least a transaction-account statement, credit-card statement, investment statement/export, debt statement, and income/pay record in materially different supported formats. It classifies each source, preserves/fingerprints the originals, extracts candidate records with provenance, and accepts all mechanically validated records while routing only material unresolved exceptions to Triage/Clarify.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current core evidence classifies supported source identities with explicit confidence/reasons and retains exact source lineage in the existing Finance importer. Mixed multi-class parser coverage, batch admission, and Triage routing remain open."
     },
     {
       "id": "OMN-ACC-134",
@@ -2024,8 +2027,11 @@
         "line": 4199
       },
       "text": "A validated account-specific parser profile automatically processes several subsequent statements with no routine user review. A later statement deliberately changes its table structure/sign convention; structural invariants detect drift, prevent silent stale-profile parsing, preserve the source, and route only the affected source/fields for re-detection or review.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "The current Finance model stores a source-bound parser profile contract and detects missing/changed headers or sign convention as DRIFT instead of silently reusing a stale profile. Repeated automatic profile admission, source-class parser cascade, preserved Artifact upload, and Triage routing remain open."
     },
     {
       "id": "OMN-ACC-136",
@@ -2044,8 +2050,11 @@
         "line": 4203
       },
       "text": "A representative monthly finance update imports several hundred transactions. Previously learned merchant/category/transfer rules and reconciliation invariants resolve the routine majority automatically; the user is shown only a small exception set whose ambiguity or consequence is material. Resolving one repeated exception creates a scoped reversible rule that removes the same routine burden on the next equivalent import.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current core evidence provides bounded recurrence and explainable review signals that can identify routine patterns and material exceptions without fraud claims. Several-hundred-row throughput, learned scoped rule persistence, transfer matching, and exception-only UI remain open."
     },
     {
       "id": "OMN-ACC-138",
@@ -2074,8 +2083,11 @@
         "line": 4209
       },
       "text": "With no manually entered budget, Finance derives an observed spending/income baseline from sufficient history, recurrence, and seasonality and produces actual-versus-baseline analysis. The user then adopts a target plan; Finance keeps observed baseline, target, actual, and forecast distinct, and after repeated structural variance flags the target assumption as stale rather than repeatedly presenting the same variance as a new behavioral failure.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current core evidence distinguishes descriptive actual cash-flow summaries, recurring patterns, and forecast vintages without presenting one opaque score. Observed-baseline seasonality, adopted target-plan persistence, and stale-assumption UI remain open."
     },
     {
       "id": "OMN-ACC-141",
@@ -2084,8 +2096,11 @@
         "line": 4211
       },
       "text": "Finance creates a base/downside/upside 12-month cash-flow forecast and stores the forecast vintage. Subsequent statement imports replace elapsed periods with actuals without deleting the original forecast, calculate forecast error/bias where meaningful, and update future forecasts while preserving the historical comparison.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current core tests create bounded BASE/DOWNSIDE/UPSIDE forecast vintages and compare later actual closing cash without overwriting the vintage. Durable canonical vintage ownership, 12-month UI, elapsed-period recomputation, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-142",
@@ -2094,8 +2109,11 @@
         "line": 4213
       },
       "text": "Finance infers recurring salary, monthly subscriptions, an annual insurance bill, and a periodic reimbursement pattern. A simulated missing payroll, subscription price increase, duplicate recurring charge, and late refund are detected with source evidence, while a holiday-shifted normal payroll and known annual renewal do not produce false urgent alerts.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current core evidence infers monthly/annual recurring patterns from merchant, exact amount, timing, and source IDs and preserves a descriptive limitation. Missing-flow, price-drift, refund/reimbursement, holiday, and false-alert qualification remain open."
     },
     {
       "id": "OMN-ACC-143",
@@ -2104,8 +2122,11 @@
         "line": 4215
       },
       "text": "A new transaction is flagged because it is a first-time merchant, materially above the account's robust historical range, and part of a rapid sequence. The review case shows each signal, source/provenance, baseline comparison, plausible benign explanation, and priority without declaring fraud. Marking the merchant/purchase legitimate updates only the appropriate scoped baseline/rule; a later materially different anomaly at the same merchant can still surface.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current core evidence emits explainable first-merchant, baseline-deviation, duplicate-identity, and rapid-sequence signals with source IDs, low-history confidence, unresolved disposition, and no fraud claim. Scoped dispositions and full review UI remain open."
     },
     {
       "id": "OMN-ACC-144",
@@ -2114,8 +2135,11 @@
         "line": 4217
       },
       "text": "Suspicious-transaction analysis is exercised on an account with weak history and on another with strong seasonal history. The weak-history case reports lower confidence/insufficient baseline rather than fabricated normality; the seasonal case avoids false alerts for a known annual pattern while still detecting an injected duplicate/error pattern. No opaque risk score is the sole explanation.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current model evidence lowers confidence when merchant history is weak and exposes reasons rather than an opaque score; seasonal-benign controls, duplicate/error fixture breadth, and disposition learning remain open."
     },
     {
       "id": "OMN-ACC-145",
@@ -2124,8 +2148,11 @@
         "line": 4219
       },
       "text": "One monthly credit-card statement and one investment valuation are deliberately omitted. Finance infers the missing period/staleness, qualifies cash-flow/net-worth/goal conclusions that depend on them, and does not coerce the missing values to zero. Importing the missing/current sources automatically clears only the affected data-quality conditions and recomputes dependent projections.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current core evidence represents missing periods, stale sources, unresolved reconciliation, and review cases explicitly as data-quality limitations rather than zero values. Automatic source coverage refresh and dependent projection invalidation remain open."
     },
     {
       "id": "OMN-ACC-146",
@@ -2168,8 +2195,11 @@
         "line": 4227
       },
       "text": "A coupled what-if scenario changes a material assumption such as income, a major purchase, debt payment, or goal contribution. Finance propagates the change through cash/liquidity, budget, debt, savings, goals, forecast, and net-worth projections where applicable, preserves the baseline for comparison, states every material assumption, and proposes alternatives without silently mutating the user's adopted plan.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current core evidence isolates scenario edges from baseline propagation and labels forecast/FIRE/goal outputs as modeled assumptions. Full coupled domain propagation, baseline/vintage comparison UI, and alternative presentation remain open."
     },
     {
       "id": "OMN-ACC-150",
@@ -2268,8 +2298,11 @@
         "line": 4247
       },
       "text": "One canonical savings account and one recurring monthly surplus are linked to an emergency reserve, retirement goal, FIRE goal, home goal, and vacation goal. The records are stored once; each goal sees the same underlying source values through typed relationships; explicit allocations prevent exclusive dollars from being multiply claimed; and changing the balance or surplus automatically updates every materially dependent trajectory.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current core evidence provides typed graph nodes/edges, exact-money exclusive versus enabling allocations, over-allocation detection, and dynamic goal target/funding pace. Canonical cross-domain relationship persistence and automatic trajectory refresh remain open."
     },
     {
       "id": "OMN-ACC-160",
@@ -2298,8 +2331,11 @@
         "line": 4253
       },
       "text": "A user-defined FIRE goal is modeled as a composite dependency graph containing at least observed savings/investments, a spending assumption, contribution rate, retirement/FIRE date, and at least one current-rule or user-assumption input. Changing one assumption recomputes the model, preserves the prior scenario for comparison, labels assumptions versus facts, and does not present FIRE as a recommended objective or one magic-number truth.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current core evidence supplies explicit graph truth classes, scenario isolation, dynamic goal funding, and assumption-labelled FIRE projections without a universal recommendation. Persisted composite goal records, prior-scenario comparison, and connected portfolio UI remain open."
     },
     {
       "id": "OMN-ACC-163",
@@ -2308,8 +2344,11 @@
         "line": 4255
       },
       "text": "A constrained monthly surplus cannot fully fund all active goals. Omnevum detects the shared-resource conflict once, shows the aggregate shortfall and affected goals, and prepares multiple feasible alternatives that preserve user-defined hard constraints. It does not silently lower a goal priority, double-count the same dollar, or optimize to a hidden score.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current exact-money allocation tests detect overcommitment and per-goal unmet amounts without reprioritizing goals or double-counting balances. Multiple user-visible alternatives and hard-constraint persistence remain open."
     },
     {
       "id": "OMN-ACC-164",
@@ -2318,8 +2357,11 @@
         "line": 4257
       },
       "text": "A candidate intervention has supported positive effects on two goals and a modeled downside on a third domain. Omnevum surfaces both the synergy and conflict, identifies evidence/assumption status for each edge, and preserves the option to take no action. A merely correlated historical pattern is not promoted to a causal synergy claim.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current graph contracts distinguish dependency/allocation propagation from evidence-bearing synergy and conflict edges, preserving truth class and source IDs without causal promotion. A user-facing intervention proposal/opt-out surface remains open."
     },
     {
       "id": "OMN-ACC-165",
@@ -2348,8 +2390,11 @@
         "line": 4263
       },
       "text": "A dependency graph contains both an accidental cycle and an intentionally modeled feedback loop. Ordinary propagation detects and quarantines the accidental cycle without recursion, oscillation, arbitrary last-write ordering, or canonical corruption. The intentional loop executes only inside a Model with explicit state/time, assumptions, termination/convergence and failure behavior; a non-convergent run is reported rather than forced to a value. Scenario edges remain isolated from the adopted baseline.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current core tests detect and quarantine ordinary cycles with downstream invalidation, run bounded convergent feedback only under an explicit scenario ID, report NON_CONVERGED results, and keep scenario edges out of baseline values. Canonical dependency persistence and full Model UI remain open."
     },
     {
       "id": "OMN-ACC-168",
@@ -2388,8 +2433,11 @@
         "line": 4271
       },
       "text": "A long-horizon retirement/FIRE scenario uses investment balances, contributions, withdrawals, inflation, fees, taxes, and a retirement date. The projection keeps nominal/real and pre/post-tax bases consistent, exposes sequence/path and longevity assumptions, preserves deterministic and stochastic/sensitivity outputs as model results rather than facts, and shows how changing one assumption propagates through the connected goal portfolio without silently changing the user's adopted plan.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+      ],
+      "notes": "Current core tests project nominal, inflation-adjusted real, after-tax, deterministic, and supplied downside/upside sequence outputs with explicit assumptions and limitations. Investment cash-flow method breadth, longevity/scenario portfolio UI, canonical baseline comparison, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-172",
@@ -2398,8 +2446,11 @@
         "line": 4273
       },
       "text": "A generated first-party package or durable workflow is handed to a fresh qualified engineer without chat history or this MPES. Its native project/spec/manifest and referenced public contracts contain or enforce the applicable local truth, authority, privacy/security, accessibility, update/invalidation, verification, recovery, versioning, maintenance, retirement, and onward-descendant obligations needed to continue correctly. A generated non-self-executing artifact that cannot carry such behavior is instead protected by an explicit generation/validation/update boundary; no applicable requirement disappears merely because the descendant medium is simpler.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-fresh-agent-and-factory-resume-receipt"
+      ],
+      "notes": "The current clean-clone fresh-agent benchmark resumes from the committed ledger/control state without the original conversation, runs npm ci/npm run ci, Recovery audit, and factory interruption/resume benchmark. Descendant package/workflow contract inheritance beyond the current factory benchmark remains open."
     }
   ]
 }
