@@ -1486,8 +1486,14 @@
         "line": 4092
       },
       "text": "A representative large personal-health/wearable export is ingested through USER_EXPORT_IMPORT on a static-browser target with streaming/resource bounds, provenance, idempotent re-import and explicit subject identity. On a target with no direct browser HealthKit/Health Connect access, Omnevum reports PLATFORM_LIMITED instead of pretending direct access; an optional native/local companion can be enabled and removed without changing canonical IDs or breaking the file-import path.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/health-import.ts",
+        "src/core/health-import.test.ts",
+        "src/core/acquire.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-health-export-intake-contract-receipt"
+      ],
+      "notes": "The bounded health import contract parses CSV/JSON user exports, preserves explicit subject/source identity and timestamps, deduplicates external IDs for idempotent re-import, and stages observations through Acquire/Triage. Direct browser HealthKit/Health Connect access is explicitly PLATFORM_LIMITED. Large streaming workload, static-browser UI wiring, optional companion lifecycle, target/deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-084",

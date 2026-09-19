@@ -1916,3 +1916,9 @@ This advances `OMN-ACC-071` from `UNKNOWN` to `PARTIAL`. No qualified RDF/JSON-L
 On 2026-09-19, source revision `d3bb061` added the Omnevum-owned bounded local analytical projection seam. The focused `src/core/analytical-projection.test.ts` suite passed `3` tests, followed by `npm run typecheck` and `git diff --check`. CSV and JSON scalar rows can be projected locally as `DERIVED` data with `canonicalOwner: NONE`, selected and filtered under row/column/byte bounds, and cancelled through `AbortSignal`; remote extension/data fetch is structurally disabled. Parquet is explicitly characterized as `PLATFORM_LIMITED` rather than parsed or fetched.
 
 This advances `OMN-ACC-056` from `UNKNOWN` to `PARTIAL`. No DuckDB-Wasm-class engine, representative large CSV/JSON/Parquet workload, static/offline analytical assets, target-performance qualification, or human acceptance was performed; those remain open.
+
+## Current v0.17.4 health export intake contract receipt
+
+On 2026-09-19, source revision `e9ed10b` added the Omnevum-owned bounded user health export intake. The focused `src/core/health-import.test.ts` suite passed `3` tests, followed by `npm run typecheck` and `git diff --check`. CSV and JSON measurements retain source identity, explicit subject identity, normalized timestamps, units, values, and external IDs; duplicate external IDs are suppressed deterministically for idempotent re-import; output is staged as `AcquireCandidate` observation/measurement data with `triageStatus: INBOX`; and the capability report explicitly marks direct browser HealthKit/Health Connect access `PLATFORM_LIMITED` while retaining file import.
+
+This advances `OMN-ACC-083` from `UNKNOWN` to `PARTIAL`. No large streaming export, browser UI/target proof, native companion, direct health API, deployment, or human acceptance was performed; those remain open.
