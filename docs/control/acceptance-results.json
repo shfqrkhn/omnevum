@@ -1751,8 +1751,13 @@
         "line": 4154
       },
       "text": "A plain search returns results grouped by owning lens with match reasons and the active Space/Scope bound stated. Facet chips are added on demand, each remains individually removable and expressible in the query, and the filtered set saved as a named view creates no writable copy and no second index authority.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/search.test.ts",
+        "src/core/compose.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromiumedge-search-facet-and-declarative-view-receipt"
+      ],
+      "notes": "Current source 4856ba7 and exact artifact digest 017b30f5f9f734067c3882ada10c8efaf12ab88fcb12438bb48effa27967b817 are receipt-bound. Edge local Chromium behavior proves canonical single-owner results, owning-lens grouping, match reasons, explicit All-Spaces scope, on-demand lens/type facet chips, query serialization, rapid-change stale-render protection, and a named Compose/View projection that persists only the query/scope across reload. Other engines, mobile, assistive technology, broad ranking/full-lens qualification, production deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-115",
