@@ -2267,8 +2267,11 @@
         "line": 4235
       },
       "text": "Finance receives a routine monthly batch whose fields are already present in supported statements/exports. Account metadata, transactions, balances, recurring flows, classifications covered by confirmed rules, reconciliations, budgets/actuals, forecasts, goals, and the update brief refresh without manual transcription. The only user-visible work is a bounded set of materially unresolved exceptions, which may be empty.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-routine-batch-receipt"
+      ],
+      "notes": "The bounded Finance batch path accepts up to 32 local statement files in one account/currency flow and one confirmation, classifies and parses each source, preserves each Artifact/source identity, deduplicates rows, computes per-source reconciliation, accepts transaction/statement facts through domain.finance, and exposes only bounded conflicts/limitations after acceptance while the existing projection/update brief refreshes. Full recurring/budget/actual/forecast/goal refresh breadth, persistent reconciliation history, upload-host/target/accessibility/input, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-154",
