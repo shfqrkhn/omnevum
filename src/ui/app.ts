@@ -15,7 +15,8 @@ import { MAX_VAULT_JSON_BYTES, parseVault } from "../core/vault";
 import type { CanonicalStore } from "../core/storage";
 import { captureExpense, captureHealthMeasurement } from "../core/workflows";
 import { acceptFinanceTransactions, createFinanceSourceId, deduplicateFinanceTransactions, parseFinanceCsv, reconcileFinanceStatement, type FinanceStatementSource } from "../core/finance";
-import { parseMoney } from "../core/money";
+import { formatMoney, parseMoney } from "../core/money";
+import { summarizeFinanceTransactions } from "../core/finance-model";
 import { projectDataset } from "../core/data";
 import { countRecords, groupCounts } from "../core/analysis";
 import type { CapabilityRuntime } from "../core/capability-runtime";
@@ -4009,13 +4010,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const transactions = parseFinanceCsv(await file.text(), source);
       const deduplicated = deduplicateFinanceTransactions(transactions);
       const reconciliation = reconcileFinanceStatement(source, transactions);
+      const summary = summarizeFinanceTransactions(transactions, currency);
       const preview = copy.financeImportResult(deduplicated.unique.length, 0, deduplicated.duplicates.length, deduplicated.conflicts.length, reconciliation.status);
       if (!await requestConfirmation(`${preview}\n\n${copy.financeImportHint}`, copy.financeImport)) return;
       const existingArtifact = (await commands.findBySourceId(sourceId)).find((record) => record.recordType === "artifact" && !record.deleted);
       const artifact = existingArtifact ?? await commands.createArtifact({ fileName: file.name, mimeType: file.type || "text/csv", blob: file, sourceId, adapter: inspection.adapter, metadata: inspection.metadata, ...(inspection.derivedText ? { derivedText: inspection.derivedText } : {}) });
       const result = await acceptFinanceTransactions(commands, { ...source, sourceArtifactId: artifact.id }, transactions);
       financeImportForm.reset();
-      financeImportStatus.textContent = copy.financeImportResult(result.created, result.existing, result.duplicates, result.conflicts.length, reconciliation.status);
+      financeImportStatus.textContent = `${copy.financeImportResult(result.created, result.existing, result.duplicates, result.conflicts.length, reconciliation.status)} ${copy.financeAnalysisResult(formatMoney(summary.postedIncome, presentation.locale), formatMoney(summary.postedSpending, presentation.locale), formatMoney(summary.netCashFlow, presentation.locale), formatMoney(summary.pendingNet, presentation.locale), formatMoney(summary.feeSpending, presentation.locale))}`;
       await renderRecords(searchQuery.value);
     } catch (error) {
       financeImportStatus.textContent = describeError(error, "Finance statement import failed; no statement rows were accepted.");

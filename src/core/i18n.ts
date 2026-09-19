@@ -18,7 +18,7 @@ export interface UiCopy {
   searchPlaceholder: string; search: string; clear: string; triage: string; reviewInbox: string; inboxCount: string;
   inboxClear: string; markReviewed: string; defer: string; deferUntil: string; clarify: string; reference: string; route: string; split: string; splitKind: string; splitParts: string; splitHint: string; splitSaved: (count: number) => string; delete: string; triageStatus: (status: TriageStatus) => string; triageProposal: (owners: string, types: string, actions: string) => string; triageDetails: string; triageProvenance: (source: string, capturedAt: string, owner: string, revision: number) => string; triageSelectAll: string; triageSelectItem: (text: string) => string; triageSelected: (count: number) => string; triageBatchReview: string; triageBatchDefer: string; triageBatchDeferUntil: string; triageNoSelection: string; triageBatchResult: (successes: number, failures: number) => string; triageBatchOutcome: (label: string, outcome: string) => string; reviewHint: string; reviewTemplates: string; reviewTemplateName: (id: ReviewTemplateId) => string; reviewStart: string; reviewResume: string; reviewSkip: string; reviewAbandon: string; reviewNext: string; reviewFinish: string; reviewCompleted: string; reviewPartial: string; reviewStep: (current: number, total: number) => string; reviewNoRecords: string; reviewPrompt: (key: string) => string; reviewMotivation: string; reviewOpenRecord: string; reviewMarkReviewed: string; reviewCompleteTask: string; relate: string; connectWithoutCopying: string; sourceRecord: string;
   targetRecord: string; relationship: string; createLink: string; relationshipHint: string; timeObserve: string; track: string; trackHeading: string; metricName: string; value: string; unit: string; trackPlaceholder: string; saveObservation: string; trackHint: string; trackSaved: (name: string) => string;
-  domains: string; financeHeading: string; merchant: string; currency: string; saveExpense: string; financeHint: string; financeImportHeading: string; financeFile: string; financeAccount: string; financeOpening: string; financeClosing: string; financeImport: string; financeImportHint: string; financeImportResult: (created: number, existing: number, duplicates: number, conflicts: number, reconciliation: "MATCH" | "MISMATCH" | "INCOMPLETE") => string; healthHeading: string; subject: string; optionalNote: string; saveMeasurement: string; healthHint: string; expenseSaved: string; measurementSaved: string;
+  domains: string; financeHeading: string; merchant: string; currency: string; saveExpense: string; financeHint: string; financeImportHeading: string; financeFile: string; financeAccount: string; financeOpening: string; financeClosing: string; financeImport: string; financeImportHint: string; financeImportResult: (created: number, existing: number, duplicates: number, conflicts: number, reconciliation: "MATCH" | "MISMATCH" | "INCOMPLETE") => string; financeAnalysisResult: (income: string, spending: string, net: string, pending: string, fees: string) => string; healthHeading: string; subject: string; optionalNote: string; saveMeasurement: string; healthHint: string; expenseSaved: string; measurementSaved: string;
   focusHeading: string; focusHint: string; startFocus: string; stopFocus: string; noActiveSession: string;
   sources: string; sourcesHeading: string; evidenceHeading: string; subjectRecord: string; evidenceRelation: string; supports: string; contradicts: string; qualifies: string; derivesFrom: string; claim: string; uncertainty: string; createEvidence: string; evidenceSaved: string; annotationHeading: string; annotationQuote: string; annotationNote: string; createAnnotation: string; annotationSaved: string; quoteMissing: string; placeHeading: string; placeLabel: string; latitude: string; longitude: string; optionalGeoJson: string; savePlace: string; placeSaved: (label: string) => string; knowledgeStatus: (evidence: number, annotations: number, active: number, stale: number, orphaned: number, places: number) => string; sourceRequired: string;
   sharing: string; sharingHeading: string; shareRecipient: string; sharePurpose: string; shareExpiry: string; shareGrant: string; selectGrant: string; selectRecords: string; includePrivate: string; createGrant: string; exportProjection: string; sharingHint: string; grantSaved: string; grantRevoked: string; grantRequired: string; grantSpaceMismatch: string; projectionSaved: (included: number, omitted: number) => string; shareSelectionRequired: string; revoke: string;
@@ -263,7 +263,7 @@ const presentationLensFrench: Pick<UiCopy, "lenses" | "lensOverflow" | "lensHint
   recordEditSegmentStatus: (label) => `Section ${label} affichee.`
 };
 
-const financeEnglish: Pick<UiCopy, "financeImportHeading" | "financeFile" | "financeAccount" | "financeOpening" | "financeClosing" | "financeImport" | "financeImportHint" | "financeImportResult"> = {
+const financeEnglish: Pick<UiCopy, "financeImportHeading" | "financeFile" | "financeAccount" | "financeOpening" | "financeClosing" | "financeImport" | "financeImportHint" | "financeImportResult" | "financeAnalysisResult"> = {
   financeImportHeading: "Import a statement",
   financeFile: "CSV statement",
   financeAccount: "Account identity",
@@ -271,10 +271,11 @@ const financeEnglish: Pick<UiCopy, "financeImportHeading" | "financeFile" | "fin
   financeClosing: "Closing balance (optional)",
   financeImport: "Import statement",
   financeImportHint: "Statements stay local. The original file is preserved as an Artifact; review reconciliation and exceptions before acceptance.",
-  financeImportResult: (created, existing, duplicates, conflicts, reconciliation) => `Finance import: ${created} created, ${existing} already present, ${duplicates} duplicate(s), ${conflicts} conflict(s); reconciliation ${reconciliation.toLowerCase()}.`
+  financeImportResult: (created, existing, duplicates, conflicts, reconciliation) => `Finance import: ${created} created, ${existing} already present, ${duplicates} duplicate(s), ${conflicts} conflict(s); reconciliation ${reconciliation.toLowerCase()}.`,
+  financeAnalysisResult: (income, spending, net, pending, fees) => `Derived position: income ${income}; spending ${spending}; net cash flow ${net}; pending ${pending}; identified fees ${fees}.`
 };
 
-const financeFrench: Pick<UiCopy, "financeImportHeading" | "financeFile" | "financeAccount" | "financeOpening" | "financeClosing" | "financeImport" | "financeImportHint" | "financeImportResult"> = {
+const financeFrench: Pick<UiCopy, "financeImportHeading" | "financeFile" | "financeAccount" | "financeOpening" | "financeClosing" | "financeImport" | "financeImportHint" | "financeImportResult" | "financeAnalysisResult"> = {
   financeImportHeading: "Importer un releve",
   financeFile: "Releve CSV",
   financeAccount: "Identite du compte",
@@ -282,7 +283,8 @@ const financeFrench: Pick<UiCopy, "financeImportHeading" | "financeFile" | "fina
   financeClosing: "Solde de cloture (facultatif)",
   financeImport: "Importer le releve",
   financeImportHint: "Les releves restent locaux. Le fichier original est preserve comme artefact; verifiez le rapprochement et les exceptions avant l'acceptation.",
-  financeImportResult: (created, existing, duplicates, conflicts, reconciliation) => `Import financier: ${created} cree(s), ${existing} deja present(s), ${duplicates} doublon(s), ${conflicts} conflit(s); rapprochement ${reconciliation.toLowerCase()}.`
+  financeImportResult: (created, existing, duplicates, conflicts, reconciliation) => `Import financier: ${created} cree(s), ${existing} deja present(s), ${duplicates} doublon(s), ${conflicts} conflit(s); rapprochement ${reconciliation.toLowerCase()}.`,
+  financeAnalysisResult: (income, spending, net, pending, fees) => `Position derivee: revenus ${income}; depenses ${spending}; flux net ${net}; en attente ${pending}; frais identifies ${fees}.`
 };
 
 const searchEnglish: Pick<UiCopy, "searchFilters" | "searchFacetLens" | "searchFacetType" | "searchFacetSpace" | "searchFacetArtifact" | "searchAll" | "searchHasArtifact" | "searchScope" | "searchMatch" | "searchSaveView" | "searchViewName" | "searchViewSaved" | "searchViewQueryRequired" | "searchFacetChip" | "searchGroup"> = {
