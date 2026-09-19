@@ -94,6 +94,43 @@ describe("canonical Finance projection", () => {
     expect(reserve.data.hardConstraint).toBe(true);
   });
 
+  it("projects retained investment valuations into explicit FIRE scenarios without mutating the adopted records", () => {
+    const investmentFacts = record("investment-statement", {
+      kind: "finance-statement-facts",
+      sourceId: "investment-source-1",
+      sourceClass: "INVESTMENT",
+      statementFacts: {
+        sourceId: "investment-source-1",
+        sourceClass: "INVESTMENT",
+        investment: { valuation: { amountMinor: "10000000", currency: "CAD" }, valuationDate: "2026-01-01T00:00:00.000Z", externalCashFlows: [] },
+        evidence: { truthClass: "OBSERVED", sourceIds: ["investment-source-1"] },
+        limitations: []
+      }
+    }, { truthClass: "IMPORTED_RECORD", provenance: { source: "IMPORT", capturedAt: "2026-01-01T00:00:00.000Z", sourceId: "investment-source-1" } });
+    const scenario = {
+      kind: "finance-fire", scenarioId: "fire-base", currency: "CAD", annualContributionMinor: "120000", annualSpendingMinor: "60000", retirementDate: "2031-01-01", yearsInRetirement: 10,
+      nominalReturnRate: 0.05, inflationRate: 0.02, annualFeesRate: 0.01, effectiveTaxRate: 0.2, withdrawalRate: 0,
+      downsideFirstReturns: [-0.2, -0.1, 0.02], upsideFirstReturns: [0.15, 0.1, 0.05]
+    };
+    const base = record("fire-base-record", scenario, { truthClass: "ASSUMPTION" });
+    const comparison = record("fire-downside-record", { ...scenario, scenarioId: "fire-downside", nominalReturnRate: 0.03 }, { truthClass: "ASSUMPTION" });
+    const projection = projectFinanceState([investmentFacts, base, comparison], { asOfDate: "2026-01-01" });
+    expect(projection.fireScenarioLimitations).toEqual([]);
+    expect(projection.statementFacts).toHaveLength(1);
+    expect(projection.fireScenarios.map((entry) => entry.scenarioId)).toEqual(["fire-base", "fire-downside"]);
+    expect(projection.fireScenarios[0]?.projection).toMatchObject({ retirementDate: "2031-01-01", currency: "CAD", truthClass: "MODELED" });
+    expect(projection.fireScenarios[0]?.inputEvidence.currentInvestments).toMatchObject({ truthClass: "OBSERVED", sourceIds: ["investment-source-1"] });
+    expect(base.data.annualContributionMinor).toBe("120000");
+    expect(investmentFacts.data.statementFacts).toBeTruthy();
+  });
+
+  it("keeps incomplete FIRE scenarios explicit instead of coercing missing assumptions", () => {
+    const incomplete = record("fire-incomplete", { kind: "finance-fire", scenarioId: "incomplete", currency: "CAD", annualSpendingMinor: "60000", yearsToRetirement: 5, yearsInRetirement: 10 });
+    const projection = projectFinanceState([incomplete]);
+    expect(projection.fireScenarios).toEqual([]);
+    expect(projection.fireScenarioLimitations).toEqual(["fire-incomplete: current investment balance is missing; no statement valuation or finance-investment record is available"]);
+  });
+
   it("excludes confirmed cross-account movements from aggregate totals while retaining unresolved candidates", () => {
     const outgoing = record("checking-transfer", { kind: "finance-transaction", merchant: "transfer to savings", description: "Transfer to savings", amountMinor: "-2500", currency: "CAD", accountId: "checking", postedAt: "2026-01-02T00:00:00.000Z", status: "POSTED" }, { truthClass: "IMPORTED_RECORD" });
     const incoming = record("savings-transfer", { kind: "finance-transaction", merchant: "transfer from checking", description: "Transfer from checking", amountMinor: "2500", currency: "CAD", accountId: "savings", postedAt: "2026-01-03T00:00:00.000Z", status: "POSTED" }, { truthClass: "IMPORTED_RECORD" });

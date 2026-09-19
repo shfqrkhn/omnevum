@@ -1,8 +1,8 @@
 import { projectDependencyGraph, projectDependencyImpact, type DependencyGraph, type DependencyImpact } from "./dependency-graph";
 import { addMoney, parseMoney, type MoneyValue } from "./money";
 import type { CanonicalRecord, TruthClass } from "./model";
-import type { FinanceLineage, FinanceTransaction, FinanceTransactionStatus } from "./finance";
-import { allocateFinanceResource, assessFinanceDataQuality, analyzeFinanceGraph, detectFinanceReviewCases, inferFinanceRecurringPatterns, matchFinanceTransfers, planFinanceAllocationAlternatives, projectFinanceGoal, summarizeFinanceTransactions, type FinanceAllocationResult, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastVintage, type FinanceFundingAnalysis, type FinanceGoalPlan, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceReviewCase, type FinanceTransactionSummary, type FinanceTransferAnalysis } from "./finance-model";
+import type { FinanceLineage, FinanceStatementFacts, FinanceTransaction, FinanceTransactionStatus } from "./finance";
+import { allocateFinanceResource, assessFinanceDataQuality, analyzeFinanceGraph, detectFinanceReviewCases, inferFinanceRecurringPatterns, matchFinanceTransfers, planFinanceAllocationAlternatives, projectFinanceGoal, projectFireScenario, summarizeFinanceTransactions, type FinanceAllocationResult, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastVintage, type FinanceFundingAnalysis, type FinanceGoalPlan, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceReviewCase, type FinanceTransactionSummary, type FinanceTransferAnalysis, type FireScenarioInput, type FireScenarioProjection } from "./finance-model";
 
 /**
  * Read-only Finance projection over canonical records and the shared typed
@@ -11,6 +11,7 @@ import { allocateFinanceResource, assessFinanceDataQuality, analyzeFinanceGraph,
  */
 export interface FinanceProjectionOptions {
   currency?: string;
+  asOfDate?: string;
   requiredPeriods?: readonly string[];
   changedIds?: readonly string[];
   forecastVintages?: readonly FinanceForecastVintage[];
@@ -43,6 +44,14 @@ export interface FinanceCrossDomainProjection {
   limitations: string[];
 }
 
+export interface FinanceFireScenarioProjection {
+  recordId: string;
+  scenarioId: string;
+  projection: FireScenarioProjection;
+  inputEvidence: Record<string, { truthClass: FinanceFactClass; sourceIds: string[]; note?: string }>;
+  sourceIds: string[];
+}
+
 export interface FinanceProjection {
   status: "NO_DATA" | "LIMITED" | "READY";
   currency?: string;
@@ -62,6 +71,9 @@ export interface FinanceProjection {
   financeAllocationResults: Array<{ resourceId: string; result: FinanceAllocationResult }>;
   financeGoalPlans: Array<{ recordId: string; plan: FinanceGoalPlan; hardConstraint: boolean }>;
   financeFundingAnalysis?: FinanceFundingAnalysis;
+  statementFacts: FinanceStatementFacts[];
+  fireScenarios: FinanceFireScenarioProjection[];
+  fireScenarioLimitations: string[];
   crossDomain: FinanceCrossDomainProjection;
   invalidatedFinanceIds: string[];
   forecastVintages: FinanceForecastVintage[];
@@ -80,6 +92,7 @@ const FINANCE_NODE_KINDS = new Set([
   "finance-insurance",
   "finance-forecast",
   "finance-fire",
+  "finance-statement-facts",
   "goal"
 ]);
 
@@ -153,6 +166,36 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
         }
       })()
     : undefined;
+  const statementFacts = activeRecords.map(toFinanceStatementFacts).filter((facts): facts is FinanceStatementFacts => facts !== undefined).sort((left, right) => left.sourceId.localeCompare(right.sourceId));
+  const investmentBalances = new Map<string, { value: MoneyValue; sourceIds: string[] }>();
+  for (const facts of statementFacts) {
+    const valuation = facts.sourceClass === "INVESTMENT" ? facts.investment?.valuation : undefined;
+    if (!valuation) continue;
+    const key = `${facts.sourceId}:${valuation.currency}`;
+    investmentBalances.set(key, { value: valuation, sourceIds: [facts.sourceId] });
+  }
+  for (const record of activeRecords.filter((candidate) => candidate.data.kind === "finance-investment")) {
+    const value = recordMoneyFieldAliases(record, ["valuationMinor", "marketValueMinor", "amountMinor"]);
+    if (!value) continue;
+    const sourceId = record.provenance.sourceId ?? record.id;
+    const key = `${sourceId}:${value.currency}`;
+    if (!investmentBalances.has(key)) investmentBalances.set(key, { value, sourceIds: [sourceId] });
+  }
+  const fireScenarioLimitations: string[] = [];
+  const fireScenarios = activeRecords.filter((record) => record.data.kind === "finance-fire").flatMap((record): FinanceFireScenarioProjection[] => {
+    const resolved = resolveFinanceFireScenario(record, [...investmentBalances.values()], options.asOfDate);
+    if (!resolved.input) {
+      fireScenarioLimitations.push(`${record.id}: ${resolved.limitation}`);
+      return [];
+    }
+    try {
+      const projection = projectFireScenario(resolved.input);
+      return [{ recordId: record.id, scenarioId: projection.scenarioId, projection, inputEvidence: resolved.inputEvidence, sourceIds: resolved.sourceIds }];
+    } catch (error) {
+      fireScenarioLimitations.push(`${record.id}: ${error instanceof Error ? error.message : "FIRE scenario is invalid"}`);
+      return [];
+    }
+  }).sort((left, right) => left.recordId.localeCompare(right.recordId));
   const invalidatedFinanceIds = dependencyImpact.invalidatedDerivedIds.filter((id) => financeNodeIds.has(id)).sort();
   const status = transactions.length === 0 ? "NO_DATA" : quality.status === "SUFFICIENT" && reviewCases.length === 0 ? "READY" : "LIMITED";
   return {
@@ -174,10 +217,94 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
     financeAllocationResults,
     financeGoalPlans,
     ...(financeFundingAnalysis ? { financeFundingAnalysis } : {}),
+    statementFacts,
+    fireScenarios,
+    fireScenarioLimitations: [...new Set(fireScenarioLimitations)].sort(),
     crossDomain,
     invalidatedFinanceIds,
     forecastVintages: [...(options.forecastVintages ?? [])]
   };
+}
+
+function toFinanceStatementFacts(record: CanonicalRecord): FinanceStatementFacts | undefined {
+  if (record.deleted || record.owner !== "domain.finance" || record.data.kind !== "finance-statement-facts") return undefined;
+  const value = record.data.statementFacts;
+  if (typeof value !== "object" || value === null) return undefined;
+  const candidate = value as Record<string, unknown>;
+  const sourceId = typeof candidate.sourceId === "string" && candidate.sourceId.trim() ? candidate.sourceId : undefined;
+  const sourceClass = candidate.sourceClass === "CREDIT_CARD" || candidate.sourceClass === "INVESTMENT" || candidate.sourceClass === "INSURANCE" ? candidate.sourceClass : undefined;
+  if (!sourceId || !sourceClass) return undefined;
+  const evidenceValue = typeof candidate.evidence === "object" && candidate.evidence !== null ? candidate.evidence as Record<string, unknown> : {};
+  const sourceIds = Array.isArray(evidenceValue.sourceIds) ? evidenceValue.sourceIds.filter((item): item is string => typeof item === "string" && Boolean(item.trim())).sort() : [sourceId];
+  return { ...candidate as unknown as FinanceStatementFacts, sourceId, sourceClass, evidence: { truthClass: "OBSERVED", sourceIds: [...new Set(sourceIds)] }, limitations: Array.isArray(candidate.limitations) ? candidate.limitations.filter((item): item is string => typeof item === "string") : ["statement facts were stored without a valid limitation list"] };
+}
+
+function resolveFinanceFireScenario(record: CanonicalRecord, balances: readonly { value: MoneyValue; sourceIds: string[] }[], asOfDate?: string): { input: FireScenarioInput; inputEvidence: Record<string, { truthClass: FinanceFactClass; sourceIds: string[]; note?: string }>; sourceIds: string[] } | { input?: undefined; limitation: string } {
+  const data = record.data;
+  const sourceId = record.provenance.sourceId ?? record.id;
+  const scenarioId = typeof data.scenarioId === "string" && data.scenarioId.trim() ? data.scenarioId.trim() : record.id;
+  const currencyValue = typeof data.currency === "string" ? data.currency : undefined;
+  if (!currencyValue) return { limitation: "currency is missing" };
+  let currency: string;
+  try { currency = parseMoney("0", currencyValue).currency; } catch { return { limitation: "currency is invalid" }; }
+  const explicitInvestments = recordMoneyFieldAliases(record, ["currentInvestmentsMinor", "currentInvestmentMinor", "currentInvestments"]);
+  const matchingBalances = balances.filter((balance) => balance.value.currency === currency);
+  const derivedInvestments = matchingBalances.reduce<MoneyValue | undefined>((total, balance) => total ? addMoney(total, balance.value) : balance.value, undefined);
+  const currentInvestments = explicitInvestments ?? derivedInvestments;
+  if (!currentInvestments) return { limitation: "current investment balance is missing; no statement valuation or finance-investment record is available" };
+  const annualContribution = recordMoneyFieldAliases(record, ["annualContributionMinor", "annualContribution"]);
+  const annualSpending = recordMoneyFieldAliases(record, ["annualSpendingMinor", "annualSpending", "annualRetirementSpendingMinor"]);
+  if (!annualContribution || !annualSpending) return { limitation: "annual contribution or annual spending assumption is missing" };
+  if (annualContribution.currency !== currency || annualSpending.currency !== currency || currentInvestments.currency !== currency) return { limitation: "FIRE money inputs use different currencies" };
+  const readNumber = (keys: readonly string[]): number | undefined => {
+    for (const key of keys) {
+      const raw = data[key];
+      const value = typeof raw === "number" ? raw : typeof raw === "string" && raw.trim() ? Number(raw) : Number.NaN;
+      if (Number.isFinite(value)) return value;
+    }
+    return undefined;
+  };
+  const retirementDate = typeof data.retirementDate === "string" && /^\d{4}-\d{2}-\d{2}$/.test(data.retirementDate) && Number.isFinite(Date.parse(`${data.retirementDate}T00:00:00Z`)) ? data.retirementDate : undefined;
+  const asOf = asOfDate ?? record.effectiveAt ?? record.createdAt;
+  const explicitYears = readNumber(["yearsToRetirement"]);
+  const derivedYears = retirementDate && Number.isFinite(Date.parse(asOf)) ? Math.max(0, Math.round((Date.parse(`${retirementDate}T00:00:00Z`) - Date.parse(asOf)) / (365.2425 * 86_400_000))) : undefined;
+  const yearsToRetirement = explicitYears ?? derivedYears;
+  const yearsInRetirement = readNumber(["yearsInRetirement", "longevityYears"]);
+  const nominalReturnRate = readNumber(["nominalReturnRate"]);
+  const inflationRate = readNumber(["inflationRate"]);
+  const annualFeesRate = readNumber(["annualFeesRate", "feesRate"]);
+  const effectiveTaxRate = readNumber(["effectiveTaxRate", "taxRate"]);
+  const withdrawalRate = readNumber(["withdrawalRate"]);
+  const numericInputs = [yearsToRetirement, yearsInRetirement, nominalReturnRate, inflationRate, annualFeesRate, effectiveTaxRate, withdrawalRate];
+  if (!numericInputs.every((value): value is number => value !== undefined)) return { limitation: "retirement horizon, date, or one or more explicit return/inflation/fee/tax/withdrawal assumptions are missing" };
+  const [resolvedYearsToRetirement, resolvedYearsInRetirement, resolvedNominalReturnRate, resolvedInflationRate, resolvedAnnualFeesRate, resolvedEffectiveTaxRate, resolvedWithdrawalRate] = numericInputs as [number, number, number, number, number, number, number];
+  const readReturns = (key: string): number[] | undefined => {
+    const value = data[key];
+    if (!Array.isArray(value)) return undefined;
+    const values = value.filter((item): item is number => typeof item === "number" && Number.isFinite(item));
+    return values.length === value.length ? values : undefined;
+  };
+  const investmentSourceIds = explicitInvestments ? [sourceId] : matchingBalances.flatMap((balance) => balance.sourceIds);
+  const sourceIds = [...new Set([sourceId, ...investmentSourceIds])].sort();
+  const recordTruth = financeFactClass(record.truthClass);
+  const inputEvidence = {
+    currentInvestments: { truthClass: explicitInvestments ? recordTruth : "OBSERVED", sourceIds: [...new Set(investmentSourceIds)].sort(), note: explicitInvestments ? "User-admitted scenario input." : "Aggregated from retained investment valuations without duplicating source records." },
+    annualContribution: { truthClass: recordTruth, sourceIds: [sourceId], note: "Scenario assumption; not an imported return or advice." },
+    annualSpending: { truthClass: recordTruth, sourceIds: [sourceId], note: "Scenario assumption; not a suitability conclusion." },
+    retirementDate: { truthClass: recordTruth, sourceIds: [sourceId], note: retirementDate ? "User-admitted retirement date." : "Retirement horizon was supplied directly." },
+    returnAndRiskAssumptions: { truthClass: recordTruth, sourceIds: [sourceId], note: "Named user/current-rule assumptions are kept separate from modeled outputs." }
+  } satisfies Record<string, { truthClass: FinanceFactClass; sourceIds: string[]; note?: string }>;
+  const downsideFirstReturns = readReturns("downsideFirstReturns");
+  const upsideFirstReturns = readReturns("upsideFirstReturns");
+  return { input: { scenarioId, ...(retirementDate ? { retirementDate } : {}), currency, currentInvestments, annualContribution, annualSpending, yearsToRetirement: resolvedYearsToRetirement, yearsInRetirement: resolvedYearsInRetirement, nominalReturnRate: resolvedNominalReturnRate, inflationRate: resolvedInflationRate, annualFeesRate: resolvedAnnualFeesRate, effectiveTaxRate: resolvedEffectiveTaxRate, withdrawalRate: resolvedWithdrawalRate, ...(downsideFirstReturns ? { downsideFirstReturns } : {}), ...(upsideFirstReturns ? { upsideFirstReturns } : {}) }, inputEvidence, sourceIds };
+}
+
+function recordMoneyFieldAliases(record: CanonicalRecord, fields: readonly string[]): MoneyValue | undefined {
+  for (const field of fields) {
+    const value = recordMoneyField(record, field);
+    if (value) return value;
+  }
+  return undefined;
 }
 
 /** Convert only canonical first-party Finance records; malformed records stay out of the projection. */

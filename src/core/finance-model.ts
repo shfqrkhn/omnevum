@@ -872,6 +872,7 @@ function deduplicateFundingAlternatives(alternatives: readonly FinanceFundingAlt
 
 export interface FireScenarioInput {
   scenarioId: string;
+  retirementDate?: string;
   currency: string;
   currentInvestments: MoneyValue;
   annualContribution: MoneyValue;
@@ -889,6 +890,7 @@ export interface FireScenarioInput {
 
 export interface FireScenarioProjection {
   scenarioId: string;
+  retirementDate?: string;
   currency: string;
   nominalAtRetirement: number;
   realAtRetirement: number;
@@ -924,7 +926,7 @@ export function projectFireScenario(input: FireScenarioInput): FireScenarioProje
   const deterministicRetirementEnd = runRetirementPath(nominalAtRetirement, input.yearsInRetirement, input.nominalReturnRate, input.annualFeesRate, spending, input.inflationRate, input.withdrawalRate, undefined);
   const downsideSequenceEnd = runRetirementPath(nominalAtRetirement, input.yearsInRetirement, input.nominalReturnRate, input.annualFeesRate, spending, input.inflationRate, input.withdrawalRate, input.downsideFirstReturns);
   const upsideSequenceEnd = runRetirementPath(nominalAtRetirement, input.yearsInRetirement, input.nominalReturnRate, input.annualFeesRate, spending, input.inflationRate, input.withdrawalRate, input.upsideFirstReturns);
-  return { scenarioId: input.scenarioId, currency, nominalAtRetirement, realAtRetirement, afterTaxNominalAtRetirement, deterministicRetirementEnd, downsideSequenceEnd, upsideSequenceEnd, assumptions: { yearsToRetirement: input.yearsToRetirement, yearsInRetirement: input.yearsInRetirement, nominalReturnRate: input.nominalReturnRate, inflationRate: input.inflationRate, annualFeesRate: input.annualFeesRate, effectiveTaxRate: input.effectiveTaxRate, withdrawalRate: input.withdrawalRate }, truthClass: "MODELED", limitations: ["Projection is assumption-driven and does not establish investment, tax, legal, insurance, or retirement suitability.", "Sequence and longevity sensitivity are represented only by the supplied bounded paths and horizon."] };
+  return { scenarioId: input.scenarioId, ...(input.retirementDate ? { retirementDate: input.retirementDate } : {}), currency, nominalAtRetirement, realAtRetirement, afterTaxNominalAtRetirement, deterministicRetirementEnd, downsideSequenceEnd, upsideSequenceEnd, assumptions: { yearsToRetirement: input.yearsToRetirement, yearsInRetirement: input.yearsInRetirement, nominalReturnRate: input.nominalReturnRate, inflationRate: input.inflationRate, annualFeesRate: input.annualFeesRate, effectiveTaxRate: input.effectiveTaxRate, withdrawalRate: input.withdrawalRate }, truthClass: "MODELED", limitations: ["Projection is assumption-driven and does not establish investment, tax, legal, insurance, or retirement suitability.", "Sequence and longevity sensitivity are represented only by the supplied bounded paths and horizon."] };
 }
 
 function runRetirementPath(starting: number, years: number, nominalReturnRate: number, feesRate: number, annualSpending: number, inflationRate: number, withdrawalRate: number, firstReturns?: number[]): number {
