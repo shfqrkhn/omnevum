@@ -1741,8 +1741,12 @@
         "line": 4152
       },
       "text": "Four staged Triage items are dispositioned as a batch, one of which is forced to fail. Per-item outcomes are reported individually, the failed item remains staged rather than being dropped, and no batch disposition is offered whose consequence the collapsed row cannot state. Expanding a row in place exposes full provenance and per-item commands without being required to act.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/commands.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromiumedge-revision-fenced-triage-batch-receipt"
+      ],
+      "notes": "Source bd988c3 and exact artifact digest 0dc020bd0e588c561196dafff515f07a244e2a721ac9182d634f4c261ef27eac are receipt-bound. The command regression forces one stale revision and proves three successes plus one failed item retained INBOX; the current Edge artifact proves four selectable staged items, individual batch outcomes, explicit review/defer-only homogeneous actions, expandable provenance/proposal details, and direct per-item commands. Browser-injected failure, other engines, mobile, assistive technology, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-114",
