@@ -2231,8 +2231,11 @@
         "line": 4229
       },
       "text": "A representative workflow receives a source containing information already needed by three or more modules/views. The user supplies the information once. Omnevum extracts or records it once with provenance, reuses it across every authorized consumer, and requires no duplicate typing or copy/paste merely because the same fact appears in multiple workflows.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-source-reuse-and-correction-receipt"
+      ],
+      "notes": "A focused canonical Finance fixture reuses one source identity through imported transactions, statement facts, an authorized cross-domain projection, and the Home update brief; the current import path preserves one domain.finance owner and source-row lineage. Broader three-module workflows, complete upload/batch interaction, target/accessibility/input, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-151",
@@ -2241,8 +2244,11 @@
         "line": 4231
       },
       "text": "A user corrects one material imported value or classification. The correction is committed once through the canonical owner; every materially dependent projection is automatically recomputed or explicitly invalidated, and no second module asks the user to repeat the same correction to restore consistency.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-source-reuse-and-correction-receipt"
+      ],
+      "notes": "The Finance owner now exposes a revision-fenced correction command and compact UI for amount or essential classification. It preserves source lineage, records history, marks the transaction CORRECTED, and rerenders the shared Finance projection from the corrected canonical record; broader graph blast-radius/invalidation, multi-lens correction, target/accessibility/input, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-152",
