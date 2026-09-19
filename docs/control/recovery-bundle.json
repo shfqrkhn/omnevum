@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "9d646e7d23384ff9e9a37624e8874db5c5cbb5b54c95f5f8a2ec80d30058889b",
-        "bytes": 179022
+        "sha256": "26109e02098fab36d2927c47da4497bfaed37045f38e255fcfafbcab80226d54",
+        "bytes": 180130
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "8f6755fb82b93359c15d441d67dc8f02ab20c5f02c46b388234c2561ec1f8c97",
-        "bytes": 57205
+        "sha256": "0f8a4cfd5f74586894f3ba37244b9e22838a8ea3b9cf0ad766eb35968c3b4ec9",
+        "bytes": 57716
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "8f65275b696332068dff335d417b6f325c35f4b71a99de942af284d3d1dcd523",
+        "sha256": "86d7033ac550567cf38cf9c4a64ab288aecbc36675830e1d5dd89e9f0f9223b2",
         "bytes": 2399
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "562e2ac5a4dcd627acdeb11fe50af4e5a38c4ec8c47ea03814f96ac93702de9f",
-        "bytes": 260683
+        "sha256": "be405c3a1dbc13ab2be6c695a10140f965461c220a94ce960bf3ec0fe6439b86",
+        "bytes": 262229
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -656,6 +656,16 @@
         "path": "src/core/factory.ts",
         "sha256": "87bf52d3caa22220c17a553b2dedda9c3c304ebfdf01e98989451a6051ce7b19",
         "bytes": 7219
+      },
+      {
+        "path": "src/core/finance.test.ts",
+        "sha256": "c0538aa2cec24ddd5787e1b02b2fd1f594a788c83e20a12904377de9ece2edeb",
+        "bytes": 5209
+      },
+      {
+        "path": "src/core/finance.ts",
+        "sha256": "e77264929f4e59c0c83d63ad190a89c43a1402d0b24b13f47cd558be1cbb2af9",
+        "bytes": 15992
       },
       {
         "path": "src/core/game.test.ts",

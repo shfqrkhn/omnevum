@@ -3,7 +3,7 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "8e2c6ecf617458740a8c9c27502a6c9d2d562d4c9f72a0dd1b1c780a6bbff6aa", "sourceRevision": "802fd31", "serviceWorkerCache": "omnevum-shell-2fb2b36a8f278d0d"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "8e2c6ecf617458740a8c9c27502a6c9d2d562d4c9f72a0dd1b1c780a6bbff6aa", "sourceRevision": "4b9f0ef", "serviceWorkerCache": "omnevum-shell-2fb2b36a8f278d0d"},
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF; captured after the full npm run build on 2026-09-19.",
   "artifactFiles": [
     {"path": "dist/assets/index-BuFaKmsX.js", "sha256": "1a7e4857386bb9325805ea74d36d8b4fbf10a82e619d7041dfdf844397551c51", "bytes": 336589},
