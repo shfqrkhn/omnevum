@@ -2248,8 +2248,11 @@
         "line": 4237
       },
       "text": "From one fixed authorized Space/Scope containing records, relationships, source provenance, derived values, uncertainty, and at least one unresolved conflict, the user generates Markdown, plain-text, and JSON context exports without manually recreating the content. All three exports represent the same bounded logical context; each retains sufficient provenance, truth/derived status, conflict state, generation metadata, and an omission/redaction manifest where needed.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-bounded-context-export-handoff-receipt"
+      ],
+      "notes": "The current Context Export core contract and exact built-artifact Chromium smoke cover bounded Markdown/plain-text/JSON handoff, truth/provenance/conflict framing, untrusted source boundaries, and no write authority. Fixed Space/Scope breadth, relationship-neighborhood completeness, other targets, assistive technology, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-155",
@@ -2258,8 +2261,11 @@
         "line": 4239
       },
       "text": "A homogeneous transaction or observation view is exported to CSV and JSONL. The CSV preserves row/field semantics, exact values, currency/unit metadata needed to interpret the table, and source linkage at the declared level. A deliberately hierarchical/many-to-many selection is refused as a misleading single CSV or exported as explicitly separated tables/bundle rather than silently flattened.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-bounded-context-export-handoff-receipt"
+      ],
+      "notes": "The core contract covers homogeneous scalar transaction/observation CSV/TSV plus JSONL, exact numeric/unit/currency fields, source-level identifiers, inert spreadsheet guards, and refusal of arrays/relationship hierarchy. Full Finance transaction-view coverage, separated multi-table bundles, other targets, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-156",
@@ -2268,8 +2274,11 @@
         "line": 4241
       },
       "text": "A manual handoff package is generated for an external AI from a current task plus related sources. The package separates user objective/instructions from source content, canonical facts, assumptions, derived analysis, and unresolved issues; excludes credentials, hidden permissions, unrelated records, and executable content; and can be read with Omnevum absent. No export grants the external AI Omnevum write authority.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-bounded-context-export-handoff-receipt"
+      ],
+      "notes": "The handoff package separates objective/framing from canonical facts, assumptions, derived records, unresolved issues, omissions, and untrusted source content; credentials/authority/active fields are excluded and the package is readable without Omnevum. Broad related-source selection, independent-reader qualification, external AI routes, other targets, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-157",
@@ -2278,8 +2287,11 @@
         "line": 4243
       },
       "text": "A saved Context Export profile is rerun after source records change. Current authorization is re-evaluated, corrected/removed source meaning propagates, and the new export reflects the current state without manual reselection. A delta export against the prior export identifies material additions, modifications, deletions/invalidation, and unchanged references without duplicating the entire prior context.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-bounded-context-export-handoff-receipt"
+      ],
+      "notes": "Saved profiles persist locally, rerun against current records and current Share authorization, and core delta tests classify additions, modifications, deletions/invalidation, and unchanged references. Cross-origin profile lifecycle, removed-source UX, richer selection/view re-evaluation, other targets, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-158",
@@ -2288,8 +2300,11 @@
         "line": 4245
       },
       "text": "A Context Export is constrained to a declared size budget. Omnevum removes irrelevant/redundant material before compressing material evidence, preserves required exact-value fields, labels every derived summary, reports omitted material in an inspectable manifest, preserves unresolved contradictions, and does not claim the compact package is lossless when information was omitted or summarized.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-bounded-context-export-handoff-receipt"
+      ],
+      "notes": "Declared byte budgets deterministically remove optional fields/records, preserve protected exact-value fields, label derived sections, retain unresolved issues, and expose an omission manifest with lossless=false. Token estimation, compact/standard/full UX breadth, larger-context qualification, other targets, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-159",
@@ -2403,8 +2418,11 @@
         "line": 4265
       },
       "text": "A Context Export includes hostile text beginning with spreadsheet formula/control prefixes and a value resembling an external link. Markdown/JSON preserve inert data semantics; the spreadsheet-compatible CSV/TSV profile prevents execution under its claimed consumer tests or clearly uses a separately identified raw/non-spreadsheet-safe representation. The export reports any round-trip-affecting transformation and grants no network or external-effect authority.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-bounded-context-export-handoff-receipt"
+      ],
+      "notes": "Core and exact built-artifact Chromium tests guard hostile formula/control prefixes and external-link-like text: Markdown/JSON retain inert values, CSV/TSV use a declared leading-apostrophe spreadsheet-safe profile and report transformations, and no network/effect path exists. Claimed consumer breadth, raw-profile policy, other targets, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-169",
