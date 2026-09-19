@@ -1351,6 +1351,14 @@ In the Edge extension at `http://127.0.0.1:4337/`, a fresh local profile created
 
 The filtered query was saved as `Work tasks`. Compose/View immediately and after a full reload rendered one matching record as a projection, while the saved definition contained the declarative query/scope only and the canonical record count remained unchanged. This receipt qualifies the local Chromium/Edge behavior for `OMN-ACC-114` as `PARTIAL`; mobile/other-engine/assistive-technology/production deployment, broad ranking and full-lens qualification, and human acceptance remain open. No external data or credential was used.
 
+## Current v0.17.4 Chromium/Edge passive Review template and resumable stepper receipt
+
+On 2026-09-19, source `6a86060` passed `npm run typecheck`, targeted `npx vitest run src/core/review.test.ts src/core/i18n.test.ts` (`6` tests passed), and `npm run build`. The exact static artifact is bound in `docs/control/release-evidence.json` to digest `01bc01ef73dce6e033024a7f63905e3e906728090d61b03c0f13b1237a38e317` and service-worker cache `omnevum-shell-51ef404e9616f0df`.
+
+The Edge localhost artifact at `http://127.0.0.1:4337/` rendered eight bounded Review template starts. Weekly opened at `Step 1 of 4` with prompt `What moved forward?`, existing motivating records, `Open record`, and explicit admitted actions; it did not create a record. `Skip step` advanced to `Step 2 of 4` (`What remains unresolved?`); after reload, the shelf exposed `Resume: Weekly`, which reopened at 2/4. `Close for now` hid the stepper while retaining Resume, and the visible canonical active count stayed at 6 throughout. The session-setting/core regression contains no due date, notification, streak, or decay fields, and all progression is explicit and local.
+
+This advances `OMN-ACC-119` to `PARTIAL` for current Chromium/Edge and core session behavior. It does not qualify extended real-time waiting, other engines/mobile/assistive technology, physical touch, deployment, or human acceptance; no external data or credential was used.
+
 ## Current v0.17.4 Chromium/Edge revision-fenced Triage batch receipt
 
 On 2026-09-19, source `bd988c3` passed `npm run typecheck`, targeted `npx vitest run src/core/commands.test.ts src/core/i18n.test.ts` (`16` tests passed), and `npm run build`. The exact artifact is bound in `docs/control/release-evidence.json` to digest `0dc020bd0e588c561196dafff515f07a244e2a721ac9182d634f4c261ef27eac` and service-worker cache `omnevum-shell-8a60ccd1efcb326c`.

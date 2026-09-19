@@ -1816,8 +1816,13 @@
         "line": 4164
       },
       "text": "A Review template is left unopened for an extended simulated period; no notification, due date, streak, decay, or pressure of any kind is produced. Opening it runs a skippable, abandonable, resumable stepper whose prompts cite motivating records and offer admitted commands; partial completion is accepted as terminal without penalty.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/review.test.ts",
+        "src/ui/app.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromiumedge-passive-review-template-and-resumable-stepper-receipt"
+      ],
+      "notes": "Source 6a86060 passed the targeted core/i18n tests and build; exact artifact digest 01bc01ef73dce6e033024a7f63905e3e906728090d61b03c0f13b1237a38e317 and service-worker cache omnevum-shell-51ef404e9616f0df are receipt-bound. Current Edge proves eight templates, explicit skip/resume/close behavior, motivating records, admitted revision-aware actions, and unchanged canonical count. Extended waiting, target breadth, assistive technology, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-120",
