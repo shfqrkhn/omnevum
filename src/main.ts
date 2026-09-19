@@ -4,7 +4,7 @@ import { CanonicalStore } from "./core/storage";
 import { CapabilityRuntime } from "./core/capability-runtime";
 import { EffectRunner } from "./core/effect-runner";
 import { PackageAutomationRegistry } from "./core/package-automation-registry";
-import { PackageAutomationRuntime } from "./core/package-automation-runtime";
+import { CORE_AUTOMATION_PACKAGE, PackageAutomationRuntime } from "./core/package-automation-runtime";
 import { PackageRegistry } from "./core/package-contract";
 import { mountApp } from "./ui/app";
 
@@ -16,7 +16,9 @@ try {
   await store.open();
   await new EffectRunner(store).recoverInterrupted();
   const commands = new CommandBus(store);
-  const packageAutomationRuntime = new PackageAutomationRuntime(new PackageAutomationRegistry(new PackageRegistry()), store);
+  const packages = new PackageRegistry();
+  packages.install(CORE_AUTOMATION_PACKAGE);
+  const packageAutomationRuntime = new PackageAutomationRuntime(new PackageAutomationRegistry(packages), store);
   await packageAutomationRuntime.restore();
   const capabilityRuntime = new CapabilityRuntime([
     { id: "core.canonical", critical: true, start: async () => { await store.health(); } },

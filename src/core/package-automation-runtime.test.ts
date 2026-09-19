@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { CommandBus } from "./commands";
+import { CanonicalStore } from "./storage";
 import { PackageAutomationRegistry } from "./package-automation-registry";
 import { PackageAutomationRuntime, type PackageAutomationStateStore } from "./package-automation-runtime";
 import { PackageRegistry, type PackageManifest } from "./package-contract";
@@ -73,5 +75,33 @@ describe("package automation runtime persistence", () => {
     await expect(runtime.disable("runtime.automation.review", "storage unavailable")).rejects.toThrow("persistence failure");
     expect(runtime.list("runtime.automation")).toMatchObject([{ status: "ENABLED" }]);
     expect(store.value()).toMatchObject([{ status: "ENABLED" }]);
+  });
+
+  it("re-checks lifecycle ownership and applies a confirmed proposal through CommandBus", async () => {
+    const canonical = new CanonicalStore(`omnevum-test-${Date.now()}-package-automation-apply`);
+    await canonical.open();
+    const commands = new CommandBus(canonical);
+    const record = await commands.create({ recordType: "note", owner: "core.capture", data: { text: "automation target" } });
+    const packages = new PackageRegistry();
+    packages.install(manifest);
+    const store = fakeStore();
+    const runtime = new PackageAutomationRuntime(new PackageAutomationRegistry(packages), store);
+    const manualDocument = JSON.stringify({
+      schemaVersion: 1,
+      ruleId: "runtime.automation.manual",
+      version: 1,
+      trigger: "MANUAL",
+      when: { op: "exists", path: "record.id" },
+      actions: [{ command: "record.update", arguments: { recordId: record.id, field: "automationReviewed", value: true } }],
+      enabled: true
+    });
+    await runtime.install(manifest.packageId, manualDocument);
+    const [proposal] = runtime.preview("MANUAL", { record: { id: record.id } });
+    expect(proposal).toBeDefined();
+    const updated = await runtime.apply(commands, proposal!, { confirmed: true, allowedRecordIds: new Set([record.id]) });
+    expect(updated).toMatchObject({ id: record.id, data: { automationReviewed: true } });
+    await runtime.disable("runtime.automation.manual", "test lifecycle stop");
+    await expect(runtime.apply(commands, proposal!, { confirmed: true, allowedRecordIds: new Set([record.id]) })).rejects.toThrow("stale");
+    canonical.close();
   });
 });

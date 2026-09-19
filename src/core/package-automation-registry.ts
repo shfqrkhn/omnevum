@@ -81,6 +81,11 @@ export class PackageAutomationRegistry {
     return this.describe(ruleId, entry);
   }
 
+  public remove(ruleId: string): void {
+    this.require(ruleId);
+    this.automations.delete(ruleId);
+  }
+
   public preview(trigger: string, context: Record<string, unknown>): PackageAutomationProposal[] {
     return [...this.automations.entries()]
       .sort(([left], [right]) => left.localeCompare(right))
@@ -90,6 +95,14 @@ export class PackageAutomationRegistry {
         return entry.adapter.preview(context).map((proposal) => ({ ...proposal, packageId: entry.adapter.packageId }));
       })
       .map((proposal) => ({ ...proposal, arguments: structuredClone(proposal.arguments) }));
+  }
+
+  public ownsProposal(proposal: PackageAutomationProposal): boolean {
+    const entry = this.automations.get(proposal.ruleId);
+    if (!entry || entry.status !== "ENABLED" || entry.adapter.packageId !== proposal.packageId) return false;
+    const installed = this.packages.get(entry.adapter.packageId);
+    if (!installed || installed.status !== "INSTALLED") return false;
+    return entry.adapter.rule.actions.some((action) => action.command === proposal.command && JSON.stringify(action.arguments) === JSON.stringify(proposal.arguments));
   }
 
   public exportState(): VaultPackageAutomation[] {

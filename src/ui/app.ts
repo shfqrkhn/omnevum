@@ -4,7 +4,7 @@ import { inspectArtifact } from "../core/artifact";
 import { redactTextArtifact } from "../core/document";
 import { isCompletedTask, isSpaceId, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, SPACE_LABELS, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getDeviceInputCopy, getInstalledMetadataStatus, getRecoveryCopy, getStoragePersistenceNotice, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
-import { CAPTURE_KINDS, type CaptureKind } from "../core/model";
+import { CAPTURE_KINDS, type CanonicalRecord, type CaptureKind } from "../core/model";
 import { DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationHomeWidgetId, type PresentationProfile, type PresentationSectionId } from "../core/presentation";
 import { TrackService } from "../core/track";
 import { makeReminderData, reconcileReminders } from "../core/time";
@@ -35,7 +35,8 @@ import { SyncEngine, SyncFailure } from "../core/sync";
 import { createRecordAppDefinition } from "../core/factory";
 import { FACTORY_PREVIEW_APP_TITLE, FACTORY_PREVIEW_FIELDS, FACTORY_PREVIEW_GAME, FACTORY_PREVIEW_MANIFEST, factoryPreviewGameAdapter, type FactoryPreviewGamePayload } from "../core/factory-preview";
 import { isCleanupHistoryRecord, previewCleanup, reconstructCleanupHistory, type CleanupDecision, type CleanupPreview, type CleanupRecipe } from "../core/cleanup";
-import type { PackageAutomationRuntime } from "../core/package-automation-runtime";
+import { CORE_AUTOMATION_PACKAGE, type PackageAutomationRuntime } from "../core/package-automation-runtime";
+import type { PackageAutomationProposal } from "../core/package-automation-registry";
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -676,6 +677,26 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <p class="hint">${copy.effectOutboxHint}</p>
           <ul id="effect-list" class="record-list"></ul>
         </div>
+        <div class="relationship-form" id="package-automation-panel">
+          <h3>${copy.automationHeading}</h3>
+          <p class="hint">${copy.automationHint}</p>
+          <p class="hint"><strong>${copy.automationPackage}:</strong> ${CORE_AUTOMATION_PACKAGE.packageId} · <strong>Permission:</strong> automation.proposal</p>
+          <form id="package-automation-form">
+            <label for="package-automation-record">${copy.automationRecord}</label>
+            <select id="package-automation-record" required></select>
+            <label for="package-automation-document">${copy.automationDocument}</label>
+            <textarea id="package-automation-document" rows="10" maxlength="32000" required></textarea>
+            <div class="form-row">
+              <button id="package-automation-install" type="submit">${copy.automationInstall}</button>
+              <button id="package-automation-preview" class="secondary" type="button">${copy.automationPreview}</button>
+            </div>
+          </form>
+          <p id="package-automation-status" class="hint" role="status"></p>
+          <h4>${copy.automationRules}</h4>
+          <ul id="package-automation-list" class="record-list"></ul>
+          <h4>${copy.automationProposals}</h4>
+          <ul id="package-automation-proposals" class="record-list"></ul>
+        </div>
         <label for="vault-password">${recoveryCopy.password}</label>
         <input id="vault-password" type="password" minlength="8" autocomplete="new-password" />
         <p class="hint">${recoveryCopy.passwordHint}</p>
@@ -898,6 +919,13 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const effectRunDialogMessage = root.querySelector<HTMLElement>("#effect-run-dialog-message");
   const effectRunDialogCancel = root.querySelector<HTMLButtonElement>("#effect-run-dialog-cancel");
   const effectRunDialogConfirm = root.querySelector<HTMLButtonElement>("#effect-run-dialog-confirm");
+  const packageAutomationForm = root.querySelector<HTMLFormElement>("#package-automation-form");
+  const packageAutomationRecord = root.querySelector<HTMLSelectElement>("#package-automation-record");
+  const packageAutomationDocument = root.querySelector<HTMLTextAreaElement>("#package-automation-document");
+  const packageAutomationPreviewButton = root.querySelector<HTMLButtonElement>("#package-automation-preview");
+  const packageAutomationStatus = root.querySelector<HTMLElement>("#package-automation-status");
+  const packageAutomationList = root.querySelector<HTMLUListElement>("#package-automation-list");
+  const packageAutomationProposals = root.querySelector<HTMLUListElement>("#package-automation-proposals");
   if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
@@ -909,6 +937,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   }
   if (!factoryPreview || !factoryAppForm || !factoryAppStatus || !factoryAppList || !factoryGameStatus || !factoryGameBoard || !factoryGameMove || !factoryGameCollect || !factoryGamePause || !factoryGameSave || !factoryGameLoad) {
     throw new Error("Omnevum factory preview controls are missing");
+  }
+  if (!packageAutomationForm || !packageAutomationRecord || !packageAutomationDocument || !packageAutomationPreviewButton || !packageAutomationStatus || !packageAutomationList || !packageAutomationProposals) {
+    throw new Error("Omnevum package-automation controls are missing");
   }
 
   const sharedParameters = new URLSearchParams(window.location.search);
@@ -929,6 +960,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   deviceBarcodeInput.disabled = !deviceCapabilitySnapshot.barcode;
   let stagedCandidates: AcquireCandidate[] = [];
   let cleanupPreviewState: CleanupPreview | undefined;
+  let packageAutomationProposalsState: PackageAutomationProposal[] = [];
+  const packageAutomationRuleId = `${CORE_AUTOMATION_PACKAGE.packageId}.manual-review-${Date.now()}`;
+  const makePackageAutomationDocument = (recordId: string): string => JSON.stringify({
+    schemaVersion: 1,
+    ruleId: packageAutomationRuleId,
+    version: 1,
+    trigger: "MANUAL",
+    when: { op: "exists", path: "record.id" },
+    actions: [{ command: "record.update", arguments: { recordId, field: "automationReviewed", value: true } }],
+    enabled: true
+  }, null, 2);
   let activeSpace: SpaceId | undefined;
   const spaceLabels = new Map<SpaceId, string>(Object.entries(SPACE_LABELS));
   const requestConfirmation = (message: string, title = copy.confirmationHeading, confirmLabel = copy.confirm): Promise<boolean> => new Promise((resolve) => {
@@ -2322,8 +2364,158 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
   });
 
+  const renderPackageAutomationChoices = (records: CanonicalRecord[]): void => {
+    const current = packageAutomationRecord.value;
+    packageAutomationRecord.replaceChildren();
+    for (const record of records.filter((candidate) => !candidate.deleted && candidate.owner !== "platform.space" && !isCleanupHistoryRecord(candidate)).sort((left, right) => recordText(left).localeCompare(recordText(right)))) {
+      const option = document.createElement("option");
+      option.value = record.id;
+      option.textContent = `${recordText(record)} (${record.id.slice(0, 12)})`;
+      packageAutomationRecord.append(option);
+    }
+    if (current && [...packageAutomationRecord.options].some((option) => option.value === current)) packageAutomationRecord.value = current;
+    if (!packageAutomationRecord.value && packageAutomationRecord.options[0]) packageAutomationRecord.value = packageAutomationRecord.options[0].value;
+    if (packageAutomationRecord.value && !packageAutomationDocument.value.trim()) {
+      packageAutomationDocument.value = makePackageAutomationDocument(packageAutomationRecord.value);
+      packageAutomationDocument.dataset.generated = "true";
+    }
+    packageAutomationPreviewButton.disabled = !packageAutomationRecord.value || !packageAutomationRuntime;
+  };
+
+  const renderPackageAutomationRules = (): void => {
+    packageAutomationList.replaceChildren();
+    const rules = packageAutomationRuntime?.list(CORE_AUTOMATION_PACKAGE.packageId) ?? [];
+    if (rules.length === 0) {
+      const empty = document.createElement("li");
+      empty.className = "empty-state";
+      empty.textContent = copy.automationNoRules;
+      packageAutomationList.append(empty);
+      return;
+    }
+    for (const rule of rules) {
+      const item = document.createElement("li");
+      item.className = "record-item";
+      const text = document.createElement("span");
+      text.textContent = `${rule.ruleId} · ${rule.trigger} · ${rule.status}${rule.disabledReason ? ` (${rule.disabledReason})` : ""}`;
+      const actions = document.createElement("span");
+      actions.className = "form-row";
+      const lifecycle = document.createElement("button");
+      lifecycle.type = "button";
+      lifecycle.className = "icon-button";
+      lifecycle.textContent = rule.status === "ENABLED" ? copy.automationDisable : copy.automationEnable;
+      lifecycle.addEventListener("click", async () => {
+        try {
+          if (rule.status === "ENABLED") await packageAutomationRuntime?.disable(rule.ruleId, "disabled by local user");
+          else await packageAutomationRuntime?.enable(rule.ruleId);
+          packageAutomationStatus.textContent = `Automation rule ${rule.status === "ENABLED" ? "disabled" : "enabled"}.`;
+          packageAutomationProposalsState = [];
+          renderPackageAutomationRules();
+          renderPackageAutomationProposals();
+        } catch (error) {
+          packageAutomationStatus.textContent = describeError(error, "Automation lifecycle change failed; durable state was not changed.");
+        }
+      });
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "icon-button";
+      remove.textContent = copy.automationRemove;
+      remove.addEventListener("click", async () => {
+        if (!await requestConfirmation(`Remove ${rule.ruleId}? Its Vault state will no longer restore this rule.`, copy.automationHeading)) return;
+        try {
+          await packageAutomationRuntime?.remove(rule.ruleId);
+          packageAutomationStatus.textContent = "Automation rule removed; canonical records were not changed.";
+          packageAutomationProposalsState = [];
+          renderPackageAutomationRules();
+          renderPackageAutomationProposals();
+        } catch (error) {
+          packageAutomationStatus.textContent = describeError(error, "Automation rule removal failed; durable state was not changed.");
+        }
+      });
+      actions.append(lifecycle, remove);
+      item.append(text, actions);
+      packageAutomationList.append(item);
+    }
+  };
+
+  const renderPackageAutomationProposals = (): void => {
+    packageAutomationProposals.replaceChildren();
+    if (packageAutomationProposalsState.length === 0) {
+      const empty = document.createElement("li");
+      empty.className = "empty-state";
+      empty.textContent = copy.automationNoProposals;
+      packageAutomationProposals.append(empty);
+      return;
+    }
+    for (const proposal of packageAutomationProposalsState) {
+      const item = document.createElement("li");
+      item.className = "record-item";
+      const summary = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = `${proposal.command} · ${proposal.ruleId}`;
+      const details = document.createElement("small");
+      details.textContent = JSON.stringify(proposal.arguments);
+      summary.append(title, details);
+      const apply = document.createElement("button");
+      apply.type = "button";
+      apply.className = "icon-button";
+      apply.textContent = copy.automationApply;
+      apply.addEventListener("click", async () => {
+        const selectedId = packageAutomationRecord.value;
+        if (!selectedId || !packageAutomationRuntime) return;
+        if (!await requestConfirmation(`Apply ${proposal.command} from ${proposal.ruleId} to the selected record? The proposal will use the normal permission and CommandBus path.`, copy.automationHeading, copy.automationApply)) return;
+        try {
+          await packageAutomationRuntime.apply(commands, proposal, { confirmed: true, allowedRecordIds: new Set([selectedId]) });
+          packageAutomationStatus.textContent = copy.automationApplied;
+          packageAutomationProposalsState = packageAutomationProposalsState.filter((candidate) => candidate !== proposal);
+          renderPackageAutomationProposals();
+          await renderRecords(searchQuery.value);
+        } catch (error) {
+          packageAutomationStatus.textContent = describeError(error, "The proposal was not applied; canonical state was not changed.");
+        }
+      });
+      item.append(summary, apply);
+      packageAutomationProposals.append(item);
+    }
+  };
+
+  const previewPackageAutomation = async (trigger: string): Promise<void> => {
+    if (!packageAutomationRuntime) {
+      packageAutomationStatus.textContent = "Package automation runtime is unavailable; no rule was evaluated.";
+      return;
+    }
+    const record = await commands.get(packageAutomationRecord.value);
+    if (!record || record.deleted) {
+      packageAutomationStatus.textContent = "Choose an active record before previewing a proposal.";
+      return;
+    }
+    packageAutomationProposalsState = packageAutomationRuntime.preview(trigger, { record: { ...record.data, id: record.id, recordType: record.recordType, owner: record.owner, revision: record.revision } });
+    packageAutomationStatus.textContent = `${packageAutomationProposalsState.length} proposal(s) generated; no canonical state changed.`;
+    renderPackageAutomationProposals();
+  };
+
+  packageAutomationDocument.addEventListener("input", () => { packageAutomationDocument.dataset.generated = "false"; });
+  packageAutomationRecord.addEventListener("change", () => {
+    if (packageAutomationDocument.dataset.generated === "true") packageAutomationDocument.value = makePackageAutomationDocument(packageAutomationRecord.value);
+    packageAutomationPreviewButton.disabled = !packageAutomationRecord.value || !packageAutomationRuntime;
+  });
+  packageAutomationForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!packageAutomationRuntime) return;
+    try {
+      const installed = await packageAutomationRuntime.install(CORE_AUTOMATION_PACKAGE.packageId, packageAutomationDocument.value.trim());
+      packageAutomationStatus.textContent = copy.automationInstalled(installed.ruleId);
+      renderPackageAutomationRules();
+    } catch (error) {
+      packageAutomationStatus.textContent = describeError(error, "The automation rule was rejected; no durable state was changed.");
+    }
+  });
+  packageAutomationPreviewButton.addEventListener("click", () => { void previewPackageAutomation("MANUAL"); });
+  renderPackageAutomationRules();
+  renderPackageAutomationProposals();
+
   const renderRecords = async (query = ""): Promise<number> => {
     const allRecords = await store.list();
+    renderPackageAutomationChoices(allRecords);
     if (activeSpace) {
       const availableSpaces = await spaceService.listSpaces();
       if (!availableSpaces.some((space) => space.id === activeSpace)) {
@@ -2430,9 +2622,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const selectedKind = CAPTURE_KINDS.includes(captureType.value as CaptureKind) ? captureType.value as CaptureKind : "note";
       const recordType = recordTypeForCaptureKind(selectedKind);
       const space = (captureSpace.value === "household" || captureSpace.value === "work" ? captureSpace.value : "personal") satisfies SpaceId;
-      await commands.create({ recordType, owner: selectedKind === "event" ? "platform.time" : "core.capture", data: { text, kind: selectedKind, space, triageStatus: captureSafeRoute.checked ? "REVIEWED" : "INBOX", ...(recordType === "task" ? { status: "OPEN" } : {}) } });
+      const created = await commands.create({ recordType, owner: selectedKind === "event" ? "platform.time" : "core.capture", data: { text, kind: selectedKind, space, triageStatus: captureSafeRoute.checked ? "REVIEWED" : "INBOX", ...(recordType === "task" ? { status: "OPEN" } : {}) } });
       captureForm.reset();
       await renderRecords(searchQuery.value);
+      if (packageAutomationRuntime) {
+        const proposals = packageAutomationRuntime.preview("ON_CAPTURE", { record: { ...created.data, id: created.id, recordType: created.recordType, owner: created.owner, revision: created.revision } });
+        if (proposals.length > 0) {
+          packageAutomationProposalsState = proposals;
+          packageAutomationStatus.textContent = `${proposals.length} proposal(s) generated for the new capture; no canonical state changed.`;
+          renderPackageAutomationProposals();
+        }
+      }
       captureText.focus();
     } catch (error) {
       healthStatus.textContent = describeError(error, "Capture failed; canonical data was not changed by this action.");
