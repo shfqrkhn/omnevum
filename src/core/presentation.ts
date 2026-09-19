@@ -7,6 +7,8 @@ export type PresentationIconography = "labels" | "glyphs";
 export type PresentationAccessibilityProfile = "standard" | "low-vision" | "motor-large-target" | "low-cognitive-load" | "custom";
 export type PresentationTextScale = 1 | 1.25 | 1.5 | 2;
 export type PresentationTargetSize = "standard" | "large";
+export const PRESENTATION_LENS_IDS = ["direction", "people", "self", "resources", "work", "environment", "knowledge", "change"] as const;
+export type PresentationLensId = typeof PRESENTATION_LENS_IDS[number];
 
 export interface PresentationAccessibilitySettings {
   profile: PresentationAccessibilityProfile;
@@ -41,6 +43,8 @@ export interface PresentationProfile {
   accessibility: PresentationAccessibilitySettings;
   labels: { home: string; capture: string; records: string };
   navigation: { visible: PresentationSectionId[]; order: PresentationSectionId[] };
+  lensPins: PresentationLensId[];
+  activeLens: PresentationLensId;
   homeWidgets: PresentationHomeWidgetId[];
 }
 
@@ -52,6 +56,7 @@ export interface PresentationProfileDocument {
 }
 
 const DEFAULT_SECTION_ORDER: PresentationSectionId[] = [...PRESENTATION_SECTION_IDS];
+const DEFAULT_LENS_PINS: PresentationLensId[] = ["direction", "people", "self", "resources"];
 const DEFAULT_HOME_WIDGETS: PresentationHomeWidgetId[] = [...PRESENTATION_HOME_WIDGET_IDS];
 
 export const DEFAULT_ACCESSIBILITY: PresentationAccessibilitySettings = {
@@ -85,6 +90,8 @@ export const DEFAULT_PRESENTATION: PresentationProfile = {
   accessibility: { ...DEFAULT_ACCESSIBILITY },
   labels: { home: "", capture: "", records: "" },
   navigation: { visible: [...DEFAULT_SECTION_ORDER], order: [...DEFAULT_SECTION_ORDER] },
+  lensPins: [...DEFAULT_LENS_PINS],
+  activeLens: "direction",
   homeWidgets: [...DEFAULT_HOME_WIDGETS]
 };
 
@@ -131,6 +138,7 @@ export function parsePresentationProfile(value: unknown): PresentationProfile {
   const candidate = value as Record<string, unknown>;
   const navigation = typeof candidate.navigation === "object" && candidate.navigation !== null ? candidate.navigation as Record<string, unknown> : {};
   const visible = orderedValues(navigation.visible, PRESENTATION_SECTION_IDS, DEFAULT_SECTION_ORDER);
+  const lensPins = orderedValues(candidate.lensPins, PRESENTATION_LENS_IDS, DEFAULT_LENS_PINS).slice(0, 4);
   for (const requiredSection of ["recovery", "presentation"] as const) {
     if (!visible.includes(requiredSection)) visible.push(requiredSection);
   }
@@ -150,6 +158,8 @@ export function parsePresentationProfile(value: unknown): PresentationProfile {
       visible,
       order: completeOrder(navigation.order, PRESENTATION_SECTION_IDS, DEFAULT_SECTION_ORDER)
     },
+    lensPins,
+    activeLens: typeof candidate.activeLens === "string" && PRESENTATION_LENS_IDS.includes(candidate.activeLens as PresentationLensId) ? candidate.activeLens as PresentationLensId : DEFAULT_PRESENTATION.activeLens,
     homeWidgets: orderedValues(candidate.homeWidgets, PRESENTATION_HOME_WIDGET_IDS, DEFAULT_HOME_WIDGETS)
   };
 }
@@ -186,6 +196,11 @@ export function isPresentationProfile(value: unknown): value is PresentationProf
     const navigation = candidate.navigation as Record<string, unknown>;
     if (!validList(navigation.visible, PRESENTATION_SECTION_IDS) || !validList(navigation.order, PRESENTATION_SECTION_IDS)) return false;
   }
+  if (candidate.lensPins !== undefined) {
+    if (!validList(candidate.lensPins, PRESENTATION_LENS_IDS)) return false;
+    if ((candidate.lensPins as unknown[]).length > 4) return false;
+  }
+  if (candidate.activeLens !== undefined && (typeof candidate.activeLens !== "string" || !PRESENTATION_LENS_IDS.includes(candidate.activeLens as PresentationLensId))) return false;
   return candidate.homeWidgets === undefined || validList(candidate.homeWidgets, PRESENTATION_HOME_WIDGET_IDS);
 }
 

@@ -5,7 +5,7 @@ import { redactTextArtifact } from "../core/document";
 import { isCompletedTask, isSpaceId, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, SPACE_LABELS, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getDeviceInputCopy, getInstalledMetadataStatus, getRecoveryCopy, getStoragePersistenceNotice, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CanonicalRecord, type CaptureKind } from "../core/model";
-import { accessibilityPreset, DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationAccessibilityProfile, type PresentationFamily, type PresentationHomeWidgetId, type PresentationProfile, type PresentationSectionId, type PresentationTargetSize, type PresentationTextScale } from "../core/presentation";
+import { accessibilityPreset, DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_LENS_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationAccessibilityProfile, type PresentationFamily, type PresentationHomeWidgetId, type PresentationLensId, type PresentationProfile, type PresentationSectionId, type PresentationTargetSize, type PresentationTextScale } from "../core/presentation";
 import { TrackService } from "../core/track";
 import { makeReminderData } from "../core/time";
 import { projectDueReminderConsiderations } from "../core/considerations";
@@ -39,6 +39,17 @@ import { isCleanupHistoryRecord, previewCleanup, reconstructCleanupHistory, type
 import { CORE_AUTOMATION_PACKAGE, type PackageAutomationRuntime } from "../core/package-automation-runtime";
 import type { PackageAutomationProposal } from "../core/package-automation-registry";
 import { shouldAutoShowOnboarding } from "../core/onboarding";
+
+const PRESENTATION_LENS_LABELS: Record<PresentationLensId, string> = {
+  direction: "Direction",
+  people: "People",
+  self: "Self",
+  resources: "Resources",
+  work: "Work",
+  environment: "Environment",
+  knowledge: "Knowledge",
+  change: "Change"
+};
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -106,6 +117,19 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       </div>
     </header>
     <nav id="primary-nav" class="primary-nav" aria-label="${copy.home}"><ol id="primary-nav-list"></ol></nav>
+    <nav id="lens-nav" class="lens-nav" aria-label="${copy.lenses}">
+      <div class="lens-nav-heading"><p id="lens-nav-label" class="eyebrow">${copy.lenses}</p><button id="lens-overflow-toggle" class="secondary" type="button">${copy.lensOverflow}</button></div>
+      <ol id="lens-nav-list"></ol>
+      <p id="lens-nav-status" class="hint">${copy.lensHint}</p>
+    </nav>
+    <dialog id="lens-overflow-dialog" aria-labelledby="lens-overflow-heading">
+      <div class="lens-dialog-content">
+        <h2 id="lens-overflow-heading">${copy.lensOverflow}</h2>
+        <p class="hint">${copy.lensHint}</p>
+        <div id="lens-overflow-grid" class="lens-overflow-grid"></div>
+        <button id="lens-overflow-close" class="secondary" type="button">${copy.clear}</button>
+      </div>
+    </dialog>
     <main>
       <section class="status-card" aria-labelledby="status-heading">
         <div>
@@ -167,6 +191,18 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           </div>
           <div id="attention-panel" class="attention-panel" role="region" aria-labelledby="home-attention-heading" aria-live="polite"></div>
         </div>
+      </section>
+
+      <section id="active-lens" class="panel" aria-labelledby="active-lens-heading">
+        <div class="section-heading">
+          <div>
+            <p id="active-lens-label" class="eyebrow">${copy.lenses}</p>
+            <h2 id="active-lens-heading">${PRESENTATION_LENS_LABELS[presentation.activeLens]}</h2>
+          </div>
+          <span id="active-lens-status" class="status-pill">${copy.lensPinned}</span>
+        </div>
+        <p id="active-lens-hint" class="hint">${copy.lensHint}</p>
+        <ul id="active-lens-records" class="record-list"></ul>
       </section>
 
       <section id="presentation" class="panel" aria-labelledby="presentation-heading">
@@ -251,6 +287,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <legend>${copy.homeWidgets}</legend>
             <div id="home-widget-options" class="presentation-options"></div>
             <p class="hint">${copy.homeWidgetsHint}</p>
+          </fieldset>
+          <fieldset class="presentation-fieldset">
+            <legend>${copy.lensPinned}</legend>
+            <div id="lens-pin-options" class="presentation-options"></div>
+            <p class="hint">${copy.lensHint} Keep up to four visible; the remaining lenses stay in the equal-prominence overflow grid.</p>
           </fieldset>
           <div class="form-row">
             <button id="reset-presentation" class="secondary" type="button">${copy.resetPresentation}</button>
@@ -953,6 +994,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const exportPresentationProfileButton = root.querySelector<HTMLButtonElement>("#export-presentation-profile");
   const presentationProfileInput = root.querySelector<HTMLInputElement>("#presentation-profile-input");
   const primaryNavList = root.querySelector<HTMLOListElement>("#primary-nav-list");
+  const lensNavList = root.querySelector<HTMLOListElement>("#lens-nav-list");
+  const lensOverflowToggle = root.querySelector<HTMLButtonElement>("#lens-overflow-toggle");
+  const lensOverflowDialog = root.querySelector<HTMLDialogElement>("#lens-overflow-dialog");
+  const lensOverflowGrid = root.querySelector<HTMLElement>("#lens-overflow-grid");
+  const lensOverflowClose = root.querySelector<HTMLButtonElement>("#lens-overflow-close");
+  const lensNavStatus = root.querySelector<HTMLElement>("#lens-nav-status");
+  const activeLensHeading = root.querySelector<HTMLElement>("#active-lens-heading");
+  const activeLensStatus = root.querySelector<HTMLElement>("#active-lens-status");
+  const activeLensHint = root.querySelector<HTMLElement>("#active-lens-hint");
+  const activeLensRecords = root.querySelector<HTMLUListElement>("#active-lens-records");
+  const lensPinOptions = root.querySelector<HTMLElement>("#lens-pin-options");
   const homeLabel = root.querySelector<HTMLElement>("#home-label");
   const recordsLabel = root.querySelector<HTMLElement>("#records-label");
   const presentationForm = root.querySelector<HTMLFormElement>("#presentation-form");
@@ -1020,6 +1072,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   }
   if (!factoryPreview || !factoryAppForm || !factoryAppStatus || !factoryAppList || !factoryGameStatus || !factoryGameBoard || !factoryGameMove || !factoryGameCollect || !factoryGamePause || !factoryGameSave || !factoryGameLoad) {
     throw new Error("Omnevum factory preview controls are missing");
+  }
+  if (!lensNavList || !lensOverflowToggle || !lensOverflowDialog || !lensOverflowGrid || !lensOverflowClose || !lensNavStatus || !activeLensHeading || !activeLensStatus || !activeLensHint || !activeLensRecords || !lensPinOptions) {
+    throw new Error("Omnevum lens navigation controls are missing");
   }
   if (!familyInput || !accessibilityProfileInput || !accessibilityTextScaleInput || !accessibilityTargetSizeInput || !accessibilityReducedMotionInput) throw new Error("Omnevum presentation accessibility controls are missing");
   if (!packageAutomationForm || !packageAutomationRecord || !packageAutomationDocument || !packageAutomationPreviewButton || !packageAutomationStatus || !packageAutomationList || !packageAutomationProposals) {
@@ -1269,6 +1324,71 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     if (button.dataset.direction === "up" && row.previousElementSibling) container.insertBefore(row, row.previousElementSibling);
     if (button.dataset.direction === "down" && row.nextElementSibling) container.insertBefore(row.nextElementSibling, row);
   };
+  const renderLensPins = (): void => {
+    lensPinOptions.replaceChildren();
+    for (const id of PRESENTATION_LENS_IDS) {
+      const row = document.createElement("div");
+      row.dataset.presentationLens = id;
+      const label = document.createElement("label");
+      label.className = "check-row";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = presentation.lensPins.includes(id);
+      checkbox.value = id;
+      checkbox.dataset.presentationLensPin = "true";
+      label.append(checkbox, document.createTextNode(PRESENTATION_LENS_LABELS[id]));
+      row.append(label);
+      lensPinOptions.append(row);
+    }
+  };
+  const renderLensNavigation = (): void => {
+    const pinned = presentation.lensPins.slice(0, 4);
+    const barLensIds = [...pinned];
+    if (!barLensIds.includes(presentation.activeLens)) barLensIds.push(presentation.activeLens);
+    lensNavList.replaceChildren();
+    for (const id of barLensIds) {
+      const item = document.createElement("li");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "secondary lens-nav-button";
+      button.dataset.lensId = id;
+      button.textContent = PRESENTATION_LENS_LABELS[id];
+      button.setAttribute("aria-current", id === presentation.activeLens ? "page" : "false");
+      item.append(button);
+      lensNavList.append(item);
+    }
+    lensOverflowGrid.replaceChildren();
+    for (const id of PRESENTATION_LENS_IDS) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "secondary lens-grid-button";
+      button.dataset.lensId = id;
+      button.textContent = PRESENTATION_LENS_LABELS[id];
+      button.setAttribute("aria-current", id === presentation.activeLens ? "page" : "false");
+      lensOverflowGrid.append(button);
+    }
+    lensNavStatus.textContent = `${copy.lensHint} ${barLensIds.length} visible in the bar; ${PRESENTATION_LENS_IDS.length} available in ${copy.lensOverflow.toLowerCase()}.`;
+  };
+  const renderActiveLens = async (): Promise<void> => {
+    activeLensHeading.textContent = PRESENTATION_LENS_LABELS[presentation.activeLens];
+    activeLensStatus.textContent = presentation.lensPins.includes(presentation.activeLens) ? copy.lensPinned : copy.lensActive;
+    activeLensHint.textContent = copy.lensHint;
+    const records = (await store.list()).filter((record) => !record.deleted).slice(0, 20);
+    activeLensRecords.replaceChildren();
+    if (records.length === 0) {
+      const empty = document.createElement("li");
+      empty.className = "record-item";
+      empty.textContent = copy.lensNoRecords;
+      activeLensRecords.append(empty);
+      return;
+    }
+    for (const record of records) {
+      const item = document.createElement("li");
+      item.className = "record-item";
+      item.textContent = `${record.recordType} - ${recordText(record).slice(0, 160)}`;
+      activeLensRecords.append(item);
+    }
+  };
   const renderPresentationOptions = (): void => {
     const renderRows = <T extends string>(container: HTMLElement, order: readonly T[], allowed: readonly T[], labelFor: (id: T) => string, visible: readonly T[], required: readonly T[], optionName: string): void => {
       container.replaceChildren();
@@ -1302,9 +1422,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     };
     renderRows(navigationOptions, presentation.navigation.order, PRESENTATION_SECTION_IDS, sectionLabel, presentation.navigation.visible, ["recovery", "presentation"], "navigation");
     renderRows(homeWidgetOptions, presentation.homeWidgets, PRESENTATION_HOME_WIDGET_IDS, homeWidgetLabel, presentation.homeWidgets, [], "home");
+    renderLensPins();
   };
   const readOptionOrder = <T extends string>(container: HTMLElement): T[] => [...container.children].map((row) => row.getAttribute("data-presentation-option")).filter((value): value is T => typeof value === "string") ;
   const readOptionVisibility = <T extends string>(container: HTMLElement): T[] => [...container.querySelectorAll<HTMLInputElement>("input[data-presentation-visibility]:checked")].map((input) => input.value as T);
+  const readLensPins = (): PresentationLensId[] => [...lensPinOptions.querySelectorAll<HTMLInputElement>("input[data-presentation-lens-pin]:checked")].map((input) => input.value as PresentationLensId);
   const isStandaloneDisplayMode = (): boolean => window.matchMedia?.("(display-mode: standalone)").matches === true || (navigator as Navigator & { standalone?: boolean }).standalone === true;
   const applyPresentationProfile = (): void => {
     root.dataset.theme = presentation.theme;
@@ -1353,6 +1475,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     themeToggle.setAttribute("aria-pressed", String(presentation.theme === "dark"));
     presentationHostStatus.textContent = getInstalledMetadataStatus(presentation.locale, isStandaloneDisplayMode());
     renderPresentationOptions();
+    renderLensNavigation();
+    void renderActiveLens();
     primaryNavList.replaceChildren();
     const visible = new Set(presentation.navigation.visible);
     for (const id of presentation.navigation.order) {
@@ -1419,6 +1543,15 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       presentationStatus.textContent = describeError(error, "Navigation pinning was not saved; canonical data was not changed.");
     }
   };
+  const activateLens = async (id: PresentationLensId): Promise<void> => {
+    try {
+      await persistPresentation(parsePresentationProfile({ ...presentation, activeLens: id }), copy.savedName(PRESENTATION_LENS_LABELS[id]));
+      if (lensOverflowDialog.open) lensOverflowDialog.close();
+      document.querySelector<HTMLElement>("#active-lens")?.scrollIntoView({ block: "start" });
+    } catch (error) {
+      lensNavStatus.textContent = describeError(error, "Lens selection was not saved; canonical data was not changed.");
+    }
+  };
   for (const container of [navigationOptions, homeWidgetOptions]) container.addEventListener("click", (event) => {
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-direction]");
     if (button) movePresentationRow(container, button);
@@ -1430,6 +1563,16 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     event.preventDefault();
     void setSectionPinned(id);
   });
+  lensNavList.addEventListener("click", (event) => {
+    const id = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-lens-id]")?.dataset.lensId as PresentationLensId | undefined;
+    if (id) void activateLens(id);
+  });
+  lensOverflowGrid.addEventListener("click", (event) => {
+    const id = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-lens-id]")?.dataset.lensId as PresentationLensId | undefined;
+    if (id) void activateLens(id);
+  });
+  lensOverflowToggle.addEventListener("click", () => lensOverflowDialog.showModal());
+  lensOverflowClose.addEventListener("click", () => lensOverflowDialog.close());
   accessibilityProfileInput.addEventListener("change", () => {
     const profile = accessibilityProfileInput.value as PresentationAccessibilityProfile;
     if (profile === "custom") return;
@@ -3410,6 +3553,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           visible: readOptionVisibility<PresentationSectionId>(navigationOptions),
           order: readOptionOrder<PresentationSectionId>(navigationOptions)
         },
+        lensPins: readLensPins(),
         homeWidgets: readOptionVisibility<PresentationHomeWidgetId>(homeWidgetOptions)
       });
       await store.setSetting("presentation", nextPresentation);

@@ -4,7 +4,7 @@ import type { TriageStatus } from "./domain";
 
 export interface UiCopy {
   productHeading: string; foundation: string; lede: string; system: string; ready: string; local: string; healthInitial: string; healthy: string; degraded: string;
-  home: string; currentPicture: string; activeRecordCount: string; visualize: string; signals: string; openTasks: string; completedTasks: string; focusMinutes: string; relationships: string; personalization: string; makeItYours: string; onboardingHeading: string; onboardingHint: string; onboardingCapture: string; onboardingReview: string; onboardingRecovery: string; onboardingStart: string; onboardingDismiss: string; onboardingShow: string;
+  home: string; currentPicture: string; activeRecordCount: string; visualize: string; signals: string; openTasks: string; completedTasks: string; focusMinutes: string; relationships: string; personalization: string; makeItYours: string; lenses: string; lensOverflow: string; lensHint: string; lensPinned: string; lensActive: string; lensNoRecords: string; onboardingHeading: string; onboardingHint: string; onboardingCapture: string; onboardingReview: string; onboardingRecovery: string; onboardingStart: string; onboardingDismiss: string; onboardingShow: string;
   derivedStatus: (records: number, sourceIds: number, groups: number) => string;
   appName: string; language: string; english: string; french: string; save: string; presentationHint: string; tagline: string; density: string; comfortable: string; compact: string; typeface: string; systemTypeface: string; serifTypeface: string; monoTypeface: string; iconography: string; labelIconography: string; glyphIconography: string; homeLabel: string; captureLabel: string; recordsLabel: string; navigationSections: string; navigationHint: string; homeWidgets: string; homeWidgetsHint: string; resetPresentation: string; exportPresentationProfile: string; importPresentationProfile: string; presentationProfileExported: string; presentationProfileImported: string; editLabel: string; labelRequired: string; pinSection: (label: string) => string; unpinSection: (label: string) => string;
   capture: string; getItOut: string; kind: string; note: string; task: string; observation: string; space: string; acquireHeading: string; stageImport: string; acquireFile: string; readClipboard: string; acceptStaged: string; acquirePlaceholder: string; acquireHint: string; stagedMessage: (count: number, warnings: number) => string; cleanupHeading: string; cleanupHint: string; cleanupImportedOnly: string; cleanupTrim: string; cleanupWhitespace: string; cleanupPreview: string; cleanupApply: string; cleanupStatus: (records: number, sources: number, proposals: number) => string; cleanupEmpty: string; cleanupTransform: string; cleanupDuplicate: string; cleanupAmbiguous: string; cleanupArchive: string; cleanupMarkReview: string; cleanupApplied: (updated: number, archived: number, review: number) => string; cleanupHistory: string; cleanupHistoryEmpty: string; cleanupHistoryEntry: (recipe: string, acceptedAt: string, inputs: number, updated: number, archived: number, review: number, chunks: number) => string;
@@ -138,8 +138,27 @@ const presentationQuickFrench: Pick<UiCopy, "editLabel" | "labelRequired" | "pin
   unpinSection: (label) => `Desepingler ${label}`
 };
 
+const presentationLensEnglish: Pick<UiCopy, "lenses" | "lensOverflow" | "lensHint" | "lensPinned" | "lensActive" | "lensNoRecords"> = {
+  lenses: "Lenses",
+  lensOverflow: "All lenses",
+  lensHint: "Lenses are projection paths over canonical records; pinning changes presentation only.",
+  lensPinned: "Pinned lenses",
+  lensActive: "Active from overflow",
+  lensNoRecords: "No records are currently projected here. Capture or retrieve a canonical record to populate this lens."
+};
+
+const presentationLensFrench: Pick<UiCopy, "lenses" | "lensOverflow" | "lensHint" | "lensPinned" | "lensActive" | "lensNoRecords"> = {
+  lenses: "Lentilles",
+  lensOverflow: "Toutes les lentilles",
+  lensHint: "Les lentilles sont des projections des dossiers canoniques; l'epinglage ne change que la presentation.",
+  lensPinned: "Lentilles epinglees",
+  lensActive: "Active depuis le debordement",
+  lensNoRecords: "Aucun dossier n'est actuellement projete ici. Capturez ou retrouvez un dossier canonique pour remplir cette lentille."
+};
+
 const english: UiCopy = {
   ...presentationQuickEnglish,
+  ...presentationLensEnglish,
   ...onboardingEnglish,
   ...cleanupEnglish,
   documentFinishHeading: "Finish a text Artifact locally",
@@ -174,6 +193,7 @@ const english: UiCopy = {
 const french: UiCopy = {
   ...english,
   ...presentationQuickFrench,
+  ...presentationLensFrench,
   ...onboardingFrench,
   ...cleanupFrench,
   documentFinishHeading: "Finaliser localement un artefact texte",

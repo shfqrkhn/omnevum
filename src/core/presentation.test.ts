@@ -25,6 +25,14 @@ describe("presentation profile", () => {
     expect(isPresentationProfile({ ...DEFAULT_PRESENTATION, family: "neon" } as unknown)).toBe(false);
   });
 
+  it("preserves eight equal-prominence lens identities and bounds pinned presentation state", () => {
+    const profile = parsePresentationProfile({ ...DEFAULT_PRESENTATION, lensPins: ["knowledge", "change", "work", "environment", "people"], activeLens: "change" });
+    expect(profile.lensPins).toEqual(["knowledge", "change", "work", "environment"]);
+    expect(profile.activeLens).toBe("change");
+    expect(isPresentationProfile({ ...DEFAULT_PRESENTATION, lensPins: ["direction", "people", "self", "resources", "work"] } as unknown)).toBe(false);
+    expect(parsePresentationProfile({ productName: "Legacy" }).lensPins).toEqual(["direction", "people", "self", "resources"]);
+  });
+
   it("supports named accessibility profiles with independently persisted settings", () => {
     expect(accessibilityPreset("low-vision")).toMatchObject({ profile: "low-vision", textScale: 1.5, targetSize: "large", reducedMotion: false });
     expect(parsePresentationProfile({ productName: "Accessible", accessibility: { profile: "motor-large-target", textScale: 2, targetSize: "large", reducedMotion: true } })).toMatchObject({ accessibility: { profile: "motor-large-target", textScale: 2, targetSize: "large", reducedMotion: true } });

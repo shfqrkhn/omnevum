@@ -124,6 +124,17 @@ button:hover { background: var(--accent-strong); }
 .nav-pin-toggle { min-width: 44px; min-height: 44px; padding: 0.35rem; }
 .primary-nav a:hover { background: var(--surface-muted); color: var(--accent-strong); }
 [data-iconography="glyphs"] .primary-nav a::before { content: attr(data-nav-icon); margin-right: 0.4rem; color: var(--accent); font-weight: 800; }
+.lens-nav { position: sticky; top: 5.7rem; z-index: 4; width: min(calc(100% - 32px), 820px); margin: 0 auto 1rem; padding: 0.55rem 0; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(10px); }
+.lens-nav-heading { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; }
+.lens-nav-heading .eyebrow { margin: 0; }
+.lens-nav ol { display: flex; flex-wrap: nowrap; gap: 0.45rem; list-style: none; margin: 0; padding: 0; overflow-x: auto; }
+.lens-nav li { flex: 0 0 auto; }
+.lens-nav-button { min-width: 44px; min-height: 44px; white-space: nowrap; }
+.lens-nav-button[aria-current="page"], .lens-grid-button[aria-current="page"] { border-color: var(--accent-strong); box-shadow: 0 0 0 2px color-mix(in srgb, var(--focus) 35%, transparent); }
+.lens-nav-status { margin: 0.35rem 0 0; }
+.lens-overflow-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem; margin: 1rem 0; }
+.lens-grid-button { min-height: 52px; }
+.lens-dialog-content { min-width: min(78vw, 28rem); }
 h1, h2, h3, p, label, legend { margin-top: 0; overflow-wrap: anywhere; }
 h1 { margin-bottom: 0.5rem; font-size: clamp(2rem, 8vw, 3.6rem); letter-spacing: -0.045em; }
 h2 { margin-bottom: 0.7rem; font-size: 1.35rem; }
