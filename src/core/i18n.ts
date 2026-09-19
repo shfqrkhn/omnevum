@@ -580,6 +580,22 @@ export interface RecoveryCopy {
   passwordHint: string;
   exportEncrypted: string;
   encryptedExported: string;
+  fullVaultMessage: (records: number, bytes: number, artifacts: number) => string;
+  exportHuman: string;
+  exportArtifacts: string;
+  exportHumanMessage: (records: number, bytes: number) => string;
+  exportArtifactsMessage: (artifacts: number, bytes: number) => string;
+  dataExitHeading: string;
+  dataExitHint: string;
+  verifyVault: string;
+  verifyVaultHint: string;
+  verifiedVault: (records: number, bytes: number) => string;
+  recordDestroyIntent: string;
+  destroyIntentRecorded: string;
+  retirementReady: string;
+  retirementBlocked: string;
+  retirementConfirmation: string;
+  retired: string;
   passwordRequired: string;
   requestPersistence: string;
   safePresentation: string;
@@ -591,13 +607,54 @@ export interface RecoveryCopy {
   clearedCanonical: string;
 }
 
-const recoveryCopy: Record<PresentationLocale, RecoveryCopy> = {
+const recoveryCopy: Record<PresentationLocale, Pick<RecoveryCopy, "clearImpact"> & Record<string, unknown>> = {
   "en-CA": { password: "Optional Vault password", passwordHint: "Used only for this action; it is never stored.", exportEncrypted: "Export encrypted Vault", encryptedExported: "Exported an integrity-protected encrypted Vault.", passwordRequired: "Enter an 8-character Vault password for encrypted recovery.", requestPersistence: "Request persistent storage", safePresentation: "Use Safe Presentation Mode", safePresentationActive: "Exit Safe Presentation Mode", safePresentationHint: "Safe mode uses a known-good built-in presentation for this session and preserves the stored profile.", clearCanonical: "Clear canonical data", clearConfirmation: "Clear all canonical records, history, artifacts, effect operations, and package saves? Export a Vault first if you may need recovery.", clearImpact: (impact) => `Hard clear impact: ${impact.canonicalRecords} canonical record(s), ${impact.relationships} relationship record(s), ${impact.historyEntries} history entr${impact.historyEntries === 1 ? "y" : "ies"}, ${impact.artifactPayloads} artifact payload(s), all ${impact.effectOperations} effect operation(s) including ${impact.pendingEffects} pending/uncertain one(s), ${impact.packageStates} package save(s), and ${impact.automationRules} automation rule(s) will be removed. ${impact.orphanedRelationships > 0 ? `Graph impact is UNKNOWN for ${impact.orphanedRelationships} relationship(s) with unresolved endpoints. ` : "Graph impact is fully enumerated. "}Preserved relationships: ${impact.preservedRelationships}; recovery window: ${impact.reversibilityWindowSeconds} seconds (no undo). Export and verify a Vault first.`, clearedCanonical: "Canonical data cleared. Presentation settings remain available." },
   "fr-CA": { password: "Mot de passe Vault facultatif", passwordHint: "Utilise seulement pour cette action; il n'est jamais stocke.", exportEncrypted: "Exporter le Vault chiffre", encryptedExported: "Vault chiffre et protege par integrite exporte.", passwordRequired: "Entrez un mot de passe Vault de 8 caracteres pour la recuperation chiffre.", requestPersistence: "Demander la persistance du stockage", safePresentation: "Utiliser le mode de presentation securise", safePresentationActive: "Quitter le mode de presentation securise", safePresentationHint: "Le mode securise utilise une presentation integree fiable pour cette session et preserve le profil stocke.", clearCanonical: "Effacer les donnees canoniques", clearConfirmation: "Effacer tous les dossiers canoniques, l'historique, les artefacts, les operations d'effet et les sauvegardes de paquets? Exportez d'abord un Vault si vous pourriez avoir besoin d'une recuperation.", clearImpact: (impact) => `Impact de l'effacement: ${impact.canonicalRecords} dossier(s), ${impact.relationships} relation(s), ${impact.historyEntries} entree(s) d'historique, ${impact.artifactPayloads} artefact(s), les ${impact.effectOperations} operation(s) d'effet dont ${impact.pendingEffects} en attente/incertaine(s), ${impact.packageStates} sauvegarde(s) de paquet et ${impact.automationRules} regle(s) d'automatisation seront supprimes. ${impact.orphanedRelationships > 0 ? `Impact du graphe INCONNU pour ${impact.orphanedRelationships} relation(s) sans extremites resolues. ` : "Impact du graphe entierement enumere. "}Relations preservees: ${impact.preservedRelationships}; fenetre de recuperation: ${impact.reversibilityWindowSeconds} seconde(s) (aucune annulation). Exportez et verifiez un Vault d'abord.`, clearedCanonical: "Donnees canoniques effacees. Les reglages de presentation restent disponibles." }
 };
 
+const recoveryCopyExtras: Record<PresentationLocale, Partial<RecoveryCopy>> = {
+  "en-CA": {
+    fullVaultMessage: (records, bytes, artifacts) => `Exported full Vault: ${records} record(s), ${artifacts} artifact payload(s), ${bytes} bytes.`,
+    exportHuman: "Export human-readable copy",
+    exportArtifacts: "Export artifact originals",
+    exportHumanMessage: (records, bytes) => `Exported a human-readable copy of ${records} record(s); ${bytes} bytes.`,
+    exportArtifactsMessage: (artifacts, bytes) => `Exported ${artifacts} artifact original(s); ${bytes} bytes.`,
+    dataExitHeading: "Data exit and retirement",
+    dataExitHint: "Exports are available without leaving the app. Retirement stays blocked until a current full Vault is read back and verified here, or you record a separate explicit destroy intent.",
+    verifyVault: "Verify full Vault for retirement",
+    verifyVaultHint: "Choose the full Vault JSON you just read back. Verification is non-mutating and must match current canonical state before clearing.",
+    verifiedVault: (records, bytes) => `Full Vault read back and verified: ${records} record(s), ${bytes} bytes. Retirement is authorized until canonical data changes.`,
+    recordDestroyIntent: "Record explicit destroy intent",
+    destroyIntentRecorded: "Explicit destroy intent recorded. Retirement is authorized only after the separate confirmation below.",
+    retirementReady: "Retirement authorization is ready.",
+    retirementBlocked: "Retirement is blocked. Verify a current full Vault or record explicit destroy intent first.",
+    retirementConfirmation: "Retire this local origin and clear canonical records, history, artifacts, effects, and package saves? This cannot be undone.",
+    retired: "Local canonical data retired. Presentation settings remain available."
+  },
+  "fr-CA": {
+    fullVaultMessage: (records, bytes, artifacts) => `Vault complet exporte: ${records} dossier(s), ${artifacts} artefact(s), ${bytes} octets.`,
+    exportHuman: "Exporter une copie lisible",
+    exportArtifacts: "Exporter les originaux des artefacts",
+    exportHumanMessage: (records, bytes) => `Copie lisible exportee: ${records} dossier(s), ${bytes} octets.`,
+    exportArtifactsMessage: (artifacts, bytes) => `${artifacts} original(aux) d'artefact exporte(s), ${bytes} octets.`,
+    dataExitHeading: "Sortie des donnees et retrait",
+    dataExitHint: "Les exports sont disponibles sans quitter l'application. Le retrait reste bloque jusqu'a la relecture et verification ici d'un Vault complet actuel, ou jusqu'a l'enregistrement d'une intention distincte de destruction.",
+    verifyVault: "Verifier le Vault complet pour le retrait",
+    verifyVaultHint: "Choisissez le JSON Vault complet que vous venez de relire. La verification ne modifie rien et doit correspondre a l'etat canonique actuel avant l'effacement.",
+    verifiedVault: (records, bytes) => `Vault complet relu et verifie: ${records} dossier(s), ${bytes} octets. Le retrait est autorise jusqu'a une modification canonique.`,
+    recordDestroyIntent: "Enregistrer l'intention explicite de detruire",
+    destroyIntentRecorded: "Intention explicite de destruction enregistree. Le retrait exige encore la confirmation separee ci-dessous.",
+    retirementReady: "L'autorisation de retrait est prete.",
+    retirementBlocked: "Retrait bloque. Verifiez un Vault complet actuel ou enregistrez d'abord l'intention explicite de detruire.",
+    retirementConfirmation: "Retirer cette origine locale et effacer les dossiers canoniques, l'historique, les artefacts, les effets et les sauvegardes de paquets? Cette action est irreversible.",
+    retired: "Donnees canoniques locales retirees. Les reglages de presentation restent disponibles."
+  }
+};
+Object.assign(recoveryCopy["en-CA"], recoveryCopyExtras["en-CA"]);
+Object.assign(recoveryCopy["fr-CA"], recoveryCopyExtras["fr-CA"]);
+
 export function getRecoveryCopy(locale: PresentationLocale): RecoveryCopy {
-  return recoveryCopy[locale];
+  return recoveryCopy[locale] as unknown as RecoveryCopy;
 }
 
 export interface TimeCopy {

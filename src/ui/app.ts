@@ -12,6 +12,7 @@ import { makeReminderData } from "../core/time";
 import { projectDueReminderConsiderations } from "../core/considerations";
 import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/crypto";
 import { MAX_VAULT_JSON_BYTES, parseVault } from "../core/vault";
+import { makeArtifactOriginalsExport, makeHumanReadableExport, parseArtifactOriginalsExport, verifyHumanReadableExport } from "../core/portable-export";
 import type { CanonicalStore } from "../core/storage";
 import { captureExpense, captureFinancePlan, captureHealthMeasurement } from "../core/workflows";
 import { acceptFinanceBatch, correctFinanceTransaction, createFinanceSourceId, deduplicateFinanceTransactions, extractFinanceStatementFacts, parseFinanceCsv, parseFinanceStatementFactsCsv, reconcileFinanceStatement, type FinanceBatchEntry, type FinanceStatementFacts, type FinanceStatementSource } from "../core/finance";
@@ -87,6 +88,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   let telemetryThresholds: TelemetryThresholds = parseTelemetryThresholds(await store.getSetting<unknown>(TELEMETRY_THRESHOLDS_SETTING));
   let telemetryDispositions: TelemetryDispositions = parseTelemetryDispositions(await store.getSetting<unknown>(TELEMETRY_DISPOSITIONS_SETTING));
   let shellUpdateLedger = parseShellUpdateLedger(await store.getSetting<unknown>(UPDATE_LEDGER_SETTING));
+  let retirementAuthorization = await store.getRetirementAuthorization();
   let updateActivationRequested = false;
   const initialRecordCount = (await store.list()).length;
   const onboardingAutoShown = shouldAutoShowOnboarding(initialRecordCount, onboardingDismissed);
@@ -943,6 +945,19 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <label class="file-button secondary" for="artifact-input">${copy.attachArtifact}</label>
           <input id="artifact-input" type="file" />
         </div>
+        <details id="recovery-data-exit" class="relationship-form compact-panel">
+          <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h3>${recoveryCopy.dataExitHeading}</h3></span></summary>
+          <p class="hint">${recoveryCopy.dataExitHint}</p>
+          <div class="form-row">
+            <button id="export-human" class="secondary" type="button">${recoveryCopy.exportHuman}</button>
+            <button id="export-artifacts" class="secondary" type="button">${recoveryCopy.exportArtifacts}</button>
+          </div>
+          <label class="file-button secondary" for="retirement-export-input">${recoveryCopy.verifyVault}</label>
+          <input id="retirement-export-input" type="file" accept="application/json,.json,.md,.txt,text/markdown,text/plain" />
+          <p class="hint">${recoveryCopy.verifyVaultHint}</p>
+          <button id="record-destroy-intent" class="secondary" type="button">${recoveryCopy.recordDestroyIntent}</button>
+          <p id="retirement-status" class="hint" role="status"></p>
+        </details>
         <details id="recovery-artifact-tools" class="relationship-form compact-panel">
           <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h3>${copy.documentFinishHeading}</h3></span></summary>
           <form id="document-finish-form">
@@ -1327,6 +1342,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const clearCanonicalButton = root.querySelector<HTMLButtonElement>("#clear-canonical");
   const importInput = root.querySelector<HTMLInputElement>("#import-vault");
   const artifactInput = root.querySelector<HTMLInputElement>("#artifact-input");
+  const exportHumanButton = root.querySelector<HTMLButtonElement>("#export-human");
+  const exportArtifactsButton = root.querySelector<HTMLButtonElement>("#export-artifacts");
+  const retirementExportInput = root.querySelector<HTMLInputElement>("#retirement-export-input");
+  const recordDestroyIntentButton = root.querySelector<HTMLButtonElement>("#record-destroy-intent");
+  const retirementStatus = root.querySelector<HTMLElement>("#retirement-status");
   const documentFinishForm = root.querySelector<HTMLFormElement>("#document-finish-form");
   const documentFinishSource = root.querySelector<HTMLSelectElement>("#document-finish-source");
   const documentFinishTerms = root.querySelector<HTMLInputElement>("#document-finish-terms");
@@ -1356,6 +1376,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchFiltersToggle || !searchFilters || !searchFacetChips || !searchFacetLens || !searchFacetType || !searchFacetSpace || !searchFacetArtifact || !searchViewName || !searchSaveView || !searchScopeStatus || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !insightsDisclosure || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !triageBatch || !triageSelectAll || !triageSelected || !triageBatchDeferUntil || !triageBatchReview || !triageBatchDefer || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !contextExportFormat || !contextExportObjective || !contextExportBudget || !contextExportButton || !contextExportRerunButton || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavMenu || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput || !activeLensDisclosure || !reviewDisclosure || !recordsDisclosure) {
     throw new Error("Omnevum foundation controls are missing");
   }
+  if (!exportHumanButton || !exportArtifactsButton || !retirementExportInput || !recordDestroyIntentButton || !retirementStatus) {
+    throw new Error("Omnevum retirement controls are missing");
+  }
+  const updateRetirementControls = (): void => {
+    clearCanonicalButton.disabled = retirementAuthorization === undefined;
+    retirementStatus.textContent = retirementAuthorization ? recoveryCopy.retirementReady : recoveryCopy.retirementBlocked;
+  };
+  updateRetirementControls();
   if (!financeImportForm || !financeImportFile || !financeImportAccount || !financeImportCurrency || !financeImportOpening || !financeImportClosing || !financeImportStatus) {
     throw new Error("Omnevum Finance import controls are missing");
   }
@@ -4988,16 +5016,74 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   exportButton.addEventListener("click", async () => {
     try {
       const vault = await store.exportVault();
-      const blob = new Blob([JSON.stringify(vault, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "omnevum-vault.json";
-      link.click();
-      window.setTimeout(() => URL.revokeObjectURL(url), 0);
-      recoveryStatus.textContent = copy.exportMessage(vault.records.length);
+      const serialized = JSON.stringify(vault, null, 2);
+      downloadText("omnevum-vault.json", serialized, "application/json");
+      recoveryStatus.textContent = recoveryCopy.fullVaultMessage(vault.records.length, new TextEncoder().encode(serialized).byteLength, vault.artifacts?.length ?? 0);
     } catch (error) {
       recoveryStatus.textContent = describeError(error, "Vault export failed; canonical data was not changed.");
+    }
+  });
+
+  exportHumanButton.addEventListener("click", async () => {
+    try {
+      const exported = makeHumanReadableExport(await store.exportVault());
+      downloadText("omnevum-human-readable.md", exported.text, "text/markdown");
+      recoveryStatus.textContent = recoveryCopy.exportHumanMessage(Number(/^Record count: (\d+)$/mu.exec(exported.text)?.[1] ?? 0), exported.sizeBytes);
+    } catch (error) {
+      recoveryStatus.textContent = describeError(error, "Human-readable export failed; canonical data was not changed.");
+    }
+  });
+
+  exportArtifactsButton.addEventListener("click", async () => {
+    try {
+      const exported = makeArtifactOriginalsExport(await store.exportVault());
+      const parsed = parseArtifactOriginalsExport(exported.text);
+      downloadText("omnevum-artifact-originals.json", exported.text, "application/json");
+      recoveryStatus.textContent = recoveryCopy.exportArtifactsMessage(parsed.artifactCount, exported.sizeBytes);
+    } catch (error) {
+      recoveryStatus.textContent = describeError(error, "Artifact-originals export failed; canonical data was not changed.");
+    }
+  });
+
+  retirementExportInput.addEventListener("change", async () => {
+    const file = retirementExportInput.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const sizeBytes = new TextEncoder().encode(text).byteLength;
+      if (text.startsWith("# Omnevum human-readable export\n")) {
+        verifyHumanReadableExport(text);
+        retirementStatus.textContent = `Read back and verified human-readable export: ${sizeBytes} bytes. A full Vault is still required for retirement.`;
+      } else if (text.trimStart().startsWith("{")) {
+        const parsed: unknown = JSON.parse(text);
+        if (parsed && typeof parsed === "object" && (parsed as { format?: unknown }).format === "OMNEVUM_ARTIFACT_ORIGINALS") {
+          const bundle = parseArtifactOriginalsExport(text);
+          retirementStatus.textContent = `Read back and verified ${bundle.artifactCount} artifact original(s): ${sizeBytes} bytes. A full Vault is still required for retirement.`;
+        } else {
+          const vault = parseVault(text);
+          const verified = await store.recordVerifiedVaultExport(vault, sizeBytes);
+          retirementAuthorization = verified;
+          retirementStatus.textContent = recoveryCopy.verifiedVault(verified.recordCount, verified.sizeBytes);
+          updateRetirementControls();
+        }
+      } else {
+        throw new Error("Choose a full Vault JSON, human-readable Markdown export, or artifact-originals JSON export");
+      }
+    } catch (error) {
+      retirementStatus.textContent = describeError(error, recoveryCopy.retirementBlocked);
+    } finally {
+      retirementExportInput.value = "";
+    }
+  });
+
+  recordDestroyIntentButton.addEventListener("click", async () => {
+    if (!await requestConfirmation("Record explicit destroy intent without retaining a copy?", copy.confirmationHeading)) return;
+    try {
+      retirementAuthorization = await store.recordExplicitDestroyIntent();
+      retirementStatus.textContent = recoveryCopy.destroyIntentRecorded;
+      updateRetirementControls();
+    } catch (error) {
+      retirementStatus.textContent = describeError(error, recoveryCopy.retirementBlocked);
     }
   });
 
@@ -5051,15 +5137,23 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   });
 
   clearCanonicalButton.addEventListener("click", async () => {
+    if (!retirementAuthorization) {
+      retirementStatus.textContent = recoveryCopy.retirementBlocked;
+      return;
+    }
     try {
       const impact = await store.getClearImpact();
-      const message = `${recoveryCopy.clearConfirmation}\n\n${recoveryCopy.clearImpact(impact)}`;
+      const message = `${recoveryCopy.retirementConfirmation}\n\n${recoveryCopy.clearImpact(impact)}`;
       if (!await requestConfirmation(message, copy.confirmationHeading)) return;
       clearArchiveUndo();
-      await store.clear();
-      recoveryStatus.textContent = recoveryCopy.clearedCanonical;
+      await store.clear(retirementAuthorization.kind);
+      retirementAuthorization = undefined;
+      updateRetirementControls();
+      recoveryStatus.textContent = recoveryCopy.retired;
       await renderRecords();
     } catch (error) {
+      retirementAuthorization = await store.getRetirementAuthorization();
+      updateRetirementControls();
       recoveryStatus.textContent = describeError(error, "Canonical data was not cleared");
     }
   });

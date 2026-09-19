@@ -23,6 +23,15 @@ export async function verifyVaultIntegrity(vault: VaultDocument): Promise<void> 
   if (digest.toLowerCase() !== vault.integrity.digest.toLowerCase()) throw new Error("Vault integrity check failed; no data was written");
 }
 
+/**
+ * Fingerprints the portable data without the export timestamp or integrity
+ * wrapper so a verified backup can be checked against the current state later.
+ */
+export async function fingerprintVault(vault: VaultDocument): Promise<string> {
+  const { integrity: _integrity, exportedAt: _exportedAt, ...payload } = vault;
+  return digestText(stableJson(payload));
+}
+
 async function digestText(text: string): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");

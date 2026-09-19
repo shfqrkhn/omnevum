@@ -587,13 +587,35 @@ describe("CanonicalStore", () => {
     const original = record("record-clear");
     await store.put(original);
       await store.enqueueEffect({ operationId: "effect-clear", owner: "platform.test", originatingCommand: "test.command", purpose: "test", destination: "test://destination", payloadOrReference: { value: "safe" }, idempotencyKey: "effect-clear-idempotency", createdAt: new Date().toISOString(), status: "PENDING", retryCount: 0, retryPolicy: { maxAttempts: 3, backoffSeconds: 1 }, evidence: [] });
-    await store.clear();
+    await store.recordExplicitDestroyIntent();
+    await store.clear("EXPLICIT_DESTROY_INTENT");
     expect(await store.list(true)).toEqual([]);
     expect(await store.history()).toEqual([]);
     expect(await store.listEffects()).toEqual([]);
     expect(await store.getSetting("presentation")).toEqual({ productName: "JohnOS" });
     expect(await store.listPackageStates()).toEqual([]);
     expect(await store.getAutomationRules()).toEqual([]);
+    store.close();
+  });
+
+  it("blocks retirement until a current verified Vault or explicit destroy intent exists", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-retirement-gate`);
+    await store.open();
+    await store.put(record("record-retirement"));
+    await expect(store.clear("VERIFIED_VAULT_EXPORT")).rejects.toThrow("Retirement is blocked");
+
+    const vault = await store.exportVault();
+    const vaultBytes = new TextEncoder().encode(JSON.stringify(vault, null, 2)).byteLength;
+    const authorization = await store.recordVerifiedVaultExport(vault, vaultBytes);
+    expect(authorization).toMatchObject({ kind: "VERIFIED_VAULT_EXPORT", recordCount: 1, sizeBytes: vaultBytes });
+    await store.put(record("record-retirement-new"));
+    await expect(store.clear("VERIFIED_VAULT_EXPORT")).rejects.toThrow("Retirement is blocked");
+    expect(await store.list()).toHaveLength(2);
+
+    await store.recordExplicitDestroyIntent();
+    await store.clear("EXPLICIT_DESTROY_INTENT");
+    expect(await store.list(true)).toEqual([]);
+    expect(await store.getRetirementAuthorization()).toBeUndefined();
     store.close();
   });
 

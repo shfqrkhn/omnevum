@@ -3,7 +3,7 @@ import { MAX_PORTABLE_ARTIFACT_BYTES } from "./artifact";
 import { VAULT_FORMAT_VERSION } from "./model";
 import { isSearchDocument, makeSearchDocument, SEARCH_INDEX_VERSION, searchDocuments, type SearchDocument, type SearchIndexMeta } from "./search";
 import { assertEffectOperation, type EffectOperation } from "./effect";
-import { withVaultIntegrity, verifyVaultIntegrity } from "./vault";
+import { fingerprintVault, withVaultIntegrity, verifyVaultIntegrity } from "./vault";
 import { assertCanonicalRecord, assertVaultDocument, assertVaultPackageState, isCanonicalRecord, isHistoryEntry, isVaultPackageAutomation, isVaultPackageState, MAX_VAULT_AUTOMATION_RULES, MAX_VAULT_PACKAGE_STATES } from "./validation";
 import { isViewDefinition, VIEW_SETTING } from "./compose";
 
@@ -16,6 +16,7 @@ const ARTIFACT_STORE = "artifactBlobs";
 const EFFECT_STORE = "effects";
 const PACKAGE_STATE_PREFIX = "packageState:";
 const AUTOMATION_RULES_SETTING_ID = "automation.rules";
+const RETIREMENT_AUTHORIZATION_SETTING_ID = "recovery.retirementAuthorization";
 
 function requestResult<T>(request: IDBRequest<T>): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -144,6 +145,26 @@ export interface CanonicalClearImpact {
   preservedRelationships: number;
   reversibilityWindowSeconds: number;
 }
+
+export type RetirementAuthorizationKind = "VERIFIED_VAULT_EXPORT" | "EXPLICIT_DESTROY_INTENT";
+
+interface RetirementAuthorizationBase {
+  kind: RetirementAuthorizationKind;
+  recordedAt: string;
+}
+
+export interface VerifiedVaultRetirementAuthorization extends RetirementAuthorizationBase {
+  kind: "VERIFIED_VAULT_EXPORT";
+  vaultFingerprint: string;
+  recordCount: number;
+  sizeBytes: number;
+}
+
+export interface ExplicitDestroyRetirementAuthorization extends RetirementAuthorizationBase {
+  kind: "EXPLICIT_DESTROY_INTENT";
+}
+
+export type RetirementAuthorization = VerifiedVaultRetirementAuthorization | ExplicitDestroyRetirementAuthorization;
 
 type PersistenceState = "GRANTED" | "DENIED" | "UNAVAILABLE";
 
@@ -279,7 +300,48 @@ export class CanonicalStore {
     this.publishChange({ kind: "CANONICAL_CHANGED", recordIds: writes.map(({ record }) => record.id) });
   }
 
-  public async clear(): Promise<void> {
+  public async recordVerifiedVaultExport(input: unknown, sizeBytes: number): Promise<VerifiedVaultRetirementAuthorization> {
+    const vault = await this.validateVaultInput(input);
+    if (!vault.integrity) throw new Error("Verified retirement export must carry a Vault integrity receipt");
+    if (!Number.isSafeInteger(sizeBytes) || sizeBytes <= 0) throw new Error("Verified retirement export size is invalid");
+    const authorization: VerifiedVaultRetirementAuthorization = {
+      kind: "VERIFIED_VAULT_EXPORT",
+      recordedAt: new Date().toISOString(),
+      vaultFingerprint: await fingerprintVault(vault),
+      recordCount: vault.records.length,
+      sizeBytes
+    };
+    await this.setSetting(RETIREMENT_AUTHORIZATION_SETTING_ID, authorization);
+    return authorization;
+  }
+
+  public async recordExplicitDestroyIntent(): Promise<ExplicitDestroyRetirementAuthorization> {
+    const authorization: ExplicitDestroyRetirementAuthorization = { kind: "EXPLICIT_DESTROY_INTENT", recordedAt: new Date().toISOString() };
+    await this.setSetting(RETIREMENT_AUTHORIZATION_SETTING_ID, authorization);
+    return authorization;
+  }
+
+  public async getRetirementAuthorization(): Promise<RetirementAuthorization | undefined> {
+    const value = await this.getSetting<unknown>(RETIREMENT_AUTHORIZATION_SETTING_ID);
+    if (!isRetirementAuthorization(value)) return undefined;
+    if (value.kind === "VERIFIED_VAULT_EXPORT") {
+      try {
+        const current = await this.exportVault();
+        if (await fingerprintVault(current) !== value.vaultFingerprint) return undefined;
+      } catch {
+        return undefined;
+      }
+    }
+    return structuredClone(value);
+  }
+
+  public async clear(authorizationKind: RetirementAuthorizationKind): Promise<void> {
+    const authorization = await this.getRetirementAuthorization();
+    if (!authorization || authorization.kind !== authorizationKind) throw new Error("Retirement is blocked until a verified Vault export or explicit destroy intent is recorded");
+    if (authorization.kind === "VERIFIED_VAULT_EXPORT") {
+      const current = await this.exportVault();
+      if (await fingerprintVault(current) !== authorization.vaultFingerprint) throw new Error("Verified Vault export is stale; export and read back the current state before retirement");
+    }
     const settings = await requestResult(this.requireDatabase().transaction(SETTINGS_STORE, "readonly").objectStore(SETTINGS_STORE).getAll());
     const packageSettingIds = settings
       .filter((setting) => typeof setting?.id === "string" && setting.id.startsWith(PACKAGE_STATE_PREFIX))
@@ -294,6 +356,7 @@ export class CanonicalStore {
     const settingsStore = transaction.objectStore(SETTINGS_STORE);
     packageSettingIds.forEach((id) => settingsStore.delete(id));
     settingsStore.delete(AUTOMATION_RULES_SETTING_ID);
+    settingsStore.delete(RETIREMENT_AUTHORIZATION_SETTING_ID);
     try {
       await transactionDone(transaction);
     } catch (error) {
@@ -915,6 +978,16 @@ function storageWriteError(error: unknown): Error {
 
 function isRawArtifactRecord(value: unknown): value is { id: string; recordType: "artifact"; data?: unknown } {
   return typeof value === "object" && value !== null && !Array.isArray(value) && typeof (value as { id?: unknown }).id === "string" && (value as { id: string }).id.length > 0 && (value as { id: string }).id.length <= 160 && (value as { recordType?: unknown }).recordType === "artifact";
+}
+
+function isRetirementAuthorization(value: unknown): value is RetirementAuthorization {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const candidate = value as { kind?: unknown; recordedAt?: unknown; vaultFingerprint?: unknown; recordCount?: unknown; sizeBytes?: unknown };
+  if ((candidate.kind !== "VERIFIED_VAULT_EXPORT" && candidate.kind !== "EXPLICIT_DESTROY_INTENT") || typeof candidate.recordedAt !== "string") return false;
+  if (candidate.kind === "EXPLICIT_DESTROY_INTENT") return true;
+  const recordCount = candidate.recordCount;
+  const sizeBytes = candidate.sizeBytes;
+  return typeof candidate.vaultFingerprint === "string" && candidate.vaultFingerprint.length === 64 && typeof recordCount === "number" && Number.isSafeInteger(recordCount) && recordCount >= 0 && typeof sizeBytes === "number" && Number.isSafeInteger(sizeBytes) && sizeBytes > 0;
 }
 
 function rawArtifactMimeType(candidate: { data?: unknown }, blob: Blob): string {
