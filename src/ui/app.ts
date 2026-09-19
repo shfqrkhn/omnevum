@@ -198,17 +198,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </div>
       </section>
 
-      <section id="active-lens" class="panel" aria-labelledby="active-lens-heading">
-        <div class="section-heading">
-          <div>
-            <p id="active-lens-label" class="eyebrow">${copy.lenses}</p>
-            <h2 id="active-lens-heading">${PRESENTATION_LENS_DEFINITIONS[presentation.activeLens].label}</h2>
-          </div>
+      <details id="active-lens" class="panel compact-panel" aria-labelledby="active-lens-heading">
+        <summary class="compact-summary section-heading">
+          <span class="compact-summary-copy"><p id="active-lens-label" class="eyebrow">${copy.lenses}</p><h2 id="active-lens-heading">${PRESENTATION_LENS_DEFINITIONS[presentation.activeLens].label}</h2></span>
           <span id="active-lens-status" class="status-pill">${copy.lensPinned}</span>
-        </div>
+        </summary>
         <p id="active-lens-hint" class="hint">${copy.lensHint}</p>
         <ul id="active-lens-records" class="record-list"></ul>
-      </section>
+      </details>
 
       <dialog id="record-detail-dialog" aria-labelledby="record-detail-heading" aria-describedby="record-detail-context">
         <div class="record-detail-content">
@@ -545,9 +542,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </div>
       </details>
 
-      <section id="search" class="panel" aria-labelledby="search-heading">
-        <p class="eyebrow">${copy.searchExplore}</p>
-        <h2 id="search-heading">${copy.findCaptures}</h2>
+      <details id="search" class="panel compact-panel" aria-labelledby="search-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.searchExplore}</p><h2 id="search-heading">${copy.findCaptures}</h2></span></summary>
         <form id="search-form" class="search-form">
           <label for="search-query">${copy.searchTerms}</label>
           <div class="form-row search-row">
@@ -573,7 +569,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <p id="search-scope-status" class="hint"></p>
           <p id="search-status" class="hint" role="status"></p>
         </form>
-      </section>
+      </details>
 
       <details id="spaces" class="panel compact-panel" aria-labelledby="spaces-heading" data-section-disclosure>
         <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.space}</p><h2 id="spaces-heading">${copy.scopeWithoutCopying}</h2></span></summary>
@@ -656,14 +652,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <div id="compose-preview" class="compose-preview" aria-live="polite"></div>
       </details>
 
-      <section id="review" class="panel" aria-labelledby="review-heading">
-        <div class="section-heading">
-          <div>
-          <p class="eyebrow">${copy.triage}</p>
-            <h2 id="review-heading">${copy.reviewInbox}</h2>
-          </div>
+      <details id="review" class="panel compact-panel" aria-labelledby="review-heading" data-section-disclosure>
+        <summary class="compact-summary section-heading">
+          <span class="compact-summary-copy"><p class="eyebrow">${copy.triage}</p><h2 id="review-heading">${copy.reviewInbox}</h2></span>
           <span id="review-count" class="count" aria-label="${copy.inboxCount}">0</span>
-        </div>
+        </summary>
         <div id="triage-batch" class="triage-batch" hidden>
           <label class="check-row" for="triage-select-all"><input id="triage-select-all" type="checkbox" /> ${copy.triageSelectAll}</label>
           <span id="triage-selected" class="hint">${copy.triageSelected(0)}</span>
@@ -694,7 +687,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <ul id="review-list" class="record-list"></ul>
         <p id="triage-status" class="hint" role="status"></p>
         <p id="review-empty" class="empty-state">${copy.inboxClear}</p>
-      </section>
+      </details>
 
       <details id="relate" class="panel compact-panel" aria-labelledby="relate-heading" data-section-disclosure>
         <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.relate}</p><h2 id="relate-heading">${copy.connectWithoutCopying}</h2></span></summary>
@@ -868,14 +861,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </form>
       </details>
 
-      <section id="records" class="panel" aria-labelledby="records-heading">
-        <div class="section-heading">
-          <div>
-            <div class="editable-term"><p id="records-label" class="eyebrow">${copy.canonicalRecords}</p><button id="edit-records-label" class="secondary term-edit-button" type="button">${copy.editLabel}</button></div>
-            <h2 id="records-heading">${copy.recentCaptures}</h2>
-          </div>
+      <details id="records" class="panel compact-panel" aria-labelledby="records-heading" data-section-disclosure>
+        <summary class="compact-summary section-heading">
+          <span class="compact-summary-copy"><p id="records-label" class="eyebrow">${copy.canonicalRecords}</p><h2 id="records-heading">${copy.recentCaptures}</h2></span>
           <span id="record-count" class="count" aria-label="${copy.recordCount}">0</span>
-        </div>
+        </summary>
+        <div class="editable-term compact-inline-control"><button id="edit-records-label" class="secondary term-edit-button" type="button">${copy.editLabel}</button></div>
         <ul id="record-list" class="record-list"></ul>
         <p id="empty-state" class="empty-state">${copy.nothingCaptured}</p>
         <div id="undo-banner" class="undo-banner" role="status" hidden>
@@ -890,7 +881,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <ul id="archive-list" class="record-list"></ul>
           <p id="archive-empty" class="empty-state">${copy.noArchived}</p>
         </div>
-      </section>
+      </details>
 
       <details id="recovery" class="panel compact-panel" aria-labelledby="recovery-heading" data-section-disclosure>
         <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h2 id="recovery-heading">${copy.keepPortable}</h2></span></summary>
@@ -1223,6 +1214,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const activeLensStatus = root.querySelector<HTMLElement>("#active-lens-status");
   const activeLensHint = root.querySelector<HTMLElement>("#active-lens-hint");
   const activeLensRecords = root.querySelector<HTMLUListElement>("#active-lens-records");
+  const activeLensDisclosure = root.querySelector<HTMLDetailsElement>("#active-lens");
+  const reviewDisclosure = root.querySelector<HTMLDetailsElement>("#review");
+  const recordsDisclosure = root.querySelector<HTMLDetailsElement>("#records");
   const lensPinOptions = root.querySelector<HTMLElement>("#lens-pin-options");
   const recordDetailDialog = root.querySelector<HTMLDialogElement>("#record-detail-dialog");
   const recordDetailContext = root.querySelector<HTMLElement>("#record-detail-context");
@@ -1297,7 +1291,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const packageAutomationStatus = root.querySelector<HTMLElement>("#package-automation-status");
   const packageAutomationList = root.querySelector<HTMLUListElement>("#package-automation-list");
   const packageAutomationProposals = root.querySelector<HTMLUListElement>("#package-automation-proposals");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchFiltersToggle || !searchFilters || !searchFacetChips || !searchFacetLens || !searchFacetType || !searchFacetSpace || !searchFacetArtifact || !searchViewName || !searchSaveView || !searchScopeStatus || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !insightsDisclosure || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !triageBatch || !triageSelectAll || !triageSelected || !triageBatchDeferUntil || !triageBatchReview || !triageBatchDefer || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !contextExportFormat || !contextExportObjective || !contextExportBudget || !contextExportButton || !contextExportRerunButton || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavMenu || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchFiltersToggle || !searchFilters || !searchFacetChips || !searchFacetLens || !searchFacetType || !searchFacetSpace || !searchFacetArtifact || !searchViewName || !searchSaveView || !searchScopeStatus || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !insightsDisclosure || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !triageBatch || !triageSelectAll || !triageSelected || !triageBatchDeferUntil || !triageBatchReview || !triageBatchDefer || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !contextExportFormat || !contextExportObjective || !contextExportBudget || !contextExportButton || !contextExportRerunButton || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavMenu || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput || !activeLensDisclosure || !reviewDisclosure || !recordsDisclosure) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!financeImportForm || !financeImportFile || !financeImportAccount || !financeImportCurrency || !financeImportOpening || !financeImportClosing || !financeImportStatus) {
@@ -1866,6 +1860,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const readLensPins = (): PresentationLensId[] => [...lensPinOptions.querySelectorAll<HTMLInputElement>("input[data-presentation-lens-pin]:checked")].map((input) => input.value as PresentationLensId);
   const isStandaloneDisplayMode = (): boolean => window.matchMedia?.("(display-mode: standalone)").matches === true || (navigator as Navigator & { standalone?: boolean }).standalone === true;
   let primaryNavDisclosureInitialized = false;
+  let reviewDisclosureChoice: boolean | undefined;
+  let recordsDisclosureChoice: boolean | undefined;
   const applyPresentationProfile = (): void => {
     root.dataset.theme = presentation.theme;
     root.dataset.family = presentation.family;
@@ -1967,7 +1963,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     try {
       await persistPresentation(parsePresentationProfile({ ...presentation, activeLens: id }), copy.savedName(PRESENTATION_LENS_DEFINITIONS[id].label));
       if (lensOverflowDialog.open) lensOverflowDialog.close();
-      document.querySelector<HTMLElement>("#active-lens")?.scrollIntoView({ block: "start" });
+      activeLensDisclosure.open = true;
+      activeLensDisclosure.scrollIntoView({ block: "start" });
     } catch (error) {
       lensNavStatus.textContent = describeError(error, "Lens selection was not saved; canonical data was not changed.");
     }
@@ -2033,6 +2030,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     if (accessibilityProfileInput.value !== "custom") accessibilityProfileInput.value = "custom";
   });
   applyPresentationProfile();
+
+  const rememberDisclosureChoice = (details: HTMLDetailsElement, setChoice: (choice: boolean) => void): void => {
+    details.addEventListener("click", (event) => {
+      if ((event.target as HTMLElement).closest("summary")) setChoice(!details.open);
+    });
+  };
+  rememberDisclosureChoice(reviewDisclosure, (choice) => { reviewDisclosureChoice = choice; });
+  rememberDisclosureChoice(recordsDisclosure, (choice) => { recordsDisclosureChoice = choice; });
 
   quickDensity.addEventListener("click", () => {
     const nextDensity = presentation.density === "compact" ? "comfortable" : "compact";
@@ -2999,6 +3004,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     reviewList.replaceChildren();
     reviewCount.textContent = formatNumber(presentation.locale, records.length);
     reviewEmpty.hidden = records.length > 0;
+    if (reviewDisclosureChoice === undefined && records.length > 0) reviewDisclosure.open = true;
     for (const record of [...records].reverse()) {
       const item = document.createElement("li");
       item.className = "record-item";
@@ -3840,6 +3846,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     recordCount.textContent = formatNumber(presentation.locale, records.length);
     emptyState.hidden = records.length > 0;
     emptyState.textContent = query.trim() ? copy.noMatching : copy.nothingCaptured;
+    if (recordsDisclosureChoice === undefined && records.length > 0) recordsDisclosure.open = true;
 
     const groupedRecords = new Map<PresentationLensId, CanonicalRecord[]>();
     for (const record of records) {
