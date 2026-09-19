@@ -159,7 +159,7 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "cc5959d899b4f5ba1d478f3aa735582ecf96240303d09975560628d1701b0e0c",
+        "sha256": "a536b0370e39f872f6eaa96448a611c22965b8d9487fb918e7c43326b64577e4",
         "bytes": 7978
       },
       {
@@ -189,7 +189,7 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "74a45e6090484142674906eaa03400d73438ad900b3393514b65ae731d295e41",
+        "sha256": "e8e419ece3ce77beea8518a59b939e33384ea09dc9d20bf0b73f7946bbce9f5e",
         "bytes": 85930
       },
       {
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "d5e46b0017665cfff85b2819619b9a8456a4cbb3a37c59ee460342b9f7fd6a50",
+        "sha256": "103da2b0f4ed47341706608c903024466dd02202604657be0941026668d89fdc",
         "bytes": 4028
       },
       {
@@ -269,7 +269,7 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "3e6c620d4c1836f06b911cff5971cf8e18dac8cf3c9d528eeb214398bcd9c0f3",
+        "sha256": "d4fba5906ec93a232e8e45b4a1c18ffeb49c6dfc411ea1e445d9bf98cef0efd5",
         "bytes": 360192
       },
       {
