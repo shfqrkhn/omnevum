@@ -3196,12 +3196,6 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     await renderShareGrants();
     await renderCleanupHistory();
     await renderActiveLens();
-    const healthBefore = await store.health();
-    if (!healthBefore.searchIndexValid) {
-      await store.rebuildSearchIndex();
-      if (capabilityRuntime) await capabilityRuntime.retry("core.search", undefined);
-      refreshCapabilityStatus();
-    }
     const healthAfter = await store.health();
     healthStatus.textContent = `${copy.healthMessage(healthAfter.activeRecords, healthAfter.archivedRecords, healthAfter.historyEntries, healthAfter.artifactPayloads, healthAfter.searchIndexValid ? copy.healthy : copy.degraded, healthAfter.storage?.pressure)} ${getStoragePersistenceNotice(presentation.locale, healthAfter.storage?.persistence ?? "UNAVAILABLE")}`;
     await renderEffects();
