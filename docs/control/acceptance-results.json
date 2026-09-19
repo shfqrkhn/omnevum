@@ -1720,9 +1720,10 @@
       "text": "A record detail surface is opened with a derived index deliberately degraded. Fields, relationships, history, and evidence all remain reachable through continuous scroll, the sticky segment bar jumps correctly and reports the in-view segment, relationships render as navigable references rather than editable copies, and every edit routes through the owning semantic command.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-canonical-lens-projection-and-detail-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-canonical-lens-projection-and-detail-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-degraded-index-detail-and-explicit-repair-receipt"
       ],
-      "notes": "Current Chromium receipt proves a shared detail surface with continuous Overview, Relationships, Evidence, and History segments, provenance/owner/ID metadata, navigable relationship references, and revision history. Deliberate derived-index degradation, edit-path breadth, strict target geometry, other engines, assistive technology, deployment, and human acceptance remain open."
+      "notes": "Current Chromium receipts prove a shared detail surface with continuous Overview, Relationships, Evidence, and History segments, provenance/owner/ID metadata, navigable relationship references, revision history, deliberate derived-index degradation, and explicit repair without canonical mutation. Edit-path breadth while degraded, sticky in-view announcements beyond the exercised controls, strict target geometry, other engines, assistive technology, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-113",

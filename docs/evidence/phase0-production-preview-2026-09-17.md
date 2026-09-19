@@ -1272,6 +1272,14 @@ The visible Capture form created one Work task and one Personal note. The task w
 
 This advances `OMN-ACC-106` and `OMN-ACC-112` to `PARTIAL` for deterministic multi-lens projection, shared-ID detail navigation, relationship references, metadata/provenance, history, and bounded evidence surfaces on current Chromium. It does not qualify deliberate derived-index degradation, every lens/domain mapping, strict 320px detail geometry, browser-family breadth, assistive technology, physical touch, deployment, or human acceptance; no completion claim is made.
 
+## Current v0.17.4 Chromium degraded-index detail and explicit repair receipt
+
+On 2026-09-19, the current built artifact at source revision `023aae6` was served from `dist/` at `http://127.0.0.1:4331/?search-degraded-preview=1` in a fresh Chromium origin. The bounded preview route deliberately invalidated only the derived search metadata before the app started; it did not alter canonical records. The visible Capture form created `degraded detail record`, and Records remained usable with health text `1 active, 0 archived, 1 revision snapshot(s), 0 artifact payload(s); search index degraded.`
+
+The record's visible `Open record` action opened the shared detail dialog while the degraded state remained active. Overview exposed canonical ID, owner, truth class, sensitivity, and provenance; Relationships, Evidence, and Revision history were all reachable through the sticky segment controls and rendered truthful empty/history content. No index rebuild occurred merely because Records or detail rendered. The visible Recovery `Repair search index` action then rebuilt the derived index, changed health to `search index healthy`, reported `Rebuilt the derived search index; canonical records were not changed.`, and left the detail closed with the canonical record intact.
+
+This advances `OMN-ACC-112` with receipt-bound deliberate degradation, continuous detail reachability, and explicit derived-state repair on current Chromium. It does not qualify every edit path while degraded, sticky in-view announcements beyond the exercised segment controls, strict 320px detail geometry, browser-family breadth, assistive technology, physical touch, deployment, or human acceptance; `OMN-ACC-112` remains `PARTIAL`.
+
 ## Current v0.17.4 Chromium bounded archive undo and hard-clear impact receipt
 
 On 2026-09-19, the current built artifact at source revision `79cd0de` was served from `dist/` at `http://127.0.0.1:4329/` in a fresh Chromium origin. `docs/control/release-evidence.json` binds it to artifact digest `8c8ffca20e76175ea8dd2b355ba59769274e7ead8097ffb560d39a613d006a42` and service-worker cache `omnevum-shell-64d0e3934748aa31`.
