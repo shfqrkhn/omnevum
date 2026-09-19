@@ -1671,9 +1671,10 @@
         "src/core/telemetry.ts",
         "src/core/telemetry.test.ts",
         "src/ui/app.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-telemetry-projection-and-health-line-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-telemetry-projection-and-health-line-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-loopback-telemetry-fault-preview-receipt"
       ],
-      "notes": "Source d9366c7 provides one shared telemetry projection for replication, backup, outbox, capability, conflict, and storage facts; targeted telemetry/i18n/storage tests passed 41 tests, and artifact ad8e8022265c3c6591a345aaab314bdbf370655a0bda55f4e59d41018538cfab with worker omnevum-shell-bf0f45c3fd008ef8 visibly renders truthful Edge health-line states on a clean localhost origin. Durable backup freshness/conflict persistence, browser-injected all-fault transitions, other targets/assistive technology/touch, deployment, and human acceptance remain open."
+      "notes": "Source d9366c7 provides the shared telemetry projection and source 14c62d0 adds a loopback-only preview; targeted telemetry/i18n/storage tests passed 41 and 44 tests respectively, and artifact 471cd9e84a6ef6642235ccf8b93ab0ebff0f37b36cb819d818c2572da311afee with worker omnevum-shell-526c6c6b4d9df45a visibly drives the actual Edge health line and Home through all five required synthetic escalation states plus a healthy no-escalation state. Durable backup freshness/conflict persistence, production fault injection, other targets/assistive technology/touch, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-108",
@@ -1817,9 +1818,10 @@
         "src/core/telemetry.ts",
         "src/core/telemetry.test.ts",
         "src/ui/app.ts",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-telemetry-escalation-and-home-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-telemetry-escalation-and-home-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-loopback-telemetry-fault-preview-receipt"
       ],
-      "notes": "Source 58eb5ef adds bounded local telemetry thresholds, attention-only Home projection, evidence text, and persisted dismiss/restore dispositions without background notification or engagement metrics; targeted telemetry/i18n/storage tests passed 43 tests, and artifact ab4d33218fcf7b6189893fc306bffe95eea85ef23d51407c9f006a281a73e96e with worker omnevum-shell-80df96c347044563 visibly exposes a capability-degraded Home item, dismiss/restore, and adjustable threshold controls in Edge on a clean localhost origin. Durable backup/conflict/replication facts, all injected fault transitions, other targets/assistive technology/touch, deployment, and human acceptance remain open."
+      "notes": "Source 58eb5ef provides thresholds and dispositions, while source 14c62d0 provides a loopback-only qualification path; targeted telemetry/i18n/storage tests passed 43 and 44 tests, and artifact 471cd9e84a6ef6642235ccf8b93ab0ebff0f37b36cb819d818c2572da311afee with worker omnevum-shell-526c6c6b4d9df45a visibly exposes all five synthetic threshold items with evidence and Dismiss controls, plus healthy mode with no Home escalation. Durable backup/conflict/replication facts, production and browser-injected transitions, other targets/assistive technology/touch, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-119",

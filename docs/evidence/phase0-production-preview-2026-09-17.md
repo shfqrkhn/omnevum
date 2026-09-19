@@ -1386,3 +1386,11 @@ The telemetry owner now applies bounded local thresholds for backup age, pending
 The current Edge localhost artifact at `http://localhost:4337/` on a clean distinct origin visibly rendered `Runtime telemetry: capability Telemetry capability: DEGRADED. Evidence: core.search` with `Dismiss item`. After dismissal and reload, the same evidence remained visible with `Restore item`; expanding `Telemetry thresholds` exposed the local backup/outbox/conflict controls and the no-background-notification boundary. No external data or credential was used.
 
 This advances `OMN-ACC-118` to `PARTIAL` only. It does not qualify durable backup/conflict/replication facts, browser-injected transitions for every threshold, other engines/mobile/assistive technology, physical touch, deployment, or human acceptance; the clean-origin capability degradation is target-local evidence rather than full fault-injection coverage.
+
+## Current v0.17.4 Chromium loopback telemetry fault preview receipt
+
+On 2026-09-19, source `14c62d0` passed `npm run typecheck`, targeted `npx vitest run src/core/telemetry.test.ts src/core/i18n.test.ts src/core/storage.test.ts` (`44` tests passed), and `npm run build`. The exact artifact is bound in `docs/control/release-evidence.json` to digest `471cd9e84a6ef6642235ccf8b93ab0ebff0f37b36cb819d818c2572da311afee` and service-worker cache `omnevum-shell-526c6c6b4d9df45a`.
+
+A loopback-only `telemetry-preview=all` path drove the actual built health-line/Home projection through backup `STALE`, outbox `BACKLOGGED`, capability `DEGRADED`, conflict `UNRESOLVED`, and storage `ELEVATED`; each Home item displayed explicit evidence and Dismiss item, while the health line stated `Telemetry preview all: synthetic loopback state; canonical data unchanged.` A separate `telemetry-preview=healthy` path rendered replication `DISABLED`, backup `CURRENT`, outbox `CLEAR`, capability `READY`, conflicts `CLEAR`, and storage `NORMAL` with `Nothing deserves attention.` The preview parser rejects non-loopback hosts and unknown modes; unit tests cover the preview matrix and no canonical writes were performed.
+
+This strengthens `OMN-ACC-107` and `OMN-ACC-118` as `PARTIAL` only. It does not qualify production fault injection, durable backup/conflict/replication routes, other engines/mobile/assistive technology, physical touch, deployment, or human acceptance.
