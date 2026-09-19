@@ -1803,8 +1803,11 @@
         "line": 4156
       },
       "text": "The Assistant is invoked standalone and from a record. Both report the same scope model; the record entry defaults to that record and its authorized relationships and states the bound; neither entry silently widens context. Every proposed action names its semantic command and affected records and requires explicit confirmation. With all AI routes disabled both entries degrade honestly and no core function becomes unreachable.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-bounded-assistant-surface-receipt"
+      ],
+      "notes": "The compact Assistant is reachable standalone and from record detail, carries the same explicit scope model, reports no configured provider and local-only disclosure, and disables submission while AI routes are unavailable. Provider-backed proposals, semantic-command confirmation, and broader target/accessibility evidence remain open."
     },
     {
       "id": "OMN-ACC-116",
@@ -2048,8 +2051,11 @@
         "line": 4186
       },
       "text": "The same fixed application state is rendered in Alpha, Beta, and Gamma across Home, Capture, an active lens, Assistant, and System/Recovery. Family-specific typography, spacing/grouping, separators, and metadata treatment match Sections 3.6 and 3.8, while consideration membership/order, evidence/uncertainty, Capture provenance, lens reachability, record identity, Assistant scope, telemetry facts, admitted commands, and Recovery reachability remain semantically identical.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-bounded-assistant-surface-receipt"
+      ],
+      "notes": "The Assistant now uses the shared presentation section and scope owner across standalone and record entry points, including honest disabled-route state. A fixed-state Alpha/Beta/Gamma comparison across every required surface remains open."
     },
     {
       "id": "OMN-ACC-131",

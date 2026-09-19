@@ -3,17 +3,17 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "41addac84703bcc9801eded8f20785ee353c4945b6ff3608f43e5ef70bb08f98", "sourceRevision": "2444ae2f7df412a9f45d9dc98b211d90ba49f21f", "serviceWorkerCache": "omnevum-shell-739a7e75c1912398"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "dc888c7b995f5c8a4afa54ef6b0f1db137ab6cd3275f95116a3bfe19821168b3", "sourceRevision": "f72114df35d83f2fd5b1e217d4e5519e81cf2986", "serviceWorkerCache": "omnevum-shell-cb18be29c89c5f0a"},
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF; captured after the full npm run build on 2026-09-19.",
   "artifactFiles": [
-    {"path": "dist/assets/index-Dnz4DCRL.css", "sha256": "7265c5b531391a279c148c93f213f1422fbf499d1527ff3644d471332e84d8ae", "bytes": 24686},
-    {"path": "dist/assets/index-B1XoGFnS.js", "sha256": "024141c13d3d184882e22abfe8531aed04dd8c0b6121ca89468b396b41d5b8ec", "bytes": 513543},
-    {"path": "dist/assets/index-B1XoGFnS.js.map", "sha256": "4045175365b4a487e58adff0766c0dfa99d910d7d991fbec0949411e03209146", "bytes": 1481574},
+    {"path": "dist/assets/index-DdwXHC_4.css", "sha256": "e12d9258c598299e1f7aa983b8c5b999a9807052eb59d681935a752048bd1062", "bytes": 24884},
+    {"path": "dist/assets/index-HM78s1Ys.js", "sha256": "c353855286f585825d2d7d79071e340ef1245e520a7b62600397e46ddf908d65", "bytes": 518155},
+    {"path": "dist/assets/index-HM78s1Ys.js.map", "sha256": "23e3a45f0020c08d91592cf5b5461952021806ba05a47343994d652e9b71e7b7", "bytes": 1491474},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "af4a8345597c006b00232a2f255ea57c360966233490678e688b2086905b32d6", "bytes": 933},
+    {"path": "dist/index.html", "sha256": "50dd7813ee0c7fb234d1be6fc4ee212e4178a01bcf1c6021d9977b7872807171", "bytes": 933},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
     {"path": "dist/recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
-    {"path": "dist/sw.js", "sha256": "6e7af5d974428b25b57137102ec9ef123b58c4b78137dca20b87254435028e74", "bytes": 3501}
+    {"path": "dist/sw.js", "sha256": "8980c72ab54d16108563b254bac65c1931806c9d9b5e412a2cc73997f87d4b3f", "bytes": 3501}
   ],
   "requiredEvidence": [
     "control-generation-and-drift",

@@ -59,7 +59,9 @@ const prior = sourceSurface(predecessorApp, predecessorPresentation);
 assert(current.requiredCaptureFields.join(",") === prior.requiredCaptureFields.join(","), "daily Capture required fields changed");
 assert(current.requiredFinanceFields.join(",") === prior.requiredFinanceFields.join(","), "Finance required fields changed");
 assert(current.manualClassificationFields === prior.manualClassificationFields, "manual classification burden changed");
-assert(current.defaultNavigation.join(",") === prior.defaultNavigation.join(","), "daily navigation spine changed");
+const priorNavigationPreserved = current.defaultNavigation.filter((id) => prior.defaultNavigation.includes(id));
+assert(priorNavigationPreserved.join(",") === prior.defaultNavigation.join(","), "daily navigation spine order changed");
+assert(current.defaultNavigation.includes("assistant"), "bounded Assistant is missing from the default reachable surfaces");
 assert(current.financeHandlerConfirmationsPerSubmission === 1, "Finance acceptance must retain one explicit confirmation boundary");
 assert(current.financeBatchOwner && current.financeBatchFileInput, "current Finance flow is not batch-capable");
 assert(current.financePerSourceReview, "batch flow must retain per-source review output");
@@ -83,6 +85,7 @@ const benchmark = {
   },
   invariants: [
     "Capture/Search remain in the default navigation spine.",
+    "Assistant is reachable from the default navigation while its low-frequency body remains collapsed and honestly disabled without a provider.",
     "The batch form preserves the two required Finance fields and derives source classification.",
     "One confirmation covers the batch while source-level reconciliation and limitations remain reviewable.",
     "Compact disclosures preserve the complete forms and canonical command owners."
