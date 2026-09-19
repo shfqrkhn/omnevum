@@ -1946,8 +1946,19 @@
         "line": 4178
       },
       "text": "The export surface is reached from System with no retention prompt, reason-for-leaving question, or added friction, and each of the full Vault, human-readable, and artifact-originals exports states its record count and size and is read back successfully with Omnevum absent. The guided retirement flow then refuses to wipe until an export has been read back and verified within the flow, or until the user separately and explicitly records intent to destroy without retaining a copy; retirement is never initiated by the system, an update, or storage pressure.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/portable-export.ts",
+        "src/core/portable-export.test.ts",
+        "src/core/storage.ts#recordVerifiedVaultExport",
+        "src/core/storage.ts#recordExplicitDestroyIntent",
+        "src/core/storage.ts#clear",
+        "src/core/storage.test.ts#blocks-retirement-until-a-current-verified-vault-or-explicit-destroy-intent-exists",
+        "src/ui/app.ts#recovery-data-exit",
+        "src/ui/app.ts#retirement-export-input",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-portable-export-and-retirement-gate-receipt"
+      ],
+      "notes": "Current source 6658dfb and exact artifact digest 5f49beade720b9f27c84d2c47d90df228b6235331cbca1ab6455541e31920109 with worker omnevum-shell-760cc8a95fe3c2a3 add bounded human-readable and artifact-originals export projections with deterministic sizes, plus a storage-owned retirement gate. Unit tests prove integrity-checked full-Vault authorization becomes stale after canonical change, explicit destroy intent is separate, and clear removes modeled canonical/recovery state while retaining presentation settings. Current Chromium reachability shows the compact Data exit disclosure, export controls, readback verifier, and disabled hard-clear before authorization. Omnevum-absent readback, artifact-bearing browser interaction, cross-origin/offline/native copy enumeration, deployment, other targets, assistive technology, and human acceptance remain open, so the scenario remains PARTIAL."
     },
     {
       "id": "OMN-ACC-127",
