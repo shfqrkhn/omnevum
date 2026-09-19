@@ -1425,6 +1425,12 @@ On 2026-09-19, source `7f90354d77ac0e4c1614a28c6bde240609b27eaf` was checked out
 
 This is current repository-control evidence for `OMN-ACC-172`/fresh-agent resumability only. The benchmark did not prove descendant package contract inheritance or any product support/browser/human-acceptance claim.
 
+## Current v0.17.4 exact fresh-agent resume receipt
+
+On 2026-09-19, exact clean revision `d40b2e5e47b95a60d68f1bfd52974e9b3f4a7df1` completed `npm run benchmark:fresh-agent`. The detached clean clone reported `FRESH_AGENT_NPM_CI_PASS`, `FRESH_AGENT_RECOVERY_AUDIT_PASS`, `FRESH_AGENT_CI_PASS`, `FRESH_AGENT_FACTORY_INTERRUPTION_PASS`, and `FRESH_AGENT_RESUME_PASS revision=d40b2e5e47b95a60d68f1bfd52974e9b3f4a7df1 clean-clone=true original-conversation=false`; the factory benchmark reported both expected-stop and resume passes. The temporary worktree was removed after verification.
+
+This binds current control/recovery resumability for `OMN-ACC-172` only. It does not promote package descendants, product support rows, external deployment, or human acceptance to PASS.
+
 ## Current v0.17.4 Finance model, allocation, risk, and scenario receipt
 
 On 2026-09-19, source `8483af1` passed `npm run typecheck`, focused `npx vitest run src/core/finance-model.test.ts` (`5` tests passed), and the full `npm run ci` gate reached typecheck, unit tests (`58` files, `245` passed, `1` skipped), build, and static validation before correctly stopping on the stale release receipt. The release receipt was then refreshed to the exact rebuilt artifact digest `8e30a24f7e0787bff848f841758fe184a849883686efad69ec428b7120177115` and service-worker cache `omnevum-shell-926acf1a537055bb`; `npm run audit:static` returned `STATIC_AUDIT_PASS`.

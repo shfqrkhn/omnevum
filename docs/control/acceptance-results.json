@@ -2448,9 +2448,9 @@
       "text": "A generated first-party package or durable workflow is handed to a fresh qualified engineer without chat history or this MPES. Its native project/spec/manifest and referenced public contracts contain or enforce the applicable local truth, authority, privacy/security, accessibility, update/invalidation, verification, recovery, versioning, maintenance, retirement, and onward-descendant obligations needed to continue correctly. A generated non-self-executing artifact that cannot carry such behavior is instead protected by an explicit generation/validation/update boundary; no applicable requirement disappears merely because the descendant medium is simpler.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-fresh-agent-and-factory-resume-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-exact-fresh-agent-resume-receipt"
       ],
-      "notes": "The current clean-clone fresh-agent benchmark resumes from the committed ledger/control state without the original conversation, runs npm ci/npm run ci, Recovery audit, and factory interruption/resume benchmark. Descendant package/workflow contract inheritance beyond the current factory benchmark remains open."
+      "notes": "The exact current clean-clone benchmark at d40b2e5 resumes from committed ledger/control state without the original conversation, runs npm ci/npm run ci, Recovery audit, and factory interruption/resume benchmark. Descendant package/workflow contract inheritance beyond the current factory benchmark remains open."
     }
   ]
 }
