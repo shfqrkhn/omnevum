@@ -1,8 +1,8 @@
 import { projectDependencyGraph, projectDependencyImpact, type DependencyGraph, type DependencyImpact } from "./dependency-graph";
-import { parseMoney, type MoneyValue } from "./money";
+import { addMoney, parseMoney, type MoneyValue } from "./money";
 import type { CanonicalRecord, TruthClass } from "./model";
 import type { FinanceLineage, FinanceTransaction, FinanceTransactionStatus } from "./finance";
-import { allocateFinanceResource, assessFinanceDataQuality, analyzeFinanceGraph, detectFinanceReviewCases, inferFinanceRecurringPatterns, summarizeFinanceTransactions, type FinanceAllocationResult, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastVintage, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceReviewCase, type FinanceTransactionSummary } from "./finance-model";
+import { allocateFinanceResource, assessFinanceDataQuality, analyzeFinanceGraph, detectFinanceReviewCases, inferFinanceRecurringPatterns, projectFinanceGoal, summarizeFinanceTransactions, type FinanceAllocationResult, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastVintage, type FinanceGoalPlan, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceReviewCase, type FinanceTransactionSummary } from "./finance-model";
 
 /**
  * Read-only Finance projection over canonical records and the shared typed
@@ -32,6 +32,7 @@ export interface FinanceProjection {
   financeGraph: FinanceDependencyGraph;
   financeGraphAnalysis: FinanceGraphAnalysis;
   financeAllocationResults: Array<{ resourceId: string; result: FinanceAllocationResult }>;
+  financeGoalPlans: Array<{ recordId: string; plan: FinanceGoalPlan }>;
   invalidatedFinanceIds: string[];
   forecastVintages: FinanceForecastVintage[];
 }
@@ -86,6 +87,28 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
     const allocations = financeGraph.edges.filter((edge) => edge.from === resource.id && edge.kind === "ALLOCATION" && edge.allocation).map((edge) => ({ id: edge.id, resourceId: resource.id, goalId: edge.to, amount: edge.allocation!, mode: edge.allocationMode ?? "EXCLUSIVE", evidence: edge.evidence }));
     return [{ resourceId: resource.id, result: allocateFinanceResource(money, allocations, {}, resource.id) }];
   });
+  const fundedByGoal = new Map<string, MoneyValue>();
+  for (const allocation of financeAllocationResults) {
+    for (const [goalId, amount] of Object.entries(allocation.result.byGoal)) {
+      const current = fundedByGoal.get(goalId);
+      if (!current) fundedByGoal.set(goalId, amount);
+      else if (current.currency === amount.currency) fundedByGoal.set(goalId, addMoney(current, amount));
+    }
+  }
+  const financeGoalPlans = activeRecords.filter((record) => record.data.kind === "finance-goal").flatMap((goal) => {
+    const target = recordMoneyField(goal, "targetAmountMinor");
+    if (!target) return [];
+    const funded = fundedByGoal.get(goal.id);
+    const sustainable = recordMoneyField(goal, "sustainableMonthlySurplusMinor");
+    const targetDate = typeof goal.data.targetDate === "string" && /^\d{4}-\d{2}-\d{2}$/.test(goal.data.targetDate) ? goal.data.targetDate : undefined;
+    if (funded && funded.currency !== target.currency) return [];
+    if (sustainable && sustainable.currency !== target.currency) return [];
+    try {
+      return [{ recordId: goal.id, plan: projectFinanceGoal({ goalId: goal.id, target, funded: funded ?? parseMoney("0", target.currency), ...(targetDate ? { targetDate } : {}), ...(sustainable ? { sustainableMonthlySurplus: sustainable } : {}) }) }];
+    } catch {
+      return [];
+    }
+  });
   const invalidatedFinanceIds = dependencyImpact.invalidatedDerivedIds.filter((id) => financeNodeIds.has(id)).sort();
   const status = transactions.length === 0 ? "NO_DATA" : quality.status === "SUFFICIENT" && reviewCases.length === 0 ? "READY" : "LIMITED";
   return {
@@ -104,6 +127,7 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
     financeGraph,
     financeGraphAnalysis,
     financeAllocationResults,
+    financeGoalPlans,
     invalidatedFinanceIds,
     forecastVintages: [...(options.forecastVintages ?? [])]
   };
@@ -165,6 +189,17 @@ function financeNodeLabel(record: CanonicalRecord): string {
 
 function recordMoney(record: CanonicalRecord): MoneyValue | undefined {
   const amount = typeof record.data.amountMinor === "string" || typeof record.data.amountMinor === "number" ? String(record.data.amountMinor) : "";
+  const currency = typeof record.data.currency === "string" ? record.data.currency : "";
+  if (!/^-?\d+$/.test(amount) || !currency) return undefined;
+  try {
+    return { amountMinor: BigInt(amount).toString(), currency: parseMoney("0", currency).currency };
+  } catch {
+    return undefined;
+  }
+}
+
+function recordMoneyField(record: CanonicalRecord, field: string): MoneyValue | undefined {
+  const amount = typeof record.data[field] === "string" || typeof record.data[field] === "number" ? String(record.data[field]) : "";
   const currency = typeof record.data.currency === "string" ? record.data.currency : "";
   if (!/^-?\d+$/.test(amount) || !currency) return undefined;
   try {

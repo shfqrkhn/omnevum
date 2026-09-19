@@ -67,4 +67,13 @@ describe("canonical Finance projection", () => {
     expect(projection.financeAllocationResults[0]?.result.conflictIds).toEqual(["RESOURCE_OVER_ALLOCATED"]);
     expect(projection.financeGraph.edges.some((edge) => edge.allocation?.currency === "CAD" && edge.allocation.amountMinor === "7000")).toBe(true);
   });
+
+  it("projects canonical Finance goals from shared resource allocations", () => {
+    const resource = record("resource-1", { kind: "finance-resource", label: "surplus", text: "Surplus", amountMinor: "10000", currency: "CAD" });
+    const goal = record("finance-goal-1", { kind: "finance-goal", label: "Emergency", text: "Emergency", targetAmountMinor: "15000", currency: "CAD", targetDate: "2099-01-01", sustainableMonthlySurplusMinor: "1000" });
+    const allocation = record("allocation-1", { kind: "dependency-link", version: 1, sourceId: resource.id, targetId: goal.id, edgeKind: "ALLOCATION", allocationMode: "EXCLUSIVE", allocation: { amountMinor: "7000", currency: "CAD" }, status: "ACTIVE", label: "reserve", text: "allocation" }, { recordType: "relationship", owner: "platform.dependency" });
+    const projection = projectFinanceState([resource, goal, allocation]);
+    expect(projection.financeGoalPlans).toHaveLength(1);
+    expect(projection.financeGoalPlans[0]?.plan).toMatchObject({ goalId: goal.id, funded: { amountMinor: "7000", currency: "CAD" }, remaining: { amountMinor: "8000", currency: "CAD" }, fundingConflict: false });
+  });
 });

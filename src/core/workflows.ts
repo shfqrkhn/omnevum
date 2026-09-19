@@ -32,6 +32,52 @@ export async function captureExpense(commands: CommandBus, input: ExpenseInput):
   });
 }
 
+export interface FinancePlanInput {
+  kind: "resource" | "goal";
+  label: string;
+  amount: string;
+  currency: string;
+  space: SpaceId;
+  targetDate?: string;
+  sustainableMonthlySurplus?: string;
+}
+
+/** Persist a bounded Finance resource or goal through the shared command owner. */
+export async function captureFinancePlan(commands: CommandBus, input: FinancePlanInput): Promise<CanonicalRecord> {
+  const label = input.label.trim().slice(0, 160);
+  if (!label) throw new Error("Finance plan label is required");
+  const amount = parseMoney(input.amount, input.currency);
+  if (BigInt(amount.amountMinor) < 0n) throw new Error("Finance plan amount cannot be negative");
+  if (input.kind === "resource") {
+    return commands.create({
+      recordType: "observation",
+      owner: "domain.finance",
+      truthClass: "USER_OBSERVATION",
+      data: { kind: "finance-resource", label, text: `${label}: ${amount.amountMinor} ${amount.currency} minor units`, amountMinor: amount.amountMinor, currency: amount.currency, space: input.space, triageStatus: "REVIEWED" }
+    });
+  }
+  const targetDate = input.targetDate?.trim();
+  if (targetDate && (!/^\d{4}-\d{2}-\d{2}$/.test(targetDate) || !Number.isFinite(new Date(`${targetDate}T00:00:00.000Z`).getTime()))) throw new Error("Finance goal target date is invalid");
+  const sustainableMonthlySurplus = input.sustainableMonthlySurplus?.trim() ? parseMoney(input.sustainableMonthlySurplus.trim(), input.currency) : undefined;
+  if (sustainableMonthlySurplus && BigInt(sustainableMonthlySurplus.amountMinor) < 0n) throw new Error("Finance goal monthly surplus cannot be negative");
+  return commands.create({
+    recordType: "observation",
+    owner: "domain.finance",
+    truthClass: "ASSUMPTION",
+    data: {
+      kind: "finance-goal",
+      label,
+      text: `${label}: target ${amount.amountMinor} ${amount.currency} minor units`,
+      targetAmountMinor: amount.amountMinor,
+      currency: amount.currency,
+      space: input.space,
+      ...(targetDate ? { targetDate } : {}),
+      ...(sustainableMonthlySurplus ? { sustainableMonthlySurplusMinor: sustainableMonthlySurplus.amountMinor } : {}),
+      triageStatus: "REVIEWED"
+    }
+  });
+}
+
 export async function captureHealthMeasurement(commands: CommandBus, input: HealthMeasurementInput): Promise<CanonicalRecord> {
   const metric = input.metric.trim().slice(0, 160);
   const subjectId = input.subjectId.trim().slice(0, 160);

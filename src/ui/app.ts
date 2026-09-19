@@ -13,7 +13,7 @@ import { projectDueReminderConsiderations } from "../core/considerations";
 import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/crypto";
 import { MAX_VAULT_JSON_BYTES, parseVault } from "../core/vault";
 import type { CanonicalStore } from "../core/storage";
-import { captureExpense, captureHealthMeasurement } from "../core/workflows";
+import { captureExpense, captureFinancePlan, captureHealthMeasurement } from "../core/workflows";
 import { acceptFinanceTransactions, createFinanceSourceId, deduplicateFinanceTransactions, parseFinanceCsv, reconcileFinanceStatement, type FinanceStatementSource } from "../core/finance";
 import { formatMoney, parseMoney } from "../core/money";
 import { summarizeFinanceTransactions } from "../core/finance-model";
@@ -493,6 +493,29 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <p class="hint">${copy.financeHint}</p>
             <button type="submit">${copy.saveExpense}</button>
             <p id="expense-status" class="hint" role="status"></p>
+          </form>
+          <form id="finance-plan-form" class="domain-form">
+            <h3>${copy.financePlanHeading}</h3>
+            <label for="finance-plan-kind">${copy.financePlanKind}</label>
+            <select id="finance-plan-kind" name="kind">
+              <option value="resource">${copy.financeResource}</option>
+              <option value="goal">${copy.financeGoal}</option>
+            </select>
+            <label for="finance-plan-label">${copy.financePlanLabel}</label>
+            <input id="finance-plan-label" name="label" type="text" maxlength="160" required />
+            <label for="finance-plan-amount">${copy.financePlanAmount}</label>
+            <input id="finance-plan-amount" name="amount" type="text" inputmode="decimal" maxlength="32" required />
+            <label for="finance-plan-currency">${copy.currency}</label>
+            <select id="finance-plan-currency" name="currency"><option value="CAD">CAD</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="JPY">JPY</option></select>
+            <label for="finance-plan-space">${copy.space}</label>
+            <select id="finance-plan-space" name="space"><option value="personal">${copy.personal}</option><option value="household">${copy.household}</option><option value="work">${copy.work}</option></select>
+            <label for="finance-plan-date">${copy.financeGoalDate}</label>
+            <input id="finance-plan-date" name="targetDate" type="date" />
+            <label for="finance-plan-surplus">${copy.financeMonthlySurplus}</label>
+            <input id="finance-plan-surplus" name="surplus" type="text" inputmode="decimal" maxlength="32" />
+            <p class="hint">${copy.financePlanHint}</p>
+            <button type="submit">${copy.saveFinancePlan}</button>
+            <p id="finance-plan-status" class="hint" role="status"></p>
           </form>
           <form id="finance-import-form" class="domain-form">
             <h3>${copy.financeImportHeading}</h3>
@@ -1022,6 +1045,15 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const expenseCurrency = root.querySelector<HTMLSelectElement>("#expense-currency");
   const expenseSpace = root.querySelector<HTMLSelectElement>("#expense-space");
   const expenseStatus = root.querySelector<HTMLElement>("#expense-status");
+  const financePlanForm = root.querySelector<HTMLFormElement>("#finance-plan-form");
+  const financePlanKind = root.querySelector<HTMLSelectElement>("#finance-plan-kind");
+  const financePlanLabel = root.querySelector<HTMLInputElement>("#finance-plan-label");
+  const financePlanAmount = root.querySelector<HTMLInputElement>("#finance-plan-amount");
+  const financePlanCurrency = root.querySelector<HTMLSelectElement>("#finance-plan-currency");
+  const financePlanSpace = root.querySelector<HTMLSelectElement>("#finance-plan-space");
+  const financePlanDate = root.querySelector<HTMLInputElement>("#finance-plan-date");
+  const financePlanSurplus = root.querySelector<HTMLInputElement>("#finance-plan-surplus");
+  const financePlanStatus = root.querySelector<HTMLElement>("#finance-plan-status");
   const financeImportForm = root.querySelector<HTMLFormElement>("#finance-import-form");
   const financeImportFile = root.querySelector<HTMLInputElement>("#finance-import-file");
   const financeImportAccount = root.querySelector<HTMLInputElement>("#finance-import-account");
@@ -1284,6 +1316,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   }
   if (!financeImportForm || !financeImportFile || !financeImportAccount || !financeImportCurrency || !financeImportOpening || !financeImportClosing || !financeImportStatus) {
     throw new Error("Omnevum Finance import controls are missing");
+  }
+  if (!financePlanForm || !financePlanKind || !financePlanLabel || !financePlanAmount || !financePlanCurrency || !financePlanSpace || !financePlanDate || !financePlanSurplus || !financePlanStatus) {
+    throw new Error("Omnevum Finance planning controls are missing");
   }
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
     throw new Error("Omnevum document-finishing controls are missing");
@@ -2629,7 +2664,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
       const allocationConflicts = finance.financeAllocationResults.reduce((total, entry) => total + entry.result.conflictIds.length, 0);
-      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)}`;
+      const goalConflicts = finance.financeGoalPlans.filter((entry) => entry.plan.fundingConflict).length;
+      const goalProgress = finance.financeGoalPlans.map((entry) => copy.financeGoalProgress(finance.financeGraph.nodes.find((node) => node.id === entry.recordId)?.label ?? entry.recordId, formatMoney(entry.plan.funded, presentation.locale), formatMoney(entry.plan.target, presentation.locale), formatMoney(entry.plan.remaining, presentation.locale), entry.plan.fundingConflict)).join(" ");
+      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${goalProgress}`;
       insightsGrid.append(financeStatus);
     } else if (finance.transactionCount === 0 && finance.financeGraph.nodes.length === 0) {
       const financeStatus = document.createElement("p");
@@ -2640,7 +2677,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
       const allocationConflicts = finance.financeAllocationResults.reduce((total, entry) => total + entry.result.conflictIds.length, 0);
-      financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)}`;
+      const goalConflicts = finance.financeGoalPlans.filter((entry) => entry.plan.fundingConflict).length;
+      const goalProgress = finance.financeGoalPlans.map((entry) => copy.financeGoalProgress(finance.financeGraph.nodes.find((node) => node.id === entry.recordId)?.label ?? entry.recordId, formatMoney(entry.plan.funded, presentation.locale), formatMoney(entry.plan.target, presentation.locale), formatMoney(entry.plan.remaining, presentation.locale), entry.plan.fundingConflict)).join(" ");
+      financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${goalProgress}`;
       insightsGrid.append(financeStatus);
     }
     const considerations = projectDueReminderConsiderations(records);
@@ -3132,6 +3171,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
 
   relateKind.addEventListener("change", updateTypedRelationshipControls);
   updateTypedRelationshipControls();
+
+  const updateFinancePlanControls = (): void => {
+    const goal = financePlanKind.value === "goal";
+    financePlanDate.disabled = !goal;
+    financePlanSurplus.disabled = !goal;
+  };
+  financePlanKind.addEventListener("change", updateFinancePlanControls);
+  updateFinancePlanControls();
 
   const renderRelationshipChoices = async (): Promise<void> => {
     const records = (await store.list()).filter((record) => record.recordType !== "relationship" && !isCleanupHistoryRecord(record));
@@ -4109,6 +4156,22 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       await renderRecords(searchQuery.value);
     } catch (error) {
       expenseStatus.textContent = error instanceof Error ? error.message : "Expense capture failed";
+    }
+  });
+
+  financePlanForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      const space = (financePlanSpace.value === "household" || financePlanSpace.value === "work" ? financePlanSpace.value : "personal") satisfies SpaceId;
+      const kind = financePlanKind.value === "goal" ? "goal" : "resource";
+      const created = await captureFinancePlan(commands, { kind, label: financePlanLabel.value, amount: financePlanAmount.value, currency: financePlanCurrency.value, space, ...(kind === "goal" && financePlanDate.value ? { targetDate: financePlanDate.value } : {}), ...(kind === "goal" && financePlanSurplus.value.trim() ? { sustainableMonthlySurplus: financePlanSurplus.value } : {}) });
+      financeChangedIds = [created.id];
+      financePlanForm.reset();
+      updateFinancePlanControls();
+      financePlanStatus.textContent = copy.financePlanSaved(kind);
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      financePlanStatus.textContent = describeError(error, "Finance plan was not saved; canonical records were not changed.");
     }
   });
 

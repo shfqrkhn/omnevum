@@ -18,7 +18,7 @@ export interface UiCopy {
   searchPlaceholder: string; search: string; clear: string; triage: string; reviewInbox: string; inboxCount: string;
   inboxClear: string; markReviewed: string; defer: string; deferUntil: string; clarify: string; reference: string; route: string; split: string; splitKind: string; splitParts: string; splitHint: string; splitSaved: (count: number) => string; delete: string; triageStatus: (status: TriageStatus) => string; triageProposal: (owners: string, types: string, actions: string) => string; triageDetails: string; triageProvenance: (source: string, capturedAt: string, owner: string, revision: number) => string; triageSelectAll: string; triageSelectItem: (text: string) => string; triageSelected: (count: number) => string; triageBatchReview: string; triageBatchDefer: string; triageBatchDeferUntil: string; triageNoSelection: string; triageBatchResult: (successes: number, failures: number) => string; triageBatchOutcome: (label: string, outcome: string) => string; reviewHint: string; reviewTemplates: string; reviewTemplateName: (id: ReviewTemplateId) => string; reviewStart: string; reviewResume: string; reviewSkip: string; reviewAbandon: string; reviewNext: string; reviewFinish: string; reviewCompleted: string; reviewPartial: string; reviewStep: (current: number, total: number) => string; reviewNoRecords: string; reviewPrompt: (key: string) => string; reviewMotivation: string; reviewOpenRecord: string; reviewMarkReviewed: string; reviewCompleteTask: string; relate: string; connectWithoutCopying: string; sourceRecord: string;
   targetRecord: string; relationship: string; createLink: string; relationshipHint: string; typedRelationshipKind: string; typedReference: string; dependency: string; allocation: string; synergy: string; conflict: string; feedback: string; relationshipScenario: string; allocationMode: string; allocationAmount: string; allocationCurrency: string; exclusive: string; enabling: string; typedRelationshipHint: string; typedLinkCreated: string; scenarioRequired: string; timeObserve: string; track: string; trackHeading: string; metricName: string; value: string; unit: string; trackPlaceholder: string; saveObservation: string; trackHint: string; trackSaved: (name: string) => string;
-  domains: string; financeHeading: string; merchant: string; currency: string; saveExpense: string; financeHint: string; financeImportHeading: string; financeFile: string; financeAccount: string; financeOpening: string; financeClosing: string; financeImport: string; financeImportHint: string; financeImportResult: (created: number, existing: number, duplicates: number, conflicts: number, reconciliation: "MATCH" | "MISMATCH" | "INCOMPLETE") => string; financeAnalysisResult: (income: string, spending: string, net: string, pending: string, fees: string) => string; financeDashboard: string; financeNoData: string; financeIncome: string; financeSpending: string; financeNet: string; financePending: string; financeQuality: (status: string, limitations: number) => string; financeReviewCases: (count: number) => string; financeGraphStatus: (nodes: number, edges: number, invalidated: number) => string; financeAllocationConflicts: (count: number) => string; healthHeading: string; subject: string; optionalNote: string; saveMeasurement: string; healthHint: string; expenseSaved: string; measurementSaved: string;
+  domains: string; financeHeading: string; merchant: string; currency: string; saveExpense: string; financeHint: string; financePlanHeading: string; financePlanKind: string; financeResource: string; financeGoal: string; financePlanLabel: string; financePlanAmount: string; financeGoalDate: string; financeMonthlySurplus: string; financePlanHint: string; saveFinancePlan: string; financePlanSaved: (kind: string) => string; financeGoalStatus: (goals: number, conflicts: number) => string; financeGoalProgress: (label: string, funded: string, target: string, remaining: string, conflict: boolean) => string; financeImportHeading: string; financeFile: string; financeAccount: string; financeOpening: string; financeClosing: string; financeImport: string; financeImportHint: string; financeImportResult: (created: number, existing: number, duplicates: number, conflicts: number, reconciliation: "MATCH" | "MISMATCH" | "INCOMPLETE") => string; financeAnalysisResult: (income: string, spending: string, net: string, pending: string, fees: string) => string; financeDashboard: string; financeNoData: string; financeIncome: string; financeSpending: string; financeNet: string; financePending: string; financeQuality: (status: string, limitations: number) => string; financeReviewCases: (count: number) => string; financeGraphStatus: (nodes: number, edges: number, invalidated: number) => string; financeAllocationConflicts: (count: number) => string; healthHeading: string; subject: string; optionalNote: string; saveMeasurement: string; healthHint: string; expenseSaved: string; measurementSaved: string;
   focusHeading: string; focusHint: string; startFocus: string; stopFocus: string; noActiveSession: string;
   sources: string; sourcesHeading: string; evidenceHeading: string; subjectRecord: string; evidenceRelation: string; supports: string; contradicts: string; qualifies: string; derivesFrom: string; claim: string; uncertainty: string; createEvidence: string; evidenceSaved: string; annotationHeading: string; annotationQuote: string; annotationNote: string; createAnnotation: string; annotationSaved: string; quoteMissing: string; placeHeading: string; placeLabel: string; latitude: string; longitude: string; optionalGeoJson: string; savePlace: string; placeSaved: (label: string) => string; knowledgeStatus: (evidence: number, annotations: number, active: number, stale: number, orphaned: number, places: number) => string; sourceRequired: string;
   sharing: string; sharingHeading: string; shareRecipient: string; sharePurpose: string; shareExpiry: string; shareGrant: string; selectGrant: string; selectRecords: string; includePrivate: string; createGrant: string; exportProjection: string; sharingHint: string; grantSaved: string; grantRevoked: string; grantRequired: string; grantSpaceMismatch: string; projectionSaved: (included: number, omitted: number) => string; shareSelectionRequired: string; revoke: string; contextExportFormat: string; contextExportObjective: string; contextExportBudget: string; contextExport: string; contextExportRerun: string; contextExportHint: string; contextExportSaved: (records: number, bytes: number, lossless: boolean) => string;
@@ -287,6 +287,38 @@ const financeFrench: Pick<UiCopy, "financeImportHeading" | "financeFile" | "fina
   financeAnalysisResult: (income, spending, net, pending, fees) => `Position derivee: revenus ${income}; depenses ${spending}; flux net ${net}; en attente ${pending}; frais identifies ${fees}.`
 };
 
+const financePlanEnglish: Pick<UiCopy, "financePlanHeading" | "financePlanKind" | "financeResource" | "financeGoal" | "financePlanLabel" | "financePlanAmount" | "financeGoalDate" | "financeMonthlySurplus" | "financePlanHint" | "saveFinancePlan" | "financePlanSaved" | "financeGoalStatus" | "financeGoalProgress"> = {
+  financePlanHeading: "Plan a Finance resource or goal",
+  financePlanKind: "Plan type",
+  financeResource: "Shared resource",
+  financeGoal: "Goal",
+  financePlanLabel: "Label",
+  financePlanAmount: "Amount",
+  financeGoalDate: "Target date (optional)",
+  financeMonthlySurplus: "Sustainable monthly surplus (optional)",
+  financePlanHint: "Resources remain exact-money observations. Goals remain labelled assumptions and receive funding only through explicit typed allocations.",
+  saveFinancePlan: "Save Finance plan",
+  financePlanSaved: (kind) => `Saved a Finance ${kind}; it remains a canonical domain.finance record.`,
+  financeGoalStatus: (goals, conflicts) => `Finance goals: ${goals}; ${conflicts} funding conflict(s) require review.`,
+  financeGoalProgress: (label, funded, target, remaining, conflict) => `${label}: funded ${funded} of ${target}; remaining ${remaining}${conflict ? "; funding conflict requires review" : ""}.`
+};
+
+const financePlanFrench: Pick<UiCopy, "financePlanHeading" | "financePlanKind" | "financeResource" | "financeGoal" | "financePlanLabel" | "financePlanAmount" | "financeGoalDate" | "financeMonthlySurplus" | "financePlanHint" | "saveFinancePlan" | "financePlanSaved" | "financeGoalStatus" | "financeGoalProgress"> = {
+  financePlanHeading: "Planifier une ressource ou un objectif financier",
+  financePlanKind: "Type de plan",
+  financeResource: "Ressource partagee",
+  financeGoal: "Objectif",
+  financePlanLabel: "Libelle",
+  financePlanAmount: "Montant",
+  financeGoalDate: "Date cible (facultatif)",
+  financeMonthlySurplus: "Surplus mensuel durable (facultatif)",
+  financePlanHint: "Les ressources restent des observations monetaires exactes. Les objectifs restent des hypotheses etiquetees et ne sont finances que par des allocations typees explicites.",
+  saveFinancePlan: "Enregistrer le plan financier",
+  financePlanSaved: (kind) => `Plan financier ${kind} enregistre; il reste un dossier canonique domain.finance.`,
+  financeGoalStatus: (goals, conflicts) => `Objectifs financiers: ${goals}; ${conflicts} conflit(s) de financement exigent une revue.`,
+  financeGoalProgress: (label, funded, target, remaining, conflict) => `${label}: finance ${funded} sur ${target}; restant ${remaining}${conflict ? "; conflit de financement a revoir" : ""}.`
+};
+
 const financeDashboardEnglish: Pick<UiCopy, "financeDashboard" | "financeNoData" | "financeIncome" | "financeSpending" | "financeNet" | "financePending" | "financeQuality" | "financeReviewCases" | "financeGraphStatus" | "financeAllocationConflicts"> = {
   financeDashboard: "Finance projection",
   financeNoData: "No canonical Finance transactions are available yet.",
@@ -361,6 +393,7 @@ const english: UiCopy = {
   ...typedRelationshipEnglish,
   ...searchEnglish,
   ...financeEnglish,
+  ...financePlanEnglish,
   ...financeDashboardEnglish,
   ...presentationQuickEnglish,
   ...presentationLensEnglish,
@@ -404,6 +437,7 @@ const french: UiCopy = {
   telemetryMessage: (replication, backup, outbox, capability, conflict, storage) => { const label = (status: TelemetryStatus) => ({ READY: "pret", DISABLED: "desactive", CURRENT: "actuelle", STALE: "perimee", CLEAR: "vide", BACKLOGGED: "en attente", DEGRADED: "degradee", UNRESOLVED: "non resolu", NORMAL: "normale", ELEVATED: "elevee", UNKNOWN: "inconnue" }[status] ?? "inconnue"); return `Telemetrie: replication ${label(replication)}, sauvegarde ${label(backup)}, effets ${label(outbox)}, capacite ${label(capability)}, conflits ${label(conflict)}, stockage ${label(storage)}.`; },
   ...searchFrench,
   ...financeFrench,
+  ...financePlanFrench,
   ...financeDashboardFrench,
   ...presentationQuickFrench,
   ...presentationLensFrench,
