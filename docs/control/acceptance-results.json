@@ -2077,8 +2077,11 @@
         "line": 4205
       },
       "text": "The user creates a dynamic emergency-reserve goal defined as six months of rolling essential spending plus fixed-amount/date goals for a home purchase and travel. New statements change essential spending and free cash flow; the emergency target, each goal's funded amount, required pace, forecast completion, and trajectory update automatically without the user re-entering balances or monthly progress.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-rolling-goal-and-allocation-receipt"
+      ],
+      "notes": "Current Finance core/workflow tests persist a rolling-essential-month goal without a fabricated fixed amount; imported essential classification remains source-lined, and the read-only projection recomputes the monthly essential baseline and target from current posted periods while preserving funded amount and pace semantics. The compact UI admits rolling target mode. Fixed home/travel portfolio fixtures, broader statement classification, backup/restore interaction, target/accessibility/deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-139",
@@ -2087,8 +2090,11 @@
         "line": 4207
       },
       "text": "Two goals draw on one savings account. Explicit virtual allocations prevent the same dollar from fully funding both goals, show unallocated cash separately, and survive import/update/backup/restore. Requested aggregate contributions are then forced above sustainable forecast free cash flow; Finance reports the funding deficit and models at least two transparent alternatives without silently reprioritizing the user's goals.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-rolling-goal-and-allocation-receipt"
+      ],
+      "notes": "Current Finance projection/core tests retain one canonical resource, exact exclusive/enabling allocations, unallocated/over-allocation conflict results, aggregate shortfall, and proportional/defer read-only alternatives without mutating priorities or balances. Backup/restore interaction, broader fixture and target/accessibility/deployment evidence, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-140",
