@@ -31,6 +31,7 @@ import { createEvidenceLink, type EvidenceRelation } from "../core/evidence";
 import { makePlaceData, parseGeoJsonPoint } from "../core/place";
 import { projectForAuthorizedShare } from "../core/share";
 import { canUseShareGrant, createShareGrant, revokeShareGrant } from "../core/sharing";
+import { createContextDelta, exportAuthorizedContext, makeContextExportProfile, parseContextExportProfile, type ContextExportFormat, type ContextExportProfile, type ContextExportSnapshot } from "../core/context-export";
 import { transitionEffect } from "../core/effect";
 import { createExternalEffect } from "../core/effect-service";
 import { createEffectRevalidationGuard } from "../core/effect-guard";
@@ -64,6 +65,15 @@ function parseExternalEffectPayload(value: string): Record<string, unknown> | st
 
 export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>, packageAutomationRuntime?: PackageAutomationRuntime): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
+  let savedContextProfile: ContextExportProfile | undefined;
+  const savedContextProfileRaw = await store.getSetting<unknown>("context-export.profile");
+  if (savedContextProfileRaw !== undefined) {
+    try {
+      savedContextProfile = parseContextExportProfile(savedContextProfileRaw);
+    } catch {
+      savedContextProfile = undefined;
+    }
+  }
   const onboardingDismissed = await store.getSetting<boolean>("onboarding.dismissed") === true;
   let homeFocusMode = await store.getSetting<boolean>("home.focusMode") === true;
   let telemetryThresholds: TelemetryThresholds = parseTelemetryThresholds(await store.getSetting<unknown>(TELEMETRY_THRESHOLDS_SETTING));
@@ -765,6 +775,24 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <button id="share-grant-submit" type="submit" disabled>${copy.createGrant}</button>
             <button id="share-export" class="secondary" type="button" disabled>${copy.exportProjection}</button>
           </div>
+          <label for="context-export-format">${copy.contextExportFormat}</label>
+          <select id="context-export-format" name="contextFormat">
+            <option value="MARKDOWN">Markdown</option>
+            <option value="TEXT">Plain text</option>
+            <option value="JSON" selected>JSON</option>
+            <option value="JSONL">JSONL</option>
+            <option value="CSV">CSV (tabular only)</option>
+            <option value="TSV">TSV (tabular only)</option>
+          </select>
+          <label for="context-export-objective">${copy.contextExportObjective}</label>
+          <textarea id="context-export-objective" name="contextObjective" maxlength="5000" rows="3"></textarea>
+          <label for="context-export-budget">${copy.contextExportBudget}</label>
+          <input id="context-export-budget" name="contextBudget" type="number" min="512" max="2000000" step="1" value="250000" />
+          <p class="hint">${copy.contextExportHint}</p>
+          <div class="form-row">
+            <button id="context-export" class="secondary" type="button" disabled>${copy.contextExport}</button>
+            <button id="context-export-rerun" class="secondary" type="button" disabled>${copy.contextExportRerun}</button>
+          </div>
           <p id="share-status" class="hint" role="status"></p>
         </form>
         <ul id="share-grant-list" class="record-list"></ul>
@@ -1086,6 +1114,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const shareIncludePrivate = root.querySelector<HTMLInputElement>("#share-include-private");
   const shareGrantSubmit = root.querySelector<HTMLButtonElement>("#share-grant-submit");
   const shareExport = root.querySelector<HTMLButtonElement>("#share-export");
+  const contextExportFormat = root.querySelector<HTMLSelectElement>("#context-export-format");
+  const contextExportObjective = root.querySelector<HTMLTextAreaElement>("#context-export-objective");
+  const contextExportBudget = root.querySelector<HTMLInputElement>("#context-export-budget");
+  const contextExportButton = root.querySelector<HTMLButtonElement>("#context-export");
+  const contextExportRerunButton = root.querySelector<HTMLButtonElement>("#context-export-rerun");
   const shareStatus = root.querySelector<HTMLElement>("#share-status");
   const shareGrantList = root.querySelector<HTMLUListElement>("#share-grant-list");
   const syncForm = root.querySelector<HTMLFormElement>("#sync-form");
@@ -1213,7 +1246,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const packageAutomationStatus = root.querySelector<HTMLElement>("#package-automation-status");
   const packageAutomationList = root.querySelector<HTMLUListElement>("#package-automation-list");
   const packageAutomationProposals = root.querySelector<HTMLUListElement>("#package-automation-proposals");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchFiltersToggle || !searchFilters || !searchFacetChips || !searchFacetLens || !searchFacetType || !searchFacetSpace || !searchFacetArtifact || !searchViewName || !searchSaveView || !searchScopeStatus || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !triageBatch || !triageSelectAll || !triageSelected || !triageBatchDeferUntil || !triageBatchReview || !triageBatchDefer || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchFiltersToggle || !searchFilters || !searchFacetChips || !searchFacetLens || !searchFacetType || !searchFacetSpace || !searchFacetArtifact || !searchViewName || !searchSaveView || !searchScopeStatus || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !triageBatch || !triageSelectAll || !triageSelected || !triageBatchDeferUntil || !triageBatchReview || !triageBatchDefer || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !contextExportFormat || !contextExportObjective || !contextExportBudget || !contextExportButton || !contextExportRerunButton || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!financeImportForm || !financeImportFile || !financeImportAccount || !financeImportCurrency || !financeImportOpening || !financeImportClosing || !financeImportStatus) {
@@ -3087,6 +3120,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const hasSelection = selectedShareIds().length > 0;
     shareGrantSubmit.disabled = !hasSelection;
     shareExport.disabled = !hasSelection || !shareGrant.value;
+    contextExportButton.disabled = !hasSelection || !shareGrant.value;
+    contextExportRerunButton.disabled = !savedContextProfile || !shareGrant.value;
   };
 
   const renderShareChoices = async (): Promise<void> => {
@@ -4287,6 +4322,72 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
   });
 
+  const makeContextProfileFromControls = (recordIds: string[]): ContextExportProfile => makeContextExportProfile({
+    id: "saved-share-handoff",
+    label: "Saved share handoff",
+    format: contextExportFormat.value as ContextExportFormat,
+    recordIds,
+    purpose: sharePurpose.value.trim() || "Authorized context handoff",
+    objective: contextExportObjective.value.trim(),
+    ...(isSpaceId(shareSpace.value) ? { scope: shareSpace.value } : {}),
+    detail: "FULL",
+    maxBytes: Number(contextExportBudget.value),
+    includePrivate: shareIncludePrivate.checked
+  });
+
+  contextExportButton.addEventListener("click", async () => {
+    const recordIds = selectedShareIds();
+    if (recordIds.length === 0) {
+      shareStatus.textContent = copy.shareSelectionRequired;
+      return;
+    }
+    try {
+      const grant = shareGrant.value ? await commands.get(shareGrant.value) : undefined;
+      if (!grant) {
+        shareStatus.textContent = copy.grantRequired;
+        updateShareActions();
+        return;
+      }
+      const allRecords = await store.list(true);
+      const profile = makeContextProfileFromControls(recordIds);
+      const artifact = exportAuthorizedContext(grant, allRecords, profile, allRecords);
+      savedContextProfile = profile;
+      await store.setSetting("context-export.profile", profile);
+      const priorRaw = await store.getSetting<unknown>("context-export.snapshot");
+      downloadText(artifact.fileName, artifact.content, artifact.mimeType);
+      if (isContextExportSnapshot(priorRaw)) downloadJson("omnevum-context-delta.json", createContextDelta(priorRaw, artifact));
+      await store.setSetting("context-export.snapshot", artifact.snapshot);
+      updateShareActions();
+      shareStatus.textContent = copy.contextExportSaved(artifact.package.manifest.recordCount, artifact.bytes, artifact.package.manifest.lossless);
+    } catch (error) {
+      shareStatus.textContent = describeError(error, "Context handoff failed; canonical records were not changed.");
+    }
+  });
+
+  contextExportRerunButton.addEventListener("click", async () => {
+    if (!savedContextProfile) {
+      shareStatus.textContent = "Save a context handoff before rerunning it.";
+      return;
+    }
+    try {
+      const grant = shareGrant.value ? await commands.get(shareGrant.value) : undefined;
+      if (!grant) {
+        shareStatus.textContent = copy.grantRequired;
+        updateShareActions();
+        return;
+      }
+      const allRecords = await store.list(true);
+      const artifact = exportAuthorizedContext(grant, allRecords, savedContextProfile, allRecords);
+      const priorRaw = await store.getSetting<unknown>("context-export.snapshot");
+      downloadText(artifact.fileName, artifact.content, artifact.mimeType);
+      if (isContextExportSnapshot(priorRaw)) downloadJson("omnevum-context-delta.json", createContextDelta(priorRaw, artifact));
+      await store.setSetting("context-export.snapshot", artifact.snapshot);
+      shareStatus.textContent = copy.contextExportSaved(artifact.package.manifest.recordCount, artifact.bytes, artifact.package.manifest.lossless);
+    } catch (error) {
+      shareStatus.textContent = describeError(error, "Saved context rerun failed; canonical records were not changed.");
+    }
+  });
+
   syncForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     try {
@@ -4627,6 +4728,22 @@ function downloadJson(fileName: string, value: unknown): void {
   link.download = fileName;
   link.click();
   window.setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+function downloadText(fileName: string, value: string, mimeType: string): void {
+  const blob = new Blob([value], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  link.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+function isContextExportSnapshot(value: unknown): value is ContextExportSnapshot {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Partial<ContextExportSnapshot>;
+  return typeof candidate.profileId === "string" && typeof candidate.exportId === "string" && Array.isArray(candidate.records) && candidate.records.every((record) => Boolean(record) && typeof record === "object" && typeof (record as { id?: unknown }).id === "string" && typeof (record as { revision?: unknown }).revision === "number" && typeof (record as { fingerprint?: unknown }).fingerprint === "string");
 }
 
 function recordTypeForCaptureKind(kind: CaptureKind): "note" | "task" | "observation" {
