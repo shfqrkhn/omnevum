@@ -214,9 +214,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <button type="button" class="secondary" data-detail-segment="evidence" aria-selected="false">${copy.recordEvidence}</button>
             <button type="button" class="secondary" data-detail-segment="history" aria-selected="false">${copy.historyHeading}</button>
           </nav>
+          <p id="record-detail-status" class="hint" role="status" aria-live="polite"></p>
           <section id="record-detail-overview" class="record-detail-segment" data-detail-panel="overview" aria-labelledby="record-detail-overview-heading">
             <h3 id="record-detail-overview-heading">${copy.recordOverview}</h3>
             <dl id="record-detail-metadata" class="record-detail-metadata"></dl>
+            <form id="record-detail-edit-form" class="record-detail-edit" hidden>
+              <label for="record-detail-edit-text">${copy.recordEditLabel}</label>
+              <textarea id="record-detail-edit-text" rows="5" maxlength="5000" required></textarea>
+              <p class="hint">${copy.recordEditHint}</p>
+              <button type="submit">${copy.saveRecordEdit}</button>
+              <p id="record-detail-edit-status" class="hint" role="status" aria-live="polite"></p>
+            </form>
           </section>
           <section id="record-detail-relationships" class="record-detail-segment" data-detail-panel="relationships" aria-labelledby="record-detail-relationships-heading" hidden>
             <h3 id="record-detail-relationships-heading">${copy.recordRelationships}</h3>
@@ -1135,6 +1143,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const recordDetailContext = root.querySelector<HTMLElement>("#record-detail-context");
   const recordDetailHeading = root.querySelector<HTMLElement>("#record-detail-heading");
   const recordDetailText = root.querySelector<HTMLElement>("#record-detail-text");
+  const recordDetailStatus = root.querySelector<HTMLElement>("#record-detail-status");
+  const recordDetailEditForm = root.querySelector<HTMLFormElement>("#record-detail-edit-form");
+  const recordDetailEditText = root.querySelector<HTMLTextAreaElement>("#record-detail-edit-text");
+  const recordDetailEditStatus = root.querySelector<HTMLElement>("#record-detail-edit-status");
   const recordDetailMetadata = root.querySelector<HTMLDListElement>("#record-detail-metadata");
   const recordDetailRelationshipList = root.querySelector<HTMLUListElement>("#record-detail-relationship-list");
   const recordDetailEvidenceList = root.querySelector<HTMLUListElement>("#record-detail-evidence-list");
@@ -1218,7 +1230,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!lensNavList || !lensOverflowToggle || !lensOverflowDialog || !lensOverflowGrid || !lensOverflowClose || !lensNavStatus || !activeLensHeading || !activeLensStatus || !activeLensHint || !activeLensRecords || !lensPinOptions) {
     throw new Error("Omnevum lens navigation controls are missing");
   }
-  if (!recordDetailDialog || !recordDetailContext || !recordDetailHeading || !recordDetailText || !recordDetailMetadata || !recordDetailRelationshipList || !recordDetailEvidenceList || !recordDetailHistoryList || !recordDetailClose || !recordDetailSegments) {
+  if (!recordDetailDialog || !recordDetailContext || !recordDetailHeading || !recordDetailText || !recordDetailStatus || !recordDetailEditForm || !recordDetailEditText || !recordDetailEditStatus || !recordDetailMetadata || !recordDetailRelationshipList || !recordDetailEvidenceList || !recordDetailHistoryList || !recordDetailClose || !recordDetailSegments) {
     throw new Error("Omnevum record detail controls are missing");
   }
   if (!familyInput || !accessibilityProfileInput || !accessibilityTextScaleInput || !accessibilityTargetSizeInput || !accessibilityReducedMotionInput) throw new Error("Omnevum presentation accessibility controls are missing");
@@ -1302,6 +1314,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   let visibleTriageRecords = new Map<string, CanonicalRecord>();
   let reviewSession: ReviewSession | undefined;
   let reviewSessionOpen = false;
+  let activeRecordDetail: { recordId: string; revision: number; lensId: PresentationLensId } | undefined;
   let packageAutomationProposalsState: PackageAutomationProposal[] = [];
   const ARCHIVE_UNDO_WINDOW_MS = 10_000;
   let archiveUndoState: { recordId: string; expiresAt: number } | undefined;
@@ -1601,15 +1614,23 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     lensNavStatus.textContent = `${copy.lensHint} ${barLensIds.length} visible in the bar; ${PRESENTATION_LENS_IDS.length} available in ${copy.lensOverflow.toLowerCase()}.`;
   };
   const setRecordDetailSegment = (segment: string): void => {
+    let selectedLabel = segment;
     for (const button of recordDetailSegments.querySelectorAll<HTMLButtonElement>("button[data-detail-segment]")) {
       const selected = button.dataset.detailSegment === segment;
       button.setAttribute("aria-selected", String(selected));
+      if (selected) selectedLabel = button.textContent?.trim() || segment;
     }
     for (const panel of recordDetailDialog.querySelectorAll<HTMLElement>("[data-detail-panel]")) panel.hidden = panel.dataset.detailPanel !== segment;
+    recordDetailStatus.textContent = copy.recordEditSegmentStatus(selectedLabel);
   };
   const openRecordDetail = async (recordId: string, lensId: PresentationLensId = presentation.activeLens): Promise<void> => {
     const record = await store.get(recordId, true);
     if (!record) return;
+    activeRecordDetail = { recordId: record.id, revision: record.revision, lensId };
+    const editable = !record.deleted && (record.recordType === "note" || record.recordType === "task" || record.recordType === "observation") && typeof record.data.text === "string";
+    recordDetailEditForm.hidden = !editable;
+    recordDetailEditText.value = editable ? String(record.data.text) : "";
+    recordDetailEditStatus.textContent = editable ? "" : copy.recordEditUnavailable;
     const allRecords = await store.list(true);
     const recordLensIds = lensIdsForRecord(record);
     const contextLens = recordLensIds.includes(lensId) ? lensId : (recordLensIds[0] ?? lensId);
@@ -1903,6 +1924,22 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   recordDetailSegments.addEventListener("click", (event) => {
     const segment = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-detail-segment]")?.dataset.detailSegment;
     if (segment) setRecordDetailSegment(segment);
+  });
+  recordDetailEditForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const detail = activeRecordDetail;
+    if (!detail) return;
+    try {
+      const updated = await commands.updateText(detail.recordId, recordDetailEditText.value, detail.revision);
+      const healthAfterEdit = await store.health();
+      const message = copy.recordEditSaved(updated.revision, healthAfterEdit.searchIndexValid ? copy.healthy : copy.degraded);
+      recordDetailDialog.close();
+      await renderRecords(searchQuery.value);
+      await openRecordDetail(updated.id, detail.lensId);
+      recordDetailEditStatus.textContent = message;
+    } catch (error) {
+      recordDetailEditStatus.textContent = describeError(error, "Canonical text was not changed.");
+    }
   });
   recordDetailDialog.addEventListener("click", (event) => {
     const recordId = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-detail-record-id]")?.dataset.detailRecordId;

@@ -217,6 +217,17 @@ export class CommandBus {
     return updated;
   }
 
+  public async updateText(id: string, text: string, expectedRevision?: number): Promise<CanonicalRecord> {
+    const normalized = text.trim();
+    if (!normalized) throw new Error("Record text is required");
+    const current = await this.store.get(id, true);
+    if (!current || current.deleted) throw new Error("Canonical record is not editable");
+    if (current.recordType === "relationship" || current.recordType === "artifact" || typeof current.data.text !== "string") {
+      throw new Error("This record does not expose an editable text field");
+    }
+    return this.update(id, { ...current.data, text: normalized }, expectedRevision ?? current.revision);
+  }
+
   public async archive(id: string): Promise<void> {
     const current = await this.store.get(id, true);
     if (!current) return;

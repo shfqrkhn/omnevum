@@ -254,6 +254,8 @@ select[multiple] { min-height: 9rem; }
 .record-detail-metadata { display: grid; grid-template-columns: minmax(7rem, 0.45fr) minmax(0, 1fr); gap: 0.45rem 0.8rem; margin: 0; }
 .record-detail-metadata dt { color: var(--muted); font-weight: 700; overflow-wrap: anywhere; }
 .record-detail-metadata dd { margin: 0; overflow-wrap: anywhere; }
+.record-detail-edit { display: grid; gap: 0.55rem; margin-top: 0.9rem; border-top: 1px solid var(--line); padding-top: 0.9rem; }
+.record-detail-edit textarea { min-height: 7rem; }
 .record-detail-history { display: grid; gap: 0.55rem; margin: 0; padding-left: 1.35rem; }
 .record-detail-history li { overflow-wrap: anywhere; }
 .icon-button { min-width: 44px; min-height: 44px; padding: 0.45rem 0.7rem; background: transparent; border-color: var(--line); color: var(--danger); font-size: 0.82rem; }

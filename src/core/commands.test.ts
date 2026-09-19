@@ -46,6 +46,26 @@ describe("CommandBus", () => {
     store.close();
   });
 
+  it("updates editable text through the command owner and invalidates only derived search state", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-text-edit`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const created = await commands.create({ recordType: "note", owner: "core.capture", data: { text: "before" } });
+    await store.rebuildSearchIndex();
+    expect((await store.health()).searchIndexValid).toBe(true);
+
+    const updated = await commands.updateText(created.id, "after", created.revision);
+    expect(updated.data.text).toBe("after");
+    expect(updated.revision).toBe(2);
+    expect((await store.get(updated.id))?.data.text).toBe("after");
+    expect((await store.health()).searchIndexValid).toBe(false);
+    await expect(commands.updateText(created.id, "stale", created.revision)).rejects.toBeInstanceOf(RevisionConflictError);
+
+    const relationship = await commands.create({ recordType: "relationship", owner: "platform.relate", data: { text: "reference" } });
+    await expect(commands.updateText(relationship.id, "not allowed")).rejects.toThrow("editable text field");
+    store.close();
+  });
+
   it("stores cross-domain relationships as explicit reference records", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-relate`);
     await store.open();
