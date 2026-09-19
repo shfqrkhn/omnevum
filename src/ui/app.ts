@@ -255,9 +255,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </div>
       </dialog>
 
-      <section id="presentation" class="panel" aria-labelledby="presentation-heading">
-        <p class="eyebrow">${copy.personalization}</p>
-        <h2 id="presentation-heading">${copy.makeItYours}</h2>
+      <details id="presentation" class="panel compact-panel" aria-labelledby="presentation-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.personalization}</p><h2 id="presentation-heading">${copy.makeItYours}</h2></span></summary>
         <form id="presentation-form">
           <label for="product-name">${copy.appName}</label>
           <div class="form-row">
@@ -352,7 +351,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <p id="presentation-status" class="hint" role="status">${copy.presentationHint}</p>
           <p id="presentation-host-status" class="hint" role="status"></p>
         </form>
-      </section>
+      </details>
 
       <dialog id="presentation-label-dialog" aria-labelledby="presentation-label-dialog-heading">
         <form id="presentation-label-dialog-form" method="dialog">
@@ -392,9 +391,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </form>
       </section>
 
-      <section id="acquire" class="panel" aria-labelledby="acquire-heading">
-        <p class="eyebrow">${copy.capture}</p>
-        <h2 id="acquire-heading">${copy.acquireHeading}</h2>
+      <details id="acquire" class="panel compact-panel" aria-labelledby="acquire-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.capture}</p><h2 id="acquire-heading">${copy.acquireHeading}</h2></span></summary>
         <form id="acquire-form">
           <label for="acquire-text">${copy.captureContent}</label>
           <textarea id="acquire-text" name="source" rows="4" maxlength="5242880" placeholder="${copy.acquirePlaceholder}"></textarea>
@@ -450,11 +448,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <p class="hint">${deviceCopy.manualFallback}</p>
           <p id="device-input-status" class="hint" role="status">${deviceCopy.ready}</p>
         </div>
-      </section>
+      </details>
 
-      <section id="track" class="panel" aria-labelledby="track-heading">
-        <p class="eyebrow">${copy.track}</p>
-        <h2 id="track-heading">${copy.trackHeading}</h2>
+      <details id="track" class="panel compact-panel" aria-labelledby="track-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.track}</p><h2 id="track-heading">${copy.trackHeading}</h2></span></summary>
         <form id="track-form">
           <label for="track-name">${copy.metricName}</label>
           <input id="track-name" name="metricName" type="text" maxlength="120" required placeholder="${copy.trackPlaceholder}" />
@@ -474,11 +471,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           </div>
           <p id="track-status" class="hint" role="status"></p>
         </form>
-      </section>
+      </details>
 
-      <section id="domains" class="panel" aria-labelledby="domains-heading">
-        <p class="eyebrow">${copy.domains}</p>
-        <h2 id="domains-heading">${copy.domains}</h2>
+      <details id="domains" class="panel compact-panel" aria-labelledby="domains-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.domains}</p><h2 id="domains-heading">${copy.domains}</h2></span></summary>
         <div class="domain-grid">
           <form id="expense-form" class="domain-form">
             <h3>${copy.financeHeading}</h3>
@@ -553,7 +549,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <p id="health-form-status" class="hint" role="status"></p>
           </form>
         </div>
-      </section>
+      </details>
 
       <section id="search" class="panel" aria-labelledby="search-heading">
         <p class="eyebrow">${copy.searchExplore}</p>
@@ -585,9 +581,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </form>
       </section>
 
-      <section id="spaces" class="panel" aria-labelledby="spaces-heading">
-        <p class="eyebrow">${copy.space}</p>
-        <h2 id="spaces-heading">${copy.scopeWithoutCopying}</h2>
+      <details id="spaces" class="panel compact-panel" aria-labelledby="spaces-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.space}</p><h2 id="spaces-heading">${copy.scopeWithoutCopying}</h2></span></summary>
         <form id="space-create-form" class="relationship-form">
           <label for="space-name">${copy.spaceName}</label>
           <input id="space-name" name="name" type="text" maxlength="80" required />
@@ -616,7 +611,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <ul id="space-list" class="record-list"></ul>
         <p class="hint">${copy.activeMemberships}</p>
         <ul id="space-membership-list" class="record-list"></ul>
-      </section>
+      </details>
 
       <section id="factory-preview" class="panel" aria-labelledby="factory-preview-heading"${factoryPreviewMode ? "" : " hidden"}>
         <p class="eyebrow">${copy.factoryPreview}</p>
@@ -647,9 +642,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </div>
       </section>
 
-      <section id="compose" class="panel" aria-labelledby="compose-heading">
-        <p class="eyebrow">${copy.compose}</p>
-        <h2 id="compose-heading">${copy.composeHeading}</h2>
+      <details id="compose" class="panel compact-panel" aria-labelledby="compose-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.compose}</p><h2 id="compose-heading">${copy.composeHeading}</h2></span></summary>
         <form id="compose-form" class="relationship-form">
           <label for="compose-title">${copy.viewTitle}</label>
           <input id="compose-title" name="title" type="text" maxlength="240" required value="${copy.defaultViewTitle}" />
@@ -666,7 +660,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <p id="compose-status" class="hint" role="status"></p>
         </form>
         <div id="compose-preview" class="compose-preview" aria-live="polite"></div>
-      </section>
+      </details>
 
       <section id="review" class="panel" aria-labelledby="review-heading">
         <div class="section-heading">
@@ -708,9 +702,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <p id="review-empty" class="empty-state">${copy.inboxClear}</p>
       </section>
 
-      <section id="relate" class="panel" aria-labelledby="relate-heading">
-        <p class="eyebrow">${copy.relate}</p>
-        <h2 id="relate-heading">${copy.connectWithoutCopying}</h2>
+      <details id="relate" class="panel compact-panel" aria-labelledby="relate-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.relate}</p><h2 id="relate-heading">${copy.connectWithoutCopying}</h2></span></summary>
         <form id="relate-form" class="relationship-form">
           <label for="relate-source">${copy.sourceRecord}</label>
           <select id="relate-source" name="source"></select>
@@ -747,11 +740,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <button id="relate-submit" type="submit">${copy.createLink}</button>
           <p id="relate-status" class="hint" role="status">${copy.relationshipHint} ${copy.typedRelationshipHint}</p>
         </form>
-      </section>
+      </details>
 
-      <section id="knowledge" class="panel" aria-labelledby="knowledge-heading">
-        <p class="eyebrow">${copy.sources}</p>
-        <h2 id="knowledge-heading">${copy.sourcesHeading}</h2>
+      <details id="knowledge" class="panel compact-panel" aria-labelledby="knowledge-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.sources}</p><h2 id="knowledge-heading">${copy.sourcesHeading}</h2></span></summary>
         <div class="domain-grid">
           <form id="evidence-form" class="domain-form">
             <h3>${copy.evidenceHeading}</h3>
@@ -799,11 +791,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           </form>
         </div>
         <p id="knowledge-status" class="hint" role="status"></p>
-      </section>
+      </details>
 
-      <section id="sharing" class="panel" aria-labelledby="sharing-heading">
-        <p class="eyebrow">${copy.sharing}</p>
-        <h2 id="sharing-heading">${copy.sharingHeading}</h2>
+      <details id="sharing" class="panel compact-panel" aria-labelledby="sharing-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.sharing}</p><h2 id="sharing-heading">${copy.sharingHeading}</h2></span></summary>
         <form id="share-form" class="relationship-form">
           <label for="share-recipient">${copy.shareRecipient}</label>
           <input id="share-recipient" name="recipient" type="text" maxlength="160" required />
@@ -848,11 +839,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <p id="share-status" class="hint" role="status"></p>
         </form>
         <ul id="share-grant-list" class="record-list"></ul>
-      </section>
+      </details>
 
-      <section id="sync" class="panel" aria-labelledby="sync-heading">
-        <p class="eyebrow">SYNC / PORTABILITY</p>
-        <h2 id="sync-heading">${copy.syncHeading}</h2>
+      <details id="sync" class="panel compact-panel" aria-labelledby="sync-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">SYNC / PORTABILITY</p><h2 id="sync-heading">${copy.syncHeading}</h2></span></summary>
         <form id="sync-form" class="relationship-form">
           <label for="sync-endpoint">${copy.syncEndpoint}</label>
           <input id="sync-endpoint" name="endpoint" type="url" maxlength="500" placeholder="https://your-endpoint.example/replica" required />
@@ -860,21 +850,19 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <button id="sync-submit" type="submit">${copy.syncRun}</button>
           <p id="sync-status" class="hint" role="status"></p>
         </form>
-      </section>
+      </details>
 
-      <section id="focus" class="panel" aria-labelledby="focus-heading">
-        <p class="eyebrow">${copy.timeObserve}</p>
-        <h2 id="focus-heading">${copy.focusHeading}</h2>
+      <details id="focus" class="panel compact-panel" aria-labelledby="focus-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.timeObserve}</p><h2 id="focus-heading">${copy.focusHeading}</h2></span></summary>
         <p class="hint">${copy.focusHint}</p>
         <div class="form-row">
           <button id="focus-toggle" type="button">${copy.startFocus}</button>
           <span id="focus-status" class="hint" role="status">${copy.noActiveSession}</span>
         </div>
-      </section>
+      </details>
 
-      <section id="reminders" class="panel" aria-labelledby="reminder-heading">
-        <p class="eyebrow">${timeCopy.reminders}</p>
-        <h2 id="reminder-heading">${timeCopy.reminderHeading}</h2>
+      <details id="reminders" class="panel compact-panel" aria-labelledby="reminder-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${timeCopy.reminders}</p><h2 id="reminder-heading">${timeCopy.reminderHeading}</h2></span></summary>
         <form id="reminder-form">
           <label for="reminder-title">${timeCopy.reminderTitle}</label>
           <input id="reminder-title" name="title" type="text" maxlength="240" required />
@@ -884,7 +872,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <button type="submit">${timeCopy.saveReminder}</button>
           <p id="reminder-status" class="hint" role="status"></p>
         </form>
-      </section>
+      </details>
 
       <section id="records" class="panel" aria-labelledby="records-heading">
         <div class="section-heading">
@@ -910,9 +898,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </div>
       </section>
 
-      <section id="recovery" class="panel" aria-labelledby="recovery-heading">
-        <p class="eyebrow">${copy.recovery}</p>
-        <h2 id="recovery-heading">${copy.keepPortable}</h2>
+      <details id="recovery" class="panel compact-panel" aria-labelledby="recovery-heading" data-section-disclosure>
+        <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h2 id="recovery-heading">${copy.keepPortable}</h2></span></summary>
         <p class="hint">${copy.recoveryHint}</p>
         <div class="form-row recovery-row">
           <button id="export-vault" class="secondary" type="button">${copy.exportVault}</button>
@@ -990,7 +977,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <input id="vault-password" type="password" minlength="8" autocomplete="new-password" />
         <p class="hint">${recoveryCopy.passwordHint}</p>
         <p id="recovery-status" class="hint" role="status"></p>
-      </section>
+      </details>
     </main>
     <dialog id="effect-run-dialog" aria-labelledby="effect-run-dialog-title" aria-describedby="effect-run-dialog-message" aria-modal="true">
       <h2 id="effect-run-dialog-title">${copy.effectRunHeading}</h2>
@@ -2019,6 +2006,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-nav-pin]");
     const id = button?.dataset.navPin as PresentationSectionId | undefined;
     if (!id) {
+      const link = (event.target as HTMLElement).closest<HTMLAnchorElement>("a[href^='#']");
+      const sectionId = link?.getAttribute("href")?.slice(1) as PresentationSectionId | undefined;
+      if (sectionId) root.querySelector<HTMLDetailsElement>(`#${sectionId}[data-section-disclosure]`)?.setAttribute("open", "");
       if (window.matchMedia("(max-width: 560px)").matches) primaryNavMenu.open = false;
       return;
     }

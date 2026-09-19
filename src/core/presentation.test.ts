@@ -11,7 +11,7 @@ describe("presentation profile", () => {
       family: "gamma",
       theme: "dark",
       locale: "en-CA",
-      density: "comfortable",
+      density: "compact",
       typeface: "system",
       iconography: "labels"
     });
@@ -91,7 +91,7 @@ describe("presentation profile", () => {
       productName: "Legacy",
       theme: "dark",
       locale: "en-CA",
-      density: "comfortable",
+      density: "compact",
       lensPins: ["direction", "people", "self", "resources"],
       activeLens: "direction",
       homeWidgets: ["summary", "insights", "attention"],
