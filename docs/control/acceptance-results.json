@@ -1775,9 +1775,10 @@
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-bounded-archive-undo-and-hard-clear-impact-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-canonical-clear-impact-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-hard-clear-removes-persisted-automation-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-hard-clear-removes-persisted-automation-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-hard-clear-explicit-effect-and-reversibility-receipt"
       ],
-      "notes": "Current Chromium evidence covers immediate archive removal, a visible numeric 10-second in-memory recovery window, normal-command Undo restoration with revision history, and a canceled hard-clear confirmation whose storage-owned impact report enumerates canonical records, relationships, history, artifact payloads, pending effects, package saves, and automation rules while disclosing unresolved relationship endpoints. The current built artifact plus storage regression now proves confirmed hard clear removes persisted automation rules together with canonical data while preserving presentation settings. Persistent/restart undo, full transitive graph/orphan blast-radius computation, every irreversible operation, browser/target breadth, assistive technology, deployment, and human acceptance remain open."
+      "notes": "Current Chromium evidence covers immediate archive removal, a visible numeric 10-second in-memory recovery window, normal-command Undo restoration with revision history, and a canceled hard-clear confirmation whose storage-owned impact report enumerates canonical records, relationships, history, artifact payloads, pending effects, package saves, and automation rules while disclosing unresolved relationship endpoints. The current built artifact plus storage regression proves confirmed hard clear removes persisted automation rules and all modeled effect operations together with canonical data while preserving presentation settings; the typed confirmation now explicitly reports all effects, preserved relationships, and a zero-second recovery window. Persistent/restart undo, full transitive graph/orphan blast-radius computation, every irreversible operation, browser/target breadth, assistive technology, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-117",
