@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "b372a068b32743797377279ae6c02579dfd8c04993e09ddee90a466b55a615da",
-        "bytes": 209985
+        "sha256": "ab7a1fbe5f33f311b2ef8247a3de68b43add6b41eba145c84ae62027665e0d35",
+        "bytes": 210949
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -159,8 +159,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "b4ba2f284a25cbcc46a3b2c10cb9093c62e1432d71d99ef34fa4ece71f59764a",
-        "bytes": 7422
+        "sha256": "876281b1264f61bdc6f47292f8ed798883f2fc10a77ae9850e82491bc4b2981c",
+        "bytes": 7500
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "21feea99b4a3627b5fc9bcc9f2f929235d29e6260dea25fe1b371582dc8961e0",
-        "bytes": 76549
+        "sha256": "2ec351de8edf6417d82d3c31466d3cea84dd7431aac458edf688d7b212ff5bb7",
+        "bytes": 77166
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -224,13 +224,13 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "f69164d65bd376c880edf8c145de3901b71612d0de78ab97d2a1758b09a6c6cf",
-        "bytes": 6005
+        "sha256": "4c1bfdf3f010719f596485e7da41f09b65c9ebf52c24ed1af247801cc466d2d0",
+        "bytes": 6119
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "6fe5564f7011ad16d3104cfbeb300d392038958c0298eae5eba06f54f14339dc",
-        "bytes": 2433
+        "sha256": "dcfa981c644852c2b9608e5b9f9890388e598bbfb953fbfac0cd01800477791d",
+        "bytes": 2609
       },
       {
         "path": "docs/control/requirements.json",
@@ -239,8 +239,8 @@
       },
       {
         "path": "docs/control/risk-threat-register.json",
-        "sha256": "68c7722bb3f8413843e25b45ffbfda8ecdeca8cabf756038aa1b7d5f1d149c48",
-        "bytes": 2927
+        "sha256": "278a3dc567a890728d954002470864f79898737154d5994557ed5ac8dbb55005",
+        "bytes": 3112
       },
       {
         "path": "docs/control/support-matrix.json",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "82f64960b93d8fedbcd718897d3f1a02dc424155caf25949b06165cf303ada82",
-        "bytes": 330316
+        "sha256": "24b9cf7529126dcdb41a3a039195cec4dae665f4ede62f4336d5eff61ec1c939",
+        "bytes": 332042
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -414,13 +414,13 @@
       },
       {
         "path": "src/core/acquire.test.ts",
-        "sha256": "95168e19770c3cd480b6cdafd16115aaef92e2c070640485651d1146ce7d5fac",
-        "bytes": 5908
+        "sha256": "4b4ba8c5fbe922b7b703f2e1b1b3c8d2de59d2f9e8eb6629703067ab6137b8c9",
+        "bytes": 7118
       },
       {
         "path": "src/core/acquire.ts",
-        "sha256": "8a407028b876cbbafebc95271585e1699971b8b94f857d1d87b3eb07a0370c44",
-        "bytes": 15814
+        "sha256": "f9ce1cbaa68f49396efe172698e98c106e063429ce800f2dfff2ba57d5434d95",
+        "bytes": 15870
       },
       {
         "path": "src/core/ai.test.ts",
@@ -454,13 +454,13 @@
       },
       {
         "path": "src/core/artifact.test.ts",
-        "sha256": "1b113ea5e5a82aa351c242661c28c5acdfba52d11ff38e3e3ab7349cad29178f",
-        "bytes": 4482
+        "sha256": "8947aa3e69880df87d5e71ed1e5e50d2bc73b338608ae97a4ac362a187926c32",
+        "bytes": 6266
       },
       {
         "path": "src/core/artifact.ts",
-        "sha256": "1b4a037397240c2ebab01c4587481914b739afae8bcdbfadb3de9b2f61bbe0de",
-        "bytes": 10892
+        "sha256": "81db5801c30ceafaed2150536a18e79de8bb5316796a695418fb3910a5ab25d0",
+        "bytes": 14002
       },
       {
         "path": "src/core/automation.test.ts",

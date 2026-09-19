@@ -2195,8 +2195,14 @@
         "line": 4223
       },
       "text": "Hostile spreadsheet/PDF fixtures contain formula-injection strings, macros/active content, remote links/resources, and extracted markup. Import/extraction preserves the original source but does not execute formulas/macros/scripts/remote fetches or grant the content canonical-write/network/effect authority. Spreadsheet export/import tests report any formula/value/type/date loss relevant to the finance claim.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/artifact.ts#inspectSpreadsheetSafety",
+        "src/core/artifact.test.ts#keeps-hostile-spreadsheet-formulas-markup-links-and-macros-inert-while-preserving-the-source",
+        "src/core/acquire.test.ts#stages-a-hostile-macro-spreadsheet-as-one-inert-source-preserving-artifact",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-hostile-spreadsheet-pdf-intake-receipt"
+      ],
+      "notes": "The existing Artifact owner now detects bounded CSV/TSV formula/control prefixes, external links/resources, markup, and macro/active-content markers in spreadsheet formats; original bytes remain preserved, no formula/macro/script/network execution occurs, and round-trip transformations are explicitly reported as none for the retained source. PDF active-action rejection remains covered. XLSX/PDF parser breadth, consumer round-trip qualification, target/browser/accessibility/deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-148",

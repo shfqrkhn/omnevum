@@ -11,7 +11,7 @@
     "acceptanceScenarios": 172
   },
   "completionClaim": "100_PERCENT_COMPLETE is prohibited until every mandatory requirement and applicable acceptance scenario has evidence-backed PASS or justified NOT_APPLICABLE and no material UNKNOWN/stale/open blocker remains.",
-  "lastVerifiedIncrement": "OMN-ACC-152 ordinary-use benchmark: source 713f4c3, exact artifact d62ec2d684be5e94f9db981ac1ae18dec75e4e6bc4705420eaf84878324794ed, worker cache omnevum-shell-a712fcc0fa96b6c9; source-contract comparison against e6a9be4 preserves fields/classification/review/navigation and reduces four monthly confirmations/submissions to one.",
+  "lastVerifiedIncrement": "OMN-ACC-147 hostile spreadsheet/PDF intake: source 4ab8d7d4df7555f96121128c1e56b0abca831581, exact artifact 7b59f4795d99a5cb7a7b9d49e72269eb777d5577e78b5fc5a99d8bdc97bfee6c, worker cache omnevum-shell-503556c45e34d015; Artifact preserves hostile sources, detects formula/link/markup/macro markers, and never evaluates or fetches imported content. OMN-ACC-152 remains receipt-bound PARTIAL immediately prior.",
   "gates": [
     {"id": "PLATFORM_READY_FOR_CORE", "phase": 0, "status": "IN_PROGRESS", "blockers": ["production static-host/browser/support/accessibility/offline qualification", "security/recovery/fault evidence", "selected search target performance/permission qualification and optional-substrate isolation"]},
     {"id": "MVP_RELEASE_READY", "phase": 1, "status": "NOT_STARTED", "blockers": ["Phase 0 gate"]},
