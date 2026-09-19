@@ -28,6 +28,7 @@ import { matchesSearchFacets, parseSearchQuery, serializeSearchQuery, type Parse
 import { readPath } from "../core/data";
 import { assessTextAnchor, createTextAnnotation } from "../core/annotation";
 import { createEvidenceLink, type EvidenceRelation } from "../core/evidence";
+import { createDependencyLink, isDependencyLink, type DependencyEdgeKind } from "../core/dependency-graph";
 import { makePlaceData, parseGeoJsonPoint } from "../core/place";
 import { projectForAuthorizedShare } from "../core/share";
 import { canUseShareGrant, createShareGrant, revokeShareGrant } from "../core/sharing";
@@ -692,8 +693,24 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <select id="relate-target" name="target"></select>
           <label for="relate-label">${copy.relationship}</label>
           <input id="relate-label" name="relation" type="text" maxlength="120" value="related" />
+          <label for="relate-kind">${copy.typedRelationshipKind}</label>
+          <select id="relate-kind" name="kind">
+            <option value="REFERENCE">${copy.typedReference}</option>
+            <option value="DEPENDENCY">${copy.dependency}</option>
+            <option value="ALLOCATION">${copy.allocation}</option>
+            <option value="SYNERGY">${copy.synergy}</option>
+            <option value="CONFLICT">${copy.conflict}</option>
+            <option value="FEEDBACK">${copy.feedback}</option>
+          </select>
+          <label for="relate-scenario">${copy.relationshipScenario}</label>
+          <input id="relate-scenario" name="scenario" type="text" maxlength="160" />
+          <label for="relate-allocation-mode">${copy.allocationMode}</label>
+          <select id="relate-allocation-mode" name="allocationMode">
+            <option value="EXCLUSIVE">${copy.exclusive}</option>
+            <option value="ENABLING">${copy.enabling}</option>
+          </select>
           <button id="relate-submit" type="submit">${copy.createLink}</button>
-          <p id="relate-status" class="hint" role="status">${copy.relationshipHint}</p>
+          <p id="relate-status" class="hint" role="status">${copy.relationshipHint} ${copy.typedRelationshipHint}</p>
         </form>
       </section>
 
@@ -1081,6 +1098,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const relateSource = root.querySelector<HTMLSelectElement>("#relate-source");
   const relateTarget = root.querySelector<HTMLSelectElement>("#relate-target");
   const relateLabel = root.querySelector<HTMLInputElement>("#relate-label");
+  const relateKind = root.querySelector<HTMLSelectElement>("#relate-kind")!;
+  const relateScenario = root.querySelector<HTMLInputElement>("#relate-scenario")!;
+  const relateAllocationMode = root.querySelector<HTMLSelectElement>("#relate-allocation-mode")!;
   const relateSubmit = root.querySelector<HTMLButtonElement>("#relate-submit");
   const relateStatus = root.querySelector<HTMLElement>("#relate-status");
   const evidenceForm = root.querySelector<HTMLFormElement>("#evidence-form");
@@ -1699,7 +1719,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         const item = document.createElement("li");
         item.className = "record-item";
         const otherId = relationship.data.sourceId === record.id ? relationship.data.targetId : relationship.data.sourceId;
-        const relation = typeof relationship.data.relation === "string" ? relationship.data.relation : "related";
+        const relation = isDependencyLink(relationship)
+          ? `${relationship.data.edgeKind}${relationship.data.scenarioId ? ` [${relationship.data.scenarioId}]` : ""}: ${relationship.data.label}`
+          : typeof relationship.data.relation === "string" ? relationship.data.relation : "related";
         const label = document.createElement("span");
         label.textContent = `${relation} · ${typeof otherId === "string" ? otherId : "unknown"}`;
         item.append(label);
@@ -3052,6 +3074,16 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     syncTriageBatchControls();
   };
 
+  const updateTypedRelationshipControls = (): void => {
+    const typed = relateKind.value !== "REFERENCE";
+    relateScenario.disabled = !typed;
+    relateScenario.required = relateKind.value === "FEEDBACK";
+    relateAllocationMode.disabled = relateKind.value !== "ALLOCATION";
+  };
+
+  relateKind.addEventListener("change", updateTypedRelationshipControls);
+  updateTypedRelationshipControls();
+
   const renderRelationshipChoices = async (): Promise<void> => {
     const records = (await store.list()).filter((record) => record.recordType !== "relationship" && !isCleanupHistoryRecord(record));
     for (const select of [relateSource, relateTarget]) {
@@ -4201,8 +4233,27 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
     const relation = relateLabel.value.trim() || "related";
     try {
-      await commands.relate(relateSource.value, relateTarget.value, relation);
-      relateStatus.textContent = copy.linkCreated;
+      const selectedKind = relateKind.value as DependencyEdgeKind | "REFERENCE";
+      if (selectedKind === "REFERENCE") {
+        await commands.relate(relateSource.value, relateTarget.value, relation);
+        relateStatus.textContent = copy.linkCreated;
+      } else {
+        const scenarioId = relateScenario.value.trim() || undefined;
+        if (selectedKind === "FEEDBACK" && !scenarioId) {
+          relateStatus.textContent = copy.scenarioRequired;
+          return;
+        }
+        await createDependencyLink(commands, {
+          sourceId: relateSource.value,
+          targetId: relateTarget.value,
+          edgeKind: selectedKind,
+          label: relation,
+          ...(scenarioId ? { scenarioId } : {}),
+          ...(selectedKind === "ALLOCATION" ? { allocationMode: relateAllocationMode.value === "ENABLING" ? "ENABLING" : "EXCLUSIVE" } : {}),
+          evidence: { truthClass: "USER_OBSERVATION", sourceIds: [relateSource.value, relateTarget.value], note: "Explicit user-created typed relationship." }
+        });
+        relateStatus.textContent = copy.typedLinkCreated;
+      }
       await renderRecords(searchQuery.value);
     } catch (error) {
       relateStatus.textContent = describeError(error, "Relationship was not created");
