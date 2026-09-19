@@ -134,7 +134,7 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "b289f70296782f7b6cbd8b34d1999ad028889941f9f714a417aba27b2e3f66d3",
+        "sha256": "6d5309de6d5246ff7a0521bb5dd14e5feb18d6e36f7dc44c307ca5983f71dd3c",
         "bytes": 183650
       },
       {
@@ -159,7 +159,7 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "8f99d40c956570db0b51ce02df98154224715d9a4123fec16b0c203b519c99fa",
+        "sha256": "b82ac6b2f5c288808204fb8c6cc2a9234561ead04687d3be6a0743ca76461fdb",
         "bytes": 4643
       },
       {
@@ -189,7 +189,7 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "ca1e316174b473a72cf37a5fb964cc0f4a587890d459ed2ed08953b5314fe9a2",
+        "sha256": "6b08ff2b627f584e01570bf193ee0955acd68dd840e0ccd6e3a7cae46173ffb9",
         "bytes": 60535
       },
       {
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "8e01c96e7725a051f6a669a351253dda52feaef08c38df86bf05ca838a2da3b3",
+        "sha256": "c3d8aa759d6e7302d346377f43d1aa3bee45695fa4caa66cd22257cf6facad2e",
         "bytes": 2400
       },
       {
@@ -269,7 +269,7 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "5258b3ec3dcbc3f69be7a60ceb52ff16a671734a5e0460f0eef9688e078acc09",
+        "sha256": "fb728ab4cd20306eaad5c6c62c200b975873a36d96fe296df86657833e3eb781",
         "bytes": 270158
       },
       {
