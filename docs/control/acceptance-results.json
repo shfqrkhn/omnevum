@@ -1608,9 +1608,10 @@
       "text": "In every built-in family in both Light and AMOLED Dark modes, every consequential state on Home, Capture, and an active lens - including action versus synergy, which share a hue within each pair - remains distinguishable under monochrome and representative color-vision-deficiency simulations because each state carries a non-color label, icon, shape, textual/segmented indicator, or positional carrier.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-non-color-state-carrier-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-non-color-state-carrier-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-cvd-matrix-receipt"
       ],
-      "notes": "Current Chromium evidence proves textual and labelled state carriers across Home, Capture, Triage, and Records without relying on accent hue. All family/mode monochrome and representative CVD breadth, active-lens coverage, other engines, assistive technology, physical touch, and human acceptance remain open."
+      "notes": "Current Chromium evidence proves textual and labelled state carriers across Home, Capture, Triage, and Records without relying on accent hue, plus a 24-run achromatopsia/deuteranopia/protanopia/tritanopia matrix across all six family/mode combinations with zero geometry or labelled-surface loss. Pixel-level visual inspection, full active-lens state coverage, other engines, assistive technology, physical touch, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-104",

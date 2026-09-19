@@ -32,7 +32,8 @@
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-delayed-onboarding-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-home-consideration-receipt",
-    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-home-focus-mode-receipt"
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-home-focus-mode-receipt",
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-cvd-matrix-receipt"
   ],
   "focus": [
     "static-host shell and base-path routing",
