@@ -174,4 +174,13 @@ describe("canonical Finance projection", () => {
     expect(projection.crossDomain.cashFlowByMonth).toEqual({});
     expect(projection.crossDomain.limitations).toEqual(["travel-plan-incomplete: travel financial projection is incomplete"]);
   });
+
+  it("creates an evidence-linked update brief and stays quiet without a material change set", () => {
+    const income = record("brief-income", { kind: "finance-transaction", merchant: "payroll", description: "Payroll", amountMinor: "300000", currency: "CAD", accountId: "checking", postedAt: "2026-01-02T00:00:00.000Z", status: "POSTED" }, { truthClass: "IMPORTED_RECORD", provenance: { source: "IMPORT", capturedAt: "2026-01-03T00:00:00.000Z", sourceId: "brief-statement" } });
+    const changed = projectFinanceState([income], { changedIds: [income.id] });
+    expect(changed.updateBrief).toMatchObject({ materialChange: true, quiet: false, truthClass: "DERIVED", sourceIds: ["brief-statement"] });
+    expect(changed.updateBrief.sections).toMatchObject({ currentPosition: 1, materialChanges: 1, cashFlowOutlook: 1 });
+    const quiet = projectFinanceState([income]);
+    expect(quiet.updateBrief).toMatchObject({ materialChange: false, quiet: true });
+  });
 });

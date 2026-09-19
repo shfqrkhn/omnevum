@@ -2653,6 +2653,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const fundingAlternative = funding?.alternatives[0];
     const fundingStatus = funding?.fundingConflict ? copy.financeFundingStatus(formatMoney(funding.aggregateShortfall, presentation.locale), Object.keys(fundingAlternative?.shortfallByGoal ?? {}).length || finance.financeGoalPlans.length, funding.alternatives.length, funding.hardConstraintConflict) : "";
     const goalLimitations = finance.financeGoalLimitations.length > 0 ? ` Goal limitations: ${finance.financeGoalLimitations.join("; ")}.` : "";
+    const briefStatus = finance.updateBrief.materialChange
+      ? presentation.locale === "fr-CA"
+        ? `Brief financier: position ${finance.updateBrief.sections.currentPosition}, changements ${finance.updateBrief.sections.materialChanges}, perspectives ${finance.updateBrief.sections.cashFlowOutlook}, objectifs ${finance.updateBrief.sections.goals}, revues ${finance.updateBrief.sections.reviewItems}, motifs recurrents ${finance.updateBrief.sections.recurringPatterns}, previsions ${finance.updateBrief.sections.forecastVintages}, limitations ${finance.updateBrief.sections.dataQualityLimitations}.`
+        : `Finance update brief: position ${finance.updateBrief.sections.currentPosition}, changes ${finance.updateBrief.sections.materialChanges}, outlook ${finance.updateBrief.sections.cashFlowOutlook}, goals ${finance.updateBrief.sections.goals}, review items ${finance.updateBrief.sections.reviewItems}, recurring patterns ${finance.updateBrief.sections.recurringPatterns}, forecast vintages ${finance.updateBrief.sections.forecastVintages}, limitations ${finance.updateBrief.sections.dataQualityLimitations}.`
+      : "";
     const crossDomainStatus = finance.crossDomain.travelPlans.length > 0 || finance.crossDomain.compensationChanges.length > 0 || finance.crossDomain.limitations.length > 0
       ? copy.financeCrossDomainStatus(finance.crossDomain.travelPlans.length, finance.crossDomain.compensationChanges.length, Object.keys(finance.crossDomain.cashFlowByMonth).length, finance.crossDomain.affectedFinanceIds.length, finance.crossDomain.limitations.length)
       : "";
@@ -2711,7 +2716,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       appendFinanceInsight(copy.financePending, formatMoney(finance.summary.pendingNet, presentation.locale));
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
-      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${fireStatus} ${goalLimitations} ${goalProgress}`;
+      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${fireStatus} ${goalLimitations} ${briefStatus} ${goalProgress}`;
       insightsGrid.append(financeStatus);
       if (funding) appendFundingReview(funding);
     } else if (finance.transactionCount === 0 && finance.financeGraph.nodes.length === 0) {
@@ -2722,7 +2727,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     } else {
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
-      financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${fireStatus} ${goalLimitations} ${goalProgress}`;
+      financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${fireStatus} ${goalLimitations} ${briefStatus} ${goalProgress}`;
       insightsGrid.append(financeStatus);
       if (funding) appendFundingReview(funding);
     }

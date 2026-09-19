@@ -52,6 +52,24 @@ export interface FinanceFireScenarioProjection {
   sourceIds: string[];
 }
 
+export interface FinanceUpdateBrief {
+  sourceIds: string[];
+  materialChange: boolean;
+  quiet: boolean;
+  sections: {
+    currentPosition: number;
+    materialChanges: number;
+    cashFlowOutlook: number;
+    goals: number;
+    reviewItems: number;
+    recurringPatterns: number;
+    forecastVintages: number;
+    dataQualityLimitations: number;
+  };
+  limitations: string[];
+  truthClass: "DERIVED";
+}
+
 export interface FinanceProjection {
   status: "NO_DATA" | "LIMITED" | "READY";
   currency?: string;
@@ -75,6 +93,7 @@ export interface FinanceProjection {
   statementFacts: FinanceStatementFacts[];
   fireScenarios: FinanceFireScenarioProjection[];
   fireScenarioLimitations: string[];
+  updateBrief: FinanceUpdateBrief;
   crossDomain: FinanceCrossDomainProjection;
   invalidatedFinanceIds: string[];
   forecastVintages: FinanceForecastVintage[];
@@ -224,6 +243,23 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
       return [];
     }
   }).sort((left, right) => left.recordId.localeCompare(right.recordId));
+  const updateBrief: FinanceUpdateBrief = {
+    sourceIds: [...new Set([...transactions.map((transaction) => transaction.lineage.sourceId), ...statementFacts.map((facts) => facts.sourceId), ...crossDomain.sourceIds])].sort(),
+    materialChange: (options.changedIds?.length ?? 0) > 0,
+    quiet: (options.changedIds?.length ?? 0) === 0,
+    sections: {
+      currentPosition: summary ? 1 : statementFacts.length,
+      materialChanges: options.changedIds?.length ?? 0,
+      cashFlowOutlook: Object.keys(crossDomain.cashFlowByMonth).length + (summary ? 1 : 0),
+      goals: financeGoalPlans.length,
+      reviewItems: reviewCases.length,
+      recurringPatterns: recurringPatterns.length,
+      forecastVintages: options.forecastVintages?.length ?? 0,
+      dataQualityLimitations: quality.limitations.length + crossDomain.limitations.length + financeGoalLimitations.length + fireScenarioLimitations.length
+    },
+    limitations: [...new Set([...quality.limitations, ...crossDomain.limitations, ...financeGoalLimitations, ...fireScenarioLimitations])].sort(),
+    truthClass: "DERIVED"
+  };
   const invalidatedFinanceIds = dependencyImpact.invalidatedDerivedIds.filter((id) => financeNodeIds.has(id)).sort();
   const status = transactions.length === 0 ? "NO_DATA" : quality.status === "SUFFICIENT" && reviewCases.length === 0 ? "READY" : "LIMITED";
   return {
@@ -249,6 +285,7 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
     statementFacts,
     fireScenarios,
     fireScenarioLimitations: [...new Set(fireScenarioLimitations)].sort(),
+    updateBrief,
     crossDomain,
     invalidatedFinanceIds,
     forecastVintages: [...(options.forecastVintages ?? [])]
