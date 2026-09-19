@@ -11,7 +11,7 @@
     "acceptanceScenarios": 172
   },
   "completionClaim": "100_PERCENT_COMPLETE is prohibited until every mandatory requirement and applicable acceptance scenario has evidence-backed PASS or justified NOT_APPLICABLE and no material UNKNOWN/stale/open blocker remains.",
-  "lastVerifiedIncrement": "OMN-ACC-147 hostile spreadsheet/PDF intake: source 4ab8d7d4df7555f96121128c1e56b0abca831581, exact artifact 7b59f4795d99a5cb7a7b9d49e72269eb777d5577e78b5fc5a99d8bdc97bfee6c, worker cache omnevum-shell-503556c45e34d015; Artifact preserves hostile sources, detects formula/link/markup/macro markers, and never evaluates or fetches imported content. OMN-ACC-152 remains receipt-bound PARTIAL immediately prior.",
+  "lastVerifiedIncrement": "OMN-ACC-165 authorized graph blast-radius explanation: source efb659fa1a01586f4bc7386ace2aa3c7a87fd1d7, exact artifact 4aaddc1fa86e7be48dfa4f2fde1e62c6cd23e2f34e174b95ed5c9ede0e4a280d, worker cache omnevum-shell-e75057ab596dbe42; the pure authorized projection spans multiple owners/lenses, recomputes safe records, invalidates a DERIVED projection, excludes an unauthorized target, and emits one concise explanation without permission or ownership mutation. OMN-ACC-147 and OMN-ACC-152 remain receipt-bound PARTIAL immediately prior.",
   "gates": [
     {"id": "PLATFORM_READY_FOR_CORE", "phase": 0, "status": "IN_PROGRESS", "blockers": ["production static-host/browser/support/accessibility/offline qualification", "security/recovery/fault evidence", "selected search target performance/permission qualification and optional-substrate isolation"]},
     {"id": "MVP_RELEASE_READY", "phase": 1, "status": "NOT_STARTED", "blockers": ["Phase 0 gate"]},

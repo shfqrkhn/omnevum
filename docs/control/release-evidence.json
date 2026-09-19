@@ -3,16 +3,16 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "7b59f4795d99a5cb7a7b9d49e72269eb777d5577e78b5fc5a99d8bdc97bfee6c", "sourceRevision": "4ab8d7d4df7555f96121128c1e56b0abca831581", "serviceWorkerCache": "omnevum-shell-503556c45e34d015"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "4aaddc1fa86e7be48dfa4f2fde1e62c6cd23e2f34e174b95ed5c9ede0e4a280d", "sourceRevision": "efb659fa1a01586f4bc7386ace2aa3c7a87fd1d7", "serviceWorkerCache": "omnevum-shell-e75057ab596dbe42"},
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF; captured after the full npm run build on 2026-09-19.",
   "artifactFiles": [
     {"path": "dist/assets/index-5Bomwce_.css", "sha256": "1c11d276ca2f5c25d1e54f84910a73a0b7c2f87d9983897d4972e1848d041446", "bytes": 24102},
-    {"path": "dist/assets/index-DlXDA6N4.js", "sha256": "6d12ffd2a5113f315766ae659a1ca1c0d0a95ecf7641d308ca6112b07ca6e10e", "bytes": 488106},
-    {"path": "dist/assets/index-DlXDA6N4.js.map", "sha256": "b5cc9d7bbba9b530fc228951b6e348afcbec44f8d6c76f479b37da6432f4a69a", "bytes": 1419163},
+    {"path": "dist/assets/index-DMVnc8c4.js", "sha256": "b65b418cba50a62e7f56229236d2d73db098a72821c67350ee6020c39bed86ff", "bytes": 489891},
+    {"path": "dist/assets/index-DMVnc8c4.js.map", "sha256": "f016f43ba5c2afe05d4611857221db7353ca4e3e6d7b83b762382b8c09fa4cfe", "bytes": 1424588},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "9b9286c0d6f611a7fa63a8beab830688326b4048cd1e3e1d3ff9754668df9767", "bytes": 933},
+    {"path": "dist/index.html", "sha256": "4df3f1c85c621115f995999091eba97138c8f41a6049ffef98ef0e9e9c308ea3", "bytes": 933},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
-    {"path": "dist/sw.js", "sha256": "88d254d13cc91e19974c3fde6821637fc25c3cde9e1711e7599d8021c52c94aa", "bytes": 3036}
+    {"path": "dist/sw.js", "sha256": "d74ba56857ac48153f57cc3af879dc2beb402a78635f2e79e7581f87bbd0de6a", "bytes": 3036}
   ],
   "requiredEvidence": [
     "control-generation-and-drift",
@@ -28,5 +28,5 @@
     "human-acceptance-where-required"
   ],
   "evidencePolicy": "Generated status text cannot create PASS. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains NOT_RUN/UNKNOWN.",
-  "currentDecision": "Continue Phase 0; OMN-ACC-147 hostile spreadsheet/PDF intake is source/test/build qualified at PARTIAL, while parser breadth, target qualification, deployment, and human acceptance remain open; do not publish a completion or production-release claim."
+  "currentDecision": "Continue Phase 0; OMN-ACC-165 authorized graph blast-radius explanation is source/test/build qualified at PARTIAL, while full correction/removal orchestration, target qualification, deployment, and human acceptance remain open; do not publish a completion or production-release claim."
 }

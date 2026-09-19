@@ -2449,12 +2449,15 @@
       "text": "A material canonical record is corrected or removed. Dependency traversal identifies every materially affected authorized projection across at least three different lenses/domains, recomputes safe derived state, invalidates uncertain outputs, and presents one concise change-impact explanation without requiring manual cross-module repair.",
       "status": "PARTIAL",
       "evidence": [
+        "src/core/dependency-graph.ts#projectAuthorizedDependencyImpact",
+        "src/core/dependency-graph.test.ts#projects-an-authorized-multi-owner-multi-lens-blast-radius-without-changing-permissions",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-authorized-graph-blast-radius-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-finance-projection-and-graph-recomputation-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-allocation-amount-and-resource-reconciliation-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-finance-planning-and-goal-trajectory-receipt"
       ],
-      "notes": "Current core impact analysis and the integrated Finance projection deterministically traverse authorized graph nodes, report affected IDs/depth and invalidated derived IDs, quarantine accidental cycles, exclude explanatory/feedback edges from ordinary propagation, and skip invalid endpoints. Three-lens/domain adapters, canonical recomputation orchestration, and one concise user-facing correction/removal explanation remain open."
+      "notes": "Source revision efb659f is test/build qualified. projectAuthorizedDependencyImpact now filters to an explicit authorized record set, reports affected depth/owners/lenses across core.capture, domain.finance, domain.health, and platform.analyze, marks safe records RECOMPUTE and DERIVED projections INVALIDATE, and emits one concise explanation without permission or ownership mutation; Finance renders the compact bilingual status only for a material changed-ID set. Full correction/removal command orchestration, broader real-domain adapters, complete recomputation/invalidation coverage, target/browser/accessibility/input qualification, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-166",
