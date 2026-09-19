@@ -54,4 +54,17 @@ describe("canonical Finance projection", () => {
     expect(projection.summariesByCurrency.USD?.postedIncome.amountMinor).toBe("1000");
     expect(projection.status).toBe("LIMITED");
   });
+
+  it("reconciles exact-money allocation edges against one canonical resource", () => {
+    const resource = record("resource-1", { kind: "finance-resource", label: "surplus", text: "Surplus", amountMinor: "10000", currency: "CAD" });
+    const goalA = record("goal-a", { kind: "goal", text: "Emergency" }, { owner: "core.capture", recordType: "note" });
+    const goalB = record("goal-b", { kind: "goal", text: "Home" }, { owner: "core.capture", recordType: "note" });
+    const allocationA = record("allocation-a", { kind: "dependency-link", version: 1, sourceId: resource.id, targetId: goalA.id, edgeKind: "ALLOCATION", allocationMode: "EXCLUSIVE", allocation: { amountMinor: "7000", currency: "CAD" }, status: "ACTIVE", label: "reserve", text: "allocation" }, { recordType: "relationship", owner: "platform.dependency" });
+    const allocationB = record("allocation-b", { kind: "dependency-link", version: 1, sourceId: resource.id, targetId: goalB.id, edgeKind: "ALLOCATION", allocationMode: "EXCLUSIVE", allocation: { amountMinor: "5000", currency: "CAD" }, status: "ACTIVE", label: "home", text: "allocation" }, { recordType: "relationship", owner: "platform.dependency" });
+    const projection = projectFinanceState([resource, goalA, goalB, allocationA, allocationB]);
+    expect(projection.financeAllocationResults).toHaveLength(1);
+    expect(projection.financeAllocationResults[0]?.result.overAllocated.amountMinor).toBe("2000");
+    expect(projection.financeAllocationResults[0]?.result.conflictIds).toEqual(["RESOURCE_OVER_ALLOCATED"]);
+    expect(projection.financeGraph.edges.some((edge) => edge.allocation?.currency === "CAD" && edge.allocation.amountMinor === "7000")).toBe(true);
+  });
 });

@@ -2,7 +2,7 @@ import { projectDependencyGraph, projectDependencyImpact, type DependencyGraph, 
 import { parseMoney, type MoneyValue } from "./money";
 import type { CanonicalRecord, TruthClass } from "./model";
 import type { FinanceLineage, FinanceTransaction, FinanceTransactionStatus } from "./finance";
-import { assessFinanceDataQuality, analyzeFinanceGraph, detectFinanceReviewCases, inferFinanceRecurringPatterns, summarizeFinanceTransactions, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastVintage, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceReviewCase, type FinanceTransactionSummary } from "./finance-model";
+import { allocateFinanceResource, assessFinanceDataQuality, analyzeFinanceGraph, detectFinanceReviewCases, inferFinanceRecurringPatterns, summarizeFinanceTransactions, type FinanceAllocationResult, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastVintage, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceReviewCase, type FinanceTransactionSummary } from "./finance-model";
 
 /**
  * Read-only Finance projection over canonical records and the shared typed
@@ -31,6 +31,7 @@ export interface FinanceProjection {
   dependencyImpact: DependencyImpact;
   financeGraph: FinanceDependencyGraph;
   financeGraphAnalysis: FinanceGraphAnalysis;
+  financeAllocationResults: Array<{ resourceId: string; result: FinanceAllocationResult }>;
   invalidatedFinanceIds: string[];
   forecastVintages: FinanceForecastVintage[];
 }
@@ -76,9 +77,15 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
   const financeNodeIds = new Set(activeRecords.filter(isFinanceNode).map((record) => record.id));
   const financeGraph: FinanceDependencyGraph = {
     nodes: activeRecords.filter((record) => financeNodeIds.has(record.id)).map((record) => ({ id: record.id, label: financeNodeLabel(record), evidence: { truthClass: financeFactClass(record.truthClass), sourceIds: sourceIdsForRecord(record), note: "Read-only Finance projection over the canonical record." } })).sort((left, right) => left.id.localeCompare(right.id)),
-    edges: dependencyGraph.edges.filter((edge) => financeNodeIds.has(edge.sourceId) && financeNodeIds.has(edge.targetId)).map((edge) => ({ id: edge.id, from: edge.sourceId, to: edge.targetId, kind: edge.edgeKind, ...(edge.scenarioId ? { scenarioId: edge.scenarioId } : {}), evidence: { truthClass: financeFactClass(edge.evidence?.truthClass ?? "DERIVED"), sourceIds: edge.evidence?.sourceIds ?? [edge.id], note: "Typed relationship is projected without granting permission or creating a second owner." } })).sort((left, right) => left.id.localeCompare(right.id))
+    edges: dependencyGraph.edges.filter((edge) => financeNodeIds.has(edge.sourceId) && financeNodeIds.has(edge.targetId)).map((edge) => ({ id: edge.id, from: edge.sourceId, to: edge.targetId, kind: edge.edgeKind, ...(edge.scenarioId ? { scenarioId: edge.scenarioId } : {}), ...(edge.allocationMode ? { allocationMode: edge.allocationMode } : {}), ...(edge.allocation ? { allocation: edge.allocation } : {}), evidence: { truthClass: financeFactClass(edge.evidence?.truthClass ?? "DERIVED"), sourceIds: edge.evidence?.sourceIds ?? [edge.id], note: "Typed relationship is projected without granting permission or creating a second owner." } })).sort((left, right) => left.id.localeCompare(right.id))
   };
   const financeGraphAnalysis = analyzeFinanceGraph(financeGraph);
+  const financeAllocationResults = activeRecords.filter((record) => record.data.kind === "finance-resource").flatMap((resource) => {
+    const money = recordMoney(resource);
+    if (!money || BigInt(money.amountMinor) < 0n) return [];
+    const allocations = financeGraph.edges.filter((edge) => edge.from === resource.id && edge.kind === "ALLOCATION" && edge.allocation).map((edge) => ({ id: edge.id, resourceId: resource.id, goalId: edge.to, amount: edge.allocation!, mode: edge.allocationMode ?? "EXCLUSIVE", evidence: edge.evidence }));
+    return [{ resourceId: resource.id, result: allocateFinanceResource(money, allocations, {}, resource.id) }];
+  });
   const invalidatedFinanceIds = dependencyImpact.invalidatedDerivedIds.filter((id) => financeNodeIds.has(id)).sort();
   const status = transactions.length === 0 ? "NO_DATA" : quality.status === "SUFFICIENT" && reviewCases.length === 0 ? "READY" : "LIMITED";
   return {
@@ -96,6 +103,7 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
     dependencyImpact,
     financeGraph,
     financeGraphAnalysis,
+    financeAllocationResults,
     invalidatedFinanceIds,
     forecastVintages: [...(options.forecastVintages ?? [])]
   };
@@ -153,6 +161,17 @@ function financeNodeLabel(record: CanonicalRecord): string {
   const data = record.data;
   for (const value of [data.label, data.name, data.merchant, data.goalId, data.accountId, data.text]) if (typeof value === "string" && value.trim()) return value.trim().slice(0, 240);
   return record.id;
+}
+
+function recordMoney(record: CanonicalRecord): MoneyValue | undefined {
+  const amount = typeof record.data.amountMinor === "string" || typeof record.data.amountMinor === "number" ? String(record.data.amountMinor) : "";
+  const currency = typeof record.data.currency === "string" ? record.data.currency : "";
+  if (!/^-?\d+$/.test(amount) || !currency) return undefined;
+  try {
+    return { amountMinor: BigInt(amount).toString(), currency: parseMoney("0", currency).currency };
+  } catch {
+    return undefined;
+  }
 }
 
 function sourceIdsForRecord(record: CanonicalRecord): string[] {

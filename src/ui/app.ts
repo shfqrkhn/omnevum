@@ -710,6 +710,16 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <option value="EXCLUSIVE">${copy.exclusive}</option>
             <option value="ENABLING">${copy.enabling}</option>
           </select>
+          <label for="relate-allocation-amount">${copy.allocationAmount}</label>
+          <input id="relate-allocation-amount" name="allocationAmount" type="text" inputmode="decimal" maxlength="32" />
+          <label for="relate-allocation-currency">${copy.allocationCurrency}</label>
+          <select id="relate-allocation-currency" name="allocationCurrency">
+            <option value="CAD">CAD</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="JPY">JPY</option>
+          </select>
           <button id="relate-submit" type="submit">${copy.createLink}</button>
           <p id="relate-status" class="hint" role="status">${copy.relationshipHint} ${copy.typedRelationshipHint}</p>
         </form>
@@ -1102,6 +1112,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const relateKind = root.querySelector<HTMLSelectElement>("#relate-kind")!;
   const relateScenario = root.querySelector<HTMLInputElement>("#relate-scenario")!;
   const relateAllocationMode = root.querySelector<HTMLSelectElement>("#relate-allocation-mode")!;
+  const relateAllocationAmount = root.querySelector<HTMLInputElement>("#relate-allocation-amount")!;
+  const relateAllocationCurrency = root.querySelector<HTMLSelectElement>("#relate-allocation-currency")!;
   const relateSubmit = root.querySelector<HTMLButtonElement>("#relate-submit");
   const relateStatus = root.querySelector<HTMLElement>("#relate-status");
   const evidenceForm = root.querySelector<HTMLFormElement>("#evidence-form");
@@ -2616,12 +2628,19 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       appendFinanceInsight(copy.financePending, formatMoney(finance.summary.pendingNet, presentation.locale));
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
-      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)}`;
+      const allocationConflicts = finance.financeAllocationResults.reduce((total, entry) => total + entry.result.conflictIds.length, 0);
+      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)}`;
       insightsGrid.append(financeStatus);
-    } else if (finance.transactionCount === 0) {
+    } else if (finance.transactionCount === 0 && finance.financeGraph.nodes.length === 0) {
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
       financeStatus.textContent = copy.financeNoData;
+      insightsGrid.append(financeStatus);
+    } else {
+      const financeStatus = document.createElement("p");
+      financeStatus.className = "hint";
+      const allocationConflicts = finance.financeAllocationResults.reduce((total, entry) => total + entry.result.conflictIds.length, 0);
+      financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)}`;
       insightsGrid.append(financeStatus);
     }
     const considerations = projectDueReminderConsiderations(records);
@@ -3107,6 +3126,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     relateScenario.disabled = !typed;
     relateScenario.required = relateKind.value === "FEEDBACK";
     relateAllocationMode.disabled = relateKind.value !== "ALLOCATION";
+    relateAllocationAmount.disabled = relateKind.value !== "ALLOCATION";
+    relateAllocationCurrency.disabled = relateKind.value !== "ALLOCATION";
   };
 
   relateKind.addEventListener("change", updateTypedRelationshipControls);
@@ -4273,15 +4294,20 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           relateStatus.textContent = copy.scenarioRequired;
           return;
         }
-        await createDependencyLink(commands, {
+        const allocation = selectedKind === "ALLOCATION" && relateAllocationAmount.value.trim()
+          ? parseMoney(relateAllocationAmount.value.trim(), relateAllocationCurrency.value)
+          : undefined;
+        const createdLink = await createDependencyLink(commands, {
           sourceId: relateSource.value,
           targetId: relateTarget.value,
           edgeKind: selectedKind,
           label: relation,
           ...(scenarioId ? { scenarioId } : {}),
           ...(selectedKind === "ALLOCATION" ? { allocationMode: relateAllocationMode.value === "ENABLING" ? "ENABLING" : "EXCLUSIVE" } : {}),
+          ...(allocation ? { allocation } : {}),
           evidence: { truthClass: "USER_OBSERVATION", sourceIds: [relateSource.value, relateTarget.value], note: "Explicit user-created typed relationship." }
         });
+        financeChangedIds = [relateSource.value, createdLink.id, relateTarget.value];
         relateStatus.textContent = copy.typedLinkCreated;
       }
       await renderRecords(searchQuery.value);

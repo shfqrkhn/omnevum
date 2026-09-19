@@ -73,14 +73,14 @@ describe("typed dependency and synergy graph", () => {
     const commands = new CommandBus(store);
     const source = await commands.create({ recordType: "note", owner: "core.capture", sensitivity: "SHARED", data: { text: "savings" } });
     const target = await commands.create({ recordType: "note", owner: "core.capture", sensitivity: "SHARED", data: { text: "retirement goal" } });
-    const first = await createDependencyLink(commands, { sourceId: source.id, targetId: target.id, edgeKind: "ALLOCATION", allocationMode: "EXCLUSIVE", label: "funds", evidence: { truthClass: "USER_OBSERVATION", sourceIds: [source.id] } });
+    const first = await createDependencyLink(commands, { sourceId: source.id, targetId: target.id, edgeKind: "ALLOCATION", allocationMode: "EXCLUSIVE", allocation: { amountMinor: "125000", currency: "CAD" }, label: "funds", evidence: { truthClass: "USER_OBSERVATION", sourceIds: [source.id] } });
     const retry = await createDependencyLink(commands, { sourceId: source.id, targetId: target.id, edgeKind: "ALLOCATION", allocationMode: "EXCLUSIVE", label: "funds" });
     expect(retry.id).toBe(first.id);
     expect(first.owner).toBe("platform.dependency");
     expect(first.sensitivity).toBe("SHARED");
     const projected = projectDependencyGraph(await commands.list());
     expect(projected.nodes).toEqual([source.id, target.id].sort());
-    expect(projected.edges).toMatchObject([{ sourceId: source.id, targetId: target.id, edgeKind: "ALLOCATION", allocationMode: "EXCLUSIVE" }]);
+    expect(projected.edges).toMatchObject([{ sourceId: source.id, targetId: target.id, edgeKind: "ALLOCATION", allocationMode: "EXCLUSIVE", allocation: { amountMinor: "125000", currency: "CAD" } }]);
     expect(recordText(first)).toContain("ALLOCATION: funds");
     store.close();
   });

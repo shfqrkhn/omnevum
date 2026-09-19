@@ -1,5 +1,6 @@
 import type { CommandBus } from "./commands";
 import type { CanonicalRecord } from "./model";
+import { parseMoney, type MoneyValue } from "./money";
 import { scrubSensitiveValue } from "./safety";
 
 export type DependencyEdgeKind = "DEPENDENCY" | "ALLOCATION" | "SYNERGY" | "CONFLICT" | "FEEDBACK";
@@ -15,6 +16,7 @@ export interface DependencyEdgeData {
   label: string;
   scenarioId?: string;
   allocationMode?: "EXCLUSIVE" | "ENABLING";
+  allocation?: MoneyValue;
   evidence?: { truthClass: CanonicalRecord["truthClass"]; sourceIds: string[]; note?: string };
   text: string;
 }
@@ -28,6 +30,7 @@ export interface DependencyEdge {
   label: string;
   scenarioId?: string;
   allocationMode?: "EXCLUSIVE" | "ENABLING";
+  allocation?: MoneyValue;
   evidence?: DependencyEdgeData["evidence"];
 }
 
@@ -79,6 +82,7 @@ export async function createDependencyLink(commands: CommandBus, input: {
   label: string;
   scenarioId?: string;
   allocationMode?: "EXCLUSIVE" | "ENABLING";
+  allocation?: MoneyValue;
   evidence?: { truthClass: CanonicalRecord["truthClass"]; sourceIds: string[]; note?: string };
   status?: DependencyEdgeStatus;
 }): Promise<CanonicalRecord> {
@@ -86,6 +90,8 @@ export async function createDependencyLink(commands: CommandBus, input: {
   if (!EDGE_KINDS.has(input.edgeKind) || !input.label.trim() || input.label.length > 240) throw new Error("Dependency edge kind and label are required");
   if (input.edgeKind === "FEEDBACK" && (!input.scenarioId || !ID.test(input.scenarioId))) throw new Error("Feedback edges require an explicit scenario ID");
   if (input.edgeKind !== "ALLOCATION" && input.allocationMode) throw new Error("Allocation mode is reserved for allocation edges");
+  if (input.edgeKind !== "ALLOCATION" && input.allocation) throw new Error("Allocation amount is reserved for allocation edges");
+  const allocation = input.allocation ? normalizeAllocation(input.allocation) : undefined;
   const [source, target] = await Promise.all([commands.get(input.sourceId), commands.get(input.targetId)]);
   if (!source || !target) throw new Error("Both dependency endpoints must be active canonical records");
   const existing = (await commands.list()).find((record) => isDependencyLink(record) && record.data.status === "ACTIVE" && record.data.sourceId === input.sourceId && record.data.targetId === input.targetId && record.data.edgeKind === input.edgeKind && record.data.scenarioId === input.scenarioId);
@@ -100,6 +106,7 @@ export async function createDependencyLink(commands: CommandBus, input: {
     label: input.label.trim().slice(0, 240),
     ...(input.scenarioId ? { scenarioId: input.scenarioId } : {}),
     ...(input.allocationMode ? { allocationMode: input.allocationMode } : {}),
+    ...(allocation ? { allocation } : {}),
     ...(input.evidence ? { evidence: { ...input.evidence, sourceIds: [...new Set(input.evidence.sourceIds.filter((id) => ID.test(id)))].slice(0, 100), ...(input.evidence.note?.trim() ? { note: input.evidence.note.trim().slice(0, 500) } : {}) } } : {}),
     text: input.sourceId + " -> " + input.targetId + ": " + input.label.trim().slice(0, 240)
   };
@@ -108,12 +115,12 @@ export async function createDependencyLink(commands: CommandBus, input: {
 
 export function isDependencyLink(record: CanonicalRecord): record is CanonicalRecord & { data: DependencyEdgeData } {
   const data = record.data;
-  return record.recordType === "relationship" && record.owner === "platform.dependency" && data.kind === "dependency-link" && data.version === 1 && typeof data.sourceId === "string" && ID.test(data.sourceId) && typeof data.targetId === "string" && ID.test(data.targetId) && data.sourceId !== data.targetId && typeof data.label === "string" && Boolean(data.label.trim()) && data.label.length <= 240 && EDGE_KINDS.has(data.edgeKind as DependencyEdgeKind) && ["ACTIVE", "PROPOSED", "REVOKED"].includes(String(data.status)) && (data.scenarioId === undefined || (typeof data.scenarioId === "string" && ID.test(data.scenarioId)));
+  return record.recordType === "relationship" && record.owner === "platform.dependency" && data.kind === "dependency-link" && data.version === 1 && typeof data.sourceId === "string" && ID.test(data.sourceId) && typeof data.targetId === "string" && ID.test(data.targetId) && data.sourceId !== data.targetId && typeof data.label === "string" && Boolean(data.label.trim()) && data.label.length <= 240 && EDGE_KINDS.has(data.edgeKind as DependencyEdgeKind) && ["ACTIVE", "PROPOSED", "REVOKED"].includes(String(data.status)) && (data.scenarioId === undefined || (typeof data.scenarioId === "string" && ID.test(data.scenarioId))) && (data.allocation === undefined || (data.edgeKind === "ALLOCATION" && isValidAllocation(data.allocation)));
 }
 
 export function projectDependencyGraph(records: CanonicalRecord[]): DependencyGraph {
   const nodeIds = new Set(records.filter((record) => !record.deleted && record.recordType !== "relationship" && !isDependencyLink(record)).map((record) => record.id));
-  const edges = records.filter((record): record is CanonicalRecord & { data: DependencyEdgeData } => !record.deleted && isDependencyLink(record) && record.data.status === "ACTIVE" && nodeIds.has(record.data.sourceId) && nodeIds.has(record.data.targetId)).map((record) => ({ id: record.id, sourceId: record.data.sourceId, targetId: record.data.targetId, edgeKind: record.data.edgeKind, status: record.data.status, label: record.data.label, ...(record.data.scenarioId ? { scenarioId: record.data.scenarioId } : {}), ...(record.data.allocationMode ? { allocationMode: record.data.allocationMode } : {}), ...(record.data.evidence ? { evidence: scrubSensitiveValue(record.data.evidence) as DependencyEdgeData["evidence"] } : {}) })).sort(compareEdges);
+  const edges = records.filter((record): record is CanonicalRecord & { data: DependencyEdgeData } => !record.deleted && isDependencyLink(record) && record.data.status === "ACTIVE" && nodeIds.has(record.data.sourceId) && nodeIds.has(record.data.targetId)).map((record) => ({ id: record.id, sourceId: record.data.sourceId, targetId: record.data.targetId, edgeKind: record.data.edgeKind, status: record.data.status, label: record.data.label, ...(record.data.scenarioId ? { scenarioId: record.data.scenarioId } : {}), ...(record.data.allocationMode ? { allocationMode: record.data.allocationMode } : {}), ...(record.data.allocation ? { allocation: record.data.allocation } : {}), ...(record.data.evidence ? { evidence: scrubSensitiveValue(record.data.evidence) as DependencyEdgeData["evidence"] } : {}) })).sort(compareEdges);
   return { nodes: [...nodeIds].sort(), edges };
 }
 
@@ -209,6 +216,25 @@ function isPropagationEdge(edge: DependencyEdge): boolean {
 
 function isGraphNodeRecord(record: CanonicalRecord): boolean {
   return !record.deleted && record.recordType !== "relationship";
+}
+
+function normalizeAllocation(value: MoneyValue): MoneyValue {
+  const currency = parseMoney("0", value.currency).currency;
+  if (!/^-?\d+$/.test(value.amountMinor)) throw new Error("Allocation amount must use exact minor units");
+  const amount = BigInt(value.amountMinor);
+  if (amount < 0n || amount > 2n ** 63n - 1n) throw new Error("Allocation amount must be non-negative and bounded");
+  return { amountMinor: amount.toString(), currency };
+}
+
+function isValidAllocation(value: unknown): value is MoneyValue {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Record<string, unknown>;
+  if (typeof candidate.amountMinor !== "string" || typeof candidate.currency !== "string" || !/^-?\d+$/.test(candidate.amountMinor)) return false;
+  try {
+    return BigInt(candidate.amountMinor) >= 0n && BigInt(candidate.amountMinor) <= 2n ** 63n - 1n && parseMoney("0", candidate.currency).currency === candidate.currency;
+  } catch {
+    return false;
+  }
 }
 
 function stringIds(value: unknown): string[] { return Array.isArray(value) ? value.filter((id): id is string => typeof id === "string" && ID.test(id)) : typeof value === "string" && ID.test(value) ? [value] : []; }

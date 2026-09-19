@@ -28,6 +28,8 @@ export interface FinanceGraphEdge {
   kind: FinanceGraphEdgeKind;
   evidence: FinanceEvidence;
   scenarioId?: string;
+  allocationMode?: "EXCLUSIVE" | "ENABLING";
+  allocation?: MoneyValue;
 }
 
 export interface FinanceDependencyGraph {
