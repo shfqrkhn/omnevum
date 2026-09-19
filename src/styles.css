@@ -295,6 +295,7 @@ dialog { width: min(544px, calc(100% - 32px)); border: 1px solid var(--line); bo
 dialog::backdrop { background: rgba(10, 18, 30, 0.58); }
 dialog h2 { margin-bottom: 0.5rem; }
 dialog p { overflow-wrap: anywhere; }
+.share-preview-payload { max-height: min(46vh, 28rem); margin: 0.8rem 0; overflow: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-muted); padding: 0.8rem; white-space: pre-wrap; overflow-wrap: anywhere; font: 0.78rem/1.45 ui-monospace, SFMono-Regular, Consolas, monospace; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1rem; }
 button:disabled { cursor: not-allowed; opacity: 0.55; }
 input[type="file"] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

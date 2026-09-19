@@ -32,7 +32,7 @@ import { assessTextAnchor, createTextAnnotation } from "../core/annotation";
 import { createEvidenceLink, type EvidenceRelation } from "../core/evidence";
 import { createDependencyLink, isDependencyLink, type DependencyEdgeKind } from "../core/dependency-graph";
 import { makePlaceData, parseGeoJsonPoint } from "../core/place";
-import { projectForAuthorizedShare } from "../core/share";
+import { projectForAuthorizedShare, type ShareProjection } from "../core/share";
 import { canUseShareGrant, createShareGrant, revokeShareGrant } from "../core/sharing";
 import { createContextDelta, exportAuthorizedContext, makeContextExportProfile, parseContextExportProfile, type ContextExportFormat, type ContextExportProfile, type ContextExportSnapshot } from "../core/context-export";
 import { transitionEffect } from "../core/effect";
@@ -75,6 +75,7 @@ export interface MountAppOptions {
 export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>, packageAutomationRuntime?: PackageAutomationRuntime, options: MountAppOptions = {}): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
   let savedContextProfile: ContextExportProfile | undefined;
+  let pendingShareProjection: ShareProjection | undefined;
   const savedContextProfileRaw = await store.getSetting<unknown>("context-export.profile");
   if (savedContextProfileRaw !== undefined) {
     try {
@@ -1051,6 +1052,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <button id="effect-run-dialog-confirm" type="button">${copy.effectRunConfirm}</button>
       </div>
     </dialog>
+    <dialog id="share-preview-dialog" aria-labelledby="share-preview-heading" aria-describedby="share-preview-hint" aria-modal="true">
+      <h2 id="share-preview-heading">${copy.sharePreviewHeading}</h2>
+      <p id="share-preview-hint" class="hint">${copy.sharePreviewHint}</p>
+      <p id="share-preview-summary" class="hint" role="status"></p>
+      <pre id="share-preview-payload" class="share-preview-payload" tabindex="0"></pre>
+      <p id="share-preview-excluded" class="hint">${copy.sharePreviewExcluded}</p>
+      <div class="dialog-actions">
+        <button id="share-preview-cancel" class="secondary" type="button">${copy.sharePreviewCancel}</button>
+        <button id="share-preview-confirm" type="button">${copy.sharePreviewConfirm}</button>
+      </div>
+    </dialog>
     <footer><span>${copy.footerPhase0}</span><span>${copy.footerOptional}</span></footer>
   `;
 
@@ -1241,6 +1253,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const shareIncludePrivate = root.querySelector<HTMLInputElement>("#share-include-private");
   const shareGrantSubmit = root.querySelector<HTMLButtonElement>("#share-grant-submit");
   const shareExport = root.querySelector<HTMLButtonElement>("#share-export");
+  const sharePreviewDialog = root.querySelector<HTMLDialogElement>("#share-preview-dialog");
+  const sharePreviewSummary = root.querySelector<HTMLElement>("#share-preview-summary");
+  const sharePreviewPayload = root.querySelector<HTMLElement>("#share-preview-payload");
+  const sharePreviewCancel = root.querySelector<HTMLButtonElement>("#share-preview-cancel");
+  const sharePreviewConfirm = root.querySelector<HTMLButtonElement>("#share-preview-confirm");
   const contextExportFormat = root.querySelector<HTMLSelectElement>("#context-export-format");
   const contextExportObjective = root.querySelector<HTMLTextAreaElement>("#context-export-objective");
   const contextExportBudget = root.querySelector<HTMLInputElement>("#context-export-budget");
@@ -1387,7 +1404,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const packageAutomationStatus = root.querySelector<HTMLElement>("#package-automation-status");
   const packageAutomationList = root.querySelector<HTMLUListElement>("#package-automation-list");
   const packageAutomationProposals = root.querySelector<HTMLUListElement>("#package-automation-proposals");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchFiltersToggle || !searchFilters || !searchFacetChips || !searchFacetLens || !searchFacetType || !searchFacetSpace || !searchFacetArtifact || !searchViewName || !searchSaveView || !searchScopeStatus || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !insightsDisclosure || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !triageBatch || !triageSelectAll || !triageSelected || !triageBatchDeferUntil || !triageBatchReview || !triageBatchDefer || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !contextExportFormat || !contextExportObjective || !contextExportBudget || !contextExportButton || !contextExportRerunButton || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavMenu || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput || !activeLensDisclosure || !reviewDisclosure || !recordsDisclosure) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchFiltersToggle || !searchFilters || !searchFacetChips || !searchFacetLens || !searchFacetType || !searchFacetSpace || !searchFacetArtifact || !searchViewName || !searchSaveView || !searchScopeStatus || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !insightsDisclosure || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !triageBatch || !triageSelectAll || !triageSelected || !triageBatchDeferUntil || !triageBatchReview || !triageBatchDefer || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !sharePreviewDialog || !sharePreviewSummary || !sharePreviewPayload || !sharePreviewCancel || !sharePreviewConfirm || !contextExportFormat || !contextExportObjective || !contextExportBudget || !contextExportButton || !contextExportRerunButton || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavMenu || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput || !activeLensDisclosure || !reviewDisclosure || !recordsDisclosure) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!exportHumanButton || !exportArtifactsButton || !retirementExportInput || !recordDestroyIntentButton || !retirementStatus) {
@@ -4806,11 +4823,29 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       }
       const allRecords = await store.list();
       const projection = projectForAuthorizedShare(grant, allRecords, recordIds, shareIncludePrivate.checked, allRecords);
-      downloadJson("omnevum-share-projection.json", projection);
-      shareStatus.textContent = copy.projectionSaved(projection.records.length, projection.omittedRecordCount);
+      pendingShareProjection = projection;
+      sharePreviewSummary.textContent = copy.sharePreviewSummary(projection.records.length, recordIds.length, projection.omittedRecordCount);
+      sharePreviewPayload.textContent = serializeJson(projection);
+      sharePreviewDialog.showModal();
+      sharePreviewConfirm.focus();
     } catch (error) {
       shareStatus.textContent = describeError(error, "Bounded share projection failed; canonical records were not changed.");
     }
+  });
+
+  const cancelSharePreview = (): void => {
+    pendingShareProjection = undefined;
+    sharePreviewPayload.textContent = "";
+    if (sharePreviewDialog.open) sharePreviewDialog.close();
+  };
+  sharePreviewCancel.addEventListener("click", cancelSharePreview);
+  sharePreviewDialog.addEventListener("cancel", (event) => { event.preventDefault(); cancelSharePreview(); });
+  sharePreviewConfirm.addEventListener("click", () => {
+    const projection = pendingShareProjection;
+    if (!projection) return cancelSharePreview();
+    downloadJson("omnevum-share-projection.json", projection);
+    shareStatus.textContent = copy.sharePreviewConfirmed;
+    cancelSharePreview();
   });
 
   const makeContextProfileFromControls = (recordIds: string[]): ContextExportProfile => makeContextExportProfile({
@@ -5313,13 +5348,17 @@ async function queryServiceWorkerStatus(registration: ServiceWorkerRegistration)
 }
 
 function downloadJson(fileName: string, value: unknown): void {
-  const blob = new Blob([JSON.stringify(value, null, 2)], { type: "application/json" });
+  const blob = new Blob([serializeJson(value)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
   link.download = fileName;
   link.click();
   window.setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+function serializeJson(value: unknown): string {
+  return JSON.stringify(value, null, 2);
 }
 
 function downloadText(fileName: string, value: string, mimeType: string): void {
