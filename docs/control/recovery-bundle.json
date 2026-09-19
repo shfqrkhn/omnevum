@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "3e84af6d164879d7e0c2d1f5087db2c5d4a0e1df1ee74b282d078129aab55fdf",
-        "bytes": 197922
+        "sha256": "c862340eab06067e539ca17a14a99f530739cde64df3d05dba41c9761334df50",
+        "bytes": 198364
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "3364de19e3edae4b2cc1f01833a4c3396a08dea952ced2aaa8d606b19a63cd7b",
+        "sha256": "3ca1112ebcb03f7320b8cc50745fb918ceaf55b0de4104989420990838200cbb",
         "bytes": 2433
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "efd2212a41a5cb8731b2d636733768c36bffe1b3ca243b78ef219c4f0f39e5a8",
-        "bytes": 288023
+        "sha256": "4f7dc37054f24060759a8599fceedcc276baf715b08d895bf7b27427bcd296d3",
+        "bytes": 290569
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -688,6 +688,16 @@
         "bytes": 37377
       },
       {
+        "path": "src/core/finance-projection.test.ts",
+        "sha256": "39294118abc8f42712fad8cc3e4940a5b1d0b41d93c7bdc99078e96001d9533e",
+        "bytes": 3913
+      },
+      {
+        "path": "src/core/finance-projection.ts",
+        "sha256": "54e395e936c87ffee7a2b054e6ba073cabfd4c1658488f08b3df533e20f52ce6",
+        "bytes": 11676
+      },
+      {
         "path": "src/core/finance.test.ts",
         "sha256": "e504e71f154f57474ec62d95a0d61fc00ae291127ba527ea264a89c44bf1438b",
         "bytes": 6755
@@ -724,8 +734,8 @@
       },
       {
         "path": "src/core/i18n.ts",
-        "sha256": "ca094e7b561094cac46553eaaf79e70bcb799056909f7020683e867911b8bf9f",
-        "bytes": 89888
+        "sha256": "58d3277df5ce203bee13c561dbf4554579dc4de1c494fb6760755e4868be1dde",
+        "bytes": 92197
       },
       {
         "path": "src/core/id.ts",
@@ -1049,8 +1059,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "e58588f3921a53b126b415470f72485a17b34ffc01d5d093106a6ca184570361",
-        "bytes": 281143
+        "sha256": "edc42c18c86b7b93e44f160b6e9f87077a83d60a19c463e82b6962b4d25ccdae",
+        "bytes": 283145
       },
       {
         "path": "tsconfig.json",

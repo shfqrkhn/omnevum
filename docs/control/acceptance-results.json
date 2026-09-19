@@ -2316,9 +2316,10 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-finance-projection-and-graph-recomputation-receipt"
       ],
-      "notes": "Current core and exact built Chromium UI evidence provides typed graph nodes/edges, canonical platform.dependency persistence, visible typed Relate creation, exact-money exclusive versus enabling allocations, over-allocation detection, and dynamic goal target/funding pace. Automatic cross-domain trajectory refresh and full Finance portfolio adapters remain open."
+      "notes": "Current core and exact built Chromium UI evidence provides typed graph nodes/edges, canonical platform.dependency persistence, visible typed Relate creation, exact-money exclusive versus enabling allocations, over-allocation detection, dynamic goal target/funding pace, and a read-only Finance projection joining canonical transactions, shared goals, typed graph impact, data quality, and review signals. Automatic multi-goal trajectory refresh and full Finance portfolio adapters remain open."
     },
     {
       "id": "OMN-ACC-160",
@@ -2390,9 +2391,10 @@
       "text": "A material canonical record is corrected or removed. Dependency traversal identifies every materially affected authorized projection across at least three different lenses/domains, recomputes safe derived state, invalidates uncertain outputs, and presents one concise change-impact explanation without requiring manual cross-module repair.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-finance-projection-and-graph-recomputation-receipt"
       ],
-      "notes": "Current core impact analysis deterministically traverses authorized graph nodes, reports affected IDs/depth and invalidated derived IDs, quarantines accidental cycles, excludes explanatory/feedback edges from ordinary propagation, and skips invalid endpoints. Three-lens/domain adapters, canonical recomputation orchestration, and one concise user-facing correction/removal explanation remain open."
+      "notes": "Current core impact analysis and the integrated Finance projection deterministically traverse authorized graph nodes, report affected IDs/depth and invalidated derived IDs, quarantine accidental cycles, exclude explanatory/feedback edges from ordinary propagation, and skip invalid endpoints. Three-lens/domain adapters, canonical recomputation orchestration, and one concise user-facing correction/removal explanation remain open."
     },
     {
       "id": "OMN-ACC-166",
