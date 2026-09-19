@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "9d6e5f898d0bedf08450870e064703ca4102ff7aef1961722b1613183f632d64",
-        "bytes": 196030
+        "sha256": "3e84af6d164879d7e0c2d1f5087db2c5d4a0e1df1ee74b282d078129aab55fdf",
+        "bytes": 197922
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "c0abdd114906c2fd47a454f74150ca0cc5c0f497e5cfd6c69346840223719fb2",
-        "bytes": 2400
+        "sha256": "3364de19e3edae4b2cc1f01833a4c3396a08dea952ced2aaa8d606b19a63cd7b",
+        "bytes": 2433
       },
       {
         "path": "docs/control/requirements.json",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "00b018e12f06e9342925fe5bb8ec15f8170e213efcb951d4280a958d3e7b2dcf",
-        "bytes": 285245
+        "sha256": "efd2212a41a5cb8731b2d636733768c36bffe1b3ca243b78ef219c4f0f39e5a8",
+        "bytes": 288023
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -558,6 +558,16 @@
         "bytes": 1890
       },
       {
+        "path": "src/core/dependency-graph.test.ts",
+        "sha256": "552d393881e1088e6070bdeb8868136d66c86d4b51685e85a54d93e428f9159d",
+        "bytes": 8546
+      },
+      {
+        "path": "src/core/dependency-graph.ts",
+        "sha256": "072e54f8e17cf07d630c70c01dd54e402c3d9abb82a768c6bd6195fbb918cbed",
+        "bytes": 14131
+      },
+      {
         "path": "src/core/device.test.ts",
         "sha256": "f3915205e38c3ee04617fb047528000ba7d6818c4c0df95bc1f3738b98e66a21",
         "bytes": 4614
@@ -584,8 +594,8 @@
       },
       {
         "path": "src/core/domain.ts",
-        "sha256": "6fd3c7bb412a0f9d8fdfad3539cfa924ccc852e8fd81cd7bd1f5b2a1e448432c",
-        "bytes": 3339
+        "sha256": "3fa3f164efb6414202b0b1c46bb10f58424ef0076a9e702c44d89e085232402c",
+        "bytes": 3574
       },
       {
         "path": "src/core/effect-guard.test.ts",
@@ -714,8 +724,8 @@
       },
       {
         "path": "src/core/i18n.ts",
-        "sha256": "c09ecbe5000abfae1a82898a3f3b9f4a2ae9899afb967bedb88067db7d042965",
-        "bytes": 86824
+        "sha256": "ca094e7b561094cac46553eaaf79e70bcb799056909f7020683e867911b8bf9f",
+        "bytes": 89888
       },
       {
         "path": "src/core/id.ts",
@@ -1039,8 +1049,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "e037e55d079e673ce7f1ac3e3854e63b27b07559823d2e06b9b3e9fd913584c6",
-        "bytes": 278198
+        "sha256": "e58588f3921a53b126b415470f72485a17b34ffc01d5d093106a6ca184570361",
+        "bytes": 281143
       },
       {
         "path": "tsconfig.json",

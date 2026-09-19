@@ -2315,9 +2315,10 @@
       "text": "One canonical savings account and one recurring monthly surplus are linked to an emergency reserve, retirement goal, FIRE goal, home goal, and vacation goal. The records are stored once; each goal sees the same underlying source values through typed relationships; explicit allocations prevent exclusive dollars from being multiply claimed; and changing the balance or surplus automatically updates every materially dependent trajectory.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt"
       ],
-      "notes": "Current core evidence provides typed graph nodes/edges, exact-money exclusive versus enabling allocations, over-allocation detection, and dynamic goal target/funding pace. Canonical cross-domain relationship persistence and automatic trajectory refresh remain open."
+      "notes": "Current core and exact built Chromium UI evidence provides typed graph nodes/edges, canonical platform.dependency persistence, visible typed Relate creation, exact-money exclusive versus enabling allocations, over-allocation detection, and dynamic goal target/funding pace. Automatic cross-domain trajectory refresh and full Finance portfolio adapters remain open."
     },
     {
       "id": "OMN-ACC-160",
@@ -2348,9 +2349,10 @@
       "text": "A user-defined FIRE goal is modeled as a composite dependency graph containing at least observed savings/investments, a spending assumption, contribution rate, retirement/FIRE date, and at least one current-rule or user-assumption input. Changing one assumption recomputes the model, preserves the prior scenario for comparison, labels assumptions versus facts, and does not present FIRE as a recommended objective or one magic-number truth.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt"
       ],
-      "notes": "Current core evidence supplies explicit graph truth classes, scenario isolation, dynamic goal funding, and assumption-labelled FIRE projections without a universal recommendation. Persisted composite goal records, prior-scenario comparison, and connected portfolio UI remain open."
+      "notes": "Current core and exact built Chromium UI evidence supplies explicit graph truth classes, canonical typed persistence, scenario isolation, dynamic goal funding, and assumption-labelled FIRE projections without a universal recommendation. Persisted composite goal records, prior-scenario comparison, automatic connected portfolio recomputation, and connected Finance UI remain open."
     },
     {
       "id": "OMN-ACC-163",
@@ -2374,9 +2376,10 @@
       "text": "A candidate intervention has supported positive effects on two goals and a modeled downside on a third domain. Omnevum surfaces both the synergy and conflict, identifies evidence/assumption status for each edge, and preserves the option to take no action. A merely correlated historical pattern is not promoted to a causal synergy claim.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt"
       ],
-      "notes": "Current graph contracts distinguish dependency/allocation propagation from evidence-bearing synergy and conflict edges, preserving truth class and source IDs without causal promotion. A user-facing intervention proposal/opt-out surface remains open."
+      "notes": "Current graph contracts and exact built Chromium Relate/detail evidence distinguish dependency/allocation propagation from evidence-bearing synergy and conflict edges, preserving truth class/source IDs without causal promotion. A user-facing intervention proposal/opt-out surface remains open."
     },
     {
       "id": "OMN-ACC-165",
@@ -2385,8 +2388,11 @@
         "line": 4259
       },
       "text": "A material canonical record is corrected or removed. Dependency traversal identifies every materially affected authorized projection across at least three different lenses/domains, recomputes safe derived state, invalidates uncertain outputs, and presents one concise change-impact explanation without requiring manual cross-module repair.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt"
+      ],
+      "notes": "Current core impact analysis deterministically traverses authorized graph nodes, reports affected IDs/depth and invalidated derived IDs, quarantines accidental cycles, excludes explanatory/feedback edges from ordinary propagation, and skips invalid endpoints. Three-lens/domain adapters, canonical recomputation orchestration, and one concise user-facing correction/removal explanation remain open."
     },
     {
       "id": "OMN-ACC-166",
@@ -2395,8 +2401,11 @@
         "line": 4261
       },
       "text": "Cross-domain relationship discovery is tested with one deterministic high-confidence link, one ambiguous link, and one prohibited/out-of-scope source. The deterministic reversible link is created automatically, the ambiguous link remains a proposal/UNKNOWN until resolved, and the excluded source contributes no relationship or inference. Link creation alone grants no new permission or disclosure authority.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt"
+      ],
+      "notes": "Current core tests cover deterministic high-confidence explicit references, ambiguous reversible proposals, unavailable or unauthorized exclusions, normal-command acceptance, and no permission widening; the exact built Chromium UI creates a typed edge through Relate. Proposal-resolution UI, broader cross-domain sources, and full disclosure qualification remain open."
     },
     {
       "id": "OMN-ACC-167",
@@ -2407,9 +2416,10 @@
       "text": "A dependency graph contains both an accidental cycle and an intentionally modeled feedback loop. Ordinary propagation detects and quarantines the accidental cycle without recursion, oscillation, arbitrary last-write ordering, or canonical corruption. The intentional loop executes only inside a Model with explicit state/time, assumptions, termination/convergence and failure behavior; a non-convergent run is reported rather than forced to a value. Scenario edges remain isolated from the adopted baseline.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt"
       ],
-      "notes": "Current core tests detect and quarantine ordinary cycles with downstream invalidation, run bounded convergent feedback only under an explicit scenario ID, report NON_CONVERGED results, and keep scenario edges out of baseline values. Canonical dependency persistence and full Model UI remain open."
+      "notes": "Current core and exact built Chromium evidence detects and quarantines ordinary dependency/allocation cycles with downstream invalidation, keeps explanatory and feedback edges out of ordinary propagation, persists typed links, admits scenario edges only by explicit identity, and reports bounded feedback convergence/non-convergence. Full Model state/time/assumption UI and domain execution remain open."
     },
     {
       "id": "OMN-ACC-168",
