@@ -3,16 +3,16 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "4aaddc1fa86e7be48dfa4f2fde1e62c6cd23e2f34e174b95ed5c9ede0e4a280d", "sourceRevision": "fb7775afd56fa23ad664dc2fe8a0e555372095a2", "serviceWorkerCache": "omnevum-shell-e75057ab596dbe42"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "43031bc12f86c154874dd34f5aa922c0760bfbd92baaeac1740edb9d2d5eb881", "sourceRevision": "4d1efaf", "serviceWorkerCache": "omnevum-shell-aebfbfe6a406b986"},
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF; captured after the full npm run build on 2026-09-19.",
   "artifactFiles": [
     {"path": "dist/assets/index-5Bomwce_.css", "sha256": "1c11d276ca2f5c25d1e54f84910a73a0b7c2f87d9983897d4972e1848d041446", "bytes": 24102},
-    {"path": "dist/assets/index-DMVnc8c4.js", "sha256": "b65b418cba50a62e7f56229236d2d73db098a72821c67350ee6020c39bed86ff", "bytes": 489891},
-    {"path": "dist/assets/index-DMVnc8c4.js.map", "sha256": "f016f43ba5c2afe05d4611857221db7353ca4e3e6d7b83b762382b8c09fa4cfe", "bytes": 1424588},
+    {"path": "dist/assets/index-BQ2_lSu5.js", "sha256": "8c4673f367b3e13aae7ebda178112cc71614fdd1b4e4de6b8483c5a46574d3be", "bytes": 496134},
+    {"path": "dist/assets/index-BQ2_lSu5.js.map", "sha256": "2cbdc91fb7b6c38999104bfdc52769a964af4d9cc979ed60c23cecb1ba035dcd", "bytes": 1442329},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "4df3f1c85c621115f995999091eba97138c8f41a6049ffef98ef0e9e9c308ea3", "bytes": 933},
+    {"path": "dist/index.html", "sha256": "14792a9cd56357eb2472cd182c48e6a74718c0b5c95b107ebbddd2736c44b3c5", "bytes": 933},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
-    {"path": "dist/sw.js", "sha256": "d74ba56857ac48153f57cc3af879dc2beb402a78635f2e79e7581f87bbd0de6a", "bytes": 3036}
+    {"path": "dist/sw.js", "sha256": "6f44f6f3926514e3e603cc256b37312462d51e3267d258de0a37b161348e76c8", "bytes": 3521}
   ],
   "requiredEvidence": [
     "control-generation-and-drift",
@@ -28,5 +28,5 @@
     "human-acceptance-where-required"
   ],
   "evidencePolicy": "Generated status text cannot create PASS. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains NOT_RUN/UNKNOWN.",
-  "currentDecision": "Continue Phase 0; OMN-ACC-123/128 schema-update approval and shell-activation policy is source/test/build qualified at PARTIAL, while live service-worker activation, deployment/rollback, target qualification, and human acceptance remain open; OMN-ACC-094 remains bounded NOT_APPLICABLE and do not publish a completion or production-release claim."
+  "currentDecision": "Continue Phase 0; OMN-ACC-123/128 schema-update approval and shell-activation policy now has a local current-artifact service-worker status/activation path and persistent collapsed version ledger at PARTIAL, while deployment/rollback, target qualification, and human acceptance remain open; OMN-ACC-094 remains bounded NOT_APPLICABLE and do not publish a completion or production-release claim."
 }

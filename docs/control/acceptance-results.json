@@ -1905,9 +1905,12 @@
       "evidence": [
         "src/core/migration.ts#evaluateUpdate",
         "src/core/migration.test.ts#requires-explicit-approval-and-a-current-verified-backup-for-canonical-migration",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-schema-update-approval-and-shell-activation-receipt"
+        "src/core/update-ledger.ts#appendShellUpdateObservation",
+        "src/ui/app.ts#renderShellUpdateLedger",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-schema-update-approval-and-shell-activation-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-service-worker-update-ledger-and-compact-recovery-receipt"
       ],
-      "notes": "Source revision fb7775a is test/build qualified. The migration owner now gates canonical-schema candidates behind explicit approval and a current verified Vault backup, reports migration IDs/affected record classes/backup state/rollback path, records update identity, and refuses malformed or stale backup receipts; shell-only candidates may apply silently. Live service-worker candidate activation, persistent version-ledger UI, deployment/rollback rehearsal, other targets, and human acceptance remain open."
+      "notes": "Source revision 4d1efaf is test/build/browser qualified. The migration owner gates canonical-schema candidates behind explicit approval and a current verified Vault backup, reports migration IDs/affected record classes/backup state/rollback path, records update identity, and refuses malformed or stale backup receipts; the stamped worker and compact Recovery ledger expose current shell identity and persist activation observations. A schema-carrying candidate, deployment/rollback promotion, other targets, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-124",
@@ -1962,9 +1965,12 @@
         "src/core/migration.ts#interruptedMigration",
         "src/core/migration.test.ts#rejects-stale-or-malformed-backup-receipts-instead-of-treating-them-as-verified",
         "src/core/storage.test.ts#preserves-canonical-data-when-an-indexeddb-migration-transaction-is-interrupted",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-schema-update-approval-and-shell-activation-receipt"
+        "src/core/update-ledger.test.ts#deduplicates-a-release-decision-bounds-history-and-keeps-the-newest-first",
+        "src/ui/app.ts#queryServiceWorkerStatus",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-schema-update-approval-and-shell-activation-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-service-worker-update-ledger-and-compact-recovery-receipt"
       ],
-      "notes": "Source revision fb7775a is test/build qualified. An unapproved schema candidate either remains read-compatible or refuses control, never migrates to resolve the condition; an interrupted migration retains the current schema/current shell and rollback path, while existing storage tests prove stale-client fencing and aborted IndexedDB-upgrade preservation. Live service-worker candidate activation, exact one-shell browser rehearsal, deployment, other targets, and human acceptance remain open."
+      "notes": "Source revision 4d1efaf is test/build/browser qualified. An unapproved schema candidate either remains read-compatible or refuses control, never migrates to resolve the condition; an interrupted migration retains the current schema/current shell and rollback path, while the current worker reports one active cache identity and the persistent Recovery ledger records it across reload. Full waiting-worker/schema interruption rehearsal, deployment, other targets, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-129",
