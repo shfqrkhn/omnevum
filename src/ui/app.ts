@@ -14,7 +14,7 @@ import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/cr
 import { MAX_VAULT_JSON_BYTES, parseVault } from "../core/vault";
 import type { CanonicalStore } from "../core/storage";
 import { captureExpense, captureFinancePlan, captureHealthMeasurement } from "../core/workflows";
-import { acceptFinanceStatementFacts, acceptFinanceTransactions, createFinanceSourceId, deduplicateFinanceTransactions, extractFinanceStatementFacts, parseFinanceCsv, parseFinanceStatementFactsCsv, reconcileFinanceStatement, type FinanceStatementFacts, type FinanceStatementSource } from "../core/finance";
+import { acceptFinanceStatementFacts, acceptFinanceTransactions, correctFinanceTransaction, createFinanceSourceId, deduplicateFinanceTransactions, extractFinanceStatementFacts, parseFinanceCsv, parseFinanceStatementFactsCsv, reconcileFinanceStatement, type FinanceStatementFacts, type FinanceStatementSource } from "../core/finance";
 import { formatMoney, parseMoney } from "../core/money";
 import { classifyFinanceSource, summarizeFinanceTransactions } from "../core/finance-model";
 import { projectFinanceState } from "../core/finance-projection";
@@ -530,6 +530,22 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <p class="hint">${copy.financeImportHint}</p>
             <button type="submit">${copy.financeImport}</button>
             <p id="finance-import-status" class="hint" role="status"></p>
+          </form>
+          <form id="finance-correction-form" class="domain-form">
+            <h3>${copy.financeCorrectionHeading}</h3>
+            <label for="finance-correction-record">${copy.financeCorrectionRecord}</label>
+            <select id="finance-correction-record" required></select>
+            <label for="finance-correction-amount">${copy.financeCorrectionAmount}</label>
+            <input id="finance-correction-amount" type="text" inputmode="decimal" maxlength="32" />
+            <label for="finance-correction-essential">${copy.financeCorrectionEssential}</label>
+            <select id="finance-correction-essential">
+              <option value="UNCHANGED">${copy.financeCorrectionUnchanged}</option>
+              <option value="YES">${copy.financeCorrectionYes}</option>
+              <option value="NO">${copy.financeCorrectionNo}</option>
+            </select>
+            <p class="hint">${copy.financeCorrectionHint}</p>
+            <button type="submit">${copy.financeCorrectionSubmit}</button>
+            <p id="finance-correction-status" class="hint" role="status"></p>
           </form>
           <form id="health-form" class="domain-form">
             <h3>${copy.healthHeading}</h3>
@@ -1047,6 +1063,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const financeImportOpening = root.querySelector<HTMLInputElement>("#finance-import-opening");
   const financeImportClosing = root.querySelector<HTMLInputElement>("#finance-import-closing");
   const financeImportStatus = root.querySelector<HTMLElement>("#finance-import-status");
+  const financeCorrectionForm = root.querySelector<HTMLFormElement>("#finance-correction-form");
+  const financeCorrectionRecord = root.querySelector<HTMLSelectElement>("#finance-correction-record");
+  const financeCorrectionAmount = root.querySelector<HTMLInputElement>("#finance-correction-amount");
+  const financeCorrectionEssential = root.querySelector<HTMLSelectElement>("#finance-correction-essential");
+  const financeCorrectionStatus = root.querySelector<HTMLElement>("#finance-correction-status");
   const healthForm = root.querySelector<HTMLFormElement>("#health-form");
   const healthMetric = root.querySelector<HTMLInputElement>("#health-metric");
   const healthValue = root.querySelector<HTMLInputElement>("#health-value");
@@ -1308,6 +1329,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   }
   if (!financeImportForm || !financeImportFile || !financeImportAccount || !financeImportCurrency || !financeImportOpening || !financeImportClosing || !financeImportStatus) {
     throw new Error("Omnevum Finance import controls are missing");
+  }
+  if (!financeCorrectionForm || !financeCorrectionRecord || !financeCorrectionAmount || !financeCorrectionEssential || !financeCorrectionStatus) {
+    throw new Error("Omnevum Finance correction controls are missing");
   }
   if (!financePlanForm || !financePlanKind || !financePlanTarget || !financePlanLabel || !financePlanAmount || !financePlanEssentialMonths || !financePlanCurrency || !financePlanSpace || !financePlanDate || !financePlanSurplus || !financePlanHardConstraint || !financePlanStatus) {
     throw new Error("Omnevum Finance planning controls are missing");
@@ -2427,6 +2451,24 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
     if (artifacts.some((record) => record.id === previous)) documentFinishSource.value = previous;
     documentFinishForm.querySelector("button[type=submit]")?.toggleAttribute("disabled", artifacts.length === 0);
+  };
+
+  const renderFinanceCorrectionChoices = (allRecords: readonly CanonicalRecord[]): void => {
+    const previous = financeCorrectionRecord.value;
+    const transactions = allRecords.filter((record) => !record.deleted && record.owner === "domain.finance" && record.data.kind === "finance-transaction").sort((left, right) => left.modifiedAt.localeCompare(right.modifiedAt) || left.id.localeCompare(right.id));
+    financeCorrectionRecord.replaceChildren();
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = transactions.length > 0 ? copy.financeCorrectionRecord : copy.financeNoData;
+    financeCorrectionRecord.append(placeholder);
+    for (const record of transactions) {
+      const option = document.createElement("option");
+      option.value = record.id;
+      option.textContent = `${record.data.description ?? record.data.text ?? record.id} · ${record.data.amountMinor ?? "?"} ${record.data.currency ?? ""} · rev ${record.revision}`;
+      financeCorrectionRecord.append(option);
+    }
+    if (transactions.some((record) => record.id === previous)) financeCorrectionRecord.value = previous;
+    financeCorrectionForm.querySelector("button[type=submit]")?.toggleAttribute("disabled", transactions.length === 0);
   };
 
   const renderComposeView = async (): Promise<void> => {
@@ -3856,6 +3898,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     syncSearchFacetControls(parsedQuery);
     const allRecords = await store.list();
     renderPackageAutomationChoices(allRecords);
+    renderFinanceCorrectionChoices(allRecords);
     if (activeSpace) {
       const availableSpaces = await spaceService.listSpaces();
       if (!availableSpaces.some((space) => space.id === activeSpace)) {
@@ -4282,6 +4325,24 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       await renderRecords(searchQuery.value);
     } catch (error) {
       financeImportStatus.textContent = describeError(error, "Finance statement import failed; no statement rows were accepted.");
+    }
+  });
+
+  financeCorrectionForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      const current = await commands.get(financeCorrectionRecord.value, true);
+      if (!current || current.deleted) throw new Error("Choose an active imported Finance transaction");
+      const corrected = await correctFinanceTransaction(commands, current.id, {
+        ...(financeCorrectionAmount.value.trim() ? { amount: financeCorrectionAmount.value.trim() } : {}),
+        ...(financeCorrectionEssential.value === "YES" ? { essential: true } : financeCorrectionEssential.value === "NO" ? { essential: false } : {})
+      }, current.revision);
+      financeChangedIds = [corrected.id];
+      financeCorrectionForm.reset();
+      financeCorrectionStatus.textContent = copy.financeCorrectionSaved(corrected.revision);
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      financeCorrectionStatus.textContent = describeError(error, "Finance correction failed; canonical data was not changed.");
     }
   });
 

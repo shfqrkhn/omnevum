@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { acceptFinanceStatementFacts, acceptFinanceTransactions, computeFinanceInvestmentPerformance, createFinanceSourceId, deduplicateFinanceTransactions, parseFinanceCsv, parseFinanceStatementFactsCsv, reconcileFinanceStatement, type FinanceStatementSource } from "./finance";
+import { acceptFinanceStatementFacts, acceptFinanceTransactions, computeFinanceInvestmentPerformance, correctFinanceTransaction, createFinanceSourceId, deduplicateFinanceTransactions, parseFinanceCsv, parseFinanceStatementFactsCsv, reconcileFinanceStatement, type FinanceStatementSource } from "./finance";
 import { CommandBus } from "./commands";
 import { CanonicalStore } from "./storage";
 
@@ -122,6 +122,23 @@ describe("credential-free Finance statement semantics", () => {
     expect(first).toMatchObject({ created: 1, existing: 0 });
     expect(second).toMatchObject({ created: 0, existing: 1, conflicts: [] });
     expect((await store.list(true)).filter((record) => record.owner === "domain.finance")).toHaveLength(1);
+    store.close();
+  });
+
+  it("corrects one imported value or classification once and preserves source lineage", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-finance-correction`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const transactions = parseFinanceCsv("Date,Description,Amount,Id\n2026-01-02,Cafe,-10.00,tx-correct\n", source);
+    const imported = await acceptFinanceTransactions(commands, source, transactions);
+    const original = imported.records[0];
+    if (!original) throw new Error("Expected one imported transaction");
+    const corrected = await correctFinanceTransaction(commands, original.id, { amount: "-12.00", essential: true }, original.revision);
+    expect(corrected.revision).toBe(2);
+    expect(corrected.provenance).toEqual(original.provenance);
+    expect(corrected.data).toMatchObject({ amountMinor: "-1200", currency: "CAD", status: "CORRECTED", essential: true, sourceTransactionId: "tx-correct" });
+    expect((await store.history(original.id)).map((entry) => entry.revision)).toEqual([1, 2]);
+    await expect(correctFinanceTransaction(commands, original.id, { description: "Stale correction" }, original.revision)).rejects.toThrow("Canonical record changed");
     store.close();
   });
 });

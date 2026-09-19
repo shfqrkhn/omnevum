@@ -138,6 +138,12 @@ export interface FinanceImportResult {
   conflicts: FinanceTransactionConflict[];
 }
 
+export interface FinanceTransactionCorrection {
+  amount?: string;
+  description?: string;
+  essential?: boolean | null;
+}
+
 export function createFinanceSourceId(sourceSha256: string, accountId: string, currency: string): string {
   if (!/^[a-f0-9]{64}$/i.test(sourceSha256)) throw new Error("Finance source SHA-256 is required");
   const normalizedAccount = accountId.trim().slice(0, 160);
@@ -475,6 +481,46 @@ export async function acceptFinanceTransactions(commands: CommandBus, source: Fi
     byProvenance.set(provenanceId, record);
   }
   return { records, created, existing, duplicates: deduplicated.duplicates.length, conflicts };
+}
+
+/** Apply one explicit user correction through the canonical Finance owner. */
+export async function correctFinanceTransaction(commands: CommandBus, recordId: string, correction: FinanceTransactionCorrection, expectedRevision?: number): Promise<CanonicalRecord> {
+  const current = await commands.get(recordId, true);
+  if (!current || current.deleted || current.owner !== "domain.finance" || current.data.kind !== "finance-transaction") throw new Error("Only an active canonical Finance transaction can be corrected");
+  const fields = [
+    correction.amount !== undefined ? "amount" : undefined,
+    correction.description !== undefined ? "description" : undefined,
+    correction.essential !== undefined ? "essential" : undefined
+  ].filter((field): field is string => field !== undefined);
+  if (fields.length === 0) throw new Error("At least one Finance correction is required");
+  const currency = typeof current.data.currency === "string" ? parseMoney("0", current.data.currency).currency : undefined;
+  if (!currency) throw new Error("Finance transaction currency is missing");
+  const currentMinor = typeof current.data.amountMinor === "string" ? BigInt(current.data.amountMinor) : undefined;
+  if (currentMinor === undefined) throw new Error("Finance transaction amount is missing");
+  const amount = correction.amount === undefined ? moneyFromMinor(currentMinor, currency) : parseMoney(correction.amount, currency);
+  const priorDescription = typeof current.data.description === "string" ? current.data.description : typeof current.data.text === "string" ? current.data.text : "";
+  const description = correction.description === undefined ? priorDescription : correction.description.trim().slice(0, 500);
+  if (!description) throw new Error("Finance transaction description is required");
+  const merchant = normalizeMerchant(description);
+  const accountId = typeof current.data.accountId === "string" && current.data.accountId.trim() ? current.data.accountId : "captured-expenses";
+  const postedAt = typeof current.data.postedAt === "string" && Number.isFinite(Date.parse(current.data.postedAt)) ? new Date(current.data.postedAt).toISOString() : current.modifiedAt;
+  const naturalKey = `${accountId}|${postedAt.slice(0, 10)}|${amount.currency}|${amount.amountMinor}|${merchant}`;
+  const { essential: _previousEssential, ...dataWithoutEssential } = current.data;
+  const essential = correction.essential === undefined ? current.data.essential === true : correction.essential === true;
+  const direction = BigInt(amount.amountMinor) > 0n ? "INFLOW" : BigInt(amount.amountMinor) < 0n ? "OUTFLOW" : "NEUTRAL";
+  return commands.update(recordId, {
+    ...dataWithoutEssential,
+    text: `${merchant}: ${amount.amountMinor} ${amount.currency} minor units`,
+    description,
+    merchant,
+    amountMinor: amount.amountMinor,
+    currency: amount.currency,
+    direction,
+    naturalKey,
+    status: "CORRECTED",
+    ...(essential ? { essential: true } : {}),
+    correction: { previousRevision: current.revision, fields, correctedAt: new Date().toISOString() }
+  }, expectedRevision ?? current.revision);
 }
 
 export async function acceptFinanceStatementFacts(commands: CommandBus, source: FinanceStatementSource, facts: FinanceStatementFacts): Promise<CanonicalRecord> {

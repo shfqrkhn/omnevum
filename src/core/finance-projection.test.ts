@@ -183,4 +183,16 @@ describe("canonical Finance projection", () => {
     const quiet = projectFinanceState([income]);
     expect(quiet.updateBrief).toMatchObject({ materialChange: false, quiet: true });
   });
+
+  it("reuses one imported source across transaction, statement, cross-domain, and Home projections", () => {
+    const sourceId = "finance-source:shared-monthly-batch";
+    const transaction = record("shared-transaction", { kind: "finance-transaction", merchant: "payroll", description: "Payroll", amountMinor: "300000", currency: "CAD", accountId: "checking", postedAt: "2026-01-02T00:00:00.000Z", status: "POSTED", financeLineage: { sourceId, sourceSha256: "a".repeat(64), sourceRow: 2, parserProfile: "CSV_HEADER_V1", rawFields: {} } }, { truthClass: "IMPORTED_RECORD", provenance: { source: "IMPORT", capturedAt: "2026-01-03T00:00:00.000Z", sourceId: "shared-row" } });
+    const facts = record("shared-statement-facts", { kind: "finance-statement-facts", sourceId, sourceClass: "CREDIT_CARD", statementFacts: { sourceId, sourceClass: "CREDIT_CARD", creditCard: { statementBalance: { amountMinor: "50000", currency: "CAD" } }, evidence: { truthClass: "OBSERVED", sourceIds: [sourceId] }, limitations: [] } }, { truthClass: "IMPORTED_RECORD", provenance: { source: "IMPORT", capturedAt: "2026-01-03T00:00:00.000Z", sourceId } });
+    const travel = record("shared-travel", { kind: "travel-plan", label: "Trip", financeProjection: { authorized: true, estimatedCostMinor: "120000", currency: "CAD", dueDate: "2026-12-15" } }, { owner: "domain.travel", truthClass: "IMPORTED_RECORD", provenance: { source: "IMPORT", capturedAt: "2026-01-03T00:00:00.000Z", sourceId } });
+    const projection = projectFinanceState([transaction, facts, travel], { changedIds: [transaction.id] });
+    expect(projection.sourceIds).toEqual([sourceId]);
+    expect(projection.statementFacts[0]?.evidence.sourceIds).toEqual([sourceId]);
+    expect(projection.crossDomain.sourceIds).toEqual([sourceId]);
+    expect(projection.updateBrief.sourceIds).toEqual([sourceId]);
+  });
 });
