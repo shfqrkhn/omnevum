@@ -1922,3 +1922,9 @@ This advances `OMN-ACC-056` from `UNKNOWN` to `PARTIAL`. No DuckDB-Wasm-class en
 On 2026-09-19, source revision `e9ed10b` added the Omnevum-owned bounded user health export intake. The focused `src/core/health-import.test.ts` suite passed `3` tests, followed by `npm run typecheck` and `git diff --check`. CSV and JSON measurements retain source identity, explicit subject identity, normalized timestamps, units, values, and external IDs; duplicate external IDs are suppressed deterministically for idempotent re-import; output is staged as `AcquireCandidate` observation/measurement data with `triageStatus: INBOX`; and the capability report explicitly marks direct browser HealthKit/Health Connect access `PLATFORM_LIMITED` while retaining file import.
 
 This advances `OMN-ACC-083` from `UNKNOWN` to `PARTIAL`. No large streaming export, browser UI/target proof, native companion, direct health API, deployment, or human acceptance was performed; those remain open.
+
+## Current v0.17.4 Geo analysis contract receipt
+
+On 2026-09-19, source revision `351dde8` added the Omnevum-owned bounded derived Geo analysis seam. The focused `src/core/geo-analysis.test.ts` suite passed `3` tests, followed by `npm run typecheck` and `git diff --check`. WGS84 point distance and LineString simplification are explicit `DERIVED_GEO_ANALYSIS` outputs with source record IDs, `WGS84_LON_LAT` coordinate assumptions, `canonicalOwner: NONE`, bounded point/tolerance inputs, and an engine replacement function that changes only the replaceable engine identity. Existing Place/Geo canonical identities remain untouched.
+
+This advances `OMN-ACC-097` from `UNKNOWN` to `PARTIAL`. No qualified modular engine such as Turf, intersection/buffer implementation, browser workload, target/deployment, or human acceptance was performed; those remain open.

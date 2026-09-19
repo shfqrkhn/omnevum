@@ -1643,8 +1643,15 @@
         "line": 4120
       },
       "text": "If Place/Geo admits nontrivial client-side spatial analysis, representative GeoJSON operations such as distance, intersection/buffer or simplification are exercised through a qualified modular engine such as Turf before bespoke geometry is accepted. Results remain DERIVED, coordinate/reference assumptions are explicit, pathological inputs are resource-bounded, and upgrading/replacing the geometry engine does not change canonical place identities.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/geo-analysis.ts",
+        "src/core/geo-analysis.test.ts",
+        "src/core/place.ts",
+        "docs/control/capability-coverage.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-geo-analysis-contract-receipt"
+      ],
+      "notes": "The bounded derived Geo contract performs WGS84 point distance and resource-bounded LineString simplification, records explicit coordinate reference/source IDs, keeps canonicalOwner NONE, and replaces only the engine identity. A qualified modular engine such as Turf, intersection/buffer breadth, pathological workload, browser target, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-098",
