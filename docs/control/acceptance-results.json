@@ -2472,8 +2472,11 @@
         "line": 4267
       },
       "text": "Finance ingests a revolving-credit statement, an investment statement with external cash flows, and an insurance statement. It preserves statement balance/due/minimum/grace-relevant terms where supplied; computes investment performance only with a named appropriate money- or time-weighted method and period assumptions; and records insurance premium/renewal/limits/deductible without claiming coverage adequacy or suitability.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-statement-and-review-semantics-receipt"
+      ],
+      "notes": "Current Finance core tests preserve exact statement money, due/minimum/grace/interest/limit terms, insurance terms, named time- or money-weighted performance assumptions, bounded cash-flow timing, explicit limitations, and source lineage. The import UI retains facts under the canonical domain.finance owner after confirmation. Broader statement fixtures, target/accessibility/deployment/human acceptance, and full downstream portfolio/adapters remain open."
     },
     {
       "id": "OMN-ACC-170",
@@ -2482,8 +2485,11 @@
         "line": 4269
       },
       "text": "Suspicious-transaction evaluation includes an authenticated/user-initiated transfer that contextual evidence indicates may be scam-induced, a familiar-merchant high-impact anomaly, and a benign anomaly. Finance does not treat authentication/familiarity as proof of legitimacy, keeps possible scam/coercion distinct from confirmed unauthorized activity, learns the benign resolution only within its valid scope, measures false-positive/observable missed-known-issue behavior when enough history exists, and never treats absence of an alert as proof of safety.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-statement-and-review-semantics-receipt"
+      ],
+      "notes": "Current Finance model tests add authenticated/user-initiated and familiar-merchant context without treating it as proof, keep possible scam/coercion urgent and distinct from confirmed unauthorized activity, apply scoped user resolutions, and expose limited resolved/missed-known-issue metrics with explicit history limitations. Full UI review workflow, broader fixture/target/accessibility/deployment/human acceptance, and enough durable history for production metrics remain open."
     },
     {
       "id": "OMN-ACC-171",
