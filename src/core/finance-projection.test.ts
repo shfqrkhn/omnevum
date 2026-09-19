@@ -85,6 +85,15 @@ describe("canonical Finance projection", () => {
     expect(projection.financeFundingAnalysis?.aggregateShortfall.amountMinor).toBeTruthy();
   });
 
+  it("carries persisted hard constraints into portfolio alternatives without mutating goals", () => {
+    const reserve = record("finance-goal-reserve", { kind: "finance-goal", label: "Emergency reserve", text: "Emergency reserve", targetAmountMinor: "40000000", currency: "CAD", targetDate: "2099-01-01", sustainableMonthlySurplusMinor: "50000", hardConstraint: true });
+    const travel = record("finance-goal-travel", { kind: "finance-goal", label: "Travel", text: "Travel", targetAmountMinor: "20000000", currency: "CAD", targetDate: "2099-01-01", sustainableMonthlySurplusMinor: "50000" });
+    const projection = projectFinanceState([reserve, travel]);
+    expect(projection.financeGoalPlans.find((entry) => entry.recordId === reserve.id)?.hardConstraint).toBe(true);
+    expect(projection.financeFundingAnalysis).toMatchObject({ fundingConflict: true, hardConstraintConflict: false, alternatives: [{ preservesHardConstraints: true }, { preservesHardConstraints: true }] });
+    expect(reserve.data.hardConstraint).toBe(true);
+  });
+
   it("excludes confirmed cross-account movements from aggregate totals while retaining unresolved candidates", () => {
     const outgoing = record("checking-transfer", { kind: "finance-transaction", merchant: "transfer to savings", description: "Transfer to savings", amountMinor: "-2500", currency: "CAD", accountId: "checking", postedAt: "2026-01-02T00:00:00.000Z", status: "POSTED" }, { truthClass: "IMPORTED_RECORD" });
     const incoming = record("savings-transfer", { kind: "finance-transaction", merchant: "transfer from checking", description: "Transfer from checking", amountMinor: "2500", currency: "CAD", accountId: "savings", postedAt: "2026-01-03T00:00:00.000Z", status: "POSTED" }, { truthClass: "IMPORTED_RECORD" });

@@ -513,6 +513,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <input id="finance-plan-date" name="targetDate" type="date" />
             <label for="finance-plan-surplus">${copy.financeMonthlySurplus}</label>
             <input id="finance-plan-surplus" name="surplus" type="text" inputmode="decimal" maxlength="32" />
+            <label class="check-row" for="finance-plan-hard"><input id="finance-plan-hard" name="hardConstraint" type="checkbox" /><span>${copy.financeHardConstraint}</span></label>
             <p class="hint">${copy.financePlanHint}</p>
             <button type="submit">${copy.saveFinancePlan}</button>
             <p id="finance-plan-status" class="hint" role="status"></p>
@@ -1051,9 +1052,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const financePlanAmount = root.querySelector<HTMLInputElement>("#finance-plan-amount");
   const financePlanCurrency = root.querySelector<HTMLSelectElement>("#finance-plan-currency");
   const financePlanSpace = root.querySelector<HTMLSelectElement>("#finance-plan-space");
-  const financePlanDate = root.querySelector<HTMLInputElement>("#finance-plan-date");
-  const financePlanSurplus = root.querySelector<HTMLInputElement>("#finance-plan-surplus");
-  const financePlanStatus = root.querySelector<HTMLElement>("#finance-plan-status");
+   const financePlanDate = root.querySelector<HTMLInputElement>("#finance-plan-date");
+   const financePlanSurplus = root.querySelector<HTMLInputElement>("#finance-plan-surplus");
+   const financePlanHardConstraint = root.querySelector<HTMLInputElement>("#finance-plan-hard");
+   const financePlanStatus = root.querySelector<HTMLElement>("#finance-plan-status");
   const financeImportForm = root.querySelector<HTMLFormElement>("#finance-import-form");
   const financeImportFile = root.querySelector<HTMLInputElement>("#finance-import-file");
   const financeImportAccount = root.querySelector<HTMLInputElement>("#finance-import-account");
@@ -1317,7 +1319,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!financeImportForm || !financeImportFile || !financeImportAccount || !financeImportCurrency || !financeImportOpening || !financeImportClosing || !financeImportStatus) {
     throw new Error("Omnevum Finance import controls are missing");
   }
-  if (!financePlanForm || !financePlanKind || !financePlanLabel || !financePlanAmount || !financePlanCurrency || !financePlanSpace || !financePlanDate || !financePlanSurplus || !financePlanStatus) {
+   if (!financePlanForm || !financePlanKind || !financePlanLabel || !financePlanAmount || !financePlanCurrency || !financePlanSpace || !financePlanDate || !financePlanSurplus || !financePlanHardConstraint || !financePlanStatus) {
     throw new Error("Omnevum Finance planning controls are missing");
   }
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
@@ -2656,6 +2658,57 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       card.append(labelElement, valueElement);
       insightsGrid.append(card);
     };
+    const allocationConflicts = finance.financeAllocationResults.reduce((total, entry) => total + entry.result.conflictIds.length, 0);
+    const goalConflicts = finance.financeGoalPlans.filter((entry) => entry.plan.fundingConflict).length;
+    const goalProgress = finance.financeGoalPlans.map((entry) => copy.financeGoalProgress(finance.financeGraph.nodes.find((node) => node.id === entry.recordId)?.label ?? entry.recordId, formatMoney(entry.plan.funded, presentation.locale), formatMoney(entry.plan.target, presentation.locale), formatMoney(entry.plan.remaining, presentation.locale), entry.plan.fundingConflict)).join(" ");
+    const funding = finance.financeFundingAnalysis;
+    const fundingAlternative = funding?.alternatives[0];
+    const fundingStatus = funding?.fundingConflict ? copy.financeFundingStatus(formatMoney(funding.aggregateShortfall, presentation.locale), Object.keys(fundingAlternative?.shortfallByGoal ?? {}).length || finance.financeGoalPlans.length, funding.alternatives.length, funding.hardConstraintConflict) : "";
+    const appendFundingReview = (analysis: NonNullable<typeof funding>): void => {
+      if (!analysis.fundingConflict || analysis.alternatives.length === 0) return;
+      const goalEntries = new Map(finance.financeGoalPlans.map((entry) => [entry.recordId, entry]));
+      const details = document.createElement("details");
+      details.className = "finance-funding-review";
+      const summary = document.createElement("summary");
+      summary.textContent = copy.financeFundingReview(analysis.alternatives.length);
+      details.append(summary);
+      const hint = document.createElement("p");
+      hint.className = "hint";
+      hint.textContent = copy.financeFundingReviewHint;
+      details.append(hint);
+      const alternatives = document.createElement("ul");
+      alternatives.className = "finance-funding-alternatives";
+      for (const alternative of analysis.alternatives) {
+        const item = document.createElement("li");
+        item.className = "finance-funding-alternative";
+        const heading = document.createElement("strong");
+        heading.textContent = copy.financeFundingAlternative(alternative.label, formatMoney(alternative.totalMonthlyContribution, presentation.locale), Object.keys(alternative.shortfallByGoal).length);
+        item.append(heading);
+        const contributions = document.createElement("ul");
+        contributions.className = "finance-funding-contributions";
+        for (const [goalId, amount] of Object.entries(alternative.monthlyContributions).sort(([left], [right]) => left.localeCompare(right))) {
+          const contribution = document.createElement("li");
+          const goal = goalEntries.get(goalId);
+          contribution.textContent = copy.financeFundingContribution(finance.financeGraph.nodes.find((node) => node.id === goalId)?.label ?? goalId, formatMoney(amount, presentation.locale), goal?.hardConstraint ?? false);
+          contributions.append(contribution);
+        }
+        item.append(contributions);
+        const shortfallEntries = Object.entries(alternative.shortfallByGoal).sort(([left], [right]) => left.localeCompare(right));
+        if (shortfallEntries.length > 0) {
+          const shortfalls = document.createElement("ul");
+          shortfalls.className = "finance-funding-shortfalls";
+          for (const [goalId, amount] of shortfallEntries) {
+            const shortfall = document.createElement("li");
+            shortfall.textContent = copy.financeFundingShortfall(finance.financeGraph.nodes.find((node) => node.id === goalId)?.label ?? goalId, formatMoney(amount, presentation.locale));
+            shortfalls.append(shortfall);
+          }
+          item.append(shortfalls);
+        }
+        alternatives.append(item);
+      }
+      details.append(alternatives);
+      insightsGrid.append(details);
+    };
     if (finance.summary) {
       appendFinanceInsight(`${copy.financeDashboard} · ${finance.summary.currency} · ${copy.financeIncome}`, formatMoney(finance.summary.postedIncome, presentation.locale));
       appendFinanceInsight(copy.financeSpending, formatMoney(finance.summary.postedSpending, presentation.locale));
@@ -2663,14 +2716,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       appendFinanceInsight(copy.financePending, formatMoney(finance.summary.pendingNet, presentation.locale));
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
-      const allocationConflicts = finance.financeAllocationResults.reduce((total, entry) => total + entry.result.conflictIds.length, 0);
-      const goalConflicts = finance.financeGoalPlans.filter((entry) => entry.plan.fundingConflict).length;
-      const goalProgress = finance.financeGoalPlans.map((entry) => copy.financeGoalProgress(finance.financeGraph.nodes.find((node) => node.id === entry.recordId)?.label ?? entry.recordId, formatMoney(entry.plan.funded, presentation.locale), formatMoney(entry.plan.target, presentation.locale), formatMoney(entry.plan.remaining, presentation.locale), entry.plan.fundingConflict)).join(" ");
-      const funding = finance.financeFundingAnalysis;
-      const fundingAlternative = funding?.alternatives[0];
-      const fundingStatus = funding?.fundingConflict ? copy.financeFundingStatus(formatMoney(funding.aggregateShortfall, presentation.locale), Object.keys(fundingAlternative?.shortfallByGoal ?? {}).length || finance.financeGoalPlans.length, funding.alternatives.length, funding.hardConstraintConflict) : "";
       financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${fundingStatus} ${goalProgress}`;
       insightsGrid.append(financeStatus);
+      if (funding) appendFundingReview(funding);
     } else if (finance.transactionCount === 0 && finance.financeGraph.nodes.length === 0) {
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
@@ -2679,14 +2727,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     } else {
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
-      const allocationConflicts = finance.financeAllocationResults.reduce((total, entry) => total + entry.result.conflictIds.length, 0);
-      const goalConflicts = finance.financeGoalPlans.filter((entry) => entry.plan.fundingConflict).length;
-      const goalProgress = finance.financeGoalPlans.map((entry) => copy.financeGoalProgress(finance.financeGraph.nodes.find((node) => node.id === entry.recordId)?.label ?? entry.recordId, formatMoney(entry.plan.funded, presentation.locale), formatMoney(entry.plan.target, presentation.locale), formatMoney(entry.plan.remaining, presentation.locale), entry.plan.fundingConflict)).join(" ");
-      const funding = finance.financeFundingAnalysis;
-      const fundingAlternative = funding?.alternatives[0];
-      const fundingStatus = funding?.fundingConflict ? copy.financeFundingStatus(formatMoney(funding.aggregateShortfall, presentation.locale), Object.keys(fundingAlternative?.shortfallByGoal ?? {}).length || finance.financeGoalPlans.length, funding.alternatives.length, funding.hardConstraintConflict) : "";
       financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${fundingStatus} ${goalProgress}`;
       insightsGrid.append(financeStatus);
+      if (funding) appendFundingReview(funding);
     }
     const considerations = projectDueReminderConsiderations(records);
     attentionPanel.replaceChildren();
@@ -3182,6 +3225,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const goal = financePlanKind.value === "goal";
     financePlanDate.disabled = !goal;
     financePlanSurplus.disabled = !goal;
+    financePlanHardConstraint.disabled = !goal;
+    if (!goal) financePlanHardConstraint.checked = false;
   };
   financePlanKind.addEventListener("change", updateFinancePlanControls);
   updateFinancePlanControls();
@@ -4170,7 +4215,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     try {
       const space = (financePlanSpace.value === "household" || financePlanSpace.value === "work" ? financePlanSpace.value : "personal") satisfies SpaceId;
       const kind = financePlanKind.value === "goal" ? "goal" : "resource";
-      const created = await captureFinancePlan(commands, { kind, label: financePlanLabel.value, amount: financePlanAmount.value, currency: financePlanCurrency.value, space, ...(kind === "goal" && financePlanDate.value ? { targetDate: financePlanDate.value } : {}), ...(kind === "goal" && financePlanSurplus.value.trim() ? { sustainableMonthlySurplus: financePlanSurplus.value } : {}) });
+      const created = await captureFinancePlan(commands, { kind, label: financePlanLabel.value, amount: financePlanAmount.value, currency: financePlanCurrency.value, space, ...(kind === "goal" && financePlanDate.value ? { targetDate: financePlanDate.value } : {}), ...(kind === "goal" && financePlanSurplus.value.trim() ? { sustainableMonthlySurplus: financePlanSurplus.value } : {}), ...(kind === "goal" && financePlanHardConstraint.checked ? { hardConstraint: true } : {}) });
       financeChangedIds = [created.id];
       financePlanForm.reset();
       updateFinancePlanControls();

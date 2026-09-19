@@ -26,9 +26,9 @@ describe("first-party domain workflows", () => {
     await store.open();
     const commands = new CommandBus(store);
     const resource = await captureFinancePlan(commands, { kind: "resource", label: "Monthly surplus", amount: "100.00", currency: "CAD", space: "personal" });
-    const goal = await captureFinancePlan(commands, { kind: "goal", label: "Emergency reserve", amount: "1000.00", currency: "CAD", space: "personal", targetDate: "2030-01-01", sustainableMonthlySurplus: "100.00" });
+    const goal = await captureFinancePlan(commands, { kind: "goal", label: "Emergency reserve", amount: "1000.00", currency: "CAD", space: "personal", targetDate: "2030-01-01", sustainableMonthlySurplus: "100.00", hardConstraint: true });
     expect(resource).toMatchObject({ owner: "domain.finance", data: { kind: "finance-resource", amountMinor: "10000", currency: "CAD" } });
-    expect(goal).toMatchObject({ owner: "domain.finance", truthClass: "ASSUMPTION", data: { kind: "finance-goal", targetAmountMinor: "100000", targetDate: "2030-01-01", sustainableMonthlySurplusMinor: "10000" } });
+    expect(goal).toMatchObject({ owner: "domain.finance", truthClass: "ASSUMPTION", data: { kind: "finance-goal", targetAmountMinor: "100000", targetDate: "2030-01-01", sustainableMonthlySurplusMinor: "10000", hardConstraint: true } });
     expect(new Set((await commands.list()).map((record) => record.id))).toEqual(new Set([resource.id, goal.id]));
     store.close();
   });

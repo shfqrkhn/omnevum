@@ -33,7 +33,7 @@ export interface FinanceProjection {
   financeGraph: FinanceDependencyGraph;
   financeGraphAnalysis: FinanceGraphAnalysis;
   financeAllocationResults: Array<{ resourceId: string; result: FinanceAllocationResult }>;
-  financeGoalPlans: Array<{ recordId: string; plan: FinanceGoalPlan }>;
+  financeGoalPlans: Array<{ recordId: string; plan: FinanceGoalPlan; hardConstraint: boolean }>;
   financeFundingAnalysis?: FinanceFundingAnalysis;
   invalidatedFinanceIds: string[];
   forecastVintages: FinanceForecastVintage[];
@@ -108,17 +108,17 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
     if (funded && funded.currency !== target.currency) return [];
     if (sustainable && sustainable.currency !== target.currency) return [];
     try {
-      return [{ recordId: goal.id, plan: projectFinanceGoal({ goalId: goal.id, target, funded: funded ?? parseMoney("0", target.currency), ...(targetDate ? { targetDate } : {}), ...(sustainable ? { sustainableMonthlySurplus: sustainable } : {}) }) }];
+      return [{ recordId: goal.id, plan: projectFinanceGoal({ goalId: goal.id, target, funded: funded ?? parseMoney("0", target.currency), ...(targetDate ? { targetDate } : {}), ...(sustainable ? { sustainableMonthlySurplus: sustainable } : {}) }), hardConstraint: goal.data.hardConstraint === true }];
     } catch {
       return [];
     }
   });
-  const fundingCandidates = financeGoalPlans.filter((entry): entry is { recordId: string; plan: FinanceGoalPlan & { requiredMonthlyContribution: MoneyValue; sustainableMonthlySurplus: MoneyValue } } => Boolean(entry.plan.requiredMonthlyContribution && entry.plan.sustainableMonthlySurplus));
+  const fundingCandidates = financeGoalPlans.filter((entry): entry is { recordId: string; plan: FinanceGoalPlan & { requiredMonthlyContribution: MoneyValue; sustainableMonthlySurplus: MoneyValue }; hardConstraint: boolean } => Boolean(entry.plan.requiredMonthlyContribution && entry.plan.sustainableMonthlySurplus));
   const commonSurplus = fundingCandidates[0]?.plan.sustainableMonthlySurplus;
   const financeFundingAnalysis = commonSurplus && fundingCandidates.every((entry) => entry.plan.sustainableMonthlySurplus.currency === commonSurplus.currency && entry.plan.sustainableMonthlySurplus.amountMinor === commonSurplus.amountMinor)
     ? (() => {
         try {
-          return planFinanceAllocationAlternatives(fundingCandidates.map((entry) => ({ goalId: entry.recordId, requiredMonthlyContribution: entry.plan.requiredMonthlyContribution, hardConstraint: false })), commonSurplus);
+          return planFinanceAllocationAlternatives(fundingCandidates.map((entry) => ({ goalId: entry.recordId, requiredMonthlyContribution: entry.plan.requiredMonthlyContribution, hardConstraint: entry.hardConstraint })), commonSurplus);
         } catch {
           return undefined;
         }

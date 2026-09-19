@@ -40,6 +40,7 @@ export interface FinancePlanInput {
   space: SpaceId;
   targetDate?: string;
   sustainableMonthlySurplus?: string;
+  hardConstraint?: boolean;
 }
 
 /** Persist a bounded Finance resource or goal through the shared command owner. */
@@ -73,6 +74,7 @@ export async function captureFinancePlan(commands: CommandBus, input: FinancePla
       space: input.space,
       ...(targetDate ? { targetDate } : {}),
       ...(sustainableMonthlySurplus ? { sustainableMonthlySurplusMinor: sustainableMonthlySurplus.amountMinor } : {}),
+      ...(input.hardConstraint === true ? { hardConstraint: true } : {}),
       triageStatus: "REVIEWED"
     }
   });

@@ -214,6 +214,12 @@ select[multiple] { min-height: 9rem; }
 .summary-item { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.8rem; }
 .summary-item span { color: var(--muted); font-size: 0.85rem; }
 .summary-item strong { color: var(--accent); font-size: 1.3rem; }
+.finance-funding-review { grid-column: 1 / -1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.7rem 0.8rem; }
+.finance-funding-review summary { display: flex; min-height: 44px; align-items: center; cursor: pointer; color: var(--accent); font-weight: 750; }
+.finance-funding-review > .hint { margin: 0.45rem 0; }
+.finance-funding-alternatives, .finance-funding-contributions, .finance-funding-shortfalls { display: grid; gap: 0.35rem; margin: 0.45rem 0 0; padding-left: 1.25rem; }
+.finance-funding-alternative { border-top: 1px solid var(--line); padding-top: 0.55rem; overflow-wrap: anywhere; }
+.finance-funding-shortfalls { color: var(--muted); font-size: 0.88rem; }
 .compose-preview { display: grid; gap: 0.8rem; margin-top: 1rem; }
 .compose-preview h3, .view-widget h4 { margin: 0; }
 .view-widget { border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.8rem; overflow-x: auto; }
