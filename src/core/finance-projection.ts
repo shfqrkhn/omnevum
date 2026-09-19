@@ -1,4 +1,4 @@
-import { projectDependencyGraph, projectDependencyImpact, type DependencyGraph, type DependencyImpact } from "./dependency-graph";
+import { projectAuthorizedDependencyImpact, projectDependencyGraph, type DependencyGraph, type DependencyImpact } from "./dependency-graph";
 import { addMoney, parseMoney, type MoneyValue } from "./money";
 import type { CanonicalRecord, TruthClass } from "./model";
 import type { FinanceLineage, FinanceStatementFacts, FinanceTransaction, FinanceTransactionStatus } from "./finance";
@@ -139,7 +139,7 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
     unresolvedReviewCases: reviewCases.filter((review) => review.disposition === "UNRESOLVED").length
   });
   const dependencyGraph = projectDependencyGraph([...activeRecords]);
-  const dependencyImpact = projectDependencyImpact(dependencyGraph, [...(options.changedIds ?? [])]);
+  const dependencyImpact = projectAuthorizedDependencyImpact(activeRecords, [...(options.changedIds ?? [])]);
   const financeNodeIds = new Set(activeRecords.filter(isFinanceNode).map((record) => record.id));
   const crossDomain = projectCrossDomainFinance(activeRecords, dependencyImpact, financeNodeIds);
   const financeGraph: FinanceDependencyGraph = {

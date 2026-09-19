@@ -2,6 +2,7 @@ import type { CommandBus } from "./commands";
 import type { CanonicalRecord } from "./model";
 import { parseMoney, type MoneyValue } from "./money";
 import { scrubSensitiveValue } from "./safety";
+import { lensIdsForRecord } from "./lenses";
 
 export type DependencyEdgeKind = "DEPENDENCY" | "ALLOCATION" | "SYNERGY" | "CONFLICT" | "FEEDBACK";
 export type DependencyEdgeStatus = "ACTIVE" | "PROPOSED" | "REVOKED";
@@ -55,6 +56,19 @@ export interface DependencyImpact {
   quarantinedCycleIds: string[][];
   invalidatedDerivedIds: string[];
   explanation: string;
+  projectionImpacts?: DependencyProjectionImpact[];
+  affectedOwnerIds?: string[];
+  affectedLensIds?: string[];
+  changeImpactExplanation?: string;
+}
+
+export interface DependencyProjectionImpact {
+  recordId: string;
+  owner: string;
+  truthClass: CanonicalRecord["truthClass"];
+  action: "SOURCE_CHANGED" | "RECOMPUTE" | "INVALIDATE";
+  depth: number;
+  lensIds: string[];
 }
 
 export interface DependencyDiscoveryCandidate {
@@ -154,6 +168,29 @@ export function projectDependencyImpact(graph: DependencyGraph, changedIds: stri
   }
   const affectedIds = Object.keys(depthById).sort((left, right) => (depthById[left]! - depthById[right]!) || left.localeCompare(right));
   return { changedIds: changed, affectedIds, depthById, quarantinedCycleIds: analysis.cycles, invalidatedDerivedIds: affectedIds.filter((id) => !changed.includes(id)), explanation: analysis.cycles.length > 0 ? "Ordinary propagation skipped quarantined cycle edges; affected derived projections require recomputation or explicit invalidation." : "Affected projections are ordered by typed dependency depth; edge creation grants no permission." };
+}
+
+/** Project one authorized change blast radius without creating durable invalidation state. */
+export function projectAuthorizedDependencyImpact(records: readonly CanonicalRecord[], changedIds: readonly string[], authorizedIds: Iterable<string> = records.filter((record) => !record.deleted).map((record) => record.id), scenarioId?: string): DependencyImpact {
+  const authorized = new Set(authorizedIds);
+  const scopedRecords = records.filter((record) => !record.deleted && authorized.has(record.id));
+  const graph = projectDependencyGraph(scopedRecords);
+  const impact = projectDependencyImpact(graph, [...changedIds], scenarioId);
+  const byId = new Map(scopedRecords.map((record) => [record.id, record]));
+  const projectionImpacts = impact.affectedIds.flatMap((recordId) => {
+    const record = byId.get(recordId);
+    if (!record) return [];
+    const action = impact.changedIds.includes(recordId) ? "SOURCE_CHANGED" : record.truthClass === "DERIVED" ? "INVALIDATE" : "RECOMPUTE";
+    return [{ recordId, owner: record.owner, truthClass: record.truthClass, action, depth: impact.depthById[recordId] ?? 0, lensIds: lensIdsForRecord(record) } satisfies DependencyProjectionImpact];
+  });
+  const affectedOwnerIds = [...new Set(projectionImpacts.map((item) => item.owner))].sort();
+  const affectedLensIds = [...new Set(projectionImpacts.flatMap((item) => item.lensIds))].sort();
+  const invalidated = projectionImpacts.filter((item) => item.action === "INVALIDATE").length;
+  const recomputed = projectionImpacts.filter((item) => item.action === "RECOMPUTE").length;
+  const changeImpactExplanation = impact.changedIds.length === 0
+    ? "No authorized canonical change is pending."
+    : `One authorized canonical change reaches ${projectionImpacts.length - impact.changedIds.length} downstream projection(s) across ${affectedOwnerIds.length} owner domain(s) and ${affectedLensIds.length} lens(es); ${invalidated} uncertain derived projection(s) require invalidation and ${recomputed} safe projection(s) require recomputation. No permission or source ownership changes. ${impact.explanation}`;
+  return { ...impact, projectionImpacts, affectedOwnerIds, affectedLensIds, changeImpactExplanation };
 }
 
 export function discoverDependencyLinks(records: CanonicalRecord[], authorizedIds: Iterable<string> = records.filter((record) => !record.deleted).map((record) => record.id)): DependencyDiscoveryResult {

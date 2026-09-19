@@ -3,7 +3,7 @@ import type { CanonicalRecord } from "./model";
 import { CommandBus } from "./commands";
 import { CanonicalStore } from "./storage";
 import { recordText } from "./domain";
-import { acceptDeterministicDependencyLinks, analyzeDependencyGraph, createDependencyLink, discoverDependencyLinks, projectDependencyGraph, projectDependencyImpact, type DependencyGraph } from "./dependency-graph";
+import { acceptDeterministicDependencyLinks, analyzeDependencyGraph, createDependencyLink, discoverDependencyLinks, projectAuthorizedDependencyImpact, projectDependencyGraph, projectDependencyImpact, type DependencyGraph } from "./dependency-graph";
 
 function record(id: string, data: Record<string, unknown> = {}, sensitivity: "PRIVATE" | "SHARED" = "PRIVATE"): CanonicalRecord {
   const now = new Date().toISOString();
@@ -50,6 +50,54 @@ describe("typed dependency and synergy graph", () => {
     const scenario = projectDependencyImpact(graph(), ["a"], "plan-downside");
     expect(baseline.affectedIds).not.toContain("c");
     expect(scenario.affectedIds).toEqual(["a", "b", "d"]);
+  });
+
+  it("projects an authorized multi-owner, multi-lens blast radius without changing permissions", () => {
+    const finance = record("finance-source", { kind: "finance-transaction", text: "monthly source" });
+    finance.recordType = "observation";
+    finance.owner = "domain.finance";
+    const goal = record("goal", { kind: "goal", text: "reserve" });
+    const health = record("health", { kind: "health-measurement", text: "resting measure" });
+    health.recordType = "observation";
+    health.owner = "domain.health";
+    health.subjectId = "person:self";
+    const derived = record("derived", { kind: "finance-brief", text: "derived brief" }, "SHARED");
+    derived.recordType = "observation";
+    derived.owner = "platform.analyze";
+    derived.truthClass = "DERIVED";
+    const privateTarget = record("private-target", { kind: "note", text: "outside projection" });
+    const link = (id: string, targetId: string): CanonicalRecord => record(id, {
+      kind: "dependency-link",
+      version: 1,
+      sourceId: finance.id,
+      targetId,
+      edgeKind: "DEPENDENCY",
+      status: "ACTIVE",
+      label: "feeds projection",
+      text: `${finance.id} -> ${targetId}: feeds projection`
+    }, "SHARED");
+    const records = [finance, goal, health, derived, privateTarget, link("finance-goal", goal.id), link("finance-health", health.id), link("finance-derived", derived.id), link("finance-private", privateTarget.id)];
+    for (const relationship of records.filter((candidate) => candidate.data.kind === "dependency-link")) {
+      relationship.recordType = "relationship";
+      relationship.owner = "platform.dependency";
+    }
+    const authorizedIds = records.filter((candidate) => candidate.id !== privateTarget.id && candidate.id !== "finance-private").map((candidate) => candidate.id);
+    const impact = projectAuthorizedDependencyImpact(records, [finance.id], authorizedIds);
+    expect(impact.affectedIds).toEqual([finance.id, derived.id, goal.id, health.id].sort((left, right) => (impact.depthById[left]! - impact.depthById[right]!) || left.localeCompare(right)));
+    expect(impact.projectionImpacts).toMatchObject([
+      { recordId: finance.id, owner: "domain.finance", action: "SOURCE_CHANGED", depth: 0 },
+      { recordId: derived.id, owner: "platform.analyze", action: "INVALIDATE", depth: 1 },
+      { recordId: goal.id, owner: "core.capture", action: "RECOMPUTE", depth: 1 },
+      { recordId: health.id, owner: "domain.health", action: "RECOMPUTE", depth: 1 }
+    ]);
+    expect(impact.affectedOwnerIds).toEqual(["core.capture", "domain.finance", "domain.health", "platform.analyze"]);
+    expect(impact.affectedLensIds?.length).toBeGreaterThanOrEqual(3);
+    expect(impact.changeImpactExplanation).toMatch(/authorized canonical change/iu);
+    expect(impact.changeImpactExplanation).toMatch(/owner domain/iu);
+    expect(impact.changeImpactExplanation).toMatch(/lens/iu);
+    expect(impact.changeImpactExplanation).toMatch(/permission/iu);
+    expect(impact.affectedIds).not.toContain(privateTarget.id);
+    expect(JSON.stringify(impact)).not.toMatch(/"permission":/iu);
   });
 
   it("does not propagate through invalid endpoints or non-node relationship records", () => {

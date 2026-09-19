@@ -2706,6 +2706,15 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const fireStatus = finance.fireScenarios.length > 0 || finance.fireScenarioLimitations.length > 0
       ? copy.financeFireStatus(finance.fireScenarios.length, finance.fireScenarioLimitations.length)
       : "";
+    const impactProjection = finance.dependencyImpact.projectionImpacts ?? [];
+    const impactStatus = finance.dependencyImpact.changedIds.length > 0
+      ? copy.financeImpactStatus(
+        finance.dependencyImpact.affectedOwnerIds?.length ?? 0,
+        finance.dependencyImpact.affectedLensIds?.length ?? 0,
+        impactProjection.filter((item) => item.action === "INVALIDATE").length,
+        impactProjection.filter((item) => item.action === "RECOMPUTE").length
+      )
+      : "";
     const appendFundingReview = (analysis: NonNullable<typeof funding>): void => {
       if (!analysis.fundingConflict || analysis.alternatives.length === 0) return;
       const goalEntries = new Map(finance.financeGoalPlans.map((entry) => [entry.recordId, entry]));
@@ -2758,7 +2767,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       appendFinanceInsight(copy.financePending, formatMoney(finance.summary.pendingNet, presentation.locale));
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
-      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${fireStatus} ${goalLimitations} ${briefStatus} ${goalProgress}`;
+      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${impactStatus} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${fireStatus} ${goalLimitations} ${briefStatus} ${goalProgress}`;
       insightsGrid.append(financeStatus);
       if (funding) appendFundingReview(funding);
     } else if (finance.transactionCount === 0 && finance.financeGraph.nodes.length === 0) {
@@ -2769,7 +2778,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     } else {
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
-      financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${fireStatus} ${goalLimitations} ${briefStatus} ${goalProgress}`;
+      financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${impactStatus} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${fireStatus} ${goalLimitations} ${briefStatus} ${goalProgress}`;
       insightsGrid.append(financeStatus);
       if (funding) appendFundingReview(funding);
     }
