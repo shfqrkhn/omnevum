@@ -31,7 +31,7 @@ describe("canonical Finance projection", () => {
   it("projects canonical transactions and typed graph impact together", () => {
     const income = record("income-1", { kind: "finance-transaction", merchant: "payroll", description: "Payroll", amountMinor: "300000", currency: "CAD", accountId: "checking", postedAt: "2026-01-02T00:00:00.000Z", status: "POSTED", naturalKey: "income" }, { truthClass: "IMPORTED_RECORD", provenance: { source: "IMPORT", capturedAt: "2026-01-03T00:00:00.000Z", sourceId: "statement-1" } });
     const expense = record("expense-1", { kind: "expense", merchant: "rent", amountMinor: "100000", currency: "CAD", text: "Rent" });
-    const goal = record("goal-1", { kind: "finance-goal", label: "reserve", text: "Reserve" });
+    const goal = record("goal-1", { kind: "goal", label: "reserve", text: "Reserve" }, { owner: "core.capture", recordType: "note" });
     const link: CanonicalRecord = record("link-1", { kind: "dependency-link", version: 1, sourceId: "expense-1", targetId: "goal-1", edgeKind: "DEPENDENCY", status: "ACTIVE", label: "funds reserve", text: "expense-1 -> goal-1: funds reserve" }, { recordType: "relationship", owner: "platform.dependency", truthClass: "USER_OBSERVATION" });
     const projection = projectFinanceState([income, expense, goal, link], { requiredPeriods: ["2026-01"], changedIds: ["expense-1"] });
     expect(projection.status).toBe("LIMITED");

@@ -47,7 +47,8 @@ const FINANCE_NODE_KINDS = new Set([
   "finance-debt",
   "finance-insurance",
   "finance-forecast",
-  "finance-fire"
+  "finance-fire",
+  "goal"
 ]);
 
 const FINANCE_STATUSES = new Set<FinanceTransactionStatus>(["PENDING", "POSTED", "REVERSED", "REFUNDED", "VOIDED", "CORRECTED", "UNKNOWN"]);
