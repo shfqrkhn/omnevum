@@ -1558,9 +1558,10 @@
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-responsive-target-geometry-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-all-family-200-target-separation-receipt"
       ],
-      "notes": "The current exact artifact covers all Alpha/Beta/Gamma Light/Dark combinations at strict 320x844 with 100% and temporary 2x page-scale profiles, and the accessibility-profile receipt adds explicit 200% text scale plus 125% large-target coverage: no page horizontal overflow or consequential target clipping was observed. True OS/browser text-size settings, physical touch, Assistant availability, vertical reachability, browser-family breadth, assistive technology, and human acceptance remain open."
+      "notes": "The current exact artifact covers all Alpha/Beta/Gamma Light/Dark combinations at strict 320x844 with actual saved 100% and 200% text-scale profiles; the current receipt reports 284 effective visible controls per run with no page overflow or page-level clipping. The accessibility-profile receipt additionally covers 125% large-target behavior. True OS/browser text-size settings, physical touch, Assistant availability, vertical reachability, browser-family breadth, assistive technology, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-100",
@@ -1573,9 +1574,10 @@
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-responsive-target-geometry-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-all-family-200-target-separation-receipt"
       ],
-      "notes": "The current exact artifact measured 216 visible consequential targets for each of 12 Alpha/Beta/Gamma Light/Dark × 100%/2x narrow runs and 162 controls in the accessibility-profile runs; none was below 44x44 CSS pixels and none was horizontally clipped, with page and body scrollWidth equal to clientWidth. Independent-target 8px separation, lower-half placement, true touch accuracy, all density/profile combinations, browser-family/accessibility breadth, and human acceptance remain open."
+      "notes": "The current exact artifact measured 284 effective visible controls in each of 12 actual saved Alpha/Beta/Gamma Light/Dark × 100%/200% narrow runs; none was below 44x44 CSS pixels, page-clipped, overlapped, or within 8 CSS pixels of an independent target, with page and body scrollWidth equal to clientWidth. Lower-half placement, true touch accuracy, all density/profile combinations, browser-family/accessibility breadth, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-101",
@@ -1970,9 +1972,10 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-strict-detail-geometry-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-all-family-narrow-target-geometry-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-all-family-narrow-target-geometry-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-all-family-200-target-separation-receipt"
       ],
-      "notes": "All six family/mode combinations were exercised at a strict 320x844 viewport and a temporary 2x page-scale rehearsal; the accessibility receipt additionally exercises large-target 125% and explicit 200% text scale, the detail receipt measures the canonical detail surface at 320px/200%, and the current all-family receipt reports 12 runs with 240 visible consequential controls per run, zero page/clipped targets, and zero inter-control overlap after keeping narrow lens navigation in normal flow. The current runs had no page/body horizontal overflow, no horizontal target clipping, no consequential target below 44x44, and the same canonical sentinel. Physical touch/input profiles, color-only state/CVD, alternate mutation paths, other engines, and human acceptance remain open."
+      "notes": "All six family/mode combinations were exercised at a strict 320x844 viewport with actual saved 100% and 200% text-scale profiles; the accessibility receipt additionally exercises large-target 125% and explicit 200% text scale, the detail receipt measures the canonical detail surface at 320px/200%, and the current all-family separation receipt reports 12 runs with 284 effective visible controls per run, zero page/clipped targets, zero overlap, and zero independent-target gaps below 8 CSS pixels after keeping narrow lens navigation and scaled form/grid children within their owners. The current runs had no page/body horizontal overflow or consequential target below 44x44. Physical touch/input profiles, lower-half reachability, color-only state/CVD, alternate mutation paths, other engines, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-132",
