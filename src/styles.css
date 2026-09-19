@@ -217,6 +217,8 @@ select[multiple] { min-height: 9rem; }
 .triage-proposal { flex: 1 1 100%; margin: 0; }
 .record-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; border: 1px solid var(--line); border-radius: 12px; padding: 0.9rem; }
 .record-item p { margin: 0.35rem 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.undo-banner { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; margin: 0.7rem 0; border: 1px solid var(--accent-strong); border-radius: 12px; background: color-mix(in srgb, var(--accent) 10%, var(--surface)); padding: 0.7rem 0.8rem; }
+.undo-banner span { min-width: 0; overflow-wrap: anywhere; }
 .history-details { margin-top: 0.6rem; color: var(--muted); font-size: 0.82rem; }
 .history-details summary { cursor: pointer; color: var(--accent); font-weight: 700; }
 .history-details ol { margin: 0.45rem 0 0; padding-left: 1.25rem; }
@@ -250,4 +252,4 @@ footer { display: flex; justify-content: space-between; gap: 1rem; border-top: 1
 [data-density="compact"] button, [data-density="compact"] .file-button { min-height: 44px; padding: 0.5rem 0.75rem; }
 [data-density="compact"] .summary-item, [data-density="compact"] .record-item { padding: 0.6rem; }
 [data-density="compact"] .domain-grid { gap: 0.65rem; }
-@media (max-width: 560px) { .topbar, .status-card, .form-row, .section-heading, .recovery-row, footer, .dialog-actions { flex-direction: column; align-items: stretch; } .topbar button { align-self: flex-start; } .primary-nav a { white-space: normal; overflow-wrap: anywhere; } .record-item { flex-direction: column; min-width: 0; } .triage-split { grid-template-columns: minmax(0, 1fr); } .triage-actions input[type="datetime-local"], .triage-actions select { width: 100%; min-width: 0; } }
+@media (max-width: 560px) { .topbar, .status-card, .form-row, .section-heading, .recovery-row, .undo-banner, footer, .dialog-actions { flex-direction: column; align-items: stretch; } .topbar button { align-self: flex-start; } .primary-nav a { white-space: normal; overflow-wrap: anywhere; } .record-item { flex-direction: column; min-width: 0; } .triage-split { grid-template-columns: minmax(0, 1fr); } .triage-actions input[type="datetime-local"], .triage-actions select { width: 100%; min-width: 0; } }

@@ -740,6 +740,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </div>
         <ul id="record-list" class="record-list"></ul>
         <p id="empty-state" class="empty-state">${copy.nothingCaptured}</p>
+        <div id="undo-banner" class="undo-banner" role="status" hidden>
+          <span id="undo-message"></span>
+          <button id="undo-archive" class="secondary" type="button">${copy.undo}</button>
+        </div>
         <div class="section-heading archive-heading">
           <h3>${copy.archivedRecords}</h3>
           <button id="toggle-archive" class="secondary" type="button" aria-expanded="false">${copy.showArchived}</button>
@@ -1044,6 +1048,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const recordList = root.querySelector<HTMLUListElement>("#record-list");
   const emptyState = root.querySelector<HTMLParagraphElement>("#empty-state");
   const recordCount = root.querySelector<HTMLElement>("#record-count");
+  const undoBanner = root.querySelector<HTMLElement>("#undo-banner");
+  const undoMessage = root.querySelector<HTMLElement>("#undo-message");
+  const undoArchive = root.querySelector<HTMLButtonElement>("#undo-archive");
   const toggleArchive = root.querySelector<HTMLButtonElement>("#toggle-archive");
   const archivePanel = root.querySelector<HTMLElement>("#archive-panel");
   const archiveList = root.querySelector<HTMLUListElement>("#archive-list");
@@ -1092,7 +1099,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const packageAutomationStatus = root.querySelector<HTMLElement>("#package-automation-status");
   const packageAutomationList = root.querySelector<HTMLUListElement>("#package-automation-list");
   const packageAutomationProposals = root.querySelector<HTMLUListElement>("#package-automation-proposals");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
@@ -1134,6 +1141,34 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   let stagedCandidates: AcquireCandidate[] = [];
   let cleanupPreviewState: CleanupPreview | undefined;
   let packageAutomationProposalsState: PackageAutomationProposal[] = [];
+  const ARCHIVE_UNDO_WINDOW_MS = 10_000;
+  let archiveUndoState: { recordId: string; expiresAt: number } | undefined;
+  let archiveUndoTicker: number | undefined;
+  const clearArchiveUndo = (): void => {
+    if (archiveUndoTicker !== undefined) window.clearInterval(archiveUndoTicker);
+    archiveUndoTicker = undefined;
+    archiveUndoState = undefined;
+    undoBanner.hidden = true;
+    undoArchive.disabled = true;
+  };
+  const renderArchiveUndo = (): boolean => {
+    if (!archiveUndoState) return false;
+    const remaining = Math.ceil((archiveUndoState.expiresAt - Date.now()) / 1000);
+    if (remaining <= 0) {
+      clearArchiveUndo();
+      return false;
+    }
+    undoMessage.textContent = copy.undoAvailable(remaining);
+    undoBanner.hidden = false;
+    undoArchive.disabled = false;
+    return true;
+  };
+  const startArchiveUndo = (recordId: string): void => {
+    clearArchiveUndo();
+    archiveUndoState = { recordId, expiresAt: Date.now() + ARCHIVE_UNDO_WINDOW_MS };
+    renderArchiveUndo();
+    archiveUndoTicker = window.setInterval(renderArchiveUndo, 250);
+  };
   const packageAutomationRuleId = `${CORE_AUTOMATION_PACKAGE.packageId}.manual-review-${Date.now()}`;
   const makePackageAutomationDocument = (recordId: string): string => JSON.stringify({
     schemaVersion: 1,
@@ -2450,6 +2485,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         try {
           await commands.archive(record.id);
           await renderRecords(searchQuery.value);
+          startArchiveUndo(record.id);
         } catch (error) {
           triageStatusMessage.textContent = describeError(error, "Triage archive failed; canonical data was not changed.");
         }
@@ -3140,6 +3176,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         try {
           await commands.archive(record.id);
           await renderRecords(searchQuery.value);
+          startArchiveUndo(record.id);
         } catch (error) {
           healthStatus.textContent = describeError(error, "Archive failed; canonical data was not changed.");
         }
@@ -3171,6 +3208,23 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     if (!archivePanel.hidden) await renderArchived();
     return records.length;
   };
+
+  undoArchive.addEventListener("click", async () => {
+    const state = archiveUndoState;
+    if (!state || state.expiresAt <= Date.now()) {
+      clearArchiveUndo();
+      return;
+    }
+    try {
+      await commands.undo(state.recordId);
+      const remaining = Math.max(0, Math.ceil((state.expiresAt - Date.now()) / 1000));
+      clearArchiveUndo();
+      healthStatus.textContent = copy.undoAvailable(remaining);
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      healthStatus.textContent = describeError(error, "Undo failed; the archived record was not changed.");
+    }
+  });
 
   captureForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -3827,8 +3881,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   });
 
   clearCanonicalButton.addEventListener("click", async () => {
-    if (!await requestConfirmation(recoveryCopy.clearConfirmation, copy.confirmationHeading)) return;
+    const records = (await store.list(true)).filter((record) => !isCleanupHistoryRecord(record));
+    const effects = (await store.listEffects()).filter((operation) => operation.status !== "SUCCEEDED");
+    const relationships = records.filter((record) => record.recordType === "relationship").length;
+    const artifacts = (await store.health()).artifactPayloads;
+    const message = `${recoveryCopy.clearConfirmation}\n\n${recoveryCopy.clearImpact(records.length, relationships, artifacts, effects.length)}`;
+    if (!await requestConfirmation(message, copy.confirmationHeading)) return;
     try {
+      clearArchiveUndo();
       await store.clear();
       recoveryStatus.textContent = recoveryCopy.clearedCanonical;
       await renderRecords();
