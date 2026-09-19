@@ -229,9 +229,10 @@
       "evidence": [
         "src/core/storage.test.ts#round-trips-a-portable-vault-while-preserving-identity-and-provenance",
         "src/core/storage.test.ts#preserves-a-bounded-artifact-payload-through-vault-export-and-restore",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#isolated-origin-vault-transfer-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#isolated-origin-vault-transfer-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-cross-origin-vault-restore-receipt"
       ],
-      "notes": "Integrity-protected Vault transfer preserves IDs/provenance across isolated local stores and bounded artifact restore; a real materially different browser-family/origin run and large-Vault qualification remain open."
+      "notes": "The exact current artifact now proves an integrity-protected one-record Vault transfer between distinct 127.0.0.1 and localhost Chromium origins, with app-owned preview/confirmation, preserved canonical identity/history, healthy search, and reload retention. A materially different browser/platform family, large-Vault limits, encrypted-password recovery, native storage faults, and human qualification remain open."
     },
     {
       "id": "OMN-ACC-011",
