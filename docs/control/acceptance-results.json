@@ -2372,9 +2372,10 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-allocation-amount-and-resource-reconciliation-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-finance-planning-and-goal-trajectory-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-layout-and-finance-portfolio-funding-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-layout-and-finance-portfolio-funding-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-reviewable-finance-alternatives-and-compact-disclosure-receipt"
       ],
-      "notes": "Current exact-money allocation and portfolio-planning tests detect overcommitment, aggregate/per-goal shortfalls, and deterministic proportional/defer alternatives without reprioritizing goals, double-counting balances, mutating canonical records, or reallocating money. Hard-constraint persistence, full Finance UI interaction, and broader target qualification remain open."
+      "notes": "Current exact-money allocation and portfolio-planning tests detect overcommitment, aggregate/per-goal shortfalls, deterministic proportional/defer alternatives, and persisted hard-constraint preservation without reprioritizing goals, double-counting balances, mutating canonical records, or reallocating money. Home exposes the alternatives in a collapsed review disclosure; real conflicting-fixture interaction, broader target qualification, and deployment remain open."
     },
     {
       "id": "OMN-ACC-164",
