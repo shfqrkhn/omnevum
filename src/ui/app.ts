@@ -677,8 +677,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <button id="triage-batch-review" class="secondary" type="button" disabled>${copy.triageBatchReview}</button>
           <button id="triage-batch-defer" class="secondary" type="button" disabled>${copy.triageBatchDefer}</button>
         </div>
-        <div id="review-templates" class="review-templates">
-          <h3>${copy.reviewTemplates}</h3>
+        <details id="review-templates" class="review-templates">
+          <summary class="review-templates-summary"><h3>${copy.reviewTemplates}</h3></summary>
           <p class="hint">${copy.reviewHint}</p>
           <div id="review-template-buttons" class="review-template-buttons"></div>
           <div id="review-stepper" class="review-stepper" hidden>
@@ -696,7 +696,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             </div>
             <p id="review-stepper-status" class="hint" role="status"></p>
           </div>
-        </div>
+        </details>
         <ul id="review-list" class="record-list"></ul>
         <p id="triage-status" class="hint" role="status"></p>
         <p id="review-empty" class="empty-state">${copy.inboxClear}</p>
@@ -1115,6 +1115,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const triageBatchDeferUntil = root.querySelector<HTMLInputElement>("#triage-batch-defer-until");
   const triageBatchReview = root.querySelector<HTMLButtonElement>("#triage-batch-review");
   const triageBatchDefer = root.querySelector<HTMLButtonElement>("#triage-batch-defer");
+  const reviewTemplates = root.querySelector<HTMLDetailsElement>("#review-templates");
   const reviewTemplateButtons = root.querySelector<HTMLElement>("#review-template-buttons");
   const reviewStepper = root.querySelector<HTMLElement>("#review-stepper");
   const reviewStepperHeading = root.querySelector<HTMLElement>("#review-stepper-heading");
@@ -1329,7 +1330,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!packageAutomationForm || !packageAutomationRecord || !packageAutomationDocument || !packageAutomationPreviewButton || !packageAutomationStatus || !packageAutomationList || !packageAutomationProposals) {
     throw new Error("Omnevum package-automation controls are missing");
   }
-  if (!reviewTemplateButtons || !reviewStepper || !reviewStepperHeading || !reviewStepperProgress || !reviewStepperPrompt || !reviewStepperMotivation || !reviewStepperRecords || !reviewStepperSkip || !reviewStepperAbandon || !reviewStepperNext || !reviewStepperStatus) {
+  if (!reviewTemplates || !reviewTemplateButtons || !reviewStepper || !reviewStepperHeading || !reviewStepperProgress || !reviewStepperPrompt || !reviewStepperMotivation || !reviewStepperRecords || !reviewStepperSkip || !reviewStepperAbandon || !reviewStepperNext || !reviewStepperStatus) {
     throw new Error("Omnevum Review template controls are missing");
   }
 
@@ -2877,6 +2878,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const renderReviewTemplates = async (): Promise<void> => {
     const stored = await store.getSetting<unknown>(REVIEW_SESSION_SETTING);
     reviewSession = isReviewSession(stored) ? stored : undefined;
+    reviewTemplates.open = reviewSessionOpen && Boolean(reviewSession);
     reviewTemplateButtons.replaceChildren();
     for (const template of REVIEW_TEMPLATES) {
       const start = document.createElement("button");

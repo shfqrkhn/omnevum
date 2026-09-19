@@ -251,8 +251,13 @@ select[multiple] { min-height: 9rem; }
 .triage-split textarea { min-height: 3rem; padding: 0.45rem 0.6rem; }
 .triage-actions input[type="datetime-local"] { min-height: 44px; min-width: 12rem; padding: 0.45rem 0.6rem; }
 .triage-proposal { flex: 1 1 100%; margin: 0; }
-.review-templates { display: grid; gap: 0.7rem; margin: 0.8rem 0; }
-.review-templates h3 { margin: 0; }
+.review-templates { display: grid; gap: 0.7rem; margin: 0.8rem 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.65rem 0.75rem; }
+.review-templates > .review-templates-summary { display: flex; min-height: 44px; align-items: center; gap: 0.6rem; cursor: pointer; list-style: none; }
+.review-templates > .review-templates-summary::-webkit-details-marker { display: none; }
+.review-templates > .review-templates-summary::before { content: "▸"; flex: 0 0 auto; color: var(--accent); font-size: 1.15rem; line-height: 1; }
+.review-templates[open] > .review-templates-summary::before { content: "▾"; }
+.review-templates > .review-templates-summary h3 { margin: 0; }
+.review-templates[open] > .review-templates-summary { margin-bottom: 0.05rem; border-bottom: 1px solid var(--line); padding-bottom: 0.65rem; }
 .review-template-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .review-stepper { display: grid; gap: 0.7rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.8rem; }
 .review-stepper[hidden] { display: none; }
