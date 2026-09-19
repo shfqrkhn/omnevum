@@ -943,65 +943,71 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <label class="file-button secondary" for="artifact-input">${copy.attachArtifact}</label>
           <input id="artifact-input" type="file" />
         </div>
-        <form id="document-finish-form" class="relationship-form">
-          <h3>${copy.documentFinishHeading}</h3>
-          <label for="document-finish-source">${copy.documentFinishSource}</label>
-          <select id="document-finish-source" required><option value="">${copy.documentFinishSource}</option></select>
-          <label for="document-finish-terms">${copy.documentFinishTerms}</label>
-          <input id="document-finish-terms" type="text" maxlength="1000" required />
-          <label for="document-finish-replacement">${copy.documentFinishReplacement}</label>
-          <input id="document-finish-replacement" type="text" maxlength="80" value="[REDACTED]" required />
-          <p class="hint">${copy.documentFinishHint}</p>
-          <button type="submit">${copy.documentFinishSubmit}</button>
-          <p id="document-finish-status" class="hint" role="status"></p>
-        </form>
-        <form id="effect-stage-form" class="relationship-form">
-          <h3>${copy.effectStageHeading}</h3>
-          <label for="effect-stage-destination">${copy.effectDestination}</label>
-          <input id="effect-stage-destination" type="url" maxlength="500" placeholder="https://your-endpoint.example/action" required />
-          <label for="effect-stage-purpose">${copy.effectPurpose}</label>
-          <input id="effect-stage-purpose" type="text" maxlength="500" required />
-          <label for="effect-stage-payload">${copy.effectPayload}</label>
-          <textarea id="effect-stage-payload" rows="4" maxlength="20000" required></textarea>
-          <label for="effect-stage-space">${copy.effectScope}</label>
-          <select id="effect-stage-space" name="space" required></select>
-          <p class="hint">${copy.effectStageHint}</p>
-          <button type="submit">${copy.effectQueue}</button>
-          <p id="effect-stage-status" class="hint" role="status"></p>
-        </form>
-        <form id="effect-run-form" class="relationship-form">
-          <h3>${copy.effectRunHeading}</h3>
-          <label for="effect-run-endpoint">${copy.effectRunEndpoint}</label>
-          <input id="effect-run-endpoint" type="url" maxlength="500" placeholder="https://your-endpoint.example/action" required />
-          <p class="hint">${copy.effectRunHint}</p>
-          <button type="submit">${copy.effectRun}</button>
-          <p id="effect-run-status" class="hint" role="status"></p>
-        </form>
-        <div class="relationship-form">
-          <h3>${copy.effectOutboxHeading}</h3>
-          <p class="hint">${copy.effectOutboxHint}</p>
-          <ul id="effect-list" class="record-list"></ul>
-        </div>
-        <div class="relationship-form" id="package-automation-panel">
-          <h3>${copy.automationHeading}</h3>
-          <p class="hint">${copy.automationHint}</p>
-          <p class="hint"><strong>${copy.automationPackage}:</strong> ${CORE_AUTOMATION_PACKAGE.packageId} · <strong>Permission:</strong> automation.proposal</p>
-          <form id="package-automation-form">
-            <label for="package-automation-record">${copy.automationRecord}</label>
-            <select id="package-automation-record" required></select>
-            <label for="package-automation-document">${copy.automationDocument}</label>
-            <textarea id="package-automation-document" rows="10" maxlength="32000" required></textarea>
-            <div class="form-row">
-              <button id="package-automation-install" type="submit">${copy.automationInstall}</button>
-              <button id="package-automation-preview" class="secondary" type="button">${copy.automationPreview}</button>
-            </div>
+        <details id="recovery-artifact-tools" class="relationship-form compact-panel">
+          <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h3>${copy.documentFinishHeading}</h3></span></summary>
+          <form id="document-finish-form">
+            <label for="document-finish-source">${copy.documentFinishSource}</label>
+            <select id="document-finish-source" required><option value="">${copy.documentFinishSource}</option></select>
+            <label for="document-finish-terms">${copy.documentFinishTerms}</label>
+            <input id="document-finish-terms" type="text" maxlength="1000" required />
+            <label for="document-finish-replacement">${copy.documentFinishReplacement}</label>
+            <input id="document-finish-replacement" type="text" maxlength="80" value="[REDACTED]" required />
+            <p class="hint">${copy.documentFinishHint}</p>
+            <button type="submit">${copy.documentFinishSubmit}</button>
+            <p id="document-finish-status" class="hint" role="status"></p>
           </form>
-          <p id="package-automation-status" class="hint" role="status"></p>
-          <h4>${copy.automationRules}</h4>
-          <ul id="package-automation-list" class="record-list"></ul>
-          <h4>${copy.automationProposals}</h4>
-          <ul id="package-automation-proposals" class="record-list"></ul>
-        </div>
+        </details>
+        <details id="recovery-effects" class="relationship-form compact-panel">
+          <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h3>${copy.effectOutboxHeading}</h3></span></summary>
+          <form id="effect-stage-form">
+            <h3>${copy.effectStageHeading}</h3>
+            <label for="effect-stage-destination">${copy.effectDestination}</label>
+            <input id="effect-stage-destination" type="url" maxlength="500" placeholder="https://your-endpoint.example/action" required />
+            <label for="effect-stage-purpose">${copy.effectPurpose}</label>
+            <input id="effect-stage-purpose" type="text" maxlength="500" required />
+            <label for="effect-stage-payload">${copy.effectPayload}</label>
+            <textarea id="effect-stage-payload" rows="4" maxlength="20000" required></textarea>
+            <label for="effect-stage-space">${copy.effectScope}</label>
+            <select id="effect-stage-space" name="space" required></select>
+            <p class="hint">${copy.effectStageHint}</p>
+            <button type="submit">${copy.effectQueue}</button>
+            <p id="effect-stage-status" class="hint" role="status"></p>
+          </form>
+          <form id="effect-run-form">
+            <h3>${copy.effectRunHeading}</h3>
+            <label for="effect-run-endpoint">${copy.effectRunEndpoint}</label>
+            <input id="effect-run-endpoint" type="url" maxlength="500" placeholder="https://your-endpoint.example/action" required />
+            <p class="hint">${copy.effectRunHint}</p>
+            <button type="submit">${copy.effectRun}</button>
+            <p id="effect-run-status" class="hint" role="status"></p>
+          </form>
+          <div>
+            <p class="hint">${copy.effectOutboxHint}</p>
+            <ul id="effect-list" class="record-list"></ul>
+          </div>
+        </details>
+        <details id="recovery-automation" class="relationship-form compact-panel">
+          <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h3>${copy.automationHeading}</h3></span></summary>
+          <div id="package-automation-panel">
+            <p class="hint">${copy.automationHint}</p>
+            <p class="hint"><strong>${copy.automationPackage}:</strong> ${CORE_AUTOMATION_PACKAGE.packageId} · <strong>Permission:</strong> automation.proposal</p>
+            <form id="package-automation-form">
+              <label for="package-automation-record">${copy.automationRecord}</label>
+              <select id="package-automation-record" required></select>
+              <label for="package-automation-document">${copy.automationDocument}</label>
+              <textarea id="package-automation-document" rows="10" maxlength="32000" required></textarea>
+              <div class="form-row">
+                <button id="package-automation-install" type="submit">${copy.automationInstall}</button>
+                <button id="package-automation-preview" class="secondary" type="button">${copy.automationPreview}</button>
+              </div>
+            </form>
+            <p id="package-automation-status" class="hint" role="status"></p>
+            <h4>${copy.automationRules}</h4>
+            <ul id="package-automation-list" class="record-list"></ul>
+            <h4>${copy.automationProposals}</h4>
+            <ul id="package-automation-proposals" class="record-list"></ul>
+          </div>
+        </details>
         <label for="vault-password">${recoveryCopy.password}</label>
         <input id="vault-password" type="password" minlength="8" autocomplete="new-password" />
         <p class="hint">${recoveryCopy.passwordHint}</p>
