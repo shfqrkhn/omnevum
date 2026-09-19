@@ -1673,7 +1673,7 @@
         "src/ui/app.ts",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-telemetry-projection-and-health-line-receipt"
       ],
-      "notes": "Source d9366c7 provides one shared telemetry projection for replication, backup, outbox, capability, conflict, and storage facts; targeted telemetry/i18n/storage tests passed 41 tests, and artifact bb1979932bfbf4a5e0c83b04312618fd2702b2a37672dff5fc9e1f02eab90c8c with worker omnevum-shell-bf0f45c3fd008ef8 visibly renders truthful Edge health-line states on a clean localhost origin. Durable backup freshness/conflict persistence, browser-injected all-fault transitions, other targets/assistive technology/touch, deployment, and human acceptance remain open."
+      "notes": "Source d9366c7 provides one shared telemetry projection for replication, backup, outbox, capability, conflict, and storage facts; targeted telemetry/i18n/storage tests passed 41 tests, and artifact ad8e8022265c3c6591a345aaab314bdbf370655a0bda55f4e59d41018538cfab with worker omnevum-shell-bf0f45c3fd008ef8 visibly renders truthful Edge health-line states on a clean localhost origin. Durable backup freshness/conflict persistence, browser-injected all-fault transitions, other targets/assistive technology/touch, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-108",
