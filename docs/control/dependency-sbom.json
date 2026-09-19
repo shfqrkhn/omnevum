@@ -9,8 +9,8 @@
   },
   "source": {
     "mpes": {
-      "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
-      "sha256": "585e2f178e47ca344c576eec16367585d1f347c2776a3c0c93a7cd4f9be4b6f3"
+      "path": "docs/Omnevum-MPES-v0_17_4.md",
+      "sha256": "ab323b33db49286420f15164d7ded7950b22d6c3bd4ef07f3f480b4b4b5cb8a6"
     },
     "omni": {
       "path": "docs/Omni_3.32.0.md",

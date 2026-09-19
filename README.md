@@ -2,7 +2,7 @@
 
 Omnevum is a mobile-first, local-first personal Life OS and extensible app/game platform.
 
-This checkout is the initial Phase 0 implementation foundation. The governing design baseline is [Omni](docs/Omni_3.32.0.md) and the product specification is the [Omnevum MPES](docs/Omnevum-MPES-v0.12.0-converged.md).
+This checkout is the initial Phase 0 implementation foundation. The governing design baseline is [Omni](docs/Omni_3.32.0.md) and the product specification is the [Omnevum MPES](docs/Omnevum-MPES-v0_17_4.md).
 
 ## Current implementation
 

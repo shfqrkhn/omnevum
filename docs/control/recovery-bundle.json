@@ -5,8 +5,8 @@
   "authority": "MPES Sections 20.5, 20.9, and 20.10; integrity manifest is a generated projection",
   "source": {
     "mpes": {
-      "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
-      "sha256": "585e2f178e47ca344c576eec16367585d1f347c2776a3c0c93a7cd4f9be4b6f3"
+      "path": "docs/Omnevum-MPES-v0_17_4.md",
+      "sha256": "ab323b33db49286420f15164d7ded7950b22d6c3bd4ef07f3f480b4b4b5cb8a6"
     },
     "omni": {
       "path": "docs/Omni_3.32.0.md",
@@ -28,7 +28,7 @@
     "secretsIncluded": false
   },
   "restoreProcedure": [
-    "Read docs/Omni_3.32.0.md and docs/Omnevum-MPES-v0.12.0-converged.md before changing scope.",
+    "Read docs/Omni_3.32.0.md and docs/Omnevum-MPES-v0_17_4.md before changing scope.",
     "Inspect docs/control/completion-ledger.json, engineering-controller.json, release-evidence.json, acceptance-results.json, support-matrix.json, and risk-threat-register.json.",
     "Run npm ci, npm run audit:recovery, and npm run ci from a clean checkout before resuming implementation.",
     "Use docs/evidence/ as dated receipts and update the canonical control register in the same verified increment.",
@@ -37,7 +37,7 @@
   "canonicalReferences": {
     "authority": [
       "docs/Omni_3.32.0.md",
-      "docs/Omnevum-MPES-v0.12.0-converged.md"
+      "docs/Omnevum-MPES-v0_17_4.md"
     ],
     "controls": [
       "docs/control/control-manifest.json",
@@ -109,18 +109,18 @@
       },
       {
         "path": "AGENTS.md",
-        "sha256": "bb5deea1862c159480d7cf4604c98ee660c4d05b7828c743a3211d2b0e2db0c6",
-        "bytes": 1223
+        "sha256": "e3d6f6a62b309c0ba82f1e60a39284b880ff3a9ebd568b17e02449f77f903926",
+        "bytes": 1335
       },
       {
         "path": "README.md",
-        "sha256": "bbe9e493909ce71f90676e22fb0bda1e7278dc2315ad64850c6ea62dc02e493d",
-        "bytes": 2566
+        "sha256": "299cbed22e3b8e6d3e2e708184faf8dc4a4792713330db67d8688ba6e5f22518",
+        "bytes": 2556
       },
       {
-        "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
-        "sha256": "585e2f178e47ca344c576eec16367585d1f347c2776a3c0c93a7cd4f9be4b6f3",
-        "bytes": 304799
+        "path": "docs/Omnevum-MPES-v0_17_4.md",
+        "sha256": "ab323b33db49286420f15164d7ded7950b22d6c3bd4ef07f3f480b4b4b5cb8a6",
+        "bytes": 438294
       },
       {
         "path": "docs/Omni_3.32.0.md",
@@ -129,18 +129,18 @@
       },
       {
         "path": "docs/README.md",
-        "sha256": "7f2db84de53502e4289b81cf7838f192715d3a7f1e5e6ec7a24b77976d50ff2e",
-        "bytes": 1047
+        "sha256": "aa90dbaf9315156493a30f52d23b08e2469a1eeb667159e7a42e5b2b4d99f65a",
+        "bytes": 1149
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "8c561b91f11d6a55fcb141060ef767470ad8c0158b481710315bea80253f460e",
-        "bytes": 117765
+        "sha256": "017318e02d55ca423671026ed723ebca4446d3e1c2641bd80c0f5dfe06bda241",
+        "bytes": 162392
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
-        "sha256": "65e6fa4531038b828813338b472c56e8b6632b878d10986e9dcbd8950234f3d6",
-        "bytes": 48979
+        "sha256": "baf4b222c816b67de0b68ecc63bd2699efe7039d84ea1a869cfe10ecdbc76d96",
+        "bytes": 89980
       },
       {
         "path": "docs/control/capability-catalogue.json",
@@ -179,8 +179,8 @@
       },
       {
         "path": "docs/control/dependency-sbom.json",
-        "sha256": "d50465baa5277a9333fc33aec576c7975c1145dca97e1e1a67c0e7e50f3dab4f",
-        "bytes": 35282
+        "sha256": "65c9db3566706e98bd09d1cebf7d672c11289d4c24ed7ba239184027c4197bf1",
+        "bytes": 35272
       },
       {
         "path": "docs/control/effect-outbox-policy.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "48e525d2d45b30054d2bf27042cc23af323fbd8350fd26dad5b112cfd497b77a",
-        "bytes": 39494
+        "sha256": "2288c49b7369089a30f19e09dec77f87d1aeb20ae5a9e99ea9c2b7f952cff6b4",
+        "bytes": 39484
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -234,8 +234,8 @@
       },
       {
         "path": "docs/control/requirements.json",
-        "sha256": "9107ccf91cfd29d0ffb281a71f9e0cd542ac1f5c2fca6d6d6b1567f06a01c709",
-        "bytes": 262325
+        "sha256": "def552a342b6937e3da4f56886547b84b289f3c95aca038bcef80fb4705db275",
+        "bytes": 372954
       },
       {
         "path": "docs/control/risk-threat-register.json",
@@ -359,8 +359,8 @@
       },
       {
         "path": "scripts/generate-control.mjs",
-        "sha256": "bd10f3f49c88c6b143e775c7f67c486484829ce2c09cfc5dac785a32c8df9c2c",
-        "bytes": 14384
+        "sha256": "c2e2311214d41e6c9db3ce4b3a6733692b1bc51a6bfc5375a273ebef6777905d",
+        "bytes": 15104
       },
       {
         "path": "scripts/license-audit.mjs",
@@ -379,8 +379,8 @@
       },
       {
         "path": "scripts/reference-audit.mjs",
-        "sha256": "4edbfb79dbf2582765f6340db5eeb36dbfb3a78b44a24ce7594761ded024c9df",
-        "bytes": 3331
+        "sha256": "5f5de93e53e1d0f9b1e773069886217d24c7060e08e8eddd5b648f99d7eca0dc",
+        "bytes": 3514
       },
       {
         "path": "scripts/service-worker-rehearsal-server.mjs",
@@ -399,8 +399,8 @@
       },
       {
         "path": "scripts/structure-audit.mjs",
-        "sha256": "ba8bd6e9a4bf0acbc83b90e1fbd3de6c700c92bdff613b159d064659ac4cc6b1",
-        "bytes": 7134
+        "sha256": "ac77265c3b783acb01cda63e7f6ce10d607e8ff20c0f939eebba6eb497b50686",
+        "bytes": 7114
       },
       {
         "path": "scripts/sync-loopback-fixture.mjs",
@@ -718,6 +718,16 @@
         "bytes": 6488
       },
       {
+        "path": "src/core/package-automation-runtime.test.ts",
+        "sha256": "96f25babc122f32b16456960185c273c85210d52b51b4f1f502cd2ab7ede76ce",
+        "bytes": 3482
+      },
+      {
+        "path": "src/core/package-automation-runtime.ts",
+        "sha256": "9f75170850f91eb09f1041576f70f14a629d6d11e7616459ff84b61fc05b77c0",
+        "bytes": 2284
+      },
+      {
         "path": "src/core/package-automation.test.ts",
         "sha256": "f999977cbfeef64b52af32c3a32bd2825cabf098ff9fea56f031a6ece2593fea",
         "bytes": 2868
@@ -934,8 +944,8 @@
       },
       {
         "path": "src/main.ts",
-        "sha256": "bf2bcf828debec87abb37724ba3fde8586a91c20957d90b88d02aade8e356dfa",
-        "bytes": 4846
+        "sha256": "d95e864974e376e074373e65855d081a3dfe91fb0e7e1fc23b4cd425e6a5c689",
+        "bytes": 5259
       },
       {
         "path": "src/styles.css",
@@ -949,8 +959,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "370f7165e7e4636030b3a44fc122306f2ffdafbd3741071fbb6d71a7fcbbd057",
-        "bytes": 179837
+        "sha256": "a39d8c3cc646cdeb0a739ea2a1098b18ac7ed270af170a98e290006ac25724b9",
+        "bytes": 180113
       },
       {
         "path": "tsconfig.json",

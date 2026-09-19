@@ -46,7 +46,10 @@ const checkReference = (value, fragment, source) => {
 
 const visitJson = (value, source) => {
   if (typeof value === "string") {
-    for (const match of value.matchAll(/(?:^|[^A-Za-z0-9_.-])((?:docs|scripts|src|public)\/[A-Za-z0-9_.\/-]+)(?:#([A-Za-z0-9_.~-]+))?/g)) checkReference(match[1], match[2], source);
+    const compatibilityOnly = /\.historicalSources\[\d+\]\.path$|\.relocations\[\d+\]\.from$|\.retiredPaths\[\d+\]$/.test(source);
+    if (!compatibilityOnly) {
+      for (const match of value.matchAll(/(?:^|[^A-Za-z0-9_.-])((?:docs|scripts|src|public)\/[A-Za-z0-9_.\/-]+\.[A-Za-z0-9]+)(?:#([A-Za-z0-9_.~-]+))?/g)) checkReference(match[1], match[2], source);
+    }
   }
   else if (Array.isArray(value)) value.forEach((item, index) => visitJson(item, `${source}[${index}]`));
   else if (typeof value === "object" && value !== null) Object.entries(value).forEach(([key, child]) => visitJson(child, `${source}.${key}`));

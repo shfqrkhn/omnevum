@@ -5,8 +5,8 @@
   "authority": "derived control projections",
   "source": {
     "mpes": {
-      "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
-      "sha256": "585e2f178e47ca344c576eec16367585d1f347c2776a3c0c93a7cd4f9be4b6f3"
+      "path": "docs/Omnevum-MPES-v0_17_4.md",
+      "sha256": "ab323b33db49286420f15164d7ded7950b22d6c3bd4ef07f3f480b4b4b5cb8a6"
     },
     "omni": {
       "path": "docs/Omni_3.32.0.md",
@@ -58,7 +58,7 @@
     },
     {
       "id": "mpes",
-      "path": "docs/Omnevum-MPES-v0.12.0-converged.md"
+      "path": "docs/Omnevum-MPES-v0_17_4.md"
     },
     {
       "id": "package-manifest",
@@ -69,11 +69,27 @@
       "path": "package-lock.json"
     }
   ],
-  "relocations": [],
-  "retiredPaths": [],
+  "historicalSources": [
+    {
+      "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
+      "sha256": "585e2f178e47ca344c576eec16367585d1f347c2776a3c0c93a7cd4f9be4b6f3",
+      "replacement": "docs/Omnevum-MPES-v0_17_4.md",
+      "preservation": "git-history-and-relocation-receipt"
+    }
+  ],
+  "relocations": [
+    {
+      "from": "docs/Omnevum-MPES-v0.12.0-converged.md",
+      "to": "docs/Omnevum-MPES-v0_17_4.md",
+      "reason": "v0.17.4-converged supersedes the v0.12 controlling baseline; prior source remains immutable in Git history."
+    }
+  ],
+  "retiredPaths": [
+    "docs/Omnevum-MPES-v0.12.0-converged.md"
+  ],
   "counts": {
-    "requirements": 393,
-    "acceptanceScenarios": 98,
+    "requirements": 541,
+    "acceptanceScenarios": 172,
     "lockedPackages": 87
   }
 }

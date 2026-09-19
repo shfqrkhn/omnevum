@@ -3,7 +3,7 @@
 Authority order for this project is external authority and owner direction, then the MPES, then derived requirements, decisions, implementation, and evidence.
 
 - `Omni_3.32.0.md` is the governing Omni doctrine.
-- `Omnevum-MPES-v0.12.0-converged.md` is the controlling product and engineering baseline.
+- `Omnevum-MPES-v0_17_4.md` is the controlling product and engineering baseline. The superseded v0.12 source is historical and is represented by the generated relocation/compatibility receipt.
 - `control/` contains machine-readable generated projections and active registers.
 - `evidence/` contains dated research and verification receipts.
 - `control/recovery-bundle.json` is a generated, integrity-checked resume manifest; it contains repository-relative references and hashes, never secrets or live credentials.

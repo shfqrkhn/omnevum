@@ -7,7 +7,9 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const docsRoot = join(root, "docs");
 const controlRoot = join(docsRoot, "control");
-const mpesPath = join(docsRoot, "Omnevum-MPES-v0.12.0-converged.md");
+const mpesPath = join(docsRoot, "Omnevum-MPES-v0_17_4.md");
+const supersededMpesPath = "docs/Omnevum-MPES-v0.12.0-converged.md";
+const supersededMpesSha256 = "585e2f178e47ca344c576eec16367585d1f347c2776a3c0c93a7cd4f9be4b6f3";
 const omniPath = join(docsRoot, "Omni_3.32.0.md");
 const packagePath = join(root, "package.json");
 const lockPath = join(root, "package-lock.json");
@@ -34,13 +36,16 @@ const extractRequirements = (document, text, path, generatedPrefix) => {
     if (/^#{1,6}\s+/.test(line)) heading = line.replace(/^#{1,6}\s+/, "").trim();
     const normativeKeywords = [...line.matchAll(normativePattern)].map((match) => match[0].toUpperCase());
     if (normativeKeywords.length === 0) continue;
-    const id = line.match(/\bOMN-[A-Z0-9]+-\d{3}\b/)?.[0] ?? `OMN-AUTO-${generatedPrefix}-${String(generatedId++).padStart(4, "0")}`;
+    const declaredId = line.match(/\b(OMN-[A-Z0-9]+-\d{3}):/)?.[1];
+    const referencedIds = [...line.matchAll(/\bOMN-[A-Z0-9]+-\d{3}\b/g)].map((match) => match[0]);
+    const id = declaredId ?? `OMN-AUTO-${generatedPrefix}-${String(generatedId++).padStart(4, "0")}`;
     requirements.push({
       id,
       kind: id.startsWith("OMN-AUTO-") ? "GENERATED" : "TAGGED",
       document,
       source: { path, line: index + 1, heading },
       normativeKeywords: [...new Set(normativeKeywords)],
+      ...(referencedIds.length > 0 && !declaredId ? { referencedIds: [...new Set(referencedIds)] } : {}),
       text: line.trim()
     });
   }
@@ -204,8 +209,9 @@ writeJson("control-manifest.json", {
     { id: "package-manifest", path: source.package.path },
     { id: "lockfile", path: source.lockfile.path }
   ],
-  relocations: [],
-  retiredPaths: [],
+  historicalSources: [{ path: supersededMpesPath, sha256: supersededMpesSha256, replacement: source.mpes.path, preservation: "git-history-and-relocation-receipt" }],
+  relocations: [{ from: supersededMpesPath, to: source.mpes.path, reason: "v0.17.4-converged supersedes the v0.12 controlling baseline; prior source remains immutable in Git history." }],
+  retiredPaths: [supersededMpesPath],
   counts: { requirements: requirements.length, acceptanceScenarios: acceptance.length, lockedPackages: lockedPackages.length }
 });
 
@@ -239,7 +245,7 @@ const repositoryFiles = (() => {
       .filter((path) => path && !path.startsWith("node_modules/") && !path.startsWith("dist/") && path !== "docs/control/control-manifest.json" && path !== "docs/control/recovery-bundle.json")
       .sort();
   } catch {
-    return ["AGENTS.md", "README.md", "package.json", "package-lock.json", "vite.config.ts", "tsconfig.json", "docs/Omni_3.32.0.md", "docs/Omnevum-MPES-v0.12.0-converged.md"];
+    return ["AGENTS.md", "README.md", "package.json", "package-lock.json", "vite.config.ts", "tsconfig.json", "docs/Omni_3.32.0.md", "docs/Omnevum-MPES-v0_17_4.md"];
   }
 })();
 const integrityFiles = repositoryFiles.filter((path) => existsSync(join(root, path))).map((path) => {
@@ -254,14 +260,14 @@ writeJson("recovery-bundle.json", {
   source,
   repository: { revision: gitRevision, revisionPolicy: "generation-base-commit-retained-until-divergence", pathsAreRepositoryRelative: true, secretsIncluded: false },
   restoreProcedure: [
-    "Read docs/Omni_3.32.0.md and docs/Omnevum-MPES-v0.12.0-converged.md before changing scope.",
+    "Read docs/Omni_3.32.0.md and docs/Omnevum-MPES-v0_17_4.md before changing scope.",
     "Inspect docs/control/completion-ledger.json, engineering-controller.json, release-evidence.json, acceptance-results.json, support-matrix.json, and risk-threat-register.json.",
     "Run npm ci, npm run audit:recovery, and npm run ci from a clean checkout before resuming implementation.",
     "Use docs/evidence/ as dated receipts and update the canonical control register in the same verified increment.",
     "Re-establish any external authority or credentials in the current environment; no credential, lease, or pending effect is restored as active by this bundle."
   ],
   canonicalReferences: {
-    authority: ["docs/Omni_3.32.0.md", "docs/Omnevum-MPES-v0.12.0-converged.md"],
+    authority: ["docs/Omni_3.32.0.md", "docs/Omnevum-MPES-v0_17_4.md"],
     controls: ["docs/control/control-manifest.json", "docs/control/requirements.json", "docs/control/acceptance-scenarios.json", "docs/control/acceptance-results.json", "docs/control/phase0-acceptance.json", "docs/control/mvp-acceptance.json", "docs/control/support-matrix.json", "docs/control/owner-registry.json", "docs/control/capability-catalogue.json", "docs/control/effect-outbox-policy.json", "docs/control/credential-key-policy.json", "docs/control/capability-coverage.json", "docs/control/upstream.json", "docs/control/patch-fork-delta.json", "docs/control/license-provenance.json", "docs/control/currentness-radar.json", "docs/control/compatibility-matrix.json", "docs/control/risk-threat-register.json", "docs/control/migration-register.json", "docs/control/release-evidence.json", "docs/control/engineering-controller.json", "docs/control/completion-ledger.json"],
     evidence: ["docs/evidence/"],
     implementation: ["src/main.ts", "src/core/", "src/ui/", "public/sw.js", "scripts/"],

@@ -3,7 +3,7 @@
 ## Authority and scope
 
 - `docs/Omni_3.32.0.md` is the governing doctrine.
-- `docs/Omnevum-MPES-v0.12.0-converged.md` is the controlling product and engineering baseline.
+- `docs/Omnevum-MPES-v0_17_4.md` is the controlling product and engineering baseline; the superseded v0.12 source is historical and may only be referenced through an explicit relocation/compatibility receipt.
 - `docs/control/` contains generated projections and maintained registers; `docs/evidence/` contains dated receipts.
 - A design, test, or generated status is not implementation, security, release, or human-acceptance evidence until its receipt says what ran, where, when, and with which artifact.
 
@@ -17,4 +17,3 @@
 ## Required verification
 
 Run `npm run ci` before handoff. It regenerates and checks control projections, verifies structure and references, checks canonical-owner architecture, typechecks, runs tests, builds the relative static PWA, audits the bundle, checks generated drift, and runs `git diff --check`.
-

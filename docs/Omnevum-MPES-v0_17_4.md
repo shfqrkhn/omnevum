@@ -3,14 +3,24 @@
 Tagline: **Life, in context.**
 
 - Document: Omnevum MPES
-- Version: 0.12.0-converged
+- Version: 0.17.4-converged
 - Status: OMNI ASSURED / CONVERGED controlling specification baseline; not implementation or release evidence
-- Convergence scope: coupled closure of the prior converged MPES plus all material owner decisions and fresh 2026-09-17 FOSS/provider/currentness discovery, including Terms-Aware Subscription AI reuse, official subscription-authenticated agent/SDK/CLI routes, reverse AI integrations, TOS-qualified browser automation, Device/Input brokering, portable sensor/health acquisition profiles, consent/delegation policy binding, engineering-agent-host reuse and lifecycle currentness, browser-local AI and speech runtime reuse, offline MapLibre/PMTiles mapping and browser geospatial analysis, local document scanning/edit-recipe patterns, browser-native media, spreadsheet, PDF/OCR and standards-auth tooling, WARC/WACZ parsing/replay integration, standards-grade calendar/recurrence handling, HTML sanitization fallback, browser-only office-component reuse, static-host peer collaboration candidates, browser SQLite/VFS/local-first substrate reuse, extension sandboxing, service-worker/PWA tooling currentness, signed supply-chain provenance/reproducibility diagnostics, automated FOSS-license compliance, and all prior Effect/Outbox, credential/key, reminder, semantic-graph, launchpad, local-first/static-host, personalization, interoperability, capability-superset, and autonomous-engineering contracts
+- Amendment 0.17.4: OMNI ASSURED coupled convergence over the complete 0.17.0-0.17.3 autonomy, Finance, AI-context-export, minimum-human-effort, and whole-system-synergy changes. The closure corrects five material gaps found during adversarial comparison with Omni 3.32.0 and the prior converged Finance engine, including relocation of the Finance contract from the owner-project migration section into the normative life/domain model: explicit recursive governed-descendant inheritance; cycle/feedback/scenario safety for the new dependency graph; inert-by-default CSV/TSV context export against spreadsheet formula/external-effect hazards; and lossless Finance risk semantics covering revolving-credit obligations, investment-return methodology, insurance terms, scam/coercion and false-negative review, nominal/real and pre/post-tax consistency, and retirement/FIRE sequence risk. Adds OMN-GOV-013, OMN-SEM-013, and OMN-ACC-167 through 172; strengthens existing OMN-CAP-023 and OMN-FIN-010, 013, 014, 022, 023, and 024. No canonical ownership, user agency, privacy boundary, or external-effect authority is widened.
+- Amendment 0.17.3: whole-system synergy and dependency integration. Makes cross-domain connectedness a default product behavior wherever evidence, authorization, and semantics support it. Adds a typed dependency/resource/outcome graph over canonical records; automatic relationship discovery/proposal; impact propagation across materially dependent goals, plans, forecasts, risks, and reviews; shared-resource allocation semantics that prevent double counting; portfolio-level goal conflict/synergy analysis; and proactive discovery of interventions that can advance several outcomes at once without forcing optimization or inventing causality. Finance is strengthened so savings, income, investments, debts, reserves, retirement, FIRE, travel/vacation, home, education, tax, and other goals can share one auditable financial model instead of isolated trackers. Adds OMN-SEM-007 through 012, OMN-CAP-024, OMN-FIN-031 through 034, and OMN-ACC-159 through 166. No canonical ownership, privacy boundary, user agency, or external-effect authority is widened by linkage alone.
+- Amendment 0.17.2: portable AI-context export. Adds a first-class bounded Context Export/Handoff path over Share + Context Broker so any authorized record selection, saved view, Space/Scope, search result, review, or domain projection can be exported locally for use with external or local AI without reconstructing context by hand. Supports prompt-ready Markdown and plain text, tabular CSV/TSV where semantically valid, structured JSON/JSONL, and extensible portable bundles with manifests. Requires provenance, evidence/truth class, uncertainty/staleness, time/scope, stable record/source references, schema/glossary where useful, explicit omission/redaction state, deterministic ordering, size/context-budget estimates, reusable export profiles, and delta exports. Manual handoff uses the same privacy/scope rules as connected AI routes; credentials, hidden authority, unrelated records, and executable/active content are excluded. Adds OMN-CAP-023, OMN-AI-011 through 012, and OMN-ACC-154 through 158. No canonical ownership or AI authority is created by export.
+- Amendment 0.17.1: minimum-human-input strengthening. Makes minimum human data entry, duplicate entry, maintenance, reconciliation, propagation, coordination, and review a first-class product-runtime invariant rather than an implied consequence of autonomy. Requires capture/import once and reuse everywhere; automatic extraction/prefill/derivation from already-authorized evidence before asking the user; no re-entry of data already present or safely derivable; automatic propagation/invalidation of accepted changes through dependent projections; measurable manual-touch burden in acceptance; and finance-specific statement-driven operation in which source files are the primary data-entry mechanism and the normal loop is `provide sources -> review only material exceptions -> consume the updated analysis`. Adds OMN-GOV-010 through 012, OMN-FIN-029 through 030, and OMN-ACC-150 through 153. No authority, privacy, security, or external-effect gate is weakened.
+- Amendment 0.17.0: product-runtime autonomy and finance-domain consolidation. Generalizes Omnevum's near-zero-human-effort objective from autonomous engineering into ordinary product operation through maximum justified autonomy, exception-driven interaction, reusable learned rules, deterministic catch-up, and material-only escalation. Adds a first-party Finance / Resources specialization that reuses Acquire/Ingest, Artifact, Data, Analyze, Model, Visualize, Evidence, History/Version, Triage/Clarify, Compose/View, Automate, and local canonical storage instead of creating a separate finance application. The finance baseline requires no bank connection or bank credential: heterogeneous user-supplied statements/exports are locally classified, fingerprinted, parsed, normalized, deduplicated, reconciled, learned into versioned parser/rule profiles, and converted into finance-owned canonical records with source traceability. The specialization adds accounting-quality transaction semantics, cross-account reconciliation, budgets, cash-flow/liquidity analysis, debt/investment/net-worth analysis, dynamic financial goals with non-double-counted allocations and conflict/scenario modeling, recurring-income/bill/refund/leakage tracking, explainable suspicious-transaction review, forecast vintages/accuracy, data-quality coverage, and autonomous update briefs. Adds OMN-GOV-007 through 009, OMN-CAP-019 through 022, OMN-FIN-001 through 028, and OMN-ACC-133 through 149. No new platform-level mutation authority, credential authority, sync identity, or external financial action path is created.
+- Amendment 0.16.0: coupled tri-theme visual-system convergence. The owner selected all three Phase 1 visual archetypes as first-class built-in presentation themes: Concept Alpha ("Tactile Monastic / Dense Type"), Concept Beta ("Humanist Editorial / Contextual Flow"), and Concept Gamma ("Industrial Utility / Segmented HUD"). Light and AMOLED Dark are now color modes within each family rather than the only theme identities. Gamma remains the distribution default and Safe Presentation Mode baseline to preserve the accepted v0.13-v0.15 default path; Alpha and Beta are equally supported user-selectable built-ins. Exact palettes, typography, theme-neutral surface contracts, and machine-testable parity/contrast/reflow scenarios are bound in Sections 3.6-3.9 and 27. The pass also corrects the stale OMN-ACC-106 lens-row contradiction and strengthens border tokens where necessary so all built-in interactive boundaries can satisfy the declared 3:1 contrast gate. No canonical schema, ownership, permission, sync identity, or Recovery authority is changed.
+- Amendment 0.15.0: CONVERGE closure over the coupled v0.14.0 visual/UX target. Five material defects corrected: a bound palette encoding an imperceptible action/synergy distinction; duplicated telemetry content between OMN-VIS-007 and OMN-VIS-021; an undo window that could outlive an already-delivered external effect; an unresolved interaction between service-worker shell activation and a pending unapproved schema migration; and a retirement flow that could report completion while unreachable replicas survived. Adds OMN-VIS-043 through 045 and OMN-ACC-127 through 129.
+- Amendment 0.14.0: end-to-end GUI/UX lifecycle convergence. Eighteen owner decisions covering first run, Home anatomy, lens mechanics, record detail, Triage, Search/Explore, Assistant, destructive confirmation, uncertainty presentation, telemetry, Review, motion, personalization, update/migration, share scope, Recovery, data exit/retirement, and accessibility are bound into Sections 3.8-3.12 and Section 27. Every decision resolved to a hybrid whose common rule is: the quiet path is the default, the explicit path is always reachable on demand. No canonical schema, ownership, permission, or Recovery authority is changed.
+- Amendment 0.13.0: coupled visual-system convergence. Owner selected Concept Gamma ("Industrial Utility / Segmented HUD") at the Phase 2 human review gate. Sections 3.2, 3.6, new 3.8-3.9, and 27 are amended normatively; no canonical schema, ownership, permission, or Recovery authority is changed.
+- Prior 0.16.0 convergence scope: coupled closure of the prior converged MPES plus all material owner decisions and fresh 2026-09-17 FOSS/provider/currentness discovery, including Terms-Aware Subscription AI reuse, official subscription-authenticated agent/SDK/CLI routes, reverse AI integrations, TOS-qualified browser automation, Device/Input brokering, portable sensor/health acquisition profiles, consent/delegation policy binding, engineering-agent-host reuse and lifecycle currentness, browser-local AI and speech runtime reuse, offline MapLibre/PMTiles mapping and browser geospatial analysis, local document scanning/edit-recipe patterns, browser-native media, spreadsheet, PDF/OCR and standards-auth tooling, WARC/WACZ parsing/replay integration, standards-grade calendar/recurrence handling, HTML sanitization fallback, browser-only office-component reuse, static-host peer collaboration candidates, browser SQLite/VFS/local-first substrate reuse, extension sandboxing, service-worker/PWA tooling currentness, signed supply-chain provenance/reproducibility diagnostics, automated FOSS-license compliance, and all prior Effect/Outbox, credential/key, reminder, semantic-graph, launchpad, local-first/static-host, personalization, interoperability, capability-superset, and autonomous-engineering contracts
+- Convergence scope: coupled closure of the 0.16.0-converged baseline plus all material 0.17.0-0.17.4 owner decisions and supplied Finance-engine semantics, including product-runtime maximum justified autonomy, minimum human input/work, statement-driven Finance, portable AI-context export, and typed whole-system dependency/synergy propagation
 - Product class: mobile-first, local-first, browser-native personal Life OS and extensible app/game platform
 - Primary runtime: static-hosted Progressive Web App (PWA)
 - Primary distribution baseline: free HTTPS static hosting, including GitHub Pages
 - Engineering mode: end-to-end autonomous AI-driven SDD/TDD development with durable evidence and cradle-to-grave lifecycle ownership
-- Human involvement target: no routine human intervention during implementation; owner returns for completed-product acceptance or an actually non-delegable external/legal/physical gate
+- Human involvement target: near-zero routine human data entry, duplicate entry, classification, reconciliation, maintenance, propagation, coordination, review, and repeated confirmation in both product use and engineering; human effort is reserved for source provision when no safe automated acquisition exists, material unresolved ambiguity, legitimate value judgments, and actually non-delegable external/legal/physical/irreversible gates
 
 ---
 
@@ -39,6 +49,8 @@ The product shall preserve user agency, privacy, portability, recoverability, pl
 This MPES is intended to be sufficient for a capable senior AI engineer to carry Omnevum from current draft through discovery, research, architecture, implementation, qualification, release, operation, maintenance, update, deprecation, retirement, and archival without requiring the original chat history.
 
 The repository and durable engineering state shall outrank conversational memory. A fresh qualified AI engineer shall be able to reconstruct the accepted project state from the repository, this MPES, machine-readable control artifacts, tests, evidence, provenance, and declared credentials/access.
+
+OMN-GOV-013: Every substantive project, package, module, workflow, automation, generated specification, report, export profile/schema, artifact class, app/game, or other product/system component created or materially revised under this MPES is a governed descendant. At creation or material revision, its native durable contract SHALL carry the smallest sufficient applicable Omnevum/Omni obligations needed for independent correct operation and lifecycle without relying on this conversation or an unavailable ancestor artifact. This includes, where applicable, truth/provenance, canonical ownership, authority, privacy/security, accessibility, source/currentness, verification, idempotence, update/invalidation, recovery, versioning, portability, maintenance, retirement, and onward inheritance. A descendant that can itself create or materially revise governed descendants SHALL impose the same applicable semantics recursively with no fixed generation-depth limit. This is semantic inheritance, not prose copying: inapplicable mechanisms are omitted; external dependencies are validated rather than rewritten; and a medium unable to carry a behavior itself SHALL enforce the nearest generation, validation, execution, update, repair, or invalidation boundary.
 
 ## 0.3 Authority order
 
@@ -79,9 +91,9 @@ OMN-GOV-002: The AI engineering system MAY bootstrap, install, configure, replac
 
 If an external service presents an actually non-delegable gate that cannot be completed by the AI despite presumed project authority, the AI shall first seek a legitimate architecture/workflow alternative that avoids the gate without weakening the accepted outcome. If none exists, it shall complete all independent work, prepare the exact final action required, and defer only that irreducible step. No routine implementation question, approval, "continue" prompt, or manual command transcription shall be requested from the human.
 
-## 0.5 Human-effort contract
+## 0.5 Human-effort and justified-autonomy contract
 
-The engineering path shall be optimized for near-zero routine human effort after initial project/tool access.
+Both the engineering path and the ordinary product runtime shall be optimized for near-zero routine human effort and minimum necessary attention.
 
 The AI engineer shall NOT ask the human to:
 
@@ -96,6 +108,18 @@ The AI engineer shall NOT ask the human to:
 - perform ordinary documentation, migration, dependency, packaging, or deployment work.
 
 The human is expected to return when Omnevum has reached the accepted completed-product gate, except where an external system, law, irreversible consequence, physical-device action, or genuinely subjective owner decision makes earlier human action unavoidable.
+
+OMN-GOV-007: The product runtime SHALL optimize for maximum justified autonomy and minimum human attention. For routine admitted work it SHALL prefer `infer -> retrieve -> derive -> cross-check -> apply a scoped confirmed rule -> make a safe reversible/provisional decision -> surface only a material exception` before asking the user. Automation SHALL preserve truth, agency, authority, privacy, reversibility, and domain-specific acceptance gates; an inability to prove a high-consequence interpretation is not permission to guess.
+
+OMN-GOV-008: Ordinary mechanical processing SHALL be exception-driven. When deterministic invariants, source evidence, prior confirmed scoped rules, and confidence/impact gates make an outcome safe, Omnevum SHOULD complete it without requiring review. User attention SHALL be requested only when an unresolved ambiguity, value judgment, external/irreversible effect, authority boundary, or materially consequential uncertainty cannot be safely represented as unknown, provisional, or scenario-based.
+
+OMN-GOV-009: A user correction or confirmed disposition MAY create or refine a reusable scoped rule, parser profile, alias, classification, reconciliation recipe, or automation preference so the same routine work does not repeatedly return to the user. Learned behavior SHALL remain inspectable, reversible, versioned where material, provenance-bound, narrowly scoped enough to avoid unsafe generalization, and invalidated when source format, semantics, authority, or evidence materially changes.
+
+OMN-GOV-010: Omnevum SHALL minimize human data entry. Before asking the user to type, copy, classify, reconcile, confirm, or re-enter information, the owning workflow SHALL first reuse already-authorized canonical data, source artifacts, prior confirmed values/rules, structured imports, extraction/OCR, Device/Input capture, relationships, deterministic derivation, and safe defaults where applicable. Information already present or safely derivable SHALL NOT require duplicate manual entry merely because another module, view, workflow, or reporting surface consumes it. The preferred pattern is capture/import once, preserve provenance, and reuse by reference or derivation everywhere authorized.
+
+OMN-GOV-011: Accepted source changes, corrections, classifications, reconciliations, and user decisions SHALL propagate automatically to materially dependent derived state, projections, summaries, forecasts, goals, views, alerts, and review status, or explicitly invalidate them when automatic recomputation is unsafe. Omnevum SHALL NOT require the user to manually synchronize the same meaning across multiple modules or repeatedly maintain derived copies.
+
+OMN-GOV-012: Human work is a product cost and SHALL be measured proportionately in representative acceptance workflows. Where two designs satisfy the same truth, safety, privacy, authority, recovery, and usability requirements, prefer the one with fewer required user fields, repeated confirmations, navigation steps, exception reviews, maintenance actions, and manual reconciliation steps. A release SHALL NOT knowingly regress ordinary human burden without a documented material benefit or stronger controlling requirement.
 
 ## 0.6 Normative language
 
@@ -347,6 +371,142 @@ Omnevum SHOULD support an Intervention concept with, where applicable:
 
 This is intended to make Omnevum a personal learning system rather than merely a tracker.
 
+## 2.4 Whole-system relationship, resource, and synergy model
+
+OMN-SEM-007: Subject to the user's active Space/Scope, privacy, consent, and domain boundaries, Omnevum SHALL treat materially related records as parts of one relevant system rather than isolated tracker rows. A canonical fact, resource, obligation, goal, plan, risk, decision, intervention, or source MAY participate in many authorized projections through typed relationships while retaining one canonical owner and identity.
+
+OMN-SEM-008: The relationship fabric SHALL support explicit typed semantics sufficient to represent material structures such as `depends_on`, `contributes_to`, `funds`, `consumes`, `earmarked_for`, `competes_for`, `constrains`, `enables`, `offsets`, `conflicts_with`, `supports`, `affected_by`, `derived_from`, and `measured_by`, or equivalent domain-specific types. Relationship types SHALL define direction, subject/object type constraints, provenance, confidence/truth class where derived, and whether the relationship is exclusive, additive, conditional, temporal, or merely informational when that distinction affects reasoning.
+
+OMN-SEM-009: Omnevum SHOULD discover useful cross-domain relationships automatically from already-authorized evidence and deterministic semantics. High-confidence mechanically established links MAY be created automatically when reversible and non-consequential; uncertain or value-laden links SHALL remain proposals/hypotheses or explicit UNKNOWN rather than forcing the user to manually connect obvious records or silently inventing relationships. Confirmed relationship corrections SHOULD become reusable scoped rules under OMN-GOV-009.
+
+OMN-SEM-010: A material change to canonical meaning SHALL trigger dependency-aware recomputation or invalidation of every materially affected authorized projection. Where relevant, one change SHOULD update dependent goals, plans, budgets, forecasts, risks, scenarios, attention items, reviews, and decision inputs without manual cross-module maintenance. The propagation graph SHALL be inspectable enough to answer `what changed because of this?` and `what depends on this?`.
+
+OMN-SEM-011: Shared resources such as money, time, capacity, assets, space, inventory, and attention SHALL use explicit allocation semantics where simultaneous claims can conflict. Exclusive/consumptive allocations SHALL not be double-counted across goals or plans; non-exclusive enabling relationships MAY support several outcomes simultaneously when that is semantically valid. The system SHALL distinguish a resource being merely relevant to several outcomes from that resource being simultaneously committed to all of them.
+
+OMN-SEM-012: Omnevum SHOULD search for cross-domain synergies and conflicts at the system level. It MAY surface an intervention, allocation, schedule, purchase, habit, decision, or plan that plausibly advances several authorized outcomes or removes a shared bottleneck, and it SHOULD identify when one local optimization harms another material outcome. Such synergy/conflict output SHALL distinguish observed evidence, deterministic consequence, modeled effect, hypothesis, and user preference; it SHALL preserve Pareto tradeoffs and SHALL NOT silently optimize the user's life to one scalar score.
+
+OMN-SEM-013: Dependency propagation SHALL be cycle-safe and scenario-safe. Ordinary derived dependency traversal SHALL detect cycles and SHALL NOT recurse, oscillate, or repeatedly mutate canonical state merely because records refer to one another. A genuine feedback loop MAY be evaluated only inside an explicit Model/Intervention contract that defines the state variables, time/iteration semantics, governing assumptions, update/solver rule, convergence or termination criteria, failure/non-convergence behavior, sensitivity/uncertainty, and scenario identity. Scenario/hypothetical edges and values SHALL remain scoped derived state and SHALL NOT silently mutate adopted plans or baseline canonical relationships. An unintended or semantically undefined cycle SHALL surface as a model/relationship defect or unresolved condition rather than being auto-resolved by arbitrary ordering.
+
+
+## 2.5 Finance / Resources domain specialization
+
+Finance is a first-party Resources specialization over shared Omnevum capabilities, not a separate financial application, parallel database, or privileged authority. Its normal outcome is a self-maintaining personal financial model driven primarily by user-supplied statements/exports and requiring human attention only for material exceptions or value judgments.
+
+OMN-FIN-001: Core Finance SHALL operate completely without a bank/broker credential, live financial-institution connection, or Omnevum financial backend. User-selected statements, exports, records, and manual corrections are the baseline acquisition path. The product SHALL NOT require the user to connect an account merely to obtain reporting, reconciliation, budgeting, forecasting, goals, anomaly review, or other core finance outcomes. A future connector MAY be separately admitted, but its absence SHALL not reduce this core contract.
+
+OMN-FIN-029: Financial source files SHALL be the primary ordinary data-entry mechanism. Finance SHALL extract and reuse all supportable account identity, statement period, balance, transaction, counterparty, amount, currency, recurring-flow, debt, holding, income, fee, and related fields from supplied evidence rather than asking the user to transcribe them. Manual financial entry SHOULD be limited to genuinely unavailable source facts, user-authored goals/preferences/assumptions, and material corrections or unresolved exceptions. The normal user loop SHOULD be `provide/drop sources -> automatic processing and reconciliation -> review only material exceptions -> consume the updated analysis`.
+
+OMN-FIN-030: A finance correction or accepted interpretation SHALL update the authoritative financial meaning once and automatically recompute or invalidate every materially dependent budget, cash-flow view, forecast vintage successor, goal trajectory, recurring-flow expectation, anomaly baseline, net-worth projection, review case, and report. Finance SHALL NOT require the user to repeat the same correction or manually maintain downstream copies.
+
+OMN-FIN-002: Finance SHALL reuse Acquire/Ingest, Artifact, Data, Analyze, Model, Visualize, Evidence, History/Version, Triage/Clarify, Compose/View, Automate, Time, Space/Scope, Vault/Recovery, and the shared command/policy spine. Finance-specific semantics own financial meaning; shared capabilities own generic mechanics. No Excel workbook, analytical engine, dashboard cache, AI narrative, or imported statement format becomes a second writable financial authority.
+
+Finance-owned canonical concepts SHOULD include only those that earn durable meaning, such as:
+
+- FinancialAccount and explicit subject/owner identity;
+- StatementSource / FinancialSource with source period and content identity;
+- Transaction with lifecycle/status semantics;
+- BalanceSnapshot;
+- AssetPosition and LiabilityPosition;
+- InvestmentHolding / Position and valuation observation;
+- Debt terms/obligation state;
+- BudgetPlan / BudgetLine where the user adopts a plan;
+- FinancialGoal plus GoalAllocation/earmark where used;
+- ForecastVintage and scenario/model assumptions;
+- RecurringPattern / ExpectedCashFlow;
+- RefundOrReimbursementReceivable;
+- FinanceReviewCase;
+- Merchant/Counterparty alias or classification rule;
+- ParserProfile / transformation recipe;
+- ReconciliationResult and unresolved difference.
+
+Derived monthly summaries, dashboards, anomaly scores, forecasts, recommendations, and charts remain rebuildable projections unless explicitly adopted as canonical plan/decision records.
+
+OMN-FIN-003: Finance acquisition SHALL recognize and separately model materially different source classes where present, including transaction accounts, credit cards, investments/brokerage, mortgages/loans/lines of credit, pay/income statements, tax/benefit documents, insurance/bills, receipts, and prior structured financial exports. A source class SHALL determine which facts can legitimately be extracted; balance movement alone SHALL NOT be reinterpreted as transaction detail, investment return, taxable income, or debt principal/interest without supporting evidence.
+
+OMN-FIN-004: Finance SHALL use a parser cascade that prefers structured formats and direct extraction before heavier inference: standards/structured exports (for example OFX/QFX or equivalent admitted formats), CSV/XLSX/tabular exports, text-native PDF extraction, local OCR for scanned sources when justified, generic structural inference, then account/source-specific learned profiles. The selected parser/profile and material extraction confidence/provenance SHALL be retained. A known profile MAY auto-process later equivalent statements; structural drift SHALL reopen detection rather than silently misparse.
+
+OMN-FIN-005: The exact original source Artifact SHALL remain preserved or referenceable according to retention policy, and every accepted normalized financial record SHALL retain enough lineage to trace `report/derived value -> calculation/rule -> canonical record -> extracted source row/region -> original source`. Raw extracted values and normalized values SHALL remain distinguishable where transformation changes representation.
+
+OMN-FIN-006: Finance SHALL be exception-driven. On every import/update it SHOULD automatically identify source/account/period, deduplicate, normalize, reconcile, classify, match transfers/refunds/reversals, update derived state, run financial-integrity analysis, refresh budget/forecast/goals, and generate a concise change brief. It SHALL ask the user only about material unresolved exceptions, competing value judgments, or consequential actions that cannot be safely inferred, represented as unknown/provisional, or modeled as alternatives.
+
+### Transaction and reconciliation semantics
+
+OMN-FIN-007: Transaction normalization SHALL preserve, where available, source ID, source description, normalized merchant/counterparty, dates and posting semantics, exact amount, explicit currency, debit/credit direction, account, transaction class, transfer links, recurring state, categorization, source period, reconciliation state, review flags, and provenance. Currency amounts SHALL follow exact-money semantics under Section 4.3. Pending, authorized, posted, reversed, refunded, voided, corrected, and duplicate-import states SHALL not be silently collapsed when the distinction affects truth.
+
+OMN-FIN-008: Reconciliation SHALL use every available invariant proportionate to the source, including opening balance + admitted activity = closing balance, statement summary totals, cross-account transfer pairing, credit-card payment pairing, refunds/reversals, investment cash movement, debt payment decomposition when supplied, and foreign-currency settlement evidence. Internal transfers and credit-card payments SHALL not be double-counted as income/spending. Unexplained differences SHALL remain explicit rather than being forced into an invented transaction or miscellaneous category.
+
+OMN-FIN-009: Merchant/counterparty normalization and financial classification SHOULD learn from repeated evidence and confirmed corrections. Rules MAY use exact/prefix/pattern/source/account/amount/frequency context, but SHALL preserve original descriptors, confidence/provenance, scope, reversibility, and format-drift invalidation. A correction for one merchant/account/context SHALL NOT silently become a universal rule when materially different contexts exist.
+
+### Financial analysis, budgets, liquidity, debt, investments, and net worth
+
+OMN-FIN-010: Finance analysis SHOULD compute only supported metrics and clearly distinguish actuals, calculations, estimates, assumptions, forecasts, scenarios, and targets. Useful analyses include income, spending, essential/discretionary and fixed/variable composition, net cash flow, savings/savings rate, rolling and period comparisons, seasonality, recurring versus exceptional effects, fees/leakage, debt service/interest, liquidity, assets/liabilities, net worth, investment contributions/withdrawals/fees, and material category changes. When relevant to the supported decision or long-horizon plan, Finance SHALL also consider material downside, concentration, sequence-of-returns risk, inflation, taxes, fees, insurance/coverage/renewal exposure, fraud/scam risk, debt-service and cash-flow timing pressure, opportunity cost, and longevity/time-horizon assumptions rather than optimizing one headline return or balance. Short-term noise SHALL NOT be promoted to trend without sufficient evidence. Finance SHALL NOT compress multidimensional financial condition into one opaque universal health score; any summary indicator SHALL expose its underlying dimensions, assumptions, and material tradeoffs.
+
+OMN-FIN-011: A useful Finance experience SHALL NOT require the user to hand-build a budget. When history supports it, Finance SHOULD generate an observed baseline from recurring obligations, historical distributions, seasonality, known future items, and structural changes. It SHALL keep at least `observed baseline`, `user-adopted target/plan`, `actual`, and `forecast` distinct. Repeated structural variance SHOULD trigger a stale-assumption warning or proposed plan revision rather than repeated moralized failure messaging.
+
+OMN-FIN-012: Cash-flow/liquidity analysis SHALL distinguish current cash, available cash, restricted/earmarked cash, pending transactions, expected inflows/outflows, and borrowing capacity. Available credit, overdraft capacity, or undrawn debt SHALL NOT be counted as cash, savings, or goal funding. Forecasting SHOULD identify upcoming obligation clusters, expected minimum cash, reserve runway, timing gaps, and downside liquidity pressure before optimizing longer-horizon discretionary uses.
+
+OMN-FIN-013: Debt analysis SHALL preserve balance, rate, fixed/variable nature, minimum/required payment, payment frequency, principal/interest/fees where supplied, maturity/amortization/renewal, and prepayment terms when available. For revolving credit/card obligations, preserve statement balance, payment due date, minimum due, materially relevant interest/grace-period semantics, and utilization/limit information only when actually supplied or reliably derived. Payoff/refinancing/consolidation or accelerated-payment comparisons SHALL be scenarios with explicit assumptions, liquidity effects, and costs; Finance SHALL not silently choose a value-laden debt strategy for the user.
+
+OMN-FIN-014: Investment/portfolio analysis SHALL distinguish contributions/withdrawals, income/distributions, fees, realized transactions, market value, valuation date/source, cost/book/tax basis where actually supplied, realized versus unrealized change where supportable, and currency effects. Balance growth SHALL NOT be labeled investment performance when contributions or valuation uncertainty could explain it. When performance is computed, Finance SHALL use and name an appropriate method such as time-weighted or money-weighted return according to the question/data, preserve the period and cash-flow assumptions, and avoid comparing unlike methods as though they were equivalent. Current prices, tax treatment, product terms, and market-sensitive claims are runtime currentness data under OMN-FIN-026. Portfolio concentration, allocation, fee drag, currency exposure, and diversification observations MAY be derived when holdings/valuations are sufficiently complete, but SHALL not be presented as personalized investment advice or portfolio suitability merely because the data exists. When insurance records are supplied, Finance SHOULD preserve premiums, renewal/expiry, covered amount/limit, deductible, beneficiary/insured subject where applicable, and other financially relevant terms while treating adequacy, legal effect, exclusions, and replacement advice as evidence/qualified-professional questions rather than inferred certainty.
+
+OMN-FIN-015: Net worth SHALL be a dated projection over supported asset and liability observations, not an invented universal score. Stale/estimated valuations SHALL be visibly identified, and a missing material account/asset/liability SHALL reduce or qualify completeness rather than being assumed zero.
+
+### Financial goals and allocation planning
+
+OMN-FIN-016: Financial goals SHALL support fixed-amount/date goals, dynamic/formula goals, and condition-based goals. Examples include emergency reserve, debt payoff, tax/annual-expense reserve, major purchase, travel, education, home/down payment, vehicle replacement, retirement/investment targets, and custom goals. A goal MAY derive its target from finance state (for example `N months of rolling essential expenses`) so the target self-updates when the underlying evidence changes.
+
+A goal SHOULD retain, as applicable: target/condition, target date, priority supplied by the user, current funded amount, linked accounts/assets/liabilities, virtual allocations/earmarks, actual and planned contribution pace, required pace, forecast completion, assumptions, dependencies, competing goals, minimum acceptable outcome, confidence/data quality, and status.
+
+OMN-FIN-017: Goal funding SHALL prevent double-counting the same money. When one account balance supports multiple goals, Finance SHALL use explicit logical allocations/earmarks or another auditable mechanism so apparent account balance is not simultaneously claimed as fully funding each goal. Unallocated value SHALL remain distinguishable. Goal allocation is planning state; it SHALL NOT imply a real bank subaccount or external transfer.
+
+OMN-FIN-018: Goal trajectory SHALL compare progress against time and feasible cash-flow capacity, not only display percent complete. Where supported it SHOULD calculate required contribution pace, recent actual pace, forecast value/completion date, target-date slippage, and base/downside/upside cases. If requested goal contributions exceed sustainable forecast free cash flow, Finance SHALL expose the funding conflict and model alternatives (for example different dates, contributions, or discretionary assumptions) without silently deciding which legitimate goal should lose priority.
+
+OMN-FIN-031: Finance SHALL treat financial goals as an interconnected goal portfolio over shared financial resources, obligations, accounts, assets, liabilities, income, and cash flows rather than independent progress bars. Savings, investments, debt payments, reserve allocations, expected income, and planned spending MAY contribute to, constrain, or compete among multiple goals through explicit relationships. A single source balance or cash-flow surplus SHALL be represented once and then allocated/referenced; it SHALL NOT be duplicated merely because retirement, FIRE, travel, home, education, emergency, tax, or other goals all depend on it.
+
+OMN-FIN-032: Composite financial goals SHALL be expressible as dependency graphs rather than forced into one target amount. For example, a user-defined retirement or FIRE objective MAY depend on retirement date/age, spending assumptions, savings/investment balances, contribution rates, expected pensions/benefits, debt/housing obligations, taxes/fees, inflation/return assumptions, reserves, and other user-admitted factors. Finance SHALL expose which inputs are observed, current external facts, user assumptions, or modeled values; changing one input SHALL propagate through the composite goal. Omnevum SHALL NOT treat FIRE, retirement, home ownership, travel, or any other financial lifestyle choice as universally desirable or silently select assumptions that decide it for the user.
+
+OMN-FIN-033: Finance SHALL interoperate with authorized non-financial plans when they have material financial consequences. Examples include a Travel plan contributing expected trip costs and dates to a vacation goal/cash-flow forecast; a Work/income change affecting savings, retirement, FIRE and debt trajectories; a Home/vehicle maintenance plan creating future reserves or obligations; or an education/household plan consuming a shared budget. The linked domain remains canonical owner of its own meaning; Finance receives only the financial projection needed for modeling, and finance-derived affordability does not become authority over the underlying life decision.
+
+OMN-FIN-034: Finance SHOULD identify portfolio-level synergies and conflicts automatically. Examples include one savings increase advancing retirement and FIRE while delaying a near-term purchase; one debt payoff improving future free cash flow that can fund several goals; or a vacation plan competing with a home deposit for the same earmarked cash. The system SHOULD calculate shared effects once, propagate them across affected goals/scenarios, and surface material tradeoffs or Pareto-improving options without recommending a value judgment that the evidence cannot determine.
+
+### Expected flows, leakage, refunds, and recurring patterns
+
+OMN-FIN-019: Finance SHOULD infer recurring income, expenses, bills, subscriptions, annual/irregular obligations, and expected future flows using timing + counterparty + amount/context evidence. It SHOULD detect new or missing expected flows, delayed payroll/income, duplicate billing, price/frequency drift, annual renewals, and dormant recurrence returning. Calendar/holiday/pay-cycle variation and known one-offs SHALL be considered before escalation.
+
+OMN-FIN-020: Refunds/reimbursements and other expected money-back items SHOULD be linked to their originating transaction/source and tracked by expected amount/date, received amount/date, status, and evidence. Finance SHOULD detect missing, partial, duplicate, late, or misdirected refunds/reimbursements where the evidence supports that conclusion.
+
+OMN-FIN-021: Financial leakage analysis SHOULD identify and quantify material bank/account/card fees, late/overdraft/ATM/foreign-exchange fees, investment/trading/management fees, loan fees, interest/penalties, duplicate services, and recurring-cost drift. It SHALL call a cost avoidable only when the evidence supports avoidability; ordinary spending preference SHALL not be mislabeled as leakage merely because it is discretionary.
+
+### Suspicious transaction and financial-integrity review
+
+OMN-FIN-022: Finance SHALL run explainable financial-integrity/anomaly analysis over new and historical records. The objective includes possible unauthorized activity, scam/coercion or materially suspicious user-initiated payments when supported by contextual evidence, billing/processing errors, duplicates, abnormal fees, missing refunds, unexpected transfers/cash withdrawals, and materially unusual behavior. An anomaly SHALL NOT be declared fraud merely because it is statistically unusual. Authentication, a familiar merchant, or evidence that the user initiated a payment SHALL NOT by itself prove legitimate informed intent; where the evidence permits, `possible scam/coercion` SHALL remain distinct from `confirmed unauthorized` and `confirmed legitimate`.
+
+Signals MAY include first-time/dormant merchant, amount/frequency/category/account/currency/location deviation when reliable, rapid sequences, repeated same-amount patterns, new beneficiary/transfer patterns, unexpected cash withdrawal, duplicate/near-duplicate charge, new recurring charge, recurring-price increase, description mismatch, missing expected refund/inflow, and balance inconsistency. Each surfaced case SHALL state the triggered reasons and source evidence; an opaque unexplained risk score is insufficient.
+
+OMN-FIN-023: Suspicious-transaction baselines SHOULD be personal/account-specific, seasonality-aware, and robust to outliers. Where history is weak, Finance SHALL lower confidence rather than invent normal behavior. Before escalating, it SHOULD check plausible benign explanations such as known travel, major purchases, annual renewals, internal transfers, card payments, refunds, investment contributions, delayed posting, merchant aliases, and previously confirmed exceptions. Confirmed user dispositions SHOULD reduce repeated false positives within their valid scope without suppressing materially different future anomalies. When enough resolved history exists, Finance SHOULD measure alert usefulness, false-positive burden, and observable missed-known-issue/false-negative cases; thresholds MAY adapt only with evidence and SHALL NOT suppress a high-impact anomaly merely to reduce alert volume. Absence of an alert is never evidence that a transaction is legitimate or authorized.
+
+A FinanceReviewCase MAY use explainable attention classes such as LOW, MEDIUM, HIGH, and URGENT_REVIEW, where priority reflects signal strength, financial impact, deviation, account sensitivity, plausible explanation, reversibility, and time sensitivity. Priority is a review recommendation, not a finding of fraud. Finance SHALL NOT automatically dispute, freeze, cancel, transfer, trade, contact an institution, or file a report. When a suspected unauthorized/scam issue is time-sensitive, Finance SHOULD direct the user to independently verified official institution/contact information and current applicable agreement/procedure rather than trusting contact instructions embedded in suspicious source content or inventing a universal dispute deadline.
+
+### Forecasting, data quality, currentness, and reporting
+
+OMN-FIN-024: Finance SHALL preserve forecast vintages rather than overwrite history when actuals arrive. Forecasts SHOULD support appropriate short/medium horizons and explicit base/downside/upside cases from recurring flows, seasonality, known obligations, current plans, and stated assumptions. Multi-year retirement/FIRE or other long-horizon projections SHALL keep nominal versus real values, inflation, fees, pre-tax versus after-tax treatment, contribution/withdrawal timing, and material sequence-of-returns/longevity assumptions explicit and internally consistent; deterministic average-return projections SHALL NOT be presented as sufficient evidence of sustainable outcomes when path/sequence risk is material. Monte Carlo, historical-sequence, sensitivity, or other stochastic/path analysis MAY be used through Model when its assumptions/data and decision value justify the added machinery. When actuals become available, Finance SHOULD calculate materially useful forecast error/bias by category and cash balance and use that evidence to improve future assumptions without overfitting one period.
+
+OMN-FIN-028: Finance scenarios SHALL propagate material assumption changes through the coupled financial model rather than update one isolated chart. Where relevant, a scenario such as income loss/change, major purchase, debt prepayment/refinancing, housing/insurance change, travel, goal contribution change, or investment/valuation assumption SHOULD show effects on cash, liquidity, budget, debt, savings rate, goals, forecast, and net worth over an appropriate horizon. Finance MAY proactively prepare scenarios when it detects a material future conflict, but SHALL present alternatives and assumptions rather than silently changing the user's plan.
+
+OMN-FIN-025: Finance SHALL maintain explicit source/account coverage and data-quality state, including missing statements/periods, stale balances/valuations, unresolved reconciliation differences, uncertain merchants/categories, malformed/duplicated sources, unsupported estimates, and stale assumptions. A dependent conclusion SHALL be qualified or withheld when missing/stale data could materially change it. Source coverage SHOULD make missing periods inferable without requiring a manual checklist.
+
+OMN-FIN-026: Volatile external financial facts such as tax law/rates, contribution limits, benefit rules, interest rates, product terms/fees, regulatory requirements, market prices, exchange rates, or institution-specific dispute/reporting deadlines SHALL be verified from current authoritative sources when material. Jurisdiction/effective date/status SHALL be explicit. Finance provides analysis/planning/navigation, not unsupported legal, tax, accounting, investment, or regulatory authority; qualified professional or official confirmation remains an external gate where required.
+
+OMN-FIN-027: Imported financial files are untrusted. Spreadsheet formulas/macros/active content, PDF scripts/actions/links, embedded remote resources, and extracted markup SHALL remain inert unless a separately qualified workflow explicitly requires otherwise. Formula injection and spreadsheet round-trip risks SHALL be tested where spreadsheet import/export is claimed. Corrections, source withdrawal/replacement, or changed parser rules SHALL invalidate and recompute materially dependent derived views, forecasts, goals, anomaly baselines, and reports rather than leaving stale conclusions active.
+
+### Finance presentation and autonomous update brief
+
+The Resources/Finance experience MAY use dashboards, analytical tables, and drill-down views even though global Home remains a bounded consideration surface. Finance presentation SHOULD answer, with traceable evidence: `Where am I?`, `What changed?`, `What is coming?`, `What is unusual or wrong?`, and `Am I progressing toward my goals?`
+
+After a material import/update, Finance SHOULD automatically produce a concise evidence-linked brief covering only applicable items: current position, material changes, trends, budget variance, cash-flow/liquidity outlook, goals, debt/investment position, suspicious/review items, recurring/fee/refund/leakage changes, forecast, data-quality limitations, and the smallest set of high-value next actions. A quiet update with no material exception is a valid outcome.
+
+Finance SHALL support bounded portable export through existing Share/Artifact capabilities, including human-readable reports and tabular open/interchange formats such as CSV and qualified spreadsheet export where useful. Export is a projection/portable copy; it SHALL NOT make the spreadsheet/file the canonical Finance database.
+
 ---
 
 # 3. Human experience, personalization, and internationalization
@@ -417,6 +577,12 @@ OMN-UX-003: Ordinary first-party content SHOULD reflow at approximately 320 CSS 
 OMN-UX-004: Critical workflows SHALL NOT depend solely on hover, drag, right-click, double-click, mouse wheel, multi-touch, precision pointer, or undiscoverable gestures.
 
 OMN-UX-005: Required controls/state SHALL survive portrait/landscape, safe areas/notches, virtual keyboard, text zoom/scaling, split screen, live resize, foldable/dynamic viewport, and browser/installed transitions on claimed targets.
+
+OMN-UX-007: Every interactive target that commits, dismisses, snoozes, navigates, or otherwise carries consequence SHALL present a hit area of at least 44 x 44 CSS pixels, independent of its painted glyph size. Adjacent independent targets SHALL retain at least 8 CSS pixels of non-interactive separation. Density preferences MAY reduce painted size but SHALL NOT reduce the 44 x 44 hit bound.
+
+OMN-UX-008: Primary routine actions - Capture invocation, lens switching, staging-item disposition, and confirm/cancel on any bottom sheet - SHALL be reachable within the lower 50% of the compact viewport. Destructive or irreversible controls SHALL NOT be placed in the dominant thumb-rest zone adjacent to a routine control of similar affordance.
+
+OMN-UX-009: The Home, Capture, lens, Assistant, and System/Recovery surfaces SHALL reflow at 320 CSS pixels equivalent width to a single column with no horizontal scrolling of first-party chrome or content, at 200% text scaling, with no clipped, overlapped, or unreachable control. Intrinsically two-dimensional content (maps, spatial canvases, wide analytical tables) MAY scroll within an explicitly bounded region that does not propagate horizontal scroll to the page.
 
 ## 3.3 Interaction grammar and one action spine
 
@@ -497,18 +663,125 @@ Users SHOULD be able to create, preview, apply, undo, reset, import, export, and
 
 ## 3.6 Default themes
 
-Omnevum SHALL ship with at least:
+Omnevum SHALL ship three immutable built-in theme families:
 
-1. **Light** - accessible, high-contrast, calm, legible, with clear surface/focus/interactive hierarchy.
-2. **AMOLED Dark** - true dark presentation using black or near-black large surfaces where appropriate, independently tuned text/semantic colors, and accessibility-safe focus/selection/error/success states.
+1. **Concept Alpha - Tactile Monastic / Dense Type**: monochrome foundation, structured borders, high information density, typography-led hierarchy, and no decorative elevation.
+2. **Concept Beta - Humanist Editorial / Contextual Flow**: serene spacing, warm neutral accents, distinct card grouping, calm empty states, and soft explicit separators.
+3. **Concept Gamma - Industrial Utility / Segmented HUD**: monospace metadata, precision grid alignment, segmented system indicators, and explicit machine-state telemetry.
 
-Both defaults SHALL meet the accepted accessibility contrast baseline and SHALL NOT encode critical state by color alone.
+Each built-in family SHALL provide both **Light** and **AMOLED Dark** color modes. Light and AMOLED Dark are presentation modes within the selected family, not separate semantic themes. The AMOLED Dark canvas SHALL be `#000000` for every built-in family.
 
-High contrast SHALL be a property of the baseline, not a separate "disabled-user theme". Additional stronger contrast modes MAY be provided.
+Concept Gamma remains the distribution-default family and the Safe Presentation Mode family. Initial mode MAY follow a qualified system preference; an explicit user family/mode choice SHALL persist as presentation state. Alpha and Beta SHALL be as fully supported on primary product surfaces as Gamma and SHALL NOT be treated as experimental, decorative-only, or second-class skins.
 
-Theme customization SHOULD expose semantic tokens such as surface, text, action, focus, success, warning, danger, chart series, typography, spacing, radius, motion, shadows, and density.
+All six built-in family/mode combinations SHALL meet the accepted accessibility contrast baseline and SHALL NOT encode critical state by color alone. High contrast is a baseline property, not a separate remedial theme. Additional stronger-contrast profiles MAY be provided.
 
-Imported/custom themes SHALL NOT be able to make Recovery inaccessible. Safe Presentation Mode SHALL load a known-good accessible built-in theme without deleting the user's customization.
+Theme customization SHOULD expose semantic tokens such as surface, text, action, focus, warning, conflict, synergy, chart series, typography, spacing, radius, motion, separators, and density. A custom presentation profile MAY derive from any built-in family but SHALL NOT mutate the immutable built-in definitions.
+
+Imported/custom themes SHALL NOT be able to make Recovery inaccessible. Safe Presentation Mode SHALL load the known-good Gamma baseline without deleting the user's selected family, custom profile, or canonical data.
+
+### 3.6.1 Bound built-in palettes
+
+OMN-THEME-001: The exact values below are immutable built-in baselines. They SHALL remain present, unmodified, and loadable without network access. Theme selection changes presentation only and SHALL NOT change canonical records, semantic IDs, permissions, ranking, evidence, command authority, or Space/Scope.
+
+#### Concept Alpha - Light
+
+- `--omn-canvas`: `#F2F2EE`
+- `--omn-surface`: `#FFFFFF`
+- `--omn-surface-raised`: `#F7F7F2`
+- `--omn-border`: `#8A8A84`
+- `--omn-border-strong`: `#5E5E59`
+- `--omn-text-primary`: `#111111`
+- `--omn-text-secondary`: `#4F4F4B`
+- `--omn-action`: `#2F2F2F`
+- `--omn-warning`: `#6B4E00`
+- `--omn-conflict`: `#7A1F1F`
+- `--omn-synergy`: `#2F2F2F`
+- `--omn-focus`: `#0A4A7A`
+
+#### Concept Alpha - AMOLED Dark
+
+- `--omn-canvas`: `#000000`
+- `--omn-surface`: `#0A0A0A`
+- `--omn-surface-raised`: `#141414`
+- `--omn-border`: `#64645E`
+- `--omn-border-strong`: `#8A8A84`
+- `--omn-text-primary`: `#F5F5F0`
+- `--omn-text-secondary`: `#B9B9B2`
+- `--omn-action`: `#EDEDE6`
+- `--omn-warning`: `#E2B340`
+- `--omn-conflict`: `#F08A80`
+- `--omn-synergy`: `#EDEDE6`
+- `--omn-focus`: `#8FC6FF`
+
+#### Concept Beta - Light
+
+- `--omn-canvas`: `#F7F3EC`
+- `--omn-surface`: `#FFFCF7`
+- `--omn-surface-raised`: `#F2ECE3`
+- `--omn-border`: `#91867B`
+- `--omn-border-strong`: `#6B6259`
+- `--omn-text-primary`: `#231F1A`
+- `--omn-text-secondary`: `#6B6259`
+- `--omn-action`: `#3F5F5A`
+- `--omn-warning`: `#8A5A00`
+- `--omn-conflict`: `#8B2E2E`
+- `--omn-synergy`: `#3F5F5A`
+- `--omn-focus`: `#355C8A`
+
+#### Concept Beta - AMOLED Dark
+
+- `--omn-canvas`: `#000000`
+- `--omn-surface`: `#11100E`
+- `--omn-surface-raised`: `#1A1815`
+- `--omn-border`: `#6F665E`
+- `--omn-border-strong`: `#9A8E82`
+- `--omn-text-primary`: `#F5EEE5`
+- `--omn-text-secondary`: `#BEB4A8`
+- `--omn-action`: `#7FC2B5`
+- `--omn-warning`: `#E0B15D`
+- `--omn-conflict`: `#F19A91`
+- `--omn-synergy`: `#7FC2B5`
+- `--omn-focus`: `#8FC6FF`
+
+#### Concept Gamma - Light
+
+- `--omn-canvas`: `#EDEFEF`
+- `--omn-surface`: `#FFFFFF`
+- `--omn-surface-raised`: `#F6F8F8`
+- `--omn-border`: `#748A83`
+- `--omn-border-strong`: `#0F5C42`
+- `--omn-text-primary`: `#0A2A1E`
+- `--omn-text-secondary`: `#3A6A54`
+- `--omn-action`: `#0F5C42`
+- `--omn-warning`: `#8A5E0C`
+- `--omn-conflict`: `#952525`
+- `--omn-synergy`: `#0F5C42`
+- `--omn-focus`: `#0A3D8F`
+
+#### Concept Gamma - AMOLED Dark
+
+- `--omn-canvas`: `#000000`
+- `--omn-surface`: `#050505`
+- `--omn-surface-raised`: `#0B0F0D`
+- `--omn-border`: `#58635E`
+- `--omn-border-strong`: `#4FE0B0`
+- `--omn-text-primary`: `#C9F5E5`
+- `--omn-text-secondary`: `#79A794`
+- `--omn-action`: `#4FE0B0`
+- `--omn-warning`: `#E8B657`
+- `--omn-conflict`: `#F08A80`
+- `--omn-synergy`: `#4FE0B0`
+- `--omn-focus`: `#8FC6FF`
+
+OMN-THEME-002: Every built-in family/mode palette SHALL satisfy WCAG 2.2 AA as a release gate: at least 4.5:1 for body and metadata text against every built-in plane on which that token is painted, at least 3:1 for large text, and at least 3:1 for the visible boundary of every interactive control, focus indicator, and state-bearing graphic against every built-in adjacent plane on which it is used. `--omn-text-secondary` is admitted only where it independently satisfies the text contrast bound at its rendered size; otherwise the surface SHALL use `--omn-text-primary`.
+
+OMN-THEME-003: `--omn-action` and `--omn-synergy` intentionally resolve to one value within every built-in family/mode pair. No surface SHALL distinguish action from synergy by color; the distinction SHALL be carried by label, icon, shape, segmented/textual indicator, or position. This rule generalizes: every consequential semantic accent SHALL have a non-color carrier. A future custom or built-in palette that separates action and synergy by hue SHALL additionally prove at least 3:1 non-text contrast between the colors where the colors themselves are expected to communicate a distinction.
+
+OMN-THEME-004: Safe Presentation Mode SHALL use Concept Gamma with the Light or AMOLED Dark mode selected from the last known-good mode or a qualified system preference. It SHALL NOT require the active family, user presentation profile, custom theme, font pack, or optional module to parse. It SHALL NOT delete or silently rewrite the user's selected family/profile. If a custom profile fails OMN-THEME-002 on Recovery-critical surfaces, those surfaces SHALL render from the Safe Presentation baseline and report the substitution.
+
+OMN-THEME-005: Theme family and color mode are one persisted presentation axis under Sections 3.4 and 3.5. System > Presentation SHALL expose Alpha, Beta, and Gamma plus Light/AMOLED mode selection without network access; equivalent in-place preview MAY be offered. Switching family or mode SHALL be reversible, previewable where presentation preview is offered, update-safe, and independently resettable from canonical data. A family switch SHALL NOT create a duplicate view definition, database, record copy, permission principal, or alternate command path.
+
+OMN-THEME-006: The generated Phase 1 concept boards are visual reference evidence, not normative token authority. Where an image-rendered label, color, type value, or control conflicts with this MPES, the exact textual requirements in Sections 3.2, 3.6 through 3.12, and Section 27 control. This preserves the visual direction without making image-generation artifacts an implementation contract.
 
 ## 3.7 Localization and multilingual architecture
 
@@ -556,6 +829,218 @@ OMN-I18N-010: Browser/OS-controlled installed-PWA localization (including host-c
 Machine/AI translation MAY accelerate language-pack development, but high-consequence warnings, permissions, deletion, encryption, Recovery, and financial/health boundary language require stronger review proportionate to consequence.
 
 ---
+
+## 3.8 Normative visual system
+
+OMN-VIS-001: Omnevum has one normative visual/interaction system with three built-in visual families: Alpha, Beta, and Gamma as defined in Section 3.6. The families may differ in typography, spacing rhythm, separators, grouping, and metadata treatment, but they SHALL render the same semantic state, evidence, uncertainty, commands, navigation reachability, telemetry truth, accessibility obligations, and Recovery authority. Concept Gamma remains the distribution default; selecting Alpha or Beta is an ordinary presentation choice, not a forked product surface.
+
+### 3.8.1 Typography
+
+OMN-VIS-002: Every built-in typography stack SHALL resolve offline without a network font fetch, honor user text scaling, preserve a minimum rendered text size of 11px at the 16px reference root before user scaling, and select locale-appropriate fallbacks when the preferred stack poorly serves a script. Typography MAY change hierarchy and density but SHALL NOT change semantic prominence, hide state, or compress a required control below its minimum hit target.
+
+OMN-VIS-003: The built-in family typography baselines are:
+
+**Concept Alpha - Tactile Monastic / Dense Type**
+
+- Surface title: `ui-serif, Georgia, Cambria, "Times New Roman", serif`; 19px equivalent; weight 600; line height 1.25.
+- Section heading: same serif stack; 15px equivalent; weight 600; line height 1.35.
+- Body / record: `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`; 13px equivalent; weight 400; line height 1.5.
+- Metadata / evidence: `ui-monospace, "SF Mono", Menlo, Consolas, monospace`; 11px equivalent; weight 500; line height 1.4.
+- Density is created by spacing and ruled grouping, not by text below the minimum size or smaller hit areas.
+
+**Concept Beta - Humanist Editorial / Contextual Flow**
+
+- Surface title: `ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif`; 22px equivalent; weight 600; line height 1.25.
+- Section heading: same serif stack; 17px equivalent; weight 600; line height 1.35.
+- Body / record: `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`; 15px equivalent; weight 400; line height 1.55.
+- Metadata / badge: same system sans stack; 12px equivalent; weight 500; line height 1.4.
+- Editorial hierarchy is carried by whitespace, paragraph rhythm, and grouping rather than ornamental decoration.
+
+**Concept Gamma - Industrial Utility / Segmented HUD**
+
+- Stack: `ui-monospace, "JetBrains Mono", "SF Mono", "Roboto Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace`.
+- Surface title: 20px equivalent; weight 500; line height 1.25; tracking 0.
+- Section heading: 16px equivalent; weight 500; line height 1.35; tracking 0.
+- Body / record: 13px equivalent; weight 400; line height 1.55; tracking 0.
+- Metadata / badge: 11px equivalent; weight 400; line height 1.4; tracking +0.02em.
+- Only weights 400 and 500 are used by default within the Gamma stack.
+
+All stated sizes SHALL be implemented with relative units or an equivalent mechanism that honors user scaling; the pixel values above state the reference values at a 16px root with no additional scaling.
+
+OMN-VIS-004: Serif, sans-serif, or monospace presentation SHALL NOT be forced onto user-authored content or a language/script that the selected stack serves poorly. The Presentation capability SHALL select a qualified locale-appropriate face and preserve correct directionality and legibility. Theme identity is subordinate to localization/accessibility correctness.
+
+### 3.8.2 Surface layering
+
+OMN-VIS-005: Exactly three semantic painted planes are admitted by the built-in families: canvas, surface, and raised surface. Alpha emphasizes borders and ruled regions; Beta emphasizes spacing, card grouping, and soft explicit separators; Gamma emphasizes precision grid alignment and machine-state grouping. Built-in depth SHALL be conveyed by plane value, border/separator, grouping, and spacing rather than drop shadow, blur, glow, or gradient. At most one floating layer (bottom sheet, dialog, or menu) SHALL be presented at a time; a second required floating layer SHALL replace rather than stack on the first.
+
+OMN-VIS-006: Bounded progress, confidence, and completeness SHALL always carry an adjacent explicit textual value or state and SHALL never be the sole carrier of a consequential condition. Gamma SHOULD use segmented indicators by default. Alpha MAY use ruled/typographic segments or fractions. Beta MAY use quiet step markers or textual progress. A theme family SHALL NOT alter the underlying value, threshold, or command behavior.
+
+### 3.8.3 System telemetry presentation
+
+OMN-VIS-007: Every primary surface SHALL present persistent, honest, non-decorative telemetry covering at minimum: storage locality (local-only versus replicated), last successful backup/sync outcome and staleness, pending Effect/Outbox depth, and degraded-capability state. Telemetry SHALL report UNKNOWN rather than imply success, SHALL be derived from real state rather than from an optimistic UI assumption, and SHALL NOT be rendered as an engagement metric, score, streak, or gamified counter. Alpha MAY render it as terse ruled metadata, Beta as a quiet contextual line, and Gamma as HUD-like machine telemetry; the information and activation path remain equivalent.
+
+### 3.8.4 Motion, haptics, and feedback
+
+OMN-VIS-009: Motion is admitted only to show the origin of a state change - where a sheet came from, where a dismissed item went, which record a result belongs to. Decorative, looping, attention-seeking, celebratory, and progress-theatre motion SHALL NOT be used. Admitted transitions SHALL complete within 200ms and SHALL NOT delay the availability of the resulting control.
+
+OMN-VIS-010: A haptic tick MAY accompany a committed semantic mutation, an accepted Triage disposition, and an undo. Haptics SHALL NOT be used for arrival of information, for suggestions, or for any event the user did not initiate. Haptics SHALL be independently disableable and SHALL never be the sole carrier of an outcome.
+
+OMN-VIS-011: A zero-motion mode SHALL be available as an accessibility setting and SHALL be adopted automatically when the platform reports a reduced-motion preference. In zero-motion mode every admitted transition becomes an instantaneous state swap with no loss of function, no loss of information, and no substituted fade.
+
+### 3.8.5 Built-in family identity and parity
+
+OMN-VIS-046: Concept Alpha SHALL preserve a monochrome/near-monochrome foundation, structured borders, compact information rhythm, typography-first hierarchy, and zero decorative elevation. It SHALL NOT reduce accessibility, evidence visibility, touch geometry, or content legibility in order to appear denser.
+
+OMN-VIS-047: Concept Beta SHALL preserve serene spacing, warm-neutral palette treatment, distinct contextual card grouping, calm empty states, and soft but explicit separators. It SHALL NOT turn Home into a lifestyle feed, remove machine-state honesty, or hide evidence/uncertainty in order to appear calmer.
+
+OMN-VIS-048: Concept Gamma SHALL preserve monospace metadata where locale-appropriate, precision alignment, segmented system indicators, and explicit machine/locality telemetry. It SHALL NOT force monospace onto unsupported scripts/user content or turn operational telemetry into a decorative score.
+
+OMN-VIS-049: Switching among Alpha, Beta, and Gamma SHALL be a pure presentation substitution over the same surface anatomy and semantic command paths. For a fixed application state and density preference, family switching SHALL preserve the same Home consideration membership/order, Capture staging items and provenance, lens reachability, record identities/relationships, Assistant scope, Recovery access, admitted commands, and consequential-state meaning.
+
+## 3.9 Layout anatomy of primary surfaces
+
+OMN-VIS-008: The anatomy below is normative for the compact (mobile) default of each surface. It constrains arrangement and required elements, not visual taste, and SHALL hold under OMN-UX-007 through OMN-UX-009.
+
+OMN-VIS-012: Where this section admits a quiet default and an explicit alternative, the explicit alternative SHALL be reachable from the surface it concerns without navigating to a settings tree, SHALL be a persisted user preference rather than a per-session state that silently resets, and SHALL NOT be presented as a corrective for a deficient default.
+
+### Home
+
+- Header: a thin persistent telemetry strip per OMN-VIS-007 and Section 3.10.
+- Consideration list: a bounded set of traceable items, default maximum five, ordered by consequence rather than recency, presented as a bounded stack whose spacing follows the active theme family and density preference.
+- Each item SHALL render, within the item itself and without navigation: source/evidence count with a path to the sources; an uncertainty marker with an explicit value or an explicit UNKNOWN; a "why this appeared" statement naming the originating signals; and one-tap snooze and dismiss controls meeting OMN-UX-007.
+- OMN-VIS-013: Home SHALL offer a focus mode presenting one consideration item at a time at larger type with expanded targets. Focus mode SHALL change presentation only: the same items, the same order, the same evidence, the same admitted commands. It SHALL NOT hide items, alter ranking, gate advancement on disposition, or impose a sequence the user must complete.
+- Terminal row: explicit empty/queue state. "Nothing deserves attention" SHALL be rendered as a first-class calm state, never as an error, prompt, or opportunity to engage.
+- Home SHALL NOT render KPI walls, rings, streaks, engagement counters, infinite feeds, or a duplicated task/calendar list.
+
+### Capture
+
+- Half-height bottom sheet over an inert dimmed backdrop. The backdrop SHALL be non-interactive except for an explicit dismiss affordance; dismissal SHALL NOT discard staged input without confirmation.
+- Modality row: text, audio/voice, scan/camera, and URL/file, each an independent target meeting OMN-UX-007, each degrading explicitly and individually when the underlying Device/Input capability is unavailable.
+- Staging queue: each entry SHALL display raw input provenance (source, capture time, modality) before any interpretation, and routing suggestions SHALL be rendered as proposals with their origin (deterministic rule or AI) and confidence, visually subordinate to the raw content.
+- Commit, defer-to-Triage, and discard SHALL be distinct admitted commands. No suggestion SHALL self-commit on timeout, scroll, or sheet dismissal.
+
+### Triage / inbox
+
+- OMN-VIS-014: The inbox SHALL present staged items as a scannable list carrying, per row, raw content identity, modality, capture time, and the proposed owner with its confidence or an explicit UNKNOWN. Multi-select SHALL be available for accepting, deferring, or discarding several items through the same admitted commands used for one.
+- OMN-VIS-015: Any row SHALL expand in place to the full single-item view showing complete provenance, the full proposal with its origin, and per-item split, link, route, defer, reference, and delete commands. Expansion SHALL NOT be required to act, and batch action SHALL NOT be available for any disposition whose consequences the collapsed row cannot honestly state.
+- A batch action SHALL report its per-item outcome individually. A partial failure SHALL NOT be reported as success and SHALL NOT silently drop the failed items from staging.
+
+### Record detail
+
+- Continuous scroll: identity and lens breadcrumb, then fields, then relationships, then history, then evidence.
+- OMN-VIS-016: A sticky segment bar SHALL offer direct jumps to fields, links, history, and evidence. The bar navigates within one scrollable document; it SHALL NOT hide sections behind tabs, SHALL NOT defer their loading in a way that makes a section unreachable when a derived index is degraded, and SHALL indicate which segment is currently in view.
+- Relationships SHALL render as navigable references naming the owning lens path, never as embedded editable copies.
+- Every field SHALL be editable only through the owning semantic command; the detail surface holds no independent mutation authority.
+
+### Search / Explore
+
+- Default state: a single query field, results grouped by owning lens, each result stating why it matched.
+- OMN-VIS-017: Facet chips (lens, time, type, Space/Scope, has-artifact and equivalents) SHALL be available on demand from the query field without being present by default. An applied chip SHALL be visible, individually removable, and expressible in the query itself so that a filtered search is inspectable and reproducible rather than hidden UI state.
+- A filtered result set MAY be saved as a named view. A saved view is a declarative Compose/View definition per Section 5.20; it creates no writable copy and no separate index authority.
+- Results SHALL honor the active Space/Scope bound and SHALL state that bound on the surface.
+
+### Assistant
+
+- OMN-VIS-018: The Assistant is reachable both as a standalone conversation surface and as a contextual panel invoked from any record or lens. Both entries SHALL be the same capability under one scope model: the context bound is always explicit, always narrowable, and never silently widened by the entry point used. Invoking from a record SHALL default the bound to that record and its authorized relationships, and SHALL state that bound.
+- Every surface SHALL declare the active provider/route and disclosure class at all times.
+- Every proposed action SHALL be rendered as a proposal carrying the semantic command it would invoke and the records it would touch, and SHALL require an explicit admitted confirmation.
+- The surface SHALL remain present and honestly degraded when all AI routes are disabled; it SHALL NOT become the only path to any core function.
+
+### Review
+
+- OMN-VIS-019: Review is a passive shelf of available templates. It SHALL NOT schedule itself, impose due dates, count streaks, or notify. A template that is never opened SHALL produce no pressure of any kind.
+- A selected template runs as a guided stepper with segmented progress, skippable at every step, abandonable without loss, and resumable without penalty. Partial completion is a valid terminal state.
+- Prompts within a stepper SHALL cite the records that motivate them and SHALL offer the admitted command to act, rather than asking the user to remember and navigate.
+
+### Lenses
+
+- Persistent bottom lens navigation. OMN-VIS-020: The bar SHALL present four user-pinned lenses plus an overflow control opening an eight-item grid sheet covering all default lenses of Section 2.2: Direction, People, Self, Resources, Work, Environment, Knowledge, Change.
+- The overflow grid SHALL present every lens at equal prominence with full accessible names, SHALL be reachable in one interaction from any primary surface, and SHALL NOT rank, hide, or demote a lens by usage.
+- The currently active lens SHALL remain visible in the bar even when it is not pinned; pinning state SHALL NOT make any lens unreachable.
+- Each lens target SHALL meet OMN-UX-007 and the bar SHALL remain a single reachable row at 320 CSS pixels.
+- The active lens view SHALL present structured canonical records, their relationships, and a context breadcrumb naming the owning lens path.
+- A lens is a projection. The lens surface SHALL NOT create writable state outside the owning semantic command path, SHALL NOT duplicate a canonical record it does not own, and SHALL render cross-lens relationships as navigable references rather than embedded copies.
+
+### System / Recovery
+
+- Recovery entry SHALL be reachable within two interactions from any primary surface and SHALL NOT depend on the user's presentation profile, custom theme, language pack, or any optional module loading successfully.
+- Recovery surfaces SHALL render from the bound baseline tokens of Section 3.6.1 under Safe Presentation Mode, at minimum 13px body text, with no reliance on gesture, hover, or color-only state.
+- Destructive operations SHALL be separated in position and affordance from routine operations and SHALL state their exact scope and reversibility before confirmation.
+
+## 3.10 State honesty, reversibility, and confirmation
+
+### 3.10.1 Telemetry escalation
+
+OMN-VIS-021: The telemetry required by OMN-VIS-007 SHALL be presented in its quiet healthy form as a thin persistent strip on every primary surface, occupying one line, and SHALL open the System detail on activation. OMN-VIS-007 governs its content; this requirement governs only its resting presentation.
+
+OMN-VIS-022: When a telemetry condition crosses a defined consequence threshold - backup staleness beyond policy, an Effect/Outbox item failing delivery, a capability degraded, a conflict unresolved beyond policy, or storage pressure - the condition SHALL additionally escalate into a first-class Home consideration item carrying the same evidence, "why this appeared", and disposition controls as any other item. Escalation thresholds SHALL be inspectable and adjustable by the user. The strip SHALL NOT become the sole location of a consequential warning, and a healthy system SHALL NOT manufacture escalations to appear active.
+
+### 3.10.2 Reversibility and confirmation
+
+OMN-VIS-023: Confirmation depth SHALL be proportional to reversibility, not to the surface or the verb used.
+
+- A reversible operation SHALL execute immediately and present an undo affordance with a segmented remaining-time indicator and an explicit numeric value. Expiry of the undo window SHALL move the record to a recoverable state for the owning domain's retention policy rather than destroying it.
+- A hard or externally-observable operation - destruction beyond the retention window, key or credential destruction, wipe, irreversible external effect delivery, or an operation the owning domain declares non-reversible - SHALL require pre-confirmation stating its exact blast radius: the records affected, the relationships that will be left orphaned or preserved, the artifacts involved, and the reversibility window or its absence.
+- OMN-VIS-024: A pre-confirmation SHALL state real computed consequences derived from the actual graph, never a generic warning template. Where the consequence cannot be computed, the surface SHALL say so explicitly rather than presenting an optimistic or absent blast radius.
+- OMN-VIS-043: An operation that enqueues an externally-observable effect SHALL hold that effect undelivered for at least the duration of its undo window, and undo SHALL withdraw it from the Outbox. Where the effect cannot be held - an immediate third-party call, a delivery the transport will not defer - the operation is not reversible and SHALL take the pre-confirmation path instead. An undo affordance SHALL NOT be shown over an effect that has already left the system.
+- Undo SHALL NOT be offered for an operation that cannot actually be undone.
+
+### 3.10.3 Uncertainty presentation
+
+OMN-VIS-025: Confidence, provenance depth, and staleness are recorded on every derived value but presented quietly by default: a field SHALL NOT display a confidence indicator merely because a value exists.
+
+OMN-VIS-026: A per-surface "show confidence" toggle SHALL reveal segmented confidence, source count, and last-verified time for every field in view. The toggle SHALL be a persisted preference and SHALL change presentation only.
+
+OMN-VIS-027: A genuine conflict - two admitted sources disagreeing on the same canonical value - SHALL surface unconditionally regardless of the toggle, SHALL retain both values with their provenance rather than silently selecting one, SHALL remain in an explicit unresolved state until resolved through an admitted command, and SHALL NOT be resolved by recency, confidence score, or any automatic rule without the user's admitted choice.
+
+## 3.11 Personalization and accessibility surfaces
+
+OMN-VIS-028: Presentation preferences SHALL be editable in place on the surface they affect - lens pinning from the lens bar, density and text scale from the surface being read, terminology from the label being renamed - and the central System > Presentation list SHALL mirror every such preference, reflecting in-place edits immediately and writing back identically. Neither path SHALL expose a preference the other cannot reach. Both SHALL write one presentation profile per Section 3.4, independently reversible and resettable.
+
+OMN-VIS-029: Accessibility SHALL be offered as named profiles - at minimum standard, low vision, motor/large target, and low cognitive load - each of which sets a known-good combination of the underlying independent settings. Selecting a profile SHALL expand to reveal and permit editing of every individual setting it changed, and a user edit SHALL NOT be silently reverted by the profile. Profiles are presentation state only.
+
+OMN-VIS-030: Accessibility profiles SHALL NOT gate any function, SHALL NOT be presented as remedial, and SHALL NOT reduce the accessible baseline of the standard profile. A platform-reported accessibility preference SHALL be honored on first run without requiring the user to find a setting.
+
+## 3.12 Lifecycle surfaces
+
+### 3.12.1 First run
+
+OMN-VIS-031: First run SHALL be a cold open: usable immediately, with no account, no configuration, no tour, and no mandatory step. The opening state SHALL state honestly that the system is local-only and empty, and SHALL offer capture as the single obvious action.
+
+OMN-VIS-032: A shaping prompt - selecting pinned lenses, terminology, density, and presentation - SHALL be offered later, triggered by accumulated real use rather than by a timer or launch count, SHALL be dismissible permanently, and SHALL remain available on demand from System thereafter. It SHALL NOT be a precondition for any capability, and every lens SHALL remain available whether or not it is pinned.
+
+### 3.12.2 Update and migration
+
+OMN-VIS-033: A shell, asset, or presentation update that does not migrate canonical data SHALL apply silently at the next safe opportunity and SHALL be recorded in an inspectable version ledger with the applied version, time, and a rollback path where one exists.
+
+OMN-VIS-044: A shell update and a canonical schema migration are separately gated. Where the runtime activates a new application shell independently of user action - including service-worker activation under Section 6.5 - the new shell SHALL detect a pending unapproved schema migration, SHALL start in a read-compatible state against the unmigrated data or refuse to take control, and SHALL NOT perform, begin, or partially apply that migration on activation. The migration prompt is presented in the running session; declining leaves the system fully usable on the prior schema. Exactly one shell version SHALL be in control at a time, and a shell that cannot operate against the unmigrated data SHALL report that condition rather than migrating to resolve it.
+
+OMN-VIS-034: An update carrying a canonical schema migration SHALL NOT apply silently. It SHALL prompt before applying, stating the migrations involved, the record classes affected, the verified state and age of the current backup, and the rollback path or its absence. Where no verified recent backup exists, the surface SHALL say so and offer to create one before proceeding. An interrupted migration SHALL follow Section 8.4 crash-consistency and SHALL NOT silently reset data.
+
+### 3.12.3 Share and export scope
+
+OMN-VIS-035: A bounded share or export SHALL be constructed through an explicit scope builder in which each linked record, artifact, relationship, and history element is individually included or excluded, defaulting to excluded, with the transitive consequence of each inclusion stated.
+
+OMN-VIS-036: The final confirmation step SHALL be a recipient-eye preview rendering exactly the content that will leave the system, including every artifact and field, and SHALL NOT be skippable. The surface SHALL state explicitly what is not included - credentials, AI authority, out-of-scope linked records, and unrelated provenance - and the exported payload SHALL match the preview byte-for-byte in content.
+
+### 3.12.4 Recovery and Safe Presentation Mode
+
+OMN-VIS-037: The ordinary Recovery path SHALL be a degraded rendering of the normal interface using the Safe Presentation baseline of Section 3.6.1: the same command vocabulary and primary layout grammar, fewer dependencies, and a known-good Gamma visual family even when the user's active family or custom profile is broken. It SHALL state what failed, what remains intact, and the verified state of the Vault, and SHALL offer repair, baseline-theme, and restore paths.
+
+OMN-VIS-038: A last-resort Recovery console SHALL exist for the case where the ordinary degraded path itself cannot render. It SHALL be visually distinct from the normal interface so that its exceptional status is unmistakable, SHALL depend on no theme, language pack, font, module, index, or network, SHALL be reachable through a documented stable route that survives a broken application shell, and SHALL at minimum report canonical record integrity and Vault state and permit an immediate export.
+
+OMN-VIS-039: Neither Recovery path SHALL delete a user's presentation profile, language pack, or canonical data as a precondition of recovering.
+
+### 3.12.5 Data exit and system retirement
+
+OMN-VIS-040: System SHALL present a permanent, always-available export surface offering at minimum: a full portable Vault archive, a human-readable export in durable open formats, and an artifact-originals export. Each SHALL state its record count and size, and SHALL be usable without Omnevum present. The export surface SHALL NOT be placed behind a retention prompt, a reason-for-leaving question, or any friction.
+
+OMN-VIS-041: An optional guided retirement flow SHALL be available, sequencing export, verification of that export, wipe of origin storage, and an optional successor/handoff note recording where the data now lives and what is needed to read it.
+
+OMN-VIS-045: Before the wipe step, the retirement flow SHALL enumerate every known copy of the user's data: origin storage, each configured replica/sync endpoint, off-origin backups, and any remote-backed artifact tier, each with its last-known state and location. For each, the flow SHALL state plainly whether Omnevum can delete it, can only request its deletion, or cannot reach it at all, and SHALL NOT report retirement as complete while a copy Omnevum cannot verify as deleted remains enumerated. Losing reach to an endpoint SHALL be reported as UNKNOWN rather than omitted from the enumeration.
+
+OMN-VIS-042: The wipe step SHALL be blocked until an export has been verified within the same flow, or until the user explicitly and separately records that they intend to destroy the data without retaining a copy. Verification SHALL mean the export was read back and checked, not that a download was initiated. Retirement SHALL never be initiated by Omnevum, by an update, by storage pressure, or by any automatic condition.
+
 
 # 4. Semantic and canonical data architecture
 
@@ -656,7 +1141,10 @@ Omnevum SHOULD support cross-domain questions such as:
 - what changed after this intervention;
 - which obligations compete for the same time or money;
 - which decisions rely on this assumption;
-- which records depend on this source.
+- which records depend on this source;
+- which one action or resource change could advance several goals;
+- which goals are drawing on the same constrained resource;
+- what downstream plans or forecasts would change if this record changed.
 
 ---
 
@@ -676,20 +1164,26 @@ Opt-in personal-data acquisition from user-selected files, exports, archives, UR
 
 Acquire/Ingest SHALL support, where applicable:
 
-- source recognition and format detection;
-- staged preview before canonical mutation;
+- source recognition and format/document-class detection;
+- staged preview before canonical mutation when review is materially useful, with high-confidence mechanically validated paths permitted to auto-admit under the rules below;
 - source-level provenance and content identity/fingerprint;
 - preservation of original source artifacts where useful and rights-permitted;
-- idempotent/repeat import and duplicate detection;
+- idempotent/repeat import, overlapping-source detection, and duplicate detection;
 - bounded parsing/resource controls;
 - mapping into candidate semantic records rather than direct uncontrolled writes;
 - staged cleaning, field mapping, normalization, clustering, transformation, and reconciliation where useful;
-- reusable transformation/reconciliation recipes with preview, effect summary, provenance, and undo/replay semantics where proportionate;
+- reusable transformation/reconciliation/parser recipes with structural signatures, preview/effect summary where material, provenance, versioning, and undo/replay semantics where proportionate;
 - candidate entity-resolution suggestions that preserve ambiguity rather than silently fuzzy-merging distinct people/accounts/assets/places/records;
+- source/profile drift detection when a previously learned format or invariant changes;
+- confidence/evidence classification sufficient to distinguish auto-admitted, provisional, review-required, and rejected/unsupported extraction results;
 - import diagnostics, omissions, partial status, and retry;
 - revocation/deletion behavior appropriate to copied versus externally referenced source data.
 
 OMN-CAP-011: Ambiguous cleaning, deduplication, entity resolution, or source reconciliation SHALL remain reviewable and SHALL NOT silently destroy, merge, overwrite, or upgrade canonical meaning. Original source identity plus the accepted transformation/reconciliation lineage SHALL remain inspectable enough to explain how imported records were produced.
+
+OMN-CAP-019: Acquire/Ingest SHOULD maximize autonomous throughput. A repeated or structurally recognized source MAY bypass routine human preview when the selected parser/profile is identity-bound, its required invariants pass, no material drift is detected, and downstream canonicalization/reconciliation gates support the interpretation. Material ambiguity or failed invariants SHALL route only the affected items to Triage/Clarify rather than block unrelated valid records.
+
+OMN-CAP-020: Confirmed import corrections SHOULD be reusable as scoped transformation/parser rules so subsequent equivalent sources require less or no manual work. A learned profile SHALL bind enough source/account/document identity and structural evidence to detect incompatible format drift; a drifted source SHALL degrade to re-detection/review rather than silently applying stale offsets, columns, labels, or sign conventions.
 
 Bulk data liberation is a first-class outcome. Repeated exports from the same source SHOULD be incrementally reconcilable rather than forcing full duplicate re-import. Projects such as HPI and Timelinize are reference patterns for broad personal-data acquisition; OpenRefine is a reference for reversible cleaning, clustering, reconciliation, transformation history, preview, and reusable recipes. Their runtime/storage assumptions are not automatically inherited.
 
@@ -819,6 +1313,8 @@ People, stakeholder, entity, household/family, organization, and typed relations
 
 Tags, folders, categories, collections, playlists/sets, smart collections, taxonomies, memberships, and saved groupings SHOULD reuse typed relationships plus Space/Scope and Compose/View projections where that preserves meaning. Omnevum SHALL NOT create a separate universal collection database merely because several domains expose grouping UX; domain-specific ordering, hierarchy, membership, and lifecycle rules remain with the owning semantics.
 
+OMN-CAP-024: Relate + Analyze + Model + Evidence SHALL provide one reusable dependency/impact/synergy projection over authorized canonical records rather than each domain implementing its own hidden relationship engine. It SHOULD support upstream/downstream traversal, shared-resource contention, goal/outcome contribution, material change-impact analysis, common-bottleneck discovery, and candidate multi-outcome interventions. The projection is DERIVED: it SHALL preserve canonical ownership, source/provenance, uncertainty and temporal validity, and SHALL invalidate when controlling records, permissions, assumptions, relationship rules, or evidence change.
+
 ## 5.16 Time
 
 Dates, durations, recurrence, reminders, timelines, temporal queries, schedules, and calendar integration without unnecessarily replacing the host/external calendar.
@@ -861,6 +1357,35 @@ For optional same-session/browser-to-browser collaboration, Omnevum SHOULD also 
 
 OMN-CAP-017: Where Omnevum represents person-specific consent, delegation, membership, guardianship/caregiver authority, sharing grants, or revocation, that state SHALL be explicit, purpose/scope-bound, source/provenance-bearing, reviewable, and linked to the relevant subject/Space/Share policy. It SHALL NOT be inferred from a contact relationship, provider ACL, household label, possession of a link, AI suggestion, or presentation membership. Revocation/change SHALL invalidate future disclosure/effect authority and trigger reconciliation of affected derived/share state where applicable. Consent/grant records are policy/relationship evidence, not a second canonical owner of the underlying domain records.
 
+OMN-CAP-023: Share SHALL provide a first-class local Context Export/Handoff projection for AI and other external analysis. From any authorized current selection, record, relationship neighborhood, saved view, Search result, Review, Space/Scope, or domain projection, the user SHALL be able to generate a bounded portable context without manually reconstructing or copy/pasting the underlying information. At minimum the export system SHALL support:
+
+- Markdown (`.md`) and plain text (`.txt`) for prompt-ready human-readable context;
+- CSV and TSV for semantically homogeneous tabular projections;
+- JSON and JSONL for structured machine-readable context;
+- a portable multi-file bundle when one flat format cannot preserve the selected structure without material loss.
+
+A Context Export SHALL preserve or include, as applicable:
+
+- export/profile identity and generation time;
+- explicit purpose/task note when the user supplies one;
+- source Space/Scope, selection/query/view identity, record types, time range, and currency/locale assumptions where relevant;
+- stable record/source/artifact identifiers sufficient for traceability without exposing secret internal handles;
+- provenance/source references, truth/evidence class, uncertainty/conflict/staleness, and last-verified time where material;
+- relationships and ordering needed to preserve meaning;
+- field/schema definitions or glossary where labels alone are ambiguous;
+- assumptions and material derived/calculated status;
+- an omission/redaction manifest when selected information is intentionally excluded, cannot fit the chosen representation, or exceeds a declared context budget.
+
+Context Export SHALL be generated locally from the same authorized projection used by product views and the AI Context Broker. It SHALL NOT export credentials, reusable secrets, hidden permission state, raw AI/provider authority, unrelated linked records, or active/executable content. Imported source instructions remain untrusted data and SHALL be delimited/identified as source content rather than promoted to export-level instructions.
+
+Format selection SHALL preserve semantics rather than merely file extension. CSV/TSV SHALL be used only for genuinely tabular rows or clearly separated tables and SHALL NOT silently flatten hierarchy, many-to-many relationships, conflicting values, or provenance into misleading columns. Markdown/text MAY use compact structured sections; JSON/JSONL and bundle formats SHOULD preserve richer typed structure. Any material representational loss SHALL be reported before export.
+
+CSV/TSV or other spreadsheet-compatible Context Exports SHALL treat exported text as untrusted and SHALL be inert by default against formula/cell injection, active links, or equivalent spreadsheet-triggered behavior on the claimed consumer profile. Because no universal escaping scheme is safe for every spreadsheet and downstream parser, the export contract SHALL define and test the exact target interpretation, preserve the semantic source value through an inspectable safe representation or separate raw field where needed, and report any transformation that can affect round-trip data. A user-requested raw representation SHALL remain clearly distinguished from a spreadsheet-safe representation and SHALL NOT silently gain execution authority.
+
+Context Export SHOULD support reusable declarative export profiles containing scope/query, format, field/detail level, artifact/excerpt inclusion, ordering, redaction rules, and context-size policy. Profiles are presentation/share configuration, not disclosure authority: each execution SHALL re-evaluate current access, sensitivity, source availability, and export consequences. Where useful, a prior export identity MAY be used to create a delta package containing material additions, changes, deletions/tombstones, invalidations, and unchanged-context references so recurring AI work does not require repeatedly exporting the entire context.
+
+The export surface SHOULD show estimated byte/character/token-scale size before final handoff and SHOULD offer compact, standard, and full detail presets. If a declared size/context budget requires omission, compression, summarization, or sampling, the transformation SHALL be deterministic or provenance-bearing, preserve protected exact-value fields, label derived summaries, and produce an inspectable omission manifest. The system SHALL prefer removing irrelevant context over lossy compression of material evidence.
+
 ## 5.20 Compose / View
 
 Reusable declarative composition of authorized records, projections, and capabilities into user- or AI-authored forms, tables, cards, dashboards, reports, charts, maps, timelines, capture templates, spatial canvases/diagrams, and focused workspaces without creating new canonical ownership.
@@ -883,6 +1408,10 @@ Spatial/canvas views SHOULD reuse qualified browser FOSS such as Excalidraw, Rea
 ## 5.21 Automate
 
 Bounded trigger/condition/action workflows designed around PWA background-execution limits. Correctness SHALL NOT depend on continuous browser background execution.
+
+OMN-CAP-021: Automation SHALL prefer event-driven completion and deterministic catch-up over user-maintained routines. Relevant triggers MAY include import/capture completion, canonical mutation, open/resume, elapsed semantic due state, reconciliation opportunity, source/currentness change, or an explicitly configured rule. Where the browser cannot run while closed, the next safe open/resume SHALL reconcile missed work without pretending background execution occurred.
+
+An automation MAY complete a reversible or provisional canonical action without a confirmation dialog only when the owning domain explicitly permits that action class, authority is current, predeclared evidence/rule/invariant gates pass, and the result remains inspectable and correctable. High-consequence external effects continue to use the normal command, confirmation, policy, and Effect/Outbox path.
 
 ## 5.22 AI
 
@@ -946,6 +1475,8 @@ Triage/Clarify SHOULD preserve the original/raw item plus provenance while allow
 A triage queue is staging/operational state, not a universal task database. Resolved records continue to belong to their canonical owners, and a capture MAY bypass triage when the user or a safe explicit rule has already provided an unambiguous owner/action.
 
 OMN-CAP-012: Triage/Clarify SHALL preserve ambiguity rather than fabricate certainty. AI classifications, priorities, extracted actions, and routing are proposals unless a user-authorized deterministic/reversible rule explicitly admits automatic handling. No unresolved input may be silently discarded, merged, escalated, published, disclosed, or promoted into high-consequence canonical meaning merely to empty an inbox or improve completion metrics.
+
+OMN-CAP-022: Triage/Clarify SHALL be an exception surface, not a mandatory tollbooth. High-confidence mechanically validated items and previously confirmed scoped rules SHOULD resolve through their owning commands without routine user review; the queue SHOULD contain only unresolved, materially ambiguous, conflicting, low-confidence, or consequential cases plus explicitly user-inboxed items. Batch resolution is preferred for genuinely homogeneous exceptions.
 
 GTD systems such as Trayzero, Mindwtr, Loop/weekly-review workflows, Super Productivity, and current task/planning FOSS are reference patterns for Capture -> Clarify -> Organize -> Engage -> Reflect. Paperless-ngx/document inboxes and personal-inbox/AI-triage projects provide classification/filing/proposal patterns. Omnevum generalizes only the triage mechanics; it SHALL NOT force every life domain into GTD/task semantics.
 
@@ -1364,6 +1895,10 @@ Each AI request SHALL declare:
 
 No module or Assistant session receives ambient access to the complete personal state.
 
+OMN-AI-011: Manual AI handoff SHALL use the same bounded Context Broker projection and Share/Context Export controls as a connected AI route. Omnevum SHALL be able to generate a prompt-ready context package from the current authorized task/Space/selection without requiring the user to reconstruct background, copy individual fields, or re-explain already recorded decisions. The package SHALL separate system-generated framing, user-authored objective/instructions, canonical facts, source material, assumptions, derived analysis, unresolved conflicts, and omitted/redacted content so an external AI can distinguish instruction from evidence. Exporting context does not grant the recipient AI write authority, Omnevum permissions, credentials, or access to omitted Vault state.
+
+OMN-AI-012: AI-context packaging SHALL optimize useful information per context cost without hiding evidence limits. When a target context size is known or selected, the Context Broker SHOULD prioritize governing constraints, current task state, material evidence, decisions, assumptions, open questions, exact-value fields, and source references before secondary history or redundant prose. Repeated or derivable information SHOULD be compressed or referenced once; contradictory evidence SHALL remain represented rather than collapsed into a synthetic certainty. A generated compact context is DERIVED and SHALL remain traceable to the fuller authorized source projection.
+
 ## 10.4 Routes
 
 Possible routes:
@@ -1374,7 +1909,7 @@ Possible routes:
 - reverse integration in which a subscribed external assistant is granted bounded access to Omnevum through an admitted standard/app/connector;
 - LAN/self-hosted endpoint;
 - metered cloud API/provider;
-- manual handoff to an external assistant;
+- manual handoff to an external assistant using a bounded Context Export/Handoff package;
 - none.
 
 Route selection SHALL consider privacy/egress, task capability, target support, memory/thermal/storage burden, latency, marginal cost, subscription/quota state, availability, and current provider terms.
@@ -2374,7 +2909,7 @@ Extract/provider-neutral AI routing, BYOK/local model support, explicit provider
 
 ## nFIRE
 
-Extract deterministic financial modeling, scenario exploration, explicit assumptions, year-by-year projections, calculation transparency, and QA patterns into Resources + Model/Visualize/Evidence capabilities.
+Extract deterministic financial modeling, scenario exploration, explicit assumptions, year-by-year projections, calculation transparency, and QA patterns into Resources + Model/Visualize/Evidence capabilities. The normative Finance / Resources specialization is Section 2.5; this migration note does not own or narrow that domain contract.
 
 ## FIFA-WC-Sim
 
@@ -3171,6 +3706,7 @@ Build the smallest daily-usable vertical product slice on final intended contrac
 - reminder state/reconciliation with truthful delivery capability reporting;
 - Evidence;
 - proportionate History/Version/undo for at least one material canonical workflow;
+- bounded Context Export/Handoff from at least one record/view/Space to Markdown/text plus structured/tabular portable formats where applicable;
 - presentation/personalization/i18n;
 - local Vault export/restore;
 - at least two materially different domain workflows sourced from owner/FOSS leverage, preferably one quantitative/modeling domain and one capture/knowledge/self domain;
@@ -3221,7 +3757,7 @@ Continuously harvest and integrate the highest-value owner/FOSS domain mechanics
 
 Priority families SHOULD include, subject to Pareto evidence:
 
-- finance/accounting/investment/portfolio/planning/modeling;
+- finance/accounting/investment/portfolio/planning/modeling, with the statement-driven autonomous Finance / Resources specialization of Section 2.5 qualified early enough to prove heterogeneous import, reconciliation, budgeting, forecasting, financial goals, anomaly review, and exception-driven operation without required bank connections;
 - fitness/activity/health-record organization;
 - knowledge/notes/documents/web/archive capture/source annotation/research/reference/citation;
 - people/relationships/family history;
@@ -3311,6 +3847,7 @@ Release requires applicable closure of:
 - localization/personalization inheritance;
 - lazy-load/resource behavior;
 - update/rollback/uninstall/retirement;
+- applicable governed-descendant local contract and onward-generation inheritance under OMN-GOV-013;
 - exact-candidate mandatory tests PASS;
 - release artifact/provenance bound;
 - no hidden routine manual step.
@@ -3333,6 +3870,7 @@ At minimum:
 - generic schema-driven forms/tables/dashboard scaffolding reuses qualified FOSS or records why a bespoke implementation dominates;
 - runtime secrets/keys are broker-owned, and any passkey/device unlock has a tested independent portable recovery path;
 - reminder delivery claims match the exact browser/installed/companion profile rather than assuming closed-app background execution;
+- bounded AI-context export/handoff is available without an AI connection, supports human-readable and machine-readable portable formats, preserves provenance/uncertainty/scope, and cannot export credentials or hidden authority;
 - optional AI can be removed without breaking core;
 - subscription-backed AI routes are terms/currentness/cost qualified, expose no reusable vendor credentials to modules, and cannot silently fall through to paid API/credits;
 - local model execution reuses a qualified browser AI runtime or records why bespoke runtime machinery dominates;
@@ -3393,7 +3931,7 @@ OMN-ACC-002: After the app shell is cached, the user performs core local workflo
 
 OMN-ACC-003: The user changes branding from Omnevum to JohnOS, changes logo/theme/lens labels, upgrades Omnevum, and retains personal branding without changing canonical record identities.
 
-OMN-ACC-004: The user switches between accessible Light and AMOLED Dark themes; critical state, focus, text, charts, and interactions remain readable and accessible.
+OMN-ACC-004: The user switches among Concept Alpha, Concept Beta, and Concept Gamma and between Light and AMOLED Dark modes within each family. Critical state, focus, text, charts, telemetry, and interactions remain readable and accessible; the same canonical records, commands, and Home consideration order remain in place; and the selected family/mode persists across restart.
 
 OMN-ACC-005: Safe Presentation Mode recovers from a deliberately broken custom presentation profile without deleting that profile or canonical data.
 
@@ -3583,7 +4121,156 @@ OMN-ACC-097: If Place/Geo admits nontrivial client-side spatial analysis, repres
 
 OMN-ACC-098: If spreadsheet import/export is admitted, representative XLSX/ODS/CSV-class fixtures are processed through a qualified browser-capable FOSS route such as SheetJS Community Edition where fit. Source/release identity follows the canonical upstream, active content/macros remain inert, formula/value/type/date-loss behavior is reported and tested, and import/export does not turn a spreadsheet parser into canonical domain ownership.
 
+OMN-ACC-099: A 320 CSS pixel equivalent viewport is exercised against Home, Capture, an active lens, Assistant, and System/Recovery at 100% and 200% text scaling. Each surface reflows to a single column with no horizontal scrolling of first-party chrome or content, no clipped or overlapped control, and no unreachable target. Any intrinsically two-dimensional region scrolls within its own explicit bounds without propagating horizontal scroll to the page.
+
+OMN-ACC-100: Every interactive target on the primary surfaces is measured programmatically. Each commits-, dismisses-, snoozes-, or navigates-class target presents a hit area of at least 44 x 44 CSS pixels with at least 8 CSS pixels of separation from adjacent independent targets, at every admitted density preference, and Capture invocation, lens switching, staging disposition, and sheet confirm/cancel all fall within the lower 50% of the viewport.
+
+OMN-ACC-101: All six bound built-in family/mode palettes are evaluated programmatically against every painted text/plane pair and every interactive-boundary/focus/state-bearing-graphic pair actually admitted on the primary surfaces. Body and metadata text meets at least 4.5:1, large text at least 3:1, and every interactive boundary, focus indicator, and state-bearing graphic at least 3:1 against every adjacent built-in plane on which it is used. A deliberately introduced failing pair fails the release gate rather than being waived.
+
+OMN-ACC-102: A deliberately broken or contrast-failing active family/custom presentation profile is loaded. Safe Presentation Mode renders Home, System, and Recovery from the bound Concept Gamma Light or AMOLED Dark baseline of Section 3.6.1 without network access, without parsing the broken profile, without deleting the selected family/profile or canonical data, and reports the substitution; the user can subsequently repair, reset, or discard the profile through an admitted command.
+
+OMN-ACC-103: In every built-in family in both Light and AMOLED Dark modes, every consequential state on Home, Capture, and an active lens - including action versus synergy, which share a hue within each pair - remains distinguishable under monochrome and representative color-vision-deficiency simulations because each state carries a non-color label, icon, shape, textual/segmented indicator, or positional carrier.
+
+OMN-ACC-104: A Home consideration item is inspected without navigating away from Home. It renders its source/evidence count with a path to the sources, an uncertainty value or an explicit UNKNOWN, a "why this appeared" statement naming the originating signals, and working one-tap snooze and dismiss. The empty state renders as a calm first-class state containing no counter, streak, score, or prompt to engage.
+
+OMN-ACC-105: An item is staged in Capture and the sheet is dismissed, scrolled, and left idle past any suggestion timeout. No routing suggestion self-commits; raw provenance remains displayed ahead of interpretation; suggestion origin (deterministic or AI) and confidence remain visible; and commit, defer-to-Triage, and discard each route through their distinct admitted commands. Disabling a Device/Input modality degrades only that modality's control, explicitly.
+
+OMN-ACC-106: Opening the same canonical record from two different lenses reaches the same record identity with no writable duplicate, shows the appropriate owning-lens breadcrumb/context, and renders cross-lens relationships as navigable references. Lens navigation reachability at 320 CSS pixels is governed by OMN-ACC-111.
+
+OMN-ACC-107: Persistent telemetry on each primary surface is verified against injected fault states: replication disabled, backup stale, Effect/Outbox backlogged, and a capability degraded. The surface reports the true state or UNKNOWN, never an optimistic assumption, and the telemetry is not rendered as a score, streak, or engagement metric.
+
+OMN-ACC-108: A locale using a script poorly served by each built-in family's preferred stack, and a right-to-left locale, are exercised across the primary surfaces in Alpha, Beta, and Gamma. Content renders in a qualified locale-appropriate face with correct directionality and no clipped or overlapping text at 200% scaling; theme identity degrades gracefully rather than forcing an illegible serif, sans-serif, or monospace aesthetic.
+
+OMN-ACC-109: A fresh install is opened and used immediately - a record captured and retrieved - with no account, no configuration step, and no dismissible tour presented. The opening state truthfully declares local-only empty storage. The later shaping prompt appears only after accumulated real use, is permanently dismissible, remains available on demand, and gates no capability; every lens is reachable before and after it.
+
+OMN-ACC-110: Home focus mode is enabled and disabled. Both presentations contain the same items in the same consequence order with the same evidence, uncertainty, why-this-appeared statement, and admitted commands. Focus mode hides no item, gates no advancement, and the preference persists across restart.
+
+OMN-ACC-111: With four lenses pinned, all eight default lenses are reached from any primary surface in one interaction through the overflow grid at 320 CSS pixels and at 200% text scaling. An unpinned lens made active remains visible in the bar, no lens becomes unreachable, and the grid ranks, hides, or demotes no lens by usage.
+
+OMN-ACC-112: A record detail surface is opened with a derived index deliberately degraded. Fields, relationships, history, and evidence all remain reachable through continuous scroll, the sticky segment bar jumps correctly and reports the in-view segment, relationships render as navigable references rather than editable copies, and every edit routes through the owning semantic command.
+
+OMN-ACC-113: Four staged Triage items are dispositioned as a batch, one of which is forced to fail. Per-item outcomes are reported individually, the failed item remains staged rather than being dropped, and no batch disposition is offered whose consequence the collapsed row cannot state. Expanding a row in place exposes full provenance and per-item commands without being required to act.
+
+OMN-ACC-114: A plain search returns results grouped by owning lens with match reasons and the active Space/Scope bound stated. Facet chips are added on demand, each remains individually removable and expressible in the query, and the filtered set saved as a named view creates no writable copy and no second index authority.
+
+OMN-ACC-115: The Assistant is invoked standalone and from a record. Both report the same scope model; the record entry defaults to that record and its authorized relationships and states the bound; neither entry silently widens context. Every proposed action names its semantic command and affected records and requires explicit confirmation. With all AI routes disabled both entries degrade honestly and no core function becomes unreachable.
+
+OMN-ACC-116: A reversible deletion executes immediately with a segmented undo indicator carrying an explicit numeric remaining time; undo restores the record fully. A hard operation instead pre-confirms with a blast radius computed from the actual graph - affected records, orphaned and preserved relationships, artifacts, reversibility window - and where a consequence cannot be computed the surface says so rather than presenting an optimistic or absent radius. No undo is offered for an operation that cannot be undone.
+
+OMN-ACC-117: With the confidence toggle off, no field displays a confidence indicator. With it on, segmented confidence, source count, and last-verified time appear for every field in view and the preference persists. An injected genuine conflict surfaces in both states, retains both values with provenance, remains explicitly unresolved, and is not auto-resolved by recency or confidence score.
+
+OMN-ACC-118: Telemetry is verified in its quiet healthy form on every primary surface and then driven across each escalation threshold - stale backup, failed Effect/Outbox delivery, degraded capability, unresolved conflict, storage pressure. Each escalates into a first-class Home item with full evidence and disposition controls, thresholds are inspectable and adjustable, and a healthy system produces no manufactured escalation.
+
+OMN-ACC-119: A Review template is left unopened for an extended simulated period; no notification, due date, streak, decay, or pressure of any kind is produced. Opening it runs a skippable, abandonable, resumable stepper whose prompts cite motivating records and offer admitted commands; partial completion is accepted as terminal without penalty.
+
+OMN-ACC-120: Admitted motion is measured to complete within 200ms, to occur only at state-change origins, and never to delay availability of the resulting control. A platform reduced-motion preference automatically selects zero-motion mode, in which every transition becomes an instant state swap with no loss of function or information. Haptics fire only on user-initiated commits and are independently disableable without losing any outcome signal.
+
+OMN-ACC-121: A presentation preference is changed in place - lens pinning from the bar, density from the surface being read, a term from its label - and appears identically in System > Presentation; the reverse edit propagates identically back. Neither path exposes a preference the other cannot reach, and the resulting profile resets cleanly without touching canonical records.
+
+OMN-ACC-122: Each named accessibility profile is selected in turn. Each expands to reveal every individual setting it changed, user edits to those settings survive and are not silently reverted, no function is gated, and the standard profile's accessible baseline is never reduced. A platform-reported accessibility preference is honored on first run without the user locating a setting.
+
+OMN-ACC-123: A shell-only update applies silently and appears in the version ledger with time and rollback path. An update carrying a canonical schema migration does not apply silently: it states the migrations, affected record classes, verified backup state and age, and rollback path, and offers to create a backup when none is recent. The migration is then interrupted and the system neither silently resets data nor loses the rollback path.
+
+OMN-ACC-124: A bounded share is constructed with every linked record, artifact, relationship, and history element defaulting to excluded and each inclusion stating its transitive consequence. The unskippable recipient-eye preview renders exactly what leaves the system, explicitly names what is excluded, and the exported payload matches the preview in content. Credentials, AI authority, and out-of-scope linked records do not leak.
+
+OMN-ACC-125: The application shell is deliberately broken in two ways. In the first, the degraded normal Recovery path renders from baseline tokens, states what failed and what is intact with verified Vault state, and offers repair, baseline-theme, and restore. In the second, where that path itself cannot render, the visually distinct last-resort console is reached through its documented stable route with no theme, language pack, font, module, index, or network available, reports record integrity and Vault state, and completes an immediate export. Neither path deletes the presentation profile, language pack, or canonical data.
+
+OMN-ACC-126: The export surface is reached from System with no retention prompt, reason-for-leaving question, or added friction, and each of the full Vault, human-readable, and artifact-originals exports states its record count and size and is read back successfully with Omnevum absent. The guided retirement flow then refuses to wipe until an export has been read back and verified within the flow, or until the user separately and explicitly records intent to destroy without retaining a copy; retirement is never initiated by the system, an update, or storage pressure.
+
+OMN-ACC-127: An operation carrying an externally-observable effect is undone within its window. The effect is withdrawn from the Outbox undelivered and never reaches the external system. A second operation whose effect the transport will not defer is verified to take the pre-confirmation path instead, showing no undo affordance, and an effect that has already left the system is never presented as undoable.
+
+OMN-ACC-128: A new application shell is activated by the runtime while a schema migration remains unapproved. The new shell either refuses control or starts read-compatible against the unmigrated data, performs no part of the migration, and leaves the system fully usable after the user declines. Exactly one shell version holds control throughout, and a shell that cannot operate against the unmigrated data reports that condition instead of migrating to resolve it.
+
+OMN-ACC-129: A system configured with a sync replica, an off-origin backup, and a remote artifact tier enters the retirement flow with one endpoint made deliberately unreachable. Every copy is enumerated with its last-known state, each is labelled as deletable, request-only, or unreachable, the unreachable one is reported as UNKNOWN rather than omitted, and retirement is not reported complete while any copy remains unverified as deleted.
+
+OMN-ACC-130: The same fixed application state is rendered in Alpha, Beta, and Gamma across Home, Capture, an active lens, Assistant, and System/Recovery. Family-specific typography, spacing/grouping, separators, and metadata treatment match Sections 3.6 and 3.8, while consideration membership/order, evidence/uncertainty, Capture provenance, lens reachability, record identity, Assistant scope, telemetry facts, admitted commands, and Recovery reachability remain semantically identical.
+
+OMN-ACC-131: Every built-in family is exercised in Light and AMOLED Dark at 320 CSS pixels, 100% and 200% text scaling, and the admitted touch/input profiles. No family introduces page-level horizontal scrolling, clipped controls, sub-44 x 44 consequential targets, color-only state, or an alternate mutation path.
+
+OMN-ACC-132: A user selects Alpha, then Beta, then Gamma, restarts, upgrades across a compatible release, exports/imports the presentation profile, and resets presentation. The selected family/mode persists where policy says it should, remains separately resettable from canonical data, and no switch or reset changes canonical IDs, records, permissions, sync identity, or Space/Scope.
+
 ---
+
+
+OMN-ACC-133: Finance receives a mixed batch containing at least a transaction-account statement, credit-card statement, investment statement/export, debt statement, and income/pay record in materially different supported formats. It classifies each source, preserves/fingerprints the originals, extracts candidate records with provenance, and accepts all mechanically validated records while routing only material unresolved exceptions to Triage/Clarify.
+
+OMN-ACC-134: The same finance source batch is imported twice, including one overlapping statement period under a renamed file. Source fingerprints/overlap and transaction identity prevent duplicate canonical records, preserve legitimate repeated real-world transactions, and report any ambiguous near-duplicate rather than silently deleting it.
+
+OMN-ACC-135: A validated account-specific parser profile automatically processes several subsequent statements with no routine user review. A later statement deliberately changes its table structure/sign convention; structural invariants detect drift, prevent silent stale-profile parsing, preserve the source, and route only the affected source/fields for re-detection or review.
+
+OMN-ACC-136: Chequing shows a credit-card payment and an internal savings/investment transfer while the receiving accounts show corresponding inflows. Finance links the pairs, reconciles the affected statements, excludes the card payment/internal transfers from income/spending totals, preserves the underlying account movements, and leaves an injected unmatched transfer explicitly unresolved.
+
+OMN-ACC-137: A representative monthly finance update imports several hundred transactions. Previously learned merchant/category/transfer rules and reconciliation invariants resolve the routine majority automatically; the user is shown only a small exception set whose ambiguity or consequence is material. Resolving one repeated exception creates a scoped reversible rule that removes the same routine burden on the next equivalent import.
+
+OMN-ACC-138: The user creates a dynamic emergency-reserve goal defined as six months of rolling essential spending plus fixed-amount/date goals for a home purchase and travel. New statements change essential spending and free cash flow; the emergency target, each goal's funded amount, required pace, forecast completion, and trajectory update automatically without the user re-entering balances or monthly progress.
+
+OMN-ACC-139: Two goals draw on one savings account. Explicit virtual allocations prevent the same dollar from fully funding both goals, show unallocated cash separately, and survive import/update/backup/restore. Requested aggregate contributions are then forced above sustainable forecast free cash flow; Finance reports the funding deficit and models at least two transparent alternatives without silently reprioritizing the user's goals.
+
+OMN-ACC-140: With no manually entered budget, Finance derives an observed spending/income baseline from sufficient history, recurrence, and seasonality and produces actual-versus-baseline analysis. The user then adopts a target plan; Finance keeps observed baseline, target, actual, and forecast distinct, and after repeated structural variance flags the target assumption as stale rather than repeatedly presenting the same variance as a new behavioral failure.
+
+OMN-ACC-141: Finance creates a base/downside/upside 12-month cash-flow forecast and stores the forecast vintage. Subsequent statement imports replace elapsed periods with actuals without deleting the original forecast, calculate forecast error/bias where meaningful, and update future forecasts while preserving the historical comparison.
+
+OMN-ACC-142: Finance infers recurring salary, monthly subscriptions, an annual insurance bill, and a periodic reimbursement pattern. A simulated missing payroll, subscription price increase, duplicate recurring charge, and late refund are detected with source evidence, while a holiday-shifted normal payroll and known annual renewal do not produce false urgent alerts.
+
+OMN-ACC-143: A new transaction is flagged because it is a first-time merchant, materially above the account's robust historical range, and part of a rapid sequence. The review case shows each signal, source/provenance, baseline comparison, plausible benign explanation, and priority without declaring fraud. Marking the merchant/purchase legitimate updates only the appropriate scoped baseline/rule; a later materially different anomaly at the same merchant can still surface.
+
+OMN-ACC-144: Suspicious-transaction analysis is exercised on an account with weak history and on another with strong seasonal history. The weak-history case reports lower confidence/insufficient baseline rather than fabricated normality; the seasonal case avoids false alerts for a known annual pattern while still detecting an injected duplicate/error pattern. No opaque risk score is the sole explanation.
+
+OMN-ACC-145: One monthly credit-card statement and one investment valuation are deliberately omitted. Finance infers the missing period/staleness, qualifies cash-flow/net-worth/goal conclusions that depend on them, and does not coerce the missing values to zero. Importing the missing/current sources automatically clears only the affected data-quality conditions and recomputes dependent projections.
+
+OMN-ACC-146: Finance is exercised end-to-end with all live financial connectors disabled and with no financial-institution credentials stored anywhere. User-supplied statements/exports alone support reconciliation, reporting, budgeting, goals, forecasts, anomaly review, and a full portable Vault backup/restore on a materially different supported browser profile.
+
+OMN-ACC-147: Hostile spreadsheet/PDF fixtures contain formula-injection strings, macros/active content, remote links/resources, and extracted markup. Import/extraction preserves the original source but does not execute formulas/macros/scripts/remote fetches or grant the content canonical-write/network/effect authority. Spreadsheet export/import tests report any formula/value/type/date loss relevant to the finance claim.
+
+OMN-ACC-148: After a material finance import, the Resources/Finance surface automatically generates an evidence-linked brief covering the applicable current position, material changes, budget/cash-flow outlook, goals, anomalies/review items, recurring/fee/refund/leakage changes, forecast, and data-quality limitations. A second update with no material change produces a quiet result rather than manufactured alerts or busywork.
+
+OMN-ACC-149: A coupled what-if scenario changes a material assumption such as income, a major purchase, debt payment, or goal contribution. Finance propagates the change through cash/liquidity, budget, debt, savings, goals, forecast, and net-worth projections where applicable, preserves the baseline for comparison, states every material assumption, and proposes alternatives without silently mutating the user's adopted plan.
+
+OMN-ACC-150: A representative workflow receives a source containing information already needed by three or more modules/views. The user supplies the information once. Omnevum extracts or records it once with provenance, reuses it across every authorized consumer, and requires no duplicate typing or copy/paste merely because the same fact appears in multiple workflows.
+
+OMN-ACC-151: A user corrects one material imported value or classification. The correction is committed once through the canonical owner; every materially dependent projection is automatically recomputed or explicitly invalidated, and no second module asks the user to repeat the same correction to restore consistency.
+
+OMN-ACC-152: A representative ordinary-use benchmark compares the accepted release with its predecessor for required user fields, manual classifications, confirmations, review items, navigation steps, and reconciliation/maintenance actions. Any material increase in avoidable human burden without a stronger requirement or measured benefit fails the acceptance gate.
+
+OMN-ACC-153: Finance receives a routine monthly batch whose fields are already present in supported statements/exports. Account metadata, transactions, balances, recurring flows, classifications covered by confirmed rules, reconciliations, budgets/actuals, forecasts, goals, and the update brief refresh without manual transcription. The only user-visible work is a bounded set of materially unresolved exceptions, which may be empty.
+
+OMN-ACC-154: From one fixed authorized Space/Scope containing records, relationships, source provenance, derived values, uncertainty, and at least one unresolved conflict, the user generates Markdown, plain-text, and JSON context exports without manually recreating the content. All three exports represent the same bounded logical context; each retains sufficient provenance, truth/derived status, conflict state, generation metadata, and an omission/redaction manifest where needed.
+
+OMN-ACC-155: A homogeneous transaction or observation view is exported to CSV and JSONL. The CSV preserves row/field semantics, exact values, currency/unit metadata needed to interpret the table, and source linkage at the declared level. A deliberately hierarchical/many-to-many selection is refused as a misleading single CSV or exported as explicitly separated tables/bundle rather than silently flattened.
+
+OMN-ACC-156: A manual handoff package is generated for an external AI from a current task plus related sources. The package separates user objective/instructions from source content, canonical facts, assumptions, derived analysis, and unresolved issues; excludes credentials, hidden permissions, unrelated records, and executable content; and can be read with Omnevum absent. No export grants the external AI Omnevum write authority.
+
+OMN-ACC-157: A saved Context Export profile is rerun after source records change. Current authorization is re-evaluated, corrected/removed source meaning propagates, and the new export reflects the current state without manual reselection. A delta export against the prior export identifies material additions, modifications, deletions/invalidation, and unchanged references without duplicating the entire prior context.
+
+OMN-ACC-158: A Context Export is constrained to a declared size budget. Omnevum removes irrelevant/redundant material before compressing material evidence, preserves required exact-value fields, labels every derived summary, reports omitted material in an inspectable manifest, preserves unresolved contradictions, and does not claim the compact package is lossless when information was omitted or summarized.
+
+OMN-ACC-159: One canonical savings account and one recurring monthly surplus are linked to an emergency reserve, retirement goal, FIRE goal, home goal, and vacation goal. The records are stored once; each goal sees the same underlying source values through typed relationships; explicit allocations prevent exclusive dollars from being multiply claimed; and changing the balance or surplus automatically updates every materially dependent trajectory.
+
+OMN-ACC-160: A user changes a planned vacation's estimated cost/date in the Travel-owned plan. Finance receives only the authorized financial projection, updates the vacation funding requirement and cash-flow forecast, recalculates affected home/retirement/FIRE trajectories where the shared resource conflict is material, and leaves itinerary/travel semantics under the Travel owner.
+
+OMN-ACC-161: A compensation change is imported from a supported Work/pay source. Without duplicate entry, Omnevum updates actual/forecast income, budget capacity, savings rate, debt capacity, retirement contributions/trajectory, FIRE trajectory, and other dependent goals. The impact view identifies the common originating change and does not represent each downstream update as an independent source fact.
+
+OMN-ACC-162: A user-defined FIRE goal is modeled as a composite dependency graph containing at least observed savings/investments, a spending assumption, contribution rate, retirement/FIRE date, and at least one current-rule or user-assumption input. Changing one assumption recomputes the model, preserves the prior scenario for comparison, labels assumptions versus facts, and does not present FIRE as a recommended objective or one magic-number truth.
+
+OMN-ACC-163: A constrained monthly surplus cannot fully fund all active goals. Omnevum detects the shared-resource conflict once, shows the aggregate shortfall and affected goals, and prepares multiple feasible alternatives that preserve user-defined hard constraints. It does not silently lower a goal priority, double-count the same dollar, or optimize to a hidden score.
+
+OMN-ACC-164: A candidate intervention has supported positive effects on two goals and a modeled downside on a third domain. Omnevum surfaces both the synergy and conflict, identifies evidence/assumption status for each edge, and preserves the option to take no action. A merely correlated historical pattern is not promoted to a causal synergy claim.
+
+OMN-ACC-165: A material canonical record is corrected or removed. Dependency traversal identifies every materially affected authorized projection across at least three different lenses/domains, recomputes safe derived state, invalidates uncertain outputs, and presents one concise change-impact explanation without requiring manual cross-module repair.
+
+OMN-ACC-166: Cross-domain relationship discovery is tested with one deterministic high-confidence link, one ambiguous link, and one prohibited/out-of-scope source. The deterministic reversible link is created automatically, the ambiguous link remains a proposal/UNKNOWN until resolved, and the excluded source contributes no relationship or inference. Link creation alone grants no new permission or disclosure authority.
+
+OMN-ACC-167: A dependency graph contains both an accidental cycle and an intentionally modeled feedback loop. Ordinary propagation detects and quarantines the accidental cycle without recursion, oscillation, arbitrary last-write ordering, or canonical corruption. The intentional loop executes only inside a Model with explicit state/time, assumptions, termination/convergence and failure behavior; a non-convergent run is reported rather than forced to a value. Scenario edges remain isolated from the adopted baseline.
+
+OMN-ACC-168: A Context Export includes hostile text beginning with spreadsheet formula/control prefixes and a value resembling an external link. Markdown/JSON preserve inert data semantics; the spreadsheet-compatible CSV/TSV profile prevents execution under its claimed consumer tests or clearly uses a separately identified raw/non-spreadsheet-safe representation. The export reports any round-trip-affecting transformation and grants no network or external-effect authority.
+
+OMN-ACC-169: Finance ingests a revolving-credit statement, an investment statement with external cash flows, and an insurance statement. It preserves statement balance/due/minimum/grace-relevant terms where supplied; computes investment performance only with a named appropriate money- or time-weighted method and period assumptions; and records insurance premium/renewal/limits/deductible without claiming coverage adequacy or suitability.
+
+OMN-ACC-170: Suspicious-transaction evaluation includes an authenticated/user-initiated transfer that contextual evidence indicates may be scam-induced, a familiar-merchant high-impact anomaly, and a benign anomaly. Finance does not treat authentication/familiarity as proof of legitimacy, keeps possible scam/coercion distinct from confirmed unauthorized activity, learns the benign resolution only within its valid scope, measures false-positive/observable missed-known-issue behavior when enough history exists, and never treats absence of an alert as proof of safety.
+
+OMN-ACC-171: A long-horizon retirement/FIRE scenario uses investment balances, contributions, withdrawals, inflation, fees, taxes, and a retirement date. The projection keeps nominal/real and pre/post-tax bases consistent, exposes sequence/path and longevity assumptions, preserves deterministic and stochastic/sensitivity outputs as model results rather than facts, and shows how changing one assumption propagates through the connected goal portfolio without silently changing the user's adopted plan.
+
+OMN-ACC-172: A generated first-party package or durable workflow is handed to a fresh qualified engineer without chat history or this MPES. Its native project/spec/manifest and referenced public contracts contain or enforce the applicable local truth, authority, privacy/security, accessibility, update/invalidation, verification, recovery, versioning, maintenance, retirement, and onward-descendant obligations needed to continue correctly. A generated non-self-executing artifact that cannot carry such behavior is instead protected by an explicit generation/validation/update boundary; no applicable requirement disappears merely because the descendant medium is simpler.
 
 # 28. Requirement namespaces and registers
 
@@ -3595,6 +4282,7 @@ Maintain machine-readable canonical registers using stable IDs. Suggested namesp
 - OMN-PERS-* branding/theme/personalization
 - OMN-I18N-* localization/internationalization
 - OMN-SEM-* semantic/life-model
+- OMN-FIN-* finance/resources domain specialization
 - OMN-DATA-* canonical data/storage
 - OMN-CAP-* shared capabilities
 - OMN-PWA-* static hosting/PWA
@@ -3709,7 +4397,7 @@ Non-FOSS/source-available/proprietary comparators may inform XY/capability-gap a
 
 ## 29.6 Consolidated material owner decisions from the governing conversation
 
-The following decisions are already normative through the sections above; this list is a non-authoritative navigation aid so a fresh engineer can see the coupled product intent without reconstructing conversation chronology:
+The following decisions are already normative through the sections above; this list is a non-authoritative navigation aid so a fresh engineer can see the coupled product intent without reconstructing conversation chronology. The 0.17.0 additions incorporate the governing conversation's finance-workstation and maximum-product-autonomy decisions as owner requirements rather than as external evidence:
 
 - Product identity: **Omnevum**. Tagline: **Life, in context.**
 - Product form: one holistic, synergistic, harmonized, DRY personal Life OS rather than a suite of siloed trackers.
@@ -3732,7 +4420,7 @@ The following decisions are already normative through the sections above; this l
 - Launchpad-first acceleration: before greenfield shell work, characterize close whole-app FOSS such as NeumanOS and Kurumi and adopt/harvest across them when that produces faster lower-lifecycle-cost compliance with Omnevum constraints.
 - Scalable portability: the simple portable Vault archive remains baseline, while large/frequent backups may use qualified incremental content-addressed encrypted repository patterns inspired by mature backup/sync FOSS; browser-native substrates such as SelfStore/remoteStorage-class tooling must be evaluated before bespoke sync/backup machinery, and external companions remain optional.
 - Personal ownership: Omnevum is the distribution; the user may make the running system their own at any time, including renaming it (for example JohnOS), theming, terminology, layout, and other presentation choices, without semantic/data migration.
-- Baseline presentation: accessible high-contrast **Light** and **AMOLED Dark** themes; customization remains bounded only by accessibility/security/Recovery/semantic integrity rather than brand preference.
+- Baseline presentation: three accessible built-in visual families - Alpha (Tactile Monastic / Dense Type), Beta (Humanist Editorial / Contextual Flow), and Gamma (Industrial Utility / Segmented HUD) - each with high-contrast Light and true-black AMOLED Dark modes; Gamma is the distribution/Safe Presentation default, while user selection and customization remain bounded only by accessibility/security/Recovery/semantic integrity rather than brand preference.
 - Internationalization: stable meaning is language-neutral; multilingual/RTL/locale support and user terminology are presentation layers, not schema migrations.
 - Shared capabilities: Acquire/Ingest, Triage/Clarify, Track/Observe, Data, Artifact/preservation/transformation, visualization, analysis/modeling, History/Version, search, time, Place/Geo, relationships, Space/Scope, evidence, Annotate/Markup, selective Share, Compose/View, Effect/Outbox, automation, AI, storage, sync, Recovery, and other generic mechanics are implemented once when legitimately shared and reused across modules.
 - External-effect reliability: one typed Effect/Outbox owns deferred/retryable/ambiguous remote effects, revalidates authority before replay, and never equates retries with exactly-once delivery.
@@ -3750,6 +4438,15 @@ The following decisions are already normative through the sections above; this l
 - Engineering-agent reuse: the durable controller is host-neutral; current FOSS coding-agent harnesses and official subscription-backed Codex/Claude/Antigravity surfaces are benchmarked before building a custom agent runtime, and switching hosts must not lose project truth or weaken evidence gates.
 - Compliance acceleration: aggressive FOSS adoption is paired with ORT/ScanCode/REUSE/SPDX-class automated license/source-obligation evidence rather than a hand-maintained attribution bottleneck.
 - Human involvement: the owner is expected to return for completed-product acceptance; earlier contact is only for an actually irreducible external/legal/physical/subjective gate after legitimate alternatives are exhausted and all independent work is complete or legitimately blocked.
+- Product-runtime autonomy: Omnevum itself, not only its engineering process, is optimized for maximum justified autonomy and minimum human attention; routine admitted work should infer, reconcile, learn scoped rules, and complete reversibly or provisionally, while Triage/Clarify becomes an exception surface for only material unresolved cases.
+- Minimum-human-input invariant: Omnevum should obtain or derive each fact once, preserve provenance, and reuse it across every authorized workflow; avoidable retyping, duplicate classification, repeated confirmation, cross-module propagation, and manual maintenance are defects unless a stronger truth/safety/authority requirement justifies them.
+- Portable AI context: any authorized record/view/search/review/Space can be packaged locally for AI/manual handoff in Markdown/text and appropriate tabular/structured formats, with provenance, uncertainty, scope, redaction/omission state, reusable profiles, and compact/delta options; context export never conveys credentials or write authority.
+- Whole-system synergy: authorized records/goals/plans/resources are connected by typed dependency and contribution relationships wherever materially useful, one canonical fact can feed many projections, shared consumptive resources cannot be double-counted, and impact/synergy/conflict analysis propagates changes across domains without turning relationships into new authority or speculative causality.
+- Financial goal portfolio: savings and cash flow are modeled as shared resources that can support retirement, FIRE, travel/vacation, home, emergency, debt, education, tax and other goals through explicit allocations/dependencies; composite goals reuse the same observed financial model and update automatically when inputs change.
+- Recursive descendant sufficiency: generated apps/packages/workflows/specifications and other substantive descendants inherit the smallest sufficient applicable Omnevum/Omni contract in native durable form, including onward propagation when they themselves generate descendants.
+- Dependency-loop safety: cross-domain propagation is cycle-detecting; genuine feedback is modeled explicitly with bounded solver/termination semantics, while scenario relationships remain isolated from adopted canonical state.
+- Finance consolidation: there is no separate canonical finance application. Finance is a Resources specialization over Omnevum's shared ingestion/data/model/evidence/automation/recovery fabric, with user-supplied heterogeneous statements/exports as the complete baseline and no required bank connection or credential.
+- Finance outcome: statement import should autonomously maintain reconciled transactions/accounts, cash flow, budgets, debt/investment/net-worth views, dynamic goals with non-double-counted allocations, recurring flows, refunds/leakage, explainable suspicious-transaction review, forecast vintages/accuracy, data quality, and a concise change brief; human work is reserved for material ambiguity, legitimate value judgments, and consequential external actions.
 
 # 30. Immediate autonomous execution directive
 
@@ -3784,7 +4481,7 @@ The AI engineer is encouraged to be maximally creative, pragmatic, and aggressiv
 Speed SHALL be achieved by eliminating unnecessary work, solving the underlying problem rather than the first proposed mechanism, and reusing proven machinery. It SHALL NOT be achieved by hiding uncertainty, weakening requirements, violating rights/licenses, skipping validation, accepting unsafe automatic upstream updates, or creating unmaintainable integration debt.
 # 31. Convergence status and execution handoff
 
-This v0.12.0 specification is the converged controlling design baseline for the coupled scope defined in the front matter. It incorporates the material product, personalization, internationalization, static-host, storage/sync, FOSS code-adoption/capability-superset, XY/outcome-analysis, ecosystem-radar/updateability, personal-data acquisition/reconciliation/triage, Track/Observe, History/Version, Artifact/preservation/transformation, Annotate/Markup, Place/Geo, selective Share, Compose/View including spatial canvases, Space/Scope, Effect/Outbox, credential/key/device-unlock brokering, reminder-delivery honesty, scalable Vault repository, open personal-data endpoints, browser-native Vault/sync substrate reuse, NeumanOS/Kurumi launchpad harvesting, schema-driven app/UI acceleration, browser-local analytical/search reuse, optional semantic-graph and MCP/open AI-tool interoperability, terms-aware subscription-backed/reverse AI routes, Device/Input brokering, browser-local AI/speech-runtime reuse, safe declarative automation, browser-native extraction/Web-capture/document-operation/scanning/media/spreadsheet/PDF-OCR adapters, WARC/WACZ parsing/replay integration, standards-grade recurrence/time and browser OAuth/OIDC client reuse, parser-aware HTML sanitization, citation/reference reuse, standards-first interoperability, MapLibre/PMTiles offline mapping and Turf-class geospatial analysis, optional WebRTC peer collaboration, browser SQLite/VFS/local-first substrate alternatives, browser-game-engine/browser-only-office-component/extension-sandbox reuse, current PWA/service-worker tooling qualification, signed supply-chain provenance/reproducibility diagnostics, current engineering-agent-host/harness reuse and lifecycle pruning, automated FOSS-compliance, specialist-domain harvest, extensibility, and autonomous-engineering decisions available in the governing conversation and supplied/current research through the convergence date.
+This v0.17.4 specification is the OMNI ASSURED / CONVERGED controlling design baseline for the coupled scope defined in the front matter. It preserves the complete v0.16.0 baseline and integrates the 0.17.x product-runtime autonomy, minimum-human-effort, Finance / Resources, portable AI-context-export, and whole-system relationship/synergy amendments plus the convergence corrections below. It is specification/release evidence for this document only; it is not evidence that Omnevum implementation, browser/provider qualification, finance calculations on real user data, app/game factories, or production release already exist.
 
 The convergence pass deliberately distinguishes:
 
@@ -3809,5 +4506,76 @@ CONVERGED here means the specification candidate reached an evidence-bounded fix
 The next normal action is autonomous execution of Section 30 and Phase 0, with parallel ecosystem/FOSS characterization, not another architecture-planning cycle. The engineer SHALL reopen this MPES only when implementation/research evidence establishes a material contradiction, missing requirement, changed owner direction, source/currentness invalidation, or a simpler stronger architecture.
 
 Before first production implementation, the durable controller SHALL materialize the machine-readable Requirement Register, Acceptance Scenario Register, support matrix, Capability Coverage Matrix, FOSS/Upstream Register, Patch/Fork Delta Ledger, license/provenance state, Ecosystem Radar queue, risk/threat register, and Phase 0 acceptance profile required by this MPES. This is traceability/acceleration work, not a request for renewed owner approval.
+
+The v0.13.0 visual-system pass additionally distinguishes:
+
+- the then-bound Gamma default palette and type ladder from a frozen aesthetic: Section 3.8 constrained the distribution default and the Safe Presentation Mode fallback, while Section 3.4 personalization freedom remained unchanged;
+- normative layout anatomy from component implementation: Section 3.9 constrains required elements and arrangement, not markup, framework, or styling mechanism;
+- a lens as a projection surface from a lens as a database: the eight default lenses gained presentation anatomy and no canonical ownership, writable state, or storage namespace;
+- a monospace default aesthetic from a monospace requirement for user content or for every script;
+- AA contrast as a machine-verified release gate from contrast as a design intention.
+
+The v0.13.0 pass introduced no new canonical schema, record type, storage namespace, permission, security principal, sync identity, or desktop-first assumption, and created no duplicate mutation authority. Sections 3.1, 3.3, 3.4, 3.5, 3.7, and 2.2 remain controlling and unmodified in substance; Section 3.9 elaborates their surfaces without superseding them.
+
+The v0.14.0 GUI/UX lifecycle pass additionally distinguishes:
+
+- a quiet default from a hidden capability: every escalation, confidence display, facet, focus mode, console, and retirement flow is reachable on demand from the surface it concerns, and none is the only route to a consequential fact;
+- proportional confirmation from uniform friction: reversibility, not the verb or the surface, determines whether an operation undoes or pre-confirms;
+- an escalation threshold from an engagement trigger: telemetry escalates on real consequence and a healthy system manufactures nothing;
+- presentation state from canonical state: focus mode, confidence toggles, pinned lenses, density, accessibility profiles, and saved views change what is shown and never what is true;
+- a degraded interface from a last-resort console: the first shares the product's visual language, the second deliberately does not, and the second exists precisely because the first can fail;
+- data exit as a permanent right from retirement as an optional ceremony: export is always available and unobstructed, wipe is always gated on verified export, and neither is ever initiated by the system;
+- an accessibility profile from a remedial mode: profiles bundle known-good settings, expand to their parts, gate no function, and never lower the standard baseline.
+
+The v0.14.0 pass introduced no new canonical schema, record type, storage namespace, permission, security principal, sync identity, or desktop-first assumption, and created no duplicate mutation authority. Every surface added in Sections 3.9 through 3.12 routes mutation through the existing semantic command spine of Section 3.3 and the canonical ownership rules of Section 4.2.
+
+The v0.15.0 convergence pass additionally distinguishes:
+
+- a bound token from a claimed distinction: a palette may not encode a semantic separation that fails its own contrast bound against the role it is separated from;
+- an undo affordance from a reversibility guarantee: an undo window is only honest while the effect it would withdraw is still held;
+- shell activation from schema migration: an automatically activated shell may take control, but never by migrating canonical data the user has not approved;
+- a wiped origin from a retired system: retirement is complete only when every enumerated copy is verified deleted, and unreachable is reported as UNKNOWN rather than dropped from the enumeration.
+
+The v0.16.0 tri-theme convergence pass additionally distinguishes:
+
+- a theme family from a color mode: Alpha, Beta, and Gamma define visual-system families, while Light and AMOLED Dark are mode variants inside each family;
+- visual diversity from semantic divergence: family switching changes presentation only and cannot alter consideration order, evidence, canonical ownership, command authority, scope, or Recovery;
+- a distribution default from exclusivity: Gamma remains the default/Safe Presentation baseline for continuity, while Alpha and Beta are equally supported built-ins rather than custom-theme examples;
+- visual-reference evidence from normative configuration: generated concept boards express design direction, while exact MPES text/tokens control implementation when rendered image text conflicts;
+- compact lens reachability from an obsolete eight-in-one-row assertion: OMN-ACC-106 now tests projection identity, while OMN-ACC-111 remains the one-step four-pinned-plus-overflow compact-navigation contract;
+- a declared contrast gate from token values that actually support it: built-in border tokens were strengthened where required so interactive-boundary use can satisfy the 3:1 bound across admitted built-in planes; the normative accessibility reference is refreshed to WCAG 2.2 AA while preserving stronger Omnevum target-size requirements.
+
+The v0.16.0 pass introduces no new canonical schema, record type, storage namespace, permission, security principal, sync identity, or desktop-first assumption, and creates no duplicate mutation authority. The three theme families share one semantic/layout/command system and remain presentation state under Sections 3.4 and 3.5.
+
+The v0.17.3 autonomy/finance/context-export/whole-system-synergy revision additionally distinguishes:
+
+- autonomous completion from hidden authority: Omnevum may eliminate routine user work only inside the owning domain's admitted reversible/provisional rules, while external/irreversible effects and irreducible value judgments remain bounded;
+- minimum human input from missing evidence: the system must eliminate avoidable transcription, duplicate maintenance, and repeated review by extracting/reusing/deriving what it already knows, while genuine unavailable facts and material ambiguity remain explicit rather than fabricated;
+- portable context from ambient authority: an AI context export is a bounded, inspectable data projection for handoff, not a credential, permission grant, whole-Vault disclosure, or alternate canonical store;
+- compact context from silent loss: context-budget optimization may remove redundancy or summarize with provenance, but omitted material and unresolved contradictions remain explicit and exact-value fields are preserved where required;
+- a review surface from a workflow tax: Triage/Clarify is reserved for material exceptions when evidence/rules can safely resolve routine cases;
+- a learned rule from permanent truth: parser/classification/reconciliation rules remain scoped, inspectable, reversible, provenance-bound, and drift-invalidated;
+- a finance domain specialization from a second product stack: Finance owns financial semantics while ingestion, artifacts, analytics, modeling, visualization, evidence, automation, storage, backup, and Recovery remain shared Omnevum capabilities;
+- statement-driven autonomy from financial-institution integration: the complete Finance core works from heterogeneous user-supplied records with no bank credentials or required live connection;
+- a financial goal from an account balance: goals use explicit logical allocation and trajectory/scenario semantics so the same dollar is not multiply claimed and the software does not silently choose among legitimate priorities;
+- connectedness from duplication: one canonical record may support many goals/plans through typed relationships and projections, while each fact/resource remains owned and stored once;
+- synergy from causality: Omnevum may identify multi-outcome opportunities and common bottlenecks, but modeled or correlated relationships remain labeled and cannot become observed causal truth without evidence;
+- goal portfolios from isolated progress bars: retirement, FIRE, vacation/travel, home, emergency, debt, education, tax and other financial goals share one financial resource/dependency model so one change propagates coherently and shared dollars are not double-counted;
+- anomaly review from fraud adjudication: suspicious-transaction signals are explainable evidence for attention, not automatic findings of fraud or authority for external account action;
+- a forecast from an actual: forecast vintages persist for accuracy/backtesting and never overwrite observed history;
+- a dashboard from Home: detailed finance analytics belong in Resources/Finance projections while global Home remains the bounded consequence-oriented consideration surface.
+
+This v0.17.3 candidate introduced finance-owned canonical record types/relationships only where the domain requires durable financial meaning and uses shared typed relationship/impact projections for cross-domain synergy; it created no new platform-level mutation authority, credential broker, notification center, backup system, AI authority, or external-effect path.
+
+The v0.17.4 convergence closure additionally distinguishes:
+
+- recursive semantic inheritance from copying the MPES: descendants carry only the applicable native contract, but no applicable truth/authority/security/recovery/lifecycle obligation disappears at a generation boundary;
+- a relationship cycle from a modeled feedback loop: accidental cycles stop propagation, while intentional feedback requires explicit model state, time, solver/termination, uncertainty, and failure semantics;
+- scenario linkage from canonical mutation: hypothetical dependency edges remain derived and scoped until deliberately adopted;
+- portable CSV/TSV data from spreadsheet execution authority: context exports are inert on their claimed consumer profile and preserve raw semantic values without allowing hostile source strings to become formulas or links by accident;
+- account growth from investment performance: performance claims identify method/period/cash-flow assumptions and do not confuse deposits with returns;
+- an authenticated/user-initiated transaction from a necessarily legitimate transaction: scam/coercion remains a separate evidence-bounded review possibility, and absence of an anomaly flag is not proof of authorization;
+- deterministic long-run averages from retirement/FIRE sustainability: long-horizon models expose nominal/real, tax/fee, timing, sequence/path, and longevity assumptions and use stronger path/sensitivity methods when their decision value justifies them.
+- a domain contract from a migration note: Finance / Resources is normatively defined in Section 2.5, while nFIRE and other owner projects remain source/migration evidence in Section 14 and cannot narrow the domain contract.
 
 A later MPES revision SHALL preserve this version as immutable history and use the normal impact, TDD/evidence, versioning, upstream-currentness, and CONVERGE rules.

@@ -35,6 +35,7 @@ import { SyncEngine, SyncFailure } from "../core/sync";
 import { createRecordAppDefinition } from "../core/factory";
 import { FACTORY_PREVIEW_APP_TITLE, FACTORY_PREVIEW_FIELDS, FACTORY_PREVIEW_GAME, FACTORY_PREVIEW_MANIFEST, factoryPreviewGameAdapter, type FactoryPreviewGamePayload } from "../core/factory-preview";
 import { isCleanupHistoryRecord, previewCleanup, reconstructCleanupHistory, type CleanupDecision, type CleanupPreview, type CleanupRecipe } from "../core/cleanup";
+import type { PackageAutomationRuntime } from "../core/package-automation-runtime";
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -51,7 +52,7 @@ function parseExternalEffectPayload(value: string): Record<string, unknown> | st
   throw new Error("The external effect payload must be a JSON object or string reference");
 }
 
-export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>): Promise<void> {
+export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>, packageAutomationRuntime?: PackageAutomationRuntime): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
   const onboardingDismissed = await store.getSetting<boolean>("onboarding.dismissed") === true;
   const safePresentationMode = readSafePresentationMode();
@@ -2940,7 +2941,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       await store.setSetting("presentation", nextPresentation);
       presentation = nextPresentation;
       if (localeChanged) {
-        await mountApp(root, store, commands);
+        await mountApp(root, store, commands, capabilityRuntime, packageAutomationRuntime);
         return;
       }
       applyPresentationProfile();
@@ -2982,7 +2983,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       await store.setSetting("presentation", imported);
       presentation = imported;
       if (localeChanged) {
-        await mountApp(root, store, commands);
+        await mountApp(root, store, commands, capabilityRuntime, packageAutomationRuntime);
         return;
       }
       applyPresentationProfile();
@@ -3084,6 +3085,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         return;
       }
       const result = await store.importVault(vault);
+      await packageAutomationRuntime?.restore();
       recoveryStatus.textContent = copy.importedMessage(result.imported, result.skipped, result.conflicts);
       await renderRecords();
     } catch (error) {

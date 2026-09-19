@@ -3,6 +3,9 @@ import { CommandBus } from "./core/commands";
 import { CanonicalStore } from "./core/storage";
 import { CapabilityRuntime } from "./core/capability-runtime";
 import { EffectRunner } from "./core/effect-runner";
+import { PackageAutomationRegistry } from "./core/package-automation-registry";
+import { PackageAutomationRuntime } from "./core/package-automation-runtime";
+import { PackageRegistry } from "./core/package-contract";
 import { mountApp } from "./ui/app";
 
 const root = document.querySelector<HTMLElement>("#app");
@@ -13,6 +16,8 @@ try {
   await store.open();
   await new EffectRunner(store).recoverInterrupted();
   const commands = new CommandBus(store);
+  const packageAutomationRuntime = new PackageAutomationRuntime(new PackageAutomationRegistry(new PackageRegistry()), store);
+  await packageAutomationRuntime.restore();
   const capabilityRuntime = new CapabilityRuntime([
     { id: "core.canonical", critical: true, start: async () => { await store.health(); } },
     { id: "core.search", start: async () => {
@@ -22,7 +27,7 @@ try {
     { id: "core.recovery", critical: true, start: async () => { await store.exportDiagnostics(); } }
   ]);
   await capabilityRuntime.start(undefined);
-  await mountApp(root, store, commands, capabilityRuntime);
+  await mountApp(root, store, commands, capabilityRuntime, packageAutomationRuntime);
 
   if ("serviceWorker" in navigator) {
     void navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(() => {
