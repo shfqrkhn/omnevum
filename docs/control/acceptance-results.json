@@ -2047,8 +2047,17 @@
         "line": 4184
       },
       "text": "A system configured with a sync replica, an off-origin backup, and a remote artifact tier enters the retirement flow with one endpoint made deliberately unreachable. Every copy is enumerated with its last-known state, each is labelled as deletable, request-only, or unreachable, the unreachable one is reported as UNKNOWN rather than omitted, and retirement is not reported complete while any copy remains unverified as deleted.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/retirement.ts#enumerateRetirementCopies",
+        "src/core/retirement.test.ts#enumerates-configured-copies-without-hiding-an-unreachable-unknown-endpoint",
+        "src/core/storage.ts#setRetirementCopyInventory",
+        "src/core/storage.ts#clear",
+        "src/core/retirement.test.ts#blocks-hard-clear-while-a-configured-remote-copy-is-unresolved-then-records-local-deletion",
+        "src/ui/app.ts#retirement-copy-inventory",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-retirement-copy-inventory-receipt"
+      ],
+      "notes": "Source d904bb0 and exact artifact digest 632a9a8eed47a1b1d1f49abd7c954ce11424f43ebc0d3f432ede810b97054df9 add a Recovery-owned typed inventory for local origin, sync replica, off-origin backup, and remote artifact tier. Configured observations retain last-known state and exact deletable/request-only/unreachable labels; unreachable remains UNKNOWN and is rendered rather than omitted. Hard clear refuses unresolved configured remote copies and the current Chromium receipt proves the four-copy UI scenario. Provider-native deletion requests, live cross-origin reachability, independent remote adapters, deployment, other targets, and human acceptance remain open, so the scenario remains PARTIAL."
     },
     {
       "id": "OMN-ACC-130",

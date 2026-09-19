@@ -67,7 +67,8 @@
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-recipient-eye-bounded-share-preview-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-bounded-assistant-surface-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-confidenceprovenance-disclosure-receipt",
-    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-experimental-rtl-presentation-receipt"
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-experimental-rtl-presentation-receipt",
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-retirement-copy-inventory-receipt"
   ],
   "focus": [
     "static-host shell and base-path routing",
