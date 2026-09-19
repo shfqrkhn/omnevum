@@ -836,8 +836,14 @@
         "line": 4018
       },
       "text": "A material upstream-backed capability is tested against both the currently accepted upstream version and a candidate update using the same Omnevum-owned compatibility harness. A changed upstream behavior is detected before promotion; either the adapter/migration is updated and all affected evidence passes, or the candidate is rejected/deferred without ordinary domain modules silently inheriting the break.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/currentness.ts#evaluateCompatibilityCandidate",
+        "src/core/currentness.test.ts",
+        "docs/control/compatibility-matrix.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compatibility-and-replica-contract-receipt"
+      ],
+      "notes": "The Omnevum-owned compatibility contract compares accepted and candidate upstream identities, defers stale gates, rejects changed behavior without an updated adapter/migration, and admits explicit compatible/adapt-and-promote outcomes only after contract/migration/target/regression gates pass. The synthetic harness is source/unit qualified; a real material upstream adapter, changed behavior, installation, and promotion remain open."
     },
     {
       "id": "OMN-ACC-047",
@@ -922,8 +928,15 @@
         "line": 4028
       },
       "text": "The same logical Vault/replica identity can move between a vendor file transport and a qualified open personal-data/storage endpoint without changing canonical record IDs. Provider/schema-specific identifiers remain adapter metadata, and losing the remote endpoint does not prevent local core use.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/sync-routes.ts#rebindReplicaTransport",
+        "src/core/sync-routes.ts#markReplicaEndpointUnavailable",
+        "src/core/sync-routes.test.ts",
+        "docs/control/capability-coverage.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compatibility-and-replica-contract-receipt"
+      ],
+      "notes": "The provider-neutral replica binding preserves one logical Vault identity and a deduplicated sorted set of canonical record IDs while changing transport/adapter and keeping provider object IDs as metadata; endpoint loss returns an explicit UNREACHABLE state with localCoreUsable true. This is a pure contract/unit proof, not a vendor/open-endpoint transfer or remote recovery qualification."
     },
     {
       "id": "OMN-ACC-052",
