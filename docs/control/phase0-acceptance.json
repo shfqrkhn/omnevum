@@ -34,7 +34,8 @@
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-home-consideration-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-home-focus-mode-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-cvd-matrix-receipt",
-    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-capture-to-triage-idle-receipt"
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-capture-to-triage-idle-receipt",
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-in-place-presentation-control-receipt"
   ],
   "focus": [
     "static-host shell and base-path routing",
