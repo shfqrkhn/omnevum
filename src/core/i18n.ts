@@ -552,6 +552,34 @@ export function getUiCopy(locale: PresentationLocale): UiCopy & AssistantCopy {
   return locale === "fr-CA" ? { ...french, ...assistantFrench } : english as UiCopy & AssistantCopy;
 }
 
+export interface ConfidenceCopy {
+  toggle: string;
+  hidden: string;
+  visible: string;
+  fieldMeta: (confidence: string, sources: number, verified: string) => string;
+  conflict: (count: number) => string;
+}
+
+const confidenceEnglish: ConfidenceCopy = {
+  toggle: "Confidence / provenance",
+  hidden: "Confidence details hidden by default.",
+  visible: "Confidence details shown for fields in this view.",
+  fieldMeta: (confidence, sources, verified) => `Confidence ${confidence}; sources ${sources}; last verified ${verified}.`,
+  conflict: (count) => `${count} unresolved conflict(s) remain explicit; no value was auto-resolved.`
+};
+
+const confidenceFrench: ConfidenceCopy = {
+  toggle: "Confiance / provenance",
+  hidden: "Les details de confiance sont masques par defaut.",
+  visible: "Les details de confiance sont affiches pour les champs de cette vue.",
+  fieldMeta: (confidence, sources, verified) => `Confiance ${confidence}; sources ${sources}; derniere verification ${verified}.`,
+  conflict: (count) => `${count} conflit(s) non resolu(s) restent explicites; aucune valeur n'a ete resolue automatiquement.`
+};
+
+export function getConfidenceCopy(locale: PresentationLocale): ConfidenceCopy {
+  return locale === "fr-CA" ? confidenceFrench : confidenceEnglish;
+}
+
 export function getInstalledMetadataStatus(locale: PresentationLocale, standalone: boolean): string {
   if (locale === "fr-CA") {
     return standalone

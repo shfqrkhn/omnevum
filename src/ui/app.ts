@@ -3,7 +3,7 @@ import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate
 import { inspectArtifact } from "../core/artifact";
 import { redactTextArtifact } from "../core/document";
 import { isCompletedTask, isSpaceId, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, SPACE_LABELS, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
-import { captureKindLabel, formatDateTime, formatNumber, getDeviceInputCopy, getInstalledMetadataStatus, getRecoveryCopy, getStoragePersistenceNotice, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
+import { captureKindLabel, formatDateTime, formatNumber, getConfidenceCopy, getDeviceInputCopy, getInstalledMetadataStatus, getRecoveryCopy, getStoragePersistenceNotice, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CanonicalRecord, type CaptureKind } from "../core/model";
 import { accessibilityPreset, DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_LENS_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationAccessibilityProfile, type PresentationFamily, type PresentationHomeWidgetId, type PresentationLensId, type PresentationProfile, type PresentationSectionId, type PresentationTargetSize, type PresentationTextScale } from "../core/presentation";
 import { PRESENTATION_LENS_DEFINITIONS, lensIdsForRecord, projectLensRecords } from "../core/lenses";
@@ -96,12 +96,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const safePresentationMode = readSafePresentationMode();
   const presentationResolution = resolvePresentationProfile(rawPresentation, safePresentationMode);
   let presentation: PresentationProfile = presentationResolution.profile;
+  let confidenceVisible = await store.getSetting<boolean>("confidence.visible") === true;
   const platformReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
   if (!safePresentationMode && rawPresentation === undefined && platformReducedMotion) {
     presentation = { ...presentation, accessibility: { ...presentation.accessibility, profile: "custom", reducedMotion: true } };
     await store.setSetting("presentation", presentation);
   }
   const copy = getUiCopy(presentation.locale);
+  const confidenceCopy = getConfidenceCopy(presentation.locale);
   const deviceCopy = getDeviceInputCopy(presentation.locale);
   const recoveryCopy = getRecoveryCopy(presentation.locale);
   const timeCopy = getTimeCopy(presentation.locale);
@@ -226,6 +228,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <p id="record-detail-context" class="eyebrow"></p>
           <h2 id="record-detail-heading">${copy.recordDetail}</h2>
           <p id="record-detail-text" class="record-detail-lede"></p>
+          <p id="record-detail-text-confidence" class="hint" hidden></p>
+          <div class="form-row record-detail-confidence-row">
+            <button id="record-detail-confidence-toggle" class="secondary" type="button" aria-pressed="false">${confidenceCopy.toggle}</button>
+            <span id="record-detail-confidence-status" class="hint">${confidenceCopy.hidden}</span>
+          </div>
           <nav id="record-detail-segments" class="detail-segment-bar" aria-label="${copy.recordDetail}">
             <button type="button" class="secondary" data-detail-segment="overview" aria-selected="true">${copy.recordOverview}</button>
             <button type="button" class="secondary" data-detail-segment="relationships" aria-selected="false">${copy.recordRelationships}</button>
@@ -1354,6 +1361,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const recordDetailContext = root.querySelector<HTMLElement>("#record-detail-context");
   const recordDetailHeading = root.querySelector<HTMLElement>("#record-detail-heading");
   const recordDetailText = root.querySelector<HTMLElement>("#record-detail-text");
+  const recordDetailTextConfidence = root.querySelector<HTMLElement>("#record-detail-text-confidence");
+  const recordDetailConfidenceToggle = root.querySelector<HTMLButtonElement>("#record-detail-confidence-toggle");
+  const recordDetailConfidenceStatus = root.querySelector<HTMLElement>("#record-detail-confidence-status");
   const recordDetailStatus = root.querySelector<HTMLElement>("#record-detail-status");
   const recordDetailEditForm = root.querySelector<HTMLFormElement>("#record-detail-edit-form");
   const recordDetailEditText = root.querySelector<HTMLTextAreaElement>("#record-detail-edit-text");
@@ -1466,7 +1476,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!lensNavList || !lensOverflowToggle || !lensOverflowDialog || !lensOverflowGrid || !lensOverflowClose || !lensNavStatus || !activeLensHeading || !activeLensStatus || !activeLensHint || !activeLensRecords || !lensPinOptions) {
     throw new Error("Omnevum lens navigation controls are missing");
   }
-  if (!recordDetailDialog || !recordDetailContext || !recordDetailHeading || !recordDetailText || !recordDetailStatus || !recordDetailEditForm || !recordDetailEditText || !recordDetailEditStatus || !recordDetailMetadata || !recordDetailRelationshipList || !recordDetailEvidenceList || !recordDetailHistoryList || !recordDetailClose || !recordDetailAssistant || !recordDetailSegments) {
+  if (!recordDetailDialog || !recordDetailContext || !recordDetailHeading || !recordDetailText || !recordDetailTextConfidence || !recordDetailConfidenceToggle || !recordDetailConfidenceStatus || !recordDetailStatus || !recordDetailEditForm || !recordDetailEditText || !recordDetailEditStatus || !recordDetailMetadata || !recordDetailRelationshipList || !recordDetailEvidenceList || !recordDetailHistoryList || !recordDetailClose || !recordDetailAssistant || !recordDetailSegments) {
     throw new Error("Omnevum record detail controls are missing");
   }
   if (!familyInput || !accessibilityProfileInput || !accessibilityTextScaleInput || !accessibilityTargetSizeInput || !accessibilityReducedMotionInput) throw new Error("Omnevum presentation accessibility controls are missing");
@@ -1962,6 +1972,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     recordDetailEditForm.hidden = !editable;
     recordDetailEditText.value = editable ? String(record.data.text) : "";
     recordDetailEditStatus.textContent = editable ? "" : copy.recordEditUnavailable;
+    recordDetailConfidenceToggle.setAttribute("aria-pressed", String(confidenceVisible));
+    recordDetailTextConfidence.hidden = !confidenceVisible;
+    recordDetailTextConfidence.textContent = confidenceVisible ? confidenceCopy.fieldMeta("UNKNOWN", 1, "UNKNOWN") : "";
     const allRecords = await store.list(true);
     const recordLensIds = lensIdsForRecord(record);
     const contextLens = recordLensIds.includes(lensId) ? lensId : (recordLensIds[0] ?? lensId);
@@ -1981,12 +1994,16 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const term = document.createElement("dt");
       term.textContent = label;
       const description = document.createElement("dd");
-      description.textContent = value;
+      description.textContent = confidenceVisible ? `${value} - ${confidenceCopy.fieldMeta("UNKNOWN", 1, "UNKNOWN")}` : value;
       recordDetailMetadata.append(term, description);
     }
     const related = allRecords.filter((candidate) => !candidate.deleted && candidate.recordType === "relationship" && (candidate.data.sourceId === record.id || candidate.data.targetId === record.id));
     assistantScopeRecordId = record.id;
     assistantScopeRelationshipCount = related.length;
+    const unresolvedConflicts = related.filter((candidate) => candidate.data.edgeKind === "CONFLICT").length;
+    recordDetailConfidenceStatus.textContent = confidenceVisible
+      ? `${confidenceCopy.visible}${unresolvedConflicts ? ` ${confidenceCopy.conflict(unresolvedConflicts)}` : ""}`
+      : confidenceCopy.hidden;
     recordDetailRelationshipList.replaceChildren();
     if (related.length === 0) {
       const empty = document.createElement("li");
@@ -2292,6 +2309,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   recordDetailDialog.addEventListener("click", (event) => {
     const recordId = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-detail-record-id]")?.dataset.detailRecordId;
     if (recordId) void openRecordDetail(recordId, presentation.activeLens);
+  });
+  recordDetailConfidenceToggle.addEventListener("click", async () => {
+    confidenceVisible = !confidenceVisible;
+    await store.setSetting("confidence.visible", confidenceVisible);
+    const detail = activeRecordDetail;
+    if (detail) {
+      recordDetailDialog.close();
+      await openRecordDetail(detail.recordId, detail.lensId);
+    } else {
+      recordDetailConfidenceStatus.textContent = confidenceVisible ? confidenceCopy.visible : confidenceCopy.hidden;
+    }
   });
   recordDetailAssistant.addEventListener("click", () => {
     recordDetailDialog.close();

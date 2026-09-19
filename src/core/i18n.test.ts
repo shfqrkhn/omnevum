@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDateTime, formatNumber, getDeviceInputCopy, getInstalledMetadataStatus, getStoragePersistenceNotice, getUiCopy, localeDirection } from "./i18n";
+import { formatDateTime, formatNumber, getConfidenceCopy, getDeviceInputCopy, getInstalledMetadataStatus, getStoragePersistenceNotice, getUiCopy, localeDirection } from "./i18n";
 
 describe("presentation localization contract", () => {
   it("keeps claimed locales offline and exposes direction/formatting", () => {
@@ -12,6 +12,8 @@ describe("presentation localization contract", () => {
     expect(getUiCopy("fr-CA").onboardingDismiss).toContain("Masquer");
     expect(getUiCopy("fr-CA").onboardingShow).toContain("Afficher");
     expect(getUiCopy("fr-CA").assistant).toBe("Assistant");
+    expect(getConfidenceCopy("en-CA").fieldMeta("UNKNOWN", 1, "UNKNOWN")).toContain("sources 1");
+    expect(getConfidenceCopy("fr-CA").toggle).toContain("Confiance");
     expect(localeDirection("en-CA")).toBe("ltr");
     expect(formatNumber("en-CA", 1234)).toContain("1");
     expect(formatDateTime("en-CA", "not-a-date")).toBe("not-a-date");

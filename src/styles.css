@@ -283,6 +283,7 @@ select[multiple] { min-height: 9rem; }
 .record-detail-metadata dd { margin: 0; overflow-wrap: anywhere; }
 .record-detail-edit { display: grid; gap: 0.55rem; margin-top: 0.9rem; border-top: 1px solid var(--line); padding-top: 0.9rem; }
 .record-detail-edit textarea { min-height: 7rem; }
+.record-detail-confidence-row { align-items: center; }
 .record-detail-history { display: grid; gap: 0.55rem; margin: 0; padding-left: 1.35rem; }
 .record-detail-history li { overflow-wrap: anywhere; }
 .assistant-boundary { display: grid; gap: 0.35rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-muted); padding: 0.7rem 0.8rem; }
