@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "a9d13ec8a46333079be4727fc4b567eaef3df427468c50de4b90bbc37ff86259",
-        "bytes": 40089
+        "sha256": "8b5d4e06aace38d9466ead493b4eaaba7bb8497743a04216c827025d35139e68",
+        "bytes": 40472
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "88922234f9de87204e5516d3e6992c7741770f6d58c4ce6e106c9dff08e631db",
-        "bytes": 215111
+        "sha256": "566054ef03b02ba886508314e332fb19c22b60620021b8f15eea73e128b42cf6",
+        "bytes": 216809
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
