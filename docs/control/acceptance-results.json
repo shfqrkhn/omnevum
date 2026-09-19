@@ -1504,8 +1504,14 @@
         "line": 4114
       },
       "text": "If a release/profile renders untrusted HTML/markup, a hostile fixture set including mutation-XSS/DOM-clobbering style cases is processed by the admitted rendering path. Native Sanitizer API use occurs only on support rows where qualified; a maintained DOMPurify-class fallback or equivalent blocks active behavior on other claimed rows; sanitizer bypass/currentness changes invalidate affected evidence; and sanitized presentation still grants no network, credential, canonical-write or external-effect authority.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "NOT_APPLICABLE",
+      "evidence": [
+        "src/core/artifact.ts#inspectArtifact",
+        "src/core/artifact.test.ts#keeps-mutation-xss-and-dom-clobbering-style-markup-on-the-text-only-presentation-path",
+        "src/ui/app.ts#textContent-record-presentation",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-inert-html-presentation-boundary-receipt"
+      ],
+      "notes": "The current v0.17.4 release/profile does not render imported or otherwise untrusted markup as HTML. The Artifact owner performs bounded inert plain-text extraction, retains original source bytes, and the hostile mutation-XSS/DOM-clobbering-style fixture passes; record-derived UI output uses textContent and the app innerHTML assignment is limited to the trusted static shell template. If a future profile renders untrusted markup, this scenario must reopen for qualified parser-aware sanitization and currentness evidence."
     },
     {
       "id": "OMN-ACC-095",
