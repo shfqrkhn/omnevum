@@ -1904,3 +1904,9 @@ This advances `OMN-ACC-063` from `UNKNOWN` to `PARTIAL`. Qualified browser Artif
 On 2026-09-19, source revision `f22cb93` added the Omnevum-owned engine-neutral spatial Compose/View seam. The focused `src/core/spatial-canvas.test.ts` suite passed `3` tests, followed by `npm run typecheck` and `git diff --check`. The contract holds bounded freeform drawing, text, and canonical-record-reference nodes plus view-only connections, supports move/style/group/viewport operations without changing referenced IDs or canonical data, exports an inert JSON Canvas Artifact projection, restores it through validation, and replaces the renderer through an explicit engine identity without record migration.
 
 This advances `OMN-ACC-064` from `UNKNOWN` to `PARTIAL`. No qualified reusable canvas engine, browser interaction, Artifact command wiring, target/deployment, or human acceptance was performed; those remain open.
+
+## Current v0.17.4 semantic graph contract receipt
+
+On 2026-09-19, source revision `59897a6` added the Omnevum-owned bounded semantic graph projection. The focused `src/core/semantic-graph.test.ts` suite passed `3` tests, followed by `npm run typecheck` and `git diff --check`. An authorized record set projects to a JSON-LD-shaped document with explicit source IDs, provenance IDs, sensitivity/disclosure scope, and deterministic triples. Local pattern queries and required-predicate shape validation return `DERIVED` results with source-bound violations; serialized graph data parses back through validation; and graph import produces reviewable `AcquireCandidate` items with `triageStatus: INBOX` and an explicit no-canonical-write boundary.
+
+This advances `OMN-ACC-071` from `UNKNOWN` to `PARTIAL`. No qualified RDF/JSON-LD/SPARQL/SHACL engine, richer ontology/inference, browser target, remote graph, deployment, or human acceptance was performed; those remain open.

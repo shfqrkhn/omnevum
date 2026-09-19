@@ -1310,8 +1310,16 @@
         "line": 4068
       },
       "text": "An authorized set of canonical records is exported/projected through a qualified JSON-LD/RDF semantic-graph profile and queried/validated with a browser-local SPARQL/SHACL-class engine. Source IDs/provenance/disclosure boundaries are preserved, inferred/validation/query results remain DERIVED, and importing graph data routes through Acquire/Triage rather than directly mutating canonical owners.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/semantic-graph.ts",
+        "src/core/semantic-graph.test.ts",
+        "src/core/acquire.ts",
+        "src/core/dependency-graph.ts",
+        "docs/control/capability-coverage.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-semantic-graph-contract-receipt"
+      ],
+      "notes": "The bounded authorized graph contract emits a JSON-LD-shaped projection with source/provenance/disclosure metadata, supports deterministic local triple-pattern queries and SHACL-style required-predicate validation as DERIVED results, and stages graph import as reviewable Acquire/Triage candidates without canonical writes. A qualified JSON-LD/RDF/SPARQL/SHACL engine, richer ontology/inference, browser target, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-072",
