@@ -65,7 +65,8 @@
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-service-worker-updaterollbackoffline-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-edge-compact-default-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-recipient-eye-bounded-share-preview-receipt",
-    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-bounded-assistant-surface-receipt"
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-bounded-assistant-surface-receipt",
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-confidenceprovenance-disclosure-receipt"
   ],
   "focus": [
     "static-host shell and base-path routing",

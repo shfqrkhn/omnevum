@@ -1832,8 +1832,11 @@
         "line": 4160
       },
       "text": "With the confidence toggle off, no field displays a confidence indicator. With it on, segmented confidence, source count, and last-verified time appear for every field in view and the preference persists. An injected genuine conflict surfaces in both states, retains both values with provenance, remains explicitly unresolved, and is not auto-resolved by recency or confidence score.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-confidenceprovenance-disclosure-receipt"
+      ],
+      "notes": "The compact record-detail toggle hides confidence metadata by default, reveals explicit UNKNOWN/source-count/last-verified values on demand, persists across close/reopen, and restores the hidden state without changing the canonical record. Real confidence derivation, segmented semantics, injected conflict preservation, and provenance comparison remain open."
     },
     {
       "id": "OMN-ACC-118",
