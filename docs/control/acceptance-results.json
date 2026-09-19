@@ -1768,9 +1768,10 @@
       "text": "A reversible deletion executes immediately with a segmented undo indicator carrying an explicit numeric remaining time; undo restores the record fully. A hard operation instead pre-confirms with a blast radius computed from the actual graph - affected records, orphaned and preserved relationships, artifacts, reversibility window - and where a consequence cannot be computed the surface says so rather than presenting an optimistic or absent radius. No undo is offered for an operation that cannot be undone.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-bounded-archive-undo-and-hard-clear-impact-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-bounded-archive-undo-and-hard-clear-impact-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-canonical-clear-impact-receipt"
       ],
-      "notes": "Current Chromium evidence covers immediate archive removal, a visible numeric 10-second in-memory recovery window, normal-command Undo restoration with revision history, and a canceled hard-clear confirmation whose counts are computed from current records, relationships, artifact payloads, and pending effects. Persistent/restart undo, full transitive graph/orphan blast-radius computation, every irreversible operation, browser/target breadth, assistive technology, deployment, and human acceptance remain open."
+      "notes": "Current Chromium evidence covers immediate archive removal, a visible numeric 10-second in-memory recovery window, normal-command Undo restoration with revision history, and a canceled hard-clear confirmation whose storage-owned impact report enumerates canonical records, relationships, history, artifact payloads, pending effects, package saves, and automation rules while disclosing unresolved relationship endpoints. Persistent/restart undo, full transitive graph/orphan blast-radius computation, every irreversible operation, browser/target breadth, assistive technology, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-117",
