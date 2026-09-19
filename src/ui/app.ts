@@ -37,6 +37,7 @@ import { FACTORY_PREVIEW_APP_TITLE, FACTORY_PREVIEW_FIELDS, FACTORY_PREVIEW_GAME
 import { isCleanupHistoryRecord, previewCleanup, reconstructCleanupHistory, type CleanupDecision, type CleanupPreview, type CleanupRecipe } from "../core/cleanup";
 import { CORE_AUTOMATION_PACKAGE, type PackageAutomationRuntime } from "../core/package-automation-runtime";
 import type { PackageAutomationProposal } from "../core/package-automation-registry";
+import { shouldAutoShowOnboarding } from "../core/onboarding";
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -56,6 +57,8 @@ function parseExternalEffectPayload(value: string): Record<string, unknown> | st
 export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>, packageAutomationRuntime?: PackageAutomationRuntime): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
   const onboardingDismissed = await store.getSetting<boolean>("onboarding.dismissed") === true;
+  const initialRecordCount = (await store.list()).length;
+  const onboardingAutoShown = shouldAutoShowOnboarding(initialRecordCount, onboardingDismissed);
   const safePresentationMode = readSafePresentationMode();
   const presentationResolution = resolvePresentationProfile(rawPresentation, safePresentationMode);
   let presentation: PresentationProfile = presentationResolution.profile;
@@ -105,10 +108,13 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <h2 id="status-heading">${copy.ready}</h2>
         <p id="health-status" role="status">${copy.healthInitial}</p>
         </div>
-         <span id="capability-status" class="status-pill">${copy.local}</span>
+        <div class="status-actions">
+          <span id="capability-status" class="status-pill">${copy.local}</span>
+          <button id="onboarding-show" class="secondary" type="button"${onboardingAutoShown ? " hidden" : ""}>${copy.onboardingShow}</button>
+        </div>
       </section>
 
-      <section id="onboarding" class="panel onboarding-panel" aria-labelledby="onboarding-heading"${onboardingDismissed ? " hidden" : ""}>
+      <section id="onboarding" class="panel onboarding-panel" aria-labelledby="onboarding-heading"${onboardingAutoShown ? "" : " hidden"}>
         <div class="section-heading">
           <div>
             <p class="eyebrow">${copy.foundation}</p>
@@ -936,6 +942,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const capabilityStatus = root.querySelector<HTMLElement>("#capability-status");
   const onboardingPanel = root.querySelector<HTMLElement>("#onboarding");
   const onboardingDismiss = root.querySelector<HTMLButtonElement>("#onboarding-dismiss");
+  const onboardingShow = root.querySelector<HTMLButtonElement>("#onboarding-show");
   const themeToggle = root.querySelector<HTMLButtonElement>("#theme-toggle");
   const exportButton = root.querySelector<HTMLButtonElement>("#export-vault");
   const encryptedExportButton = root.querySelector<HTMLButtonElement>("#export-encrypted");
@@ -973,7 +980,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const packageAutomationStatus = root.querySelector<HTMLElement>("#package-automation-status");
   const packageAutomationList = root.querySelector<HTMLUListElement>("#package-automation-list");
   const packageAutomationProposals = root.querySelector<HTMLUListElement>("#package-automation-proposals");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
@@ -1360,9 +1367,15 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     try {
       await store.setSetting("onboarding.dismissed", true);
       onboardingPanel.hidden = true;
+      onboardingShow.hidden = false;
     } catch (error) {
       recoveryStatus.textContent = describeError(error, "The getting-started guide could not be dismissed; canonical data was not changed.");
     }
+  });
+  onboardingShow.addEventListener("click", () => {
+    onboardingPanel.hidden = false;
+    onboardingShow.hidden = true;
+    onboardingDismiss.focus();
   });
 
   const showAcquirePreview = (preview: AcquirePreview): void => {

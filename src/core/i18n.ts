@@ -4,7 +4,7 @@ import type { TriageStatus } from "./domain";
 
 export interface UiCopy {
   productHeading: string; foundation: string; lede: string; system: string; ready: string; local: string; healthInitial: string; healthy: string; degraded: string;
-  home: string; currentPicture: string; activeRecordCount: string; visualize: string; signals: string; openTasks: string; completedTasks: string; focusMinutes: string; relationships: string; personalization: string; makeItYours: string; onboardingHeading: string; onboardingHint: string; onboardingCapture: string; onboardingReview: string; onboardingRecovery: string; onboardingStart: string; onboardingDismiss: string;
+  home: string; currentPicture: string; activeRecordCount: string; visualize: string; signals: string; openTasks: string; completedTasks: string; focusMinutes: string; relationships: string; personalization: string; makeItYours: string; onboardingHeading: string; onboardingHint: string; onboardingCapture: string; onboardingReview: string; onboardingRecovery: string; onboardingStart: string; onboardingDismiss: string; onboardingShow: string;
   derivedStatus: (records: number, sourceIds: number, groups: number) => string;
   appName: string; language: string; english: string; french: string; save: string; presentationHint: string; tagline: string; density: string; comfortable: string; compact: string; typeface: string; systemTypeface: string; serifTypeface: string; monoTypeface: string; iconography: string; labelIconography: string; glyphIconography: string; homeLabel: string; captureLabel: string; recordsLabel: string; navigationSections: string; navigationHint: string; homeWidgets: string; homeWidgetsHint: string; resetPresentation: string; exportPresentationProfile: string; importPresentationProfile: string; presentationProfileExported: string; presentationProfileImported: string;
   capture: string; getItOut: string; kind: string; note: string; task: string; observation: string; space: string; acquireHeading: string; stageImport: string; acquireFile: string; readClipboard: string; acceptStaged: string; acquirePlaceholder: string; acquireHint: string; stagedMessage: (count: number, warnings: number) => string; cleanupHeading: string; cleanupHint: string; cleanupImportedOnly: string; cleanupTrim: string; cleanupWhitespace: string; cleanupPreview: string; cleanupApply: string; cleanupStatus: (records: number, sources: number, proposals: number) => string; cleanupEmpty: string; cleanupTransform: string; cleanupDuplicate: string; cleanupAmbiguous: string; cleanupArchive: string; cleanupMarkReview: string; cleanupApplied: (updated: number, archived: number, review: number) => string; cleanupHistory: string; cleanupHistoryEmpty: string; cleanupHistoryEntry: (recipe: string, acceptedAt: string, inputs: number, updated: number, archived: number, review: number, chunks: number) => string;
@@ -39,24 +39,26 @@ export interface UiCopy {
   resultMessage: (count: number, index: string) => string;
 }
 
-const onboardingEnglish: Pick<UiCopy, "onboardingHeading" | "onboardingHint" | "onboardingCapture" | "onboardingReview" | "onboardingRecovery" | "onboardingStart" | "onboardingDismiss"> = {
+const onboardingEnglish: Pick<UiCopy, "onboardingHeading" | "onboardingHint" | "onboardingCapture" | "onboardingReview" | "onboardingRecovery" | "onboardingStart" | "onboardingDismiss" | "onboardingShow"> = {
   onboardingHeading: "Start with a small step",
   onboardingHint: "No account is required. Begin locally, keep meaning in canonical records, and export a Vault when you want a portable recovery copy.",
   onboardingCapture: "Capture a thought, task, or observation.",
   onboardingReview: "Review the proposal-only inbox, then search and revisit what you kept.",
   onboardingRecovery: "Use Vault export in Recovery before changing origins or browsers.",
   onboardingStart: "Go to Capture",
-  onboardingDismiss: "Dismiss guide"
+  onboardingDismiss: "Dismiss guide",
+  onboardingShow: "Show getting-started guide"
 };
 
-const onboardingFrench: Pick<UiCopy, "onboardingHeading" | "onboardingHint" | "onboardingCapture" | "onboardingReview" | "onboardingRecovery" | "onboardingStart" | "onboardingDismiss"> = {
+const onboardingFrench: Pick<UiCopy, "onboardingHeading" | "onboardingHint" | "onboardingCapture" | "onboardingReview" | "onboardingRecovery" | "onboardingStart" | "onboardingDismiss" | "onboardingShow"> = {
   onboardingHeading: "Commencez par un petit pas",
   onboardingHint: "Aucun compte n'est requis. Commencez localement, gardez le sens dans les dossiers canoniques et exportez un Vault pour une copie de recuperation portable.",
   onboardingCapture: "Capturez une pensee, une tache ou une observation.",
   onboardingReview: "Revoyez la boite de propositions, puis recherchez et revisitez ce que vous gardez.",
   onboardingRecovery: "Utilisez l'export Vault dans Recuperation avant de changer d'origine ou de navigateur.",
   onboardingStart: "Aller a Capture",
-  onboardingDismiss: "Masquer le guide"
+  onboardingDismiss: "Masquer le guide",
+  onboardingShow: "Afficher le guide de demarrage"
 };
 
 interface CleanupCopy {

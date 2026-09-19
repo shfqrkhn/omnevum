@@ -136,6 +136,7 @@ main > * { min-width: 0; }
 .onboarding-start { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
 .panel, .status-card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); padding: 1.25rem; }
 .status-card { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.status-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 0.55rem; }
 .status-card p:last-child { margin-bottom: 0; color: var(--muted); }
 .status-pill, .count { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: var(--surface-muted); color: var(--accent); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; padding: 0.45rem 0.65rem; white-space: nowrap; }
 .count { min-width: 2.2rem; font-size: 0.95rem; letter-spacing: 0; }
