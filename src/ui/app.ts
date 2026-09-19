@@ -51,6 +51,7 @@ import { shouldAutoShowOnboarding } from "../core/onboarding";
 import { REVIEW_SESSION_SETTING, REVIEW_TEMPLATES, advanceReviewSession, getReviewTemplate, isReviewSession, makeReviewSession, type ReviewSession } from "../core/review";
 import { makeTelemetryPreviewInput, parseTelemetryPreviewMode, projectTelemetry, projectTelemetryConsiderations, parseTelemetryDispositions, parseTelemetryThresholds, TELEMETRY_DISPOSITIONS_SETTING, TELEMETRY_THRESHOLDS_SETTING, type TelemetryDispositions, type TelemetryThresholds } from "../core/telemetry";
 import { appendShellUpdateObservation, parseShellUpdateLedger, UPDATE_LEDGER_SETTING } from "../core/update-ledger";
+import { enumerateRetirementCopies, type RetirementCopyObservation, type RetirementCopyState } from "../core/retirement";
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -90,6 +91,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   let telemetryDispositions: TelemetryDispositions = parseTelemetryDispositions(await store.getSetting<unknown>(TELEMETRY_DISPOSITIONS_SETTING));
   let shellUpdateLedger = parseShellUpdateLedger(await store.getSetting<unknown>(UPDATE_LEDGER_SETTING));
   let retirementAuthorization = await store.getRetirementAuthorization();
+  const savedRetirementCopyInventory = await store.getRetirementCopyInventory();
+  let retirementCopyInventory: ReturnType<typeof enumerateRetirementCopies>;
   let updateActivationRequested = false;
   const initialRecordCount = (await store.list()).length;
   const onboardingAutoShown = shouldAutoShowOnboarding(initialRecordCount, onboardingDismissed);
@@ -106,6 +109,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const confidenceCopy = getConfidenceCopy(presentation.locale);
   const deviceCopy = getDeviceInputCopy(presentation.locale);
   const recoveryCopy = getRecoveryCopy(presentation.locale);
+  retirementCopyInventory = savedRetirementCopyInventory ?? enumerateRetirementCopies([
+    { id: "local-origin", kind: "LOCAL_ORIGIN", label: recoveryCopy.retirementCopyLocalOrigin, configured: true, disposition: "DELETABLE", state: "PRESENT" },
+    { id: "sync-replica", kind: "SYNC_REPLICA", label: recoveryCopy.retirementCopySyncReplica, configured: false, disposition: "NOT_CONFIGURED", state: "NOT_CONFIGURED" },
+    { id: "off-origin-backup", kind: "OFF_ORIGIN_BACKUP", label: recoveryCopy.retirementCopyOffOriginBackup, configured: false, disposition: "NOT_CONFIGURED", state: "NOT_CONFIGURED" },
+    { id: "remote-artifact-tier", kind: "REMOTE_ARTIFACT_TIER", label: recoveryCopy.retirementCopyArtifactTier, configured: false, disposition: "NOT_CONFIGURED", state: "NOT_CONFIGURED" }
+  ]);
   const timeCopy = getTimeCopy(presentation.locale);
   const familyLabels: Record<PresentationFamily, string> = presentation.locale === "fr-CA"
     ? { alpha: "Concept Alpha - Monastique tactile", beta: "Concept Beta - Editorial humaniste", gamma: "Concept Gamma - Utilitaire industriel" }
@@ -1005,6 +1014,35 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <p class="hint">${recoveryCopy.verifyVaultHint}</p>
           <button id="record-destroy-intent" class="secondary" type="button">${recoveryCopy.recordDestroyIntent}</button>
           <p id="retirement-status" class="hint" role="status"></p>
+          <details id="retirement-copy-inventory" class="relationship-form compact-panel">
+            <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h4>${recoveryCopy.retirementInventoryHeading}</h4></span></summary>
+            <p class="hint">${recoveryCopy.retirementInventoryHint}</p>
+            <p id="retirement-copy-local" class="hint"></p>
+            <label for="retirement-copy-sync">${recoveryCopy.retirementCopySyncReplica}</label>
+            <select id="retirement-copy-sync">
+              <option value="NOT_CONFIGURED">${recoveryCopy.retirementCopyNotConfigured}</option>
+              <option value="PRESENT">${recoveryCopy.retirementCopyPresent}</option>
+              <option value="VERIFIED_DELETED">${recoveryCopy.retirementCopyVerifiedDeleted}</option>
+              <option value="UNKNOWN">${recoveryCopy.retirementCopyUnknown}</option>
+            </select>
+            <label for="retirement-copy-backup">${recoveryCopy.retirementCopyOffOriginBackup}</label>
+            <select id="retirement-copy-backup">
+              <option value="NOT_CONFIGURED">${recoveryCopy.retirementCopyNotConfigured}</option>
+              <option value="PRESENT">${recoveryCopy.retirementCopyPresent}</option>
+              <option value="VERIFIED_DELETED">${recoveryCopy.retirementCopyVerifiedDeleted}</option>
+              <option value="UNKNOWN">${recoveryCopy.retirementCopyUnknown}</option>
+            </select>
+            <label for="retirement-copy-artifact">${recoveryCopy.retirementCopyArtifactTier}</label>
+            <select id="retirement-copy-artifact">
+              <option value="NOT_CONFIGURED">${recoveryCopy.retirementCopyNotConfigured}</option>
+              <option value="PRESENT">${recoveryCopy.retirementCopyPresent}</option>
+              <option value="VERIFIED_DELETED">${recoveryCopy.retirementCopyVerifiedDeleted}</option>
+              <option value="UNKNOWN">${recoveryCopy.retirementCopyUnknown}</option>
+            </select>
+            <div class="form-row"><button id="retirement-copy-save" type="button">${recoveryCopy.retirementCopySave}</button></div>
+            <p id="retirement-copy-status" class="hint" role="status"></p>
+            <ul id="retirement-copy-list" class="record-list"></ul>
+          </details>
         </details>
         <details id="recovery-artifact-tools" class="relationship-form compact-panel">
           <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h3>${copy.documentFinishHeading}</h3></span></summary>
@@ -1419,6 +1457,13 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const retirementExportInput = root.querySelector<HTMLInputElement>("#retirement-export-input");
   const recordDestroyIntentButton = root.querySelector<HTMLButtonElement>("#record-destroy-intent");
   const retirementStatus = root.querySelector<HTMLElement>("#retirement-status");
+  const retirementCopyLocal = root.querySelector<HTMLElement>("#retirement-copy-local");
+  const retirementCopySync = root.querySelector<HTMLSelectElement>("#retirement-copy-sync");
+  const retirementCopyBackup = root.querySelector<HTMLSelectElement>("#retirement-copy-backup");
+  const retirementCopyArtifact = root.querySelector<HTMLSelectElement>("#retirement-copy-artifact");
+  const retirementCopySave = root.querySelector<HTMLButtonElement>("#retirement-copy-save");
+  const retirementCopyStatus = root.querySelector<HTMLElement>("#retirement-copy-status");
+  const retirementCopyList = root.querySelector<HTMLUListElement>("#retirement-copy-list");
   const documentFinishForm = root.querySelector<HTMLFormElement>("#document-finish-form");
   const documentFinishSource = root.querySelector<HTMLSelectElement>("#document-finish-source");
   const documentFinishTerms = root.querySelector<HTMLInputElement>("#document-finish-terms");
@@ -1448,14 +1493,55 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchFiltersToggle || !searchFilters || !searchFacetChips || !searchFacetLens || !searchFacetType || !searchFacetSpace || !searchFacetArtifact || !searchViewName || !searchSaveView || !searchScopeStatus || !searchStatus || !assistantForm || !assistantQuestion || !assistantSubmit || !assistantClearScope || !assistantScope || !assistantStatus || !assistantSection || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !insightsDisclosure || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !triageBatch || !triageSelectAll || !triageSelected || !triageBatchDeferUntil || !triageBatchReview || !triageBatchDefer || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !sharePreviewDialog || !sharePreviewSummary || !sharePreviewPayload || !sharePreviewCancel || !sharePreviewConfirm || !contextExportFormat || !contextExportObjective || !contextExportBudget || !contextExportButton || !contextExportRerunButton || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavMenu || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput || !activeLensDisclosure || !reviewDisclosure || !recordsDisclosure) {
     throw new Error("Omnevum foundation controls are missing");
   }
-  if (!exportHumanButton || !exportArtifactsButton || !retirementExportInput || !recordDestroyIntentButton || !retirementStatus) {
+  if (!exportHumanButton || !exportArtifactsButton || !retirementExportInput || !recordDestroyIntentButton || !retirementStatus || !retirementCopyLocal || !retirementCopySync || !retirementCopyBackup || !retirementCopyArtifact || !retirementCopySave || !retirementCopyStatus || !retirementCopyList) {
     throw new Error("Omnevum retirement controls are missing");
   }
+  const renderRetirementCopyInventory = (): void => {
+    const byId = new Map(retirementCopyInventory.copies.map((copy) => [copy.id, copy]));
+    retirementCopyLocal.textContent = `${recoveryCopy.retirementCopyLocalOrigin}: ${recoveryCopy.retirementCopyDisposition(byId.get("local-origin")?.disposition ?? "DELETABLE")} / ${recoveryCopy.retirementCopyState(byId.get("local-origin")?.state ?? "PRESENT")}`;
+    for (const [select, id] of [[retirementCopySync, "sync-replica"], [retirementCopyBackup, "off-origin-backup"], [retirementCopyArtifact, "remote-artifact-tier"]] as const) {
+      const state = byId.get(id)?.state ?? "NOT_CONFIGURED";
+      select.value = state;
+    }
+    retirementCopyList.replaceChildren();
+    for (const copy of retirementCopyInventory.copies) {
+      const item = document.createElement("li");
+      item.textContent = `${copy.label}: ${recoveryCopy.retirementCopyDisposition(copy.disposition)} / ${recoveryCopy.retirementCopyState(copy.state)}`;
+      retirementCopyList.append(item);
+    }
+    const configured = retirementCopyInventory.copies.filter((copy) => copy.configured).length;
+    retirementCopyStatus.textContent = recoveryCopy.retirementInventoryStatus(configured, retirementCopyInventory.unresolvedCopyIds.length);
+  };
   const updateRetirementControls = (): void => {
-    clearCanonicalButton.disabled = retirementAuthorization === undefined;
-    retirementStatus.textContent = retirementAuthorization ? recoveryCopy.retirementReady : recoveryCopy.retirementBlocked;
+    const unresolvedRemoteCopies = retirementCopyInventory.copies.filter((copy) => copy.configured && copy.kind !== "LOCAL_ORIGIN" && copy.state !== "VERIFIED_DELETED");
+    clearCanonicalButton.disabled = retirementAuthorization === undefined || unresolvedRemoteCopies.length > 0;
+    retirementStatus.textContent = retirementAuthorization
+      ? unresolvedRemoteCopies.length > 0 ? recoveryCopy.retirementBlockedByCopies(unresolvedRemoteCopies.length) : recoveryCopy.retirementReady
+      : recoveryCopy.retirementBlocked;
+    renderRetirementCopyInventory();
   };
   updateRetirementControls();
+  retirementCopySave.addEventListener("click", async () => {
+    const makeRemoteCopy = (id: string, kind: "SYNC_REPLICA" | "OFF_ORIGIN_BACKUP" | "REMOTE_ARTIFACT_TIER", label: string, rawState: string): RetirementCopyObservation => {
+      const state = rawState as RetirementCopyState;
+      if (state === "NOT_CONFIGURED") return { id, kind, label, configured: false, disposition: "NOT_CONFIGURED", state };
+      return { id, kind, label, configured: true, disposition: state === "UNKNOWN" ? "UNREACHABLE" : "REQUEST_ONLY", state };
+    };
+    try {
+      const currentLocal = retirementCopyInventory.copies.find((copy) => copy.id === "local-origin") ?? { id: "local-origin", kind: "LOCAL_ORIGIN" as const, label: recoveryCopy.retirementCopyLocalOrigin, configured: true, disposition: "DELETABLE" as const, state: "PRESENT" as const };
+      retirementCopyInventory = await store.setRetirementCopyInventory([
+        currentLocal,
+        makeRemoteCopy("sync-replica", "SYNC_REPLICA", recoveryCopy.retirementCopySyncReplica, retirementCopySync.value),
+        makeRemoteCopy("off-origin-backup", "OFF_ORIGIN_BACKUP", recoveryCopy.retirementCopyOffOriginBackup, retirementCopyBackup.value),
+        makeRemoteCopy("remote-artifact-tier", "REMOTE_ARTIFACT_TIER", recoveryCopy.retirementCopyArtifactTier, retirementCopyArtifact.value)
+      ]);
+      updateRetirementControls();
+      const configured = retirementCopyInventory.copies.filter((copy) => copy.configured).length;
+      retirementCopyStatus.textContent = recoveryCopy.retirementInventorySaved(configured, retirementCopyInventory.unresolvedCopyIds.length);
+    } catch (error) {
+      retirementCopyStatus.textContent = describeError(error, recoveryCopy.retirementInventoryHint);
+    }
+  });
   if (!financeImportForm || !financeImportFile || !financeImportAccount || !financeImportCurrency || !financeImportOpening || !financeImportClosing || !financeImportStatus) {
     throw new Error("Omnevum Finance import controls are missing");
   }
@@ -5302,11 +5388,13 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       clearArchiveUndo();
       await store.clear(retirementAuthorization.kind);
       retirementAuthorization = undefined;
+      retirementCopyInventory = await store.getRetirementCopyInventory() ?? retirementCopyInventory;
       updateRetirementControls();
       recoveryStatus.textContent = recoveryCopy.retired;
       await renderRecords();
     } catch (error) {
       retirementAuthorization = await store.getRetirementAuthorization();
+      retirementCopyInventory = await store.getRetirementCopyInventory() ?? retirementCopyInventory;
       updateRetirementControls();
       recoveryStatus.textContent = describeError(error, "Canonical data was not cleared");
     }

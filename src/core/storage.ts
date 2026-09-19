@@ -6,6 +6,7 @@ import { assertEffectOperation, type EffectOperation } from "./effect";
 import { fingerprintVault, withVaultIntegrity, verifyVaultIntegrity } from "./vault";
 import { assertCanonicalRecord, assertVaultDocument, assertVaultPackageState, isCanonicalRecord, isHistoryEntry, isVaultPackageAutomation, isVaultPackageState, MAX_VAULT_AUTOMATION_RULES, MAX_VAULT_PACKAGE_STATES } from "./validation";
 import { isViewDefinition, VIEW_SETTING } from "./compose";
+import { enumerateRetirementCopies, parseRetirementCopyObservations, type RetirementCopyInventory, type RetirementCopyObservation } from "./retirement";
 
 const RECORD_STORE = "records";
 const SEARCH_STORE = "searchDocuments";
@@ -17,6 +18,7 @@ const EFFECT_STORE = "effects";
 const PACKAGE_STATE_PREFIX = "packageState:";
 const AUTOMATION_RULES_SETTING_ID = "automation.rules";
 const RETIREMENT_AUTHORIZATION_SETTING_ID = "recovery.retirementAuthorization";
+const RETIREMENT_COPY_INVENTORY_SETTING_ID = "recovery.retirementCopyInventory";
 
 function requestResult<T>(request: IDBRequest<T>): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -335,6 +337,18 @@ export class CanonicalStore {
     return structuredClone(value);
   }
 
+  public async getRetirementCopyInventory(): Promise<RetirementCopyInventory | undefined> {
+    const value = await this.getSetting<unknown>(RETIREMENT_COPY_INVENTORY_SETTING_ID);
+    const copies = parseRetirementCopyObservations(value);
+    return copies ? enumerateRetirementCopies(copies) : undefined;
+  }
+
+  public async setRetirementCopyInventory(copies: readonly RetirementCopyObservation[]): Promise<RetirementCopyInventory> {
+    const inventory = enumerateRetirementCopies(copies);
+    await this.setSetting(RETIREMENT_COPY_INVENTORY_SETTING_ID, { version: 1, copies: inventory.copies });
+    return inventory;
+  }
+
   public async clear(authorizationKind: RetirementAuthorizationKind): Promise<void> {
     const authorization = await this.getRetirementAuthorization();
     if (!authorization || authorization.kind !== authorizationKind) throw new Error("Retirement is blocked until a verified Vault export or explicit destroy intent is recorded");
@@ -342,6 +356,14 @@ export class CanonicalStore {
       const current = await this.exportVault();
       if (await fingerprintVault(current) !== authorization.vaultFingerprint) throw new Error("Verified Vault export is stale; export and read back the current state before retirement");
     }
+    const retirementCopyInventory = await this.getRetirementCopyInventory();
+    const unresolvedRemoteCopies = retirementCopyInventory?.copies.filter((copy) => copy.configured && copy.kind !== "LOCAL_ORIGIN" && copy.state !== "VERIFIED_DELETED") ?? [];
+    if (unresolvedRemoteCopies.length > 0) throw new Error("Retirement is blocked until every configured remote copy is verified deleted");
+    const retiredCopyInventory = retirementCopyInventory
+      ? enumerateRetirementCopies(retirementCopyInventory.copies.map((copy) => copy.kind === "LOCAL_ORIGIN" && copy.configured
+        ? { ...copy, state: "VERIFIED_DELETED", observedAt: new Date().toISOString() }
+        : copy))
+      : undefined;
     const settings = await requestResult(this.requireDatabase().transaction(SETTINGS_STORE, "readonly").objectStore(SETTINGS_STORE).getAll());
     const packageSettingIds = settings
       .filter((setting) => typeof setting?.id === "string" && setting.id.startsWith(PACKAGE_STATE_PREFIX))
@@ -357,6 +379,7 @@ export class CanonicalStore {
     packageSettingIds.forEach((id) => settingsStore.delete(id));
     settingsStore.delete(AUTOMATION_RULES_SETTING_ID);
     settingsStore.delete(RETIREMENT_AUTHORIZATION_SETTING_ID);
+    if (retiredCopyInventory) settingsStore.put({ id: RETIREMENT_COPY_INVENTORY_SETTING_ID, value: { version: 1, copies: retiredCopyInventory.copies }, modifiedAt: new Date().toISOString() });
     try {
       await transactionDone(transaction);
     } catch (error) {

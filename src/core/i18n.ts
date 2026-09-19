@@ -4,6 +4,7 @@ import type { TriageStatus } from "./domain";
 import type { CanonicalClearImpact } from "./storage";
 import type { ReviewTemplateId } from "./review";
 import type { TelemetryStatus } from "./telemetry";
+import type { RetirementCopyDisposition, RetirementCopyState } from "./retirement";
 
 export interface UiCopy {
   productHeading: string; foundation: string; lede: string; system: string; ready: string; local: string; healthInitial: string; healthy: string; degraded: string;
@@ -680,6 +681,7 @@ export interface RecoveryCopy {
   destroyIntentRecorded: string;
   retirementReady: string;
   retirementBlocked: string;
+  retirementBlockedByCopies: (count: number) => string;
   retirementConfirmation: string;
   retired: string;
   passwordRequired: string;
@@ -690,6 +692,21 @@ export interface RecoveryCopy {
   backupToolsHeading: string;
   maintenanceToolsHeading: string;
   retirementToolsHeading: string;
+  retirementInventoryHeading: string;
+  retirementInventoryHint: string;
+  retirementCopyLocalOrigin: string;
+  retirementCopySyncReplica: string;
+  retirementCopyOffOriginBackup: string;
+  retirementCopyArtifactTier: string;
+  retirementCopyNotConfigured: string;
+  retirementCopyPresent: string;
+  retirementCopyVerifiedDeleted: string;
+  retirementCopyUnknown: string;
+  retirementCopySave: string;
+  retirementInventorySaved: (configured: number, unresolved: number) => string;
+  retirementInventoryStatus: (configured: number, unresolved: number) => string;
+  retirementCopyState: (state: RetirementCopyState) => string;
+  retirementCopyDisposition: (disposition: RetirementCopyDisposition) => string;
   lastResortConsole: string;
   lastResortHint: string;
   clearCanonical: string;
@@ -719,11 +736,27 @@ const recoveryCopyExtras: Record<"en-CA" | "fr-CA", Partial<RecoveryCopy>> = {
     destroyIntentRecorded: "Explicit destroy intent recorded. Retirement is authorized only after the separate confirmation below.",
     retirementReady: "Retirement authorization is ready.",
     retirementBlocked: "Retirement is blocked. Verify a current full Vault or record explicit destroy intent first.",
+    retirementBlockedByCopies: (count) => `Retirement is blocked: ${count} configured remote copy/copies still require verified deletion.`,
     retirementConfirmation: "Retire this local origin and clear canonical records, history, artifacts, effects, and package saves? This cannot be undone.",
     retired: "Local canonical data retired. Presentation settings remain available.",
     backupToolsHeading: "Back up / restore",
     maintenanceToolsHeading: "Repair / platform",
     retirementToolsHeading: "Retire local data",
+    retirementInventoryHeading: "Copy inventory",
+    retirementInventoryHint: "Enumerate configured sync, backup, and artifact copies before retirement. Unreachable copies stay UNKNOWN and keep retirement blocked.",
+    retirementCopyLocalOrigin: "Local origin",
+    retirementCopySyncReplica: "Sync replica",
+    retirementCopyOffOriginBackup: "Off-origin backup",
+    retirementCopyArtifactTier: "Remote artifact tier",
+    retirementCopyNotConfigured: "Not configured",
+    retirementCopyPresent: "Configured / present",
+    retirementCopyVerifiedDeleted: "Verified deleted",
+    retirementCopyUnknown: "Configured / unreachable (UNKNOWN)",
+    retirementCopySave: "Save copy inventory",
+    retirementInventorySaved: (configured, unresolved) => `Copy inventory saved: ${configured} configured copy/copies; ${unresolved} unresolved.`,
+    retirementInventoryStatus: (configured, unresolved) => `${configured} configured copy/copies; ${unresolved} unresolved before retirement.`,
+    retirementCopyState: (state) => ({ PRESENT: "present", VERIFIED_DELETED: "verified deleted", UNKNOWN: "UNKNOWN", NOT_CONFIGURED: "not configured" }[state]),
+    retirementCopyDisposition: (disposition) => ({ DELETABLE: "deletable", REQUEST_ONLY: "request-only", UNREACHABLE: "unreachable", NOT_CONFIGURED: "not configured" }[disposition]),
     lastResortConsole: "Open last-resort console",
     lastResortHint: "Independent read-only rescue route for a broken application shell."
   },
@@ -742,11 +775,27 @@ const recoveryCopyExtras: Record<"en-CA" | "fr-CA", Partial<RecoveryCopy>> = {
     destroyIntentRecorded: "Intention explicite de destruction enregistree. Le retrait exige encore la confirmation separee ci-dessous.",
     retirementReady: "L'autorisation de retrait est prete.",
     retirementBlocked: "Retrait bloque. Verifiez un Vault complet actuel ou enregistrez d'abord l'intention explicite de detruire.",
+    retirementBlockedByCopies: (count) => `Retrait bloque: ${count} copie(s) distante(s) configuree(s) exigent encore une suppression verifiee.`,
     retirementConfirmation: "Retirer cette origine locale et effacer les dossiers canoniques, l'historique, les artefacts, les effets et les sauvegardes de paquets? Cette action est irreversible.",
     retired: "Donnees canoniques locales retirees. Les reglages de presentation restent disponibles.",
     backupToolsHeading: "Sauvegarder / restaurer",
     maintenanceToolsHeading: "Reparer / plateforme",
     retirementToolsHeading: "Retirer les donnees locales",
+    retirementInventoryHeading: "Inventaire des copies",
+    retirementInventoryHint: "Enumerez les copies de synchronisation, de sauvegarde et d'artefacts configurees avant le retrait. Les copies injoignables restent INCONNUES et bloquent le retrait.",
+    retirementCopyLocalOrigin: "Origine locale",
+    retirementCopySyncReplica: "Replicat de synchronisation",
+    retirementCopyOffOriginBackup: "Sauvegarde hors origine",
+    retirementCopyArtifactTier: "Niveau d'artefacts distant",
+    retirementCopyNotConfigured: "Non configure",
+    retirementCopyPresent: "Configure / present",
+    retirementCopyVerifiedDeleted: "Suppression verifiee",
+    retirementCopyUnknown: "Configure / injoignable (INCONNU)",
+    retirementCopySave: "Enregistrer l'inventaire",
+    retirementInventorySaved: (configured, unresolved) => `Inventaire enregistre: ${configured} copie(s) configuree(s); ${unresolved} non resolue(s).`,
+    retirementInventoryStatus: (configured, unresolved) => `${configured} copie(s) configuree(s); ${unresolved} non resolue(s) avant le retrait.`,
+    retirementCopyState: (state) => ({ PRESENT: "presente", VERIFIED_DELETED: "suppression verifiee", UNKNOWN: "INCONNU", NOT_CONFIGURED: "non configuree" }[state]),
+    retirementCopyDisposition: (disposition) => ({ DELETABLE: "supprimable", REQUEST_ONLY: "sur demande", UNREACHABLE: "injoignable", NOT_CONFIGURED: "non configuree" }[disposition]),
     lastResortConsole: "Ouvrir la console de dernier recours",
     lastResortHint: "Voie de secours independante et en lecture seule si la coque de l'application est brisee."
   }
