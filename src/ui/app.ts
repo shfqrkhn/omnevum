@@ -933,19 +933,35 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <p id="update-ledger-status" class="hint" role="status"></p>
           <ul id="update-ledger-list" class="record-list"></ul>
         </details>
-        <div class="form-row recovery-row">
-          <button id="export-vault" class="secondary" type="button">${copy.exportVault}</button>
-          <button id="export-encrypted" class="secondary" type="button">${recoveryCopy.exportEncrypted}</button>
-           <button id="export-diagnostics" class="secondary" type="button">${copy.exportDiagnostics}</button>
-           <button id="repair-search" class="secondary" type="button">${copy.repairSearch}</button>
-           <button id="request-persistence" class="secondary" type="button">${recoveryCopy.requestPersistence}</button>
-           <button id="safe-presentation" class="secondary" type="button">${safePresentationMode ? recoveryCopy.safePresentationActive : recoveryCopy.safePresentation}</button>
-           <button id="clear-canonical" class="danger-button" type="button">${recoveryCopy.clearCanonical}</button>
-          <label class="file-button secondary" for="import-vault">${copy.importVault}</label>
-          <input id="import-vault" type="file" accept="application/json,.json" />
-          <label class="file-button secondary" for="artifact-input">${copy.attachArtifact}</label>
-          <input id="artifact-input" type="file" />
-        </div>
+        <details id="recovery-backup-tools" class="relationship-form compact-panel recovery-tool-group">
+          <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h3>${recoveryCopy.backupToolsHeading}</h3></span></summary>
+          <p class="hint">${copy.recoveryHint}</p>
+          <div class="form-row recovery-row">
+            <button id="export-vault" class="secondary" type="button">${copy.exportVault}</button>
+            <button id="export-encrypted" class="secondary" type="button">${recoveryCopy.exportEncrypted}</button>
+            <label class="file-button secondary" for="import-vault">${copy.importVault}</label>
+            <input id="import-vault" type="file" accept="application/json,.json" />
+            <label class="file-button secondary" for="artifact-input">${copy.attachArtifact}</label>
+            <input id="artifact-input" type="file" />
+          </div>
+          <label for="vault-password">${recoveryCopy.password}</label>
+          <input id="vault-password" type="password" minlength="8" autocomplete="new-password" />
+          <p class="hint">${recoveryCopy.passwordHint}</p>
+        </details>
+        <details id="recovery-maintenance-tools" class="relationship-form compact-panel recovery-tool-group">
+          <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h3>${recoveryCopy.maintenanceToolsHeading}</h3></span></summary>
+          <div class="form-row recovery-row">
+            <button id="export-diagnostics" class="secondary" type="button">${copy.exportDiagnostics}</button>
+            <button id="repair-search" class="secondary" type="button">${copy.repairSearch}</button>
+            <button id="request-persistence" class="secondary" type="button">${recoveryCopy.requestPersistence}</button>
+            <button id="safe-presentation" class="secondary" type="button">${safePresentationMode ? recoveryCopy.safePresentationActive : recoveryCopy.safePresentation}</button>
+          </div>
+        </details>
+        <details id="recovery-retirement-tools" class="relationship-form compact-panel recovery-tool-group">
+          <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h3>${recoveryCopy.retirementToolsHeading}</h3></span></summary>
+          <p class="hint">${recoveryCopy.dataExitHint}</p>
+          <button id="clear-canonical" class="danger-button" type="button">${recoveryCopy.clearCanonical}</button>
+        </details>
         <details id="recovery-data-exit" class="relationship-form compact-panel">
           <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h3>${recoveryCopy.dataExitHeading}</h3></span></summary>
           <p class="hint">${recoveryCopy.dataExitHint}</p>
@@ -1024,9 +1040,6 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <ul id="package-automation-proposals" class="record-list"></ul>
           </div>
         </details>
-        <label for="vault-password">${recoveryCopy.password}</label>
-        <input id="vault-password" type="password" minlength="8" autocomplete="new-password" />
-        <p class="hint">${recoveryCopy.passwordHint}</p>
         <p id="recovery-status" class="hint" role="status"></p>
       </details>
     </main>

@@ -601,6 +601,9 @@ export interface RecoveryCopy {
   safePresentation: string;
   safePresentationActive: string;
   safePresentationHint: string;
+  backupToolsHeading: string;
+  maintenanceToolsHeading: string;
+  retirementToolsHeading: string;
   lastResortConsole: string;
   lastResortHint: string;
   clearCanonical: string;
@@ -632,6 +635,9 @@ const recoveryCopyExtras: Record<PresentationLocale, Partial<RecoveryCopy>> = {
     retirementBlocked: "Retirement is blocked. Verify a current full Vault or record explicit destroy intent first.",
     retirementConfirmation: "Retire this local origin and clear canonical records, history, artifacts, effects, and package saves? This cannot be undone.",
     retired: "Local canonical data retired. Presentation settings remain available.",
+    backupToolsHeading: "Back up / restore",
+    maintenanceToolsHeading: "Repair / platform",
+    retirementToolsHeading: "Retire local data",
     lastResortConsole: "Open last-resort console",
     lastResortHint: "Independent read-only rescue route for a broken application shell."
   },
@@ -652,6 +658,9 @@ const recoveryCopyExtras: Record<PresentationLocale, Partial<RecoveryCopy>> = {
     retirementBlocked: "Retrait bloque. Verifiez un Vault complet actuel ou enregistrez d'abord l'intention explicite de detruire.",
     retirementConfirmation: "Retirer cette origine locale et effacer les dossiers canoniques, l'historique, les artefacts, les effets et les sauvegardes de paquets? Cette action est irreversible.",
     retired: "Donnees canoniques locales retirees. Les reglages de presentation restent disponibles.",
+    backupToolsHeading: "Sauvegarder / restaurer",
+    maintenanceToolsHeading: "Reparer / plateforme",
+    retirementToolsHeading: "Retirer les donnees locales",
     lastResortConsole: "Ouvrir la console de dernier recours",
     lastResortHint: "Voie de secours independante et en lecture seule si la coque de l'application est brisee."
   }
