@@ -18,9 +18,9 @@ describe("presentation profile", () => {
   });
 
   it("keeps the default navigation focused on the daily spine while preserving mandatory recovery paths", () => {
-    expect(DEFAULT_PRESENTATION.navigation.visible).toEqual(["home-summary", "capture", "search", "review", "records", "recovery", "presentation"]);
+    expect(DEFAULT_PRESENTATION.navigation.visible).toEqual(["home-summary", "capture", "search", "assistant", "review", "records", "recovery", "presentation"]);
     expect(parsePresentationProfile({ productName: "Fresh" }).navigation.visible).toEqual(DEFAULT_PRESENTATION.navigation.visible);
-    expect(DEFAULT_PRESENTATION.navigation.order).toHaveLength(18);
+    expect(DEFAULT_PRESENTATION.navigation.order).toHaveLength(19);
   });
 
   it("supports the three persisted built-in presentation families", () => {
@@ -68,7 +68,7 @@ describe("presentation profile", () => {
     });
     expect(profile.tagline).toBe("Private cockpit");
     expect(profile.labels).toEqual({ home: "Today", capture: "Inbox", records: "Journal" });
-    expect(profile.navigation.visible).toEqual(["search", "capture", "recovery", "presentation"]);
+    expect(profile.navigation.visible).toEqual(["search", "capture", "assistant", "recovery", "presentation"]);
     expect(profile.navigation.order.slice(0, 2)).toEqual(["search", "capture"]);
     expect(profile.homeWidgets).toEqual(["attention", "summary"]);
   });

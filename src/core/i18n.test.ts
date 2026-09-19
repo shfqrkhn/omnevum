@@ -7,9 +7,11 @@ describe("presentation localization contract", () => {
     expect(getUiCopy("fr-CA").capture).toBe("Capture");
     expect(getUiCopy("en-CA").onboardingHint).toContain("No account");
     expect(getUiCopy("en-CA").onboardingShow).toContain("Show");
+    expect(getUiCopy("en-CA").assistantProvider).toContain("none configured");
     expect(getUiCopy("fr-CA").onboardingHeading).toContain("Commencez");
     expect(getUiCopy("fr-CA").onboardingDismiss).toContain("Masquer");
     expect(getUiCopy("fr-CA").onboardingShow).toContain("Afficher");
+    expect(getUiCopy("fr-CA").assistant).toBe("Assistant");
     expect(localeDirection("en-CA")).toBe("ltr");
     expect(formatNumber("en-CA", 1234)).toContain("1");
     expect(formatDateTime("en-CA", "not-a-date")).toBe("not-a-date");

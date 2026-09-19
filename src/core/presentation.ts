@@ -22,7 +22,7 @@ export const PRESENTATION_PROFILE_VERSION = 1 as const;
 export const MAX_PRESENTATION_PROFILE_JSON_BYTES = 256 * 1024;
 
 export const PRESENTATION_SECTION_IDS = [
-  "home-summary", "capture", "acquire", "track", "domains", "search", "spaces", "compose", "review",
+  "home-summary", "capture", "acquire", "track", "domains", "search", "assistant", "spaces", "compose", "review",
   "relate", "knowledge", "sharing", "sync", "focus", "reminders", "records", "recovery", "presentation"
 ] as const;
 export type PresentationSectionId = typeof PRESENTATION_SECTION_IDS[number];
@@ -56,7 +56,7 @@ export interface PresentationProfileDocument {
 }
 
 const DEFAULT_SECTION_ORDER: PresentationSectionId[] = [...PRESENTATION_SECTION_IDS];
-const DEFAULT_VISIBLE_SECTIONS: PresentationSectionId[] = ["home-summary", "capture", "search", "review", "records", "recovery", "presentation"];
+const DEFAULT_VISIBLE_SECTIONS: PresentationSectionId[] = ["home-summary", "capture", "search", "assistant", "review", "records", "recovery", "presentation"];
 const DEFAULT_LENS_PINS: PresentationLensId[] = ["direction", "people", "self", "resources"];
 const DEFAULT_HOME_WIDGETS: PresentationHomeWidgetId[] = [...PRESENTATION_HOME_WIDGET_IDS];
 
@@ -140,7 +140,7 @@ export function parsePresentationProfile(value: unknown): PresentationProfile {
   const navigation = typeof candidate.navigation === "object" && candidate.navigation !== null ? candidate.navigation as Record<string, unknown> : {};
   const visible = orderedValues(navigation.visible, PRESENTATION_SECTION_IDS, DEFAULT_VISIBLE_SECTIONS);
   const lensPins = orderedValues(candidate.lensPins, PRESENTATION_LENS_IDS, DEFAULT_LENS_PINS).slice(0, 4);
-  for (const requiredSection of ["recovery", "presentation"] as const) {
+  for (const requiredSection of ["assistant", "recovery", "presentation"] as const) {
     if (!visible.includes(requiredSection)) visible.push(requiredSection);
   }
   return {

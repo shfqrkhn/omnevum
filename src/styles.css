@@ -285,6 +285,8 @@ select[multiple] { min-height: 9rem; }
 .record-detail-edit textarea { min-height: 7rem; }
 .record-detail-history { display: grid; gap: 0.55rem; margin: 0; padding-left: 1.35rem; }
 .record-detail-history li { overflow-wrap: anywhere; }
+.assistant-boundary { display: grid; gap: 0.35rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-muted); padding: 0.7rem 0.8rem; }
+.assistant-boundary p { margin: 0; overflow-wrap: anywhere; }
 .icon-button { min-width: 44px; min-height: 44px; padding: 0.45rem 0.7rem; background: transparent; border-color: var(--line); color: var(--danger); font-size: 0.82rem; }
 .icon-button:hover { background: var(--surface-muted); }
 .complete-button { color: var(--accent); }
