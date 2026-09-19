@@ -1546,9 +1546,10 @@
       "text": "A 320 CSS pixel equivalent viewport is exercised against Home, Capture, an active lens, Assistant, and System/Recovery at 100% and 200% text scaling. Each surface reflows to a single column with no horizontal scrolling of first-party chrome or content, no clipped or overlapped control, and no unreachable target. Any intrinsically two-dimensional region scrolls within its own explicit bounds without propagating horizontal scroll to the page.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-responsive-target-geometry-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-responsive-target-geometry-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt"
       ],
-      "notes": "The current receipt-bound Chromium artifact has a strict 320x844 CSS viewport geometry audit with no page overflow and a 2x page-scale rehearsal, plus a normal desktop audit. True OS/browser text-size scaling, physical touch, Assistant availability, browser-family breadth, assistive technology, and human acceptance remain open."
+      "notes": "The current exact artifact now covers all Alpha/Beta/Gamma Light/Dark combinations at strict 320x844 with 100% and temporary 2x page-scale profiles: no page horizontal overflow or horizontal target clipping was observed, and the canonical sentinel remained present. True OS/browser text-size scaling, physical touch, Assistant availability, vertical reachability, browser-family breadth, assistive technology, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-100",
@@ -1559,9 +1560,10 @@
       "text": "Every interactive target on the primary surfaces is measured programmatically. Each commits-, dismisses-, snoozes-, or navigates-class target presents a hit area of at least 44 x 44 CSS pixels with at least 8 CSS pixels of separation from adjacent independent targets, at every admitted density preference, and Capture invocation, lens switching, staging disposition, and sheet confirm/cancel all fall within the lower 50% of the viewport.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-responsive-target-geometry-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-responsive-target-geometry-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt"
       ],
-      "notes": "The current receipt-bound Chromium audit measured 281 visible target candidates at strict narrow and normal desktop profiles; none was below 44px in either dimension or outside the viewport. Independent-target 8px separation, lower-half placement for every specified action, true touch accuracy, all density/profile combinations, browser-family/accessibility breadth, and human acceptance remain open."
+      "notes": "The current exact artifact measured 216 visible consequential targets for each of 12 Alpha/Beta/Gamma Light/Dark × 100%/2x narrow runs; none was below 44x44 CSS pixels and none was horizontally clipped, with page scrollWidth equal to clientWidth. Independent-target 8px separation, lower-half placement, true touch accuracy, all density/profile combinations, browser-family/accessibility breadth, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-101",
@@ -1874,8 +1876,11 @@
         "line": 4188
       },
       "text": "Every built-in family is exercised in Light and AMOLED Dark at 320 CSS pixels, 100% and 200% text scaling, and the admitted touch/input profiles. No family introduces page-level horizontal scrolling, clipped controls, sub-44 x 44 consequential targets, color-only state, or an alternate mutation path.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt"
+      ],
+      "notes": "All six family/mode combinations were exercised at a strict 320x844 viewport and a temporary 2x page-scale rehearsal; all 12 runs had no page horizontal overflow, no horizontal target clipping, no consequential target below 44x44, and the same canonical sentinel. True text-size settings, physical touch/input profiles, color-only state/CVD, alternate mutation paths, other engines, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-132",

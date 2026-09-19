@@ -23,7 +23,8 @@
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-responsive-target-geometry-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-cross-origin-vault-restore-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-built-artifact-palette-contrast-receipt",
-    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-presentation-receipt"
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-presentation-receipt",
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt"
   ],
   "focus": [
     "static-host shell and base-path routing",
