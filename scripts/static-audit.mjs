@@ -30,7 +30,7 @@ else {
 if (!existsSync(dist)) failures.push("missing dist");
 if (failures.length === 0) {
   const sourceStyles = readFileSync(join(root, "src/styles.css"), "utf8");
-  if (!/\.compact-panel:not\(\[open\]\)\s*>\s*:not\(summary\)/u.test(sourceStyles) || !/details\.relationship-form:not\(\[open\]\)\s*>\s*:not\(summary\)/u.test(sourceStyles)) failures.push("closed compact disclosures do not hide their non-summary content");
+  if (!/\.compact-panel:not\(\[open\]\)\s*>\s*:not\(summary\)/u.test(sourceStyles) || !/details\.relationship-form:not\(\[open\]\)\s*>\s*:not\(summary\)/u.test(sourceStyles) || !/details\.telemetry-thresholds:not\(\[open\]\)\s*>\s*:not\(summary\)/u.test(sourceStyles)) failures.push("closed compact disclosures do not hide their non-summary content");
   const index = readFileSync(join(dist, "index.html"), "utf8");
   const lastResortPath = join(dist, "recovery.html");
   if (!existsSync(lastResortPath)) failures.push("missing independent last-resort recovery route");
