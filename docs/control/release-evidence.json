@@ -3,7 +3,7 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "4aaddc1fa86e7be48dfa4f2fde1e62c6cd23e2f34e174b95ed5c9ede0e4a280d", "sourceRevision": "3132fa98fbecde13f4c6d2fccae17b813f173d93", "serviceWorkerCache": "omnevum-shell-e75057ab596dbe42"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "4aaddc1fa86e7be48dfa4f2fde1e62c6cd23e2f34e174b95ed5c9ede0e4a280d", "sourceRevision": "fb7775afd56fa23ad664dc2fe8a0e555372095a2", "serviceWorkerCache": "omnevum-shell-e75057ab596dbe42"},
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF; captured after the full npm run build on 2026-09-19.",
   "artifactFiles": [
     {"path": "dist/assets/index-5Bomwce_.css", "sha256": "1c11d276ca2f5c25d1e54f84910a73a0b7c2f87d9983897d4972e1848d041446", "bytes": 24102},
@@ -28,5 +28,5 @@
     "human-acceptance-where-required"
   ],
   "evidencePolicy": "Generated status text cannot create PASS. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains NOT_RUN/UNKNOWN.",
-  "currentDecision": "Continue Phase 0; OMN-ACC-094 is bounded NOT_APPLICABLE because the current profile never renders untrusted markup, while OMN-ACC-165 authorized graph blast-radius explanation remains PARTIAL and full correction/removal orchestration, target qualification, deployment, and human acceptance remain open; do not publish a completion or production-release claim."
+  "currentDecision": "Continue Phase 0; OMN-ACC-123/128 schema-update approval and shell-activation policy is source/test/build qualified at PARTIAL, while live service-worker activation, deployment/rollback, target qualification, and human acceptance remain open; OMN-ACC-094 remains bounded NOT_APPLICABLE and do not publish a completion or production-release claim."
 }

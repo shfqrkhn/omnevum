@@ -1901,8 +1901,13 @@
         "line": 4172
       },
       "text": "A shell-only update applies silently and appears in the version ledger with time and rollback path. An update carrying a canonical schema migration does not apply silently: it states the migrations, affected record classes, verified backup state and age, and rollback path, and offers to create a backup when none is recent. The migration is then interrupted and the system neither silently resets data nor loses the rollback path.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/migration.ts#evaluateUpdate",
+        "src/core/migration.test.ts#requires-explicit-approval-and-a-current-verified-backup-for-canonical-migration",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-schema-update-approval-and-shell-activation-receipt"
+      ],
+      "notes": "Source revision fb7775a is test/build qualified. The migration owner now gates canonical-schema candidates behind explicit approval and a current verified Vault backup, reports migration IDs/affected record classes/backup state/rollback path, records update identity, and refuses malformed or stale backup receipts; shell-only candidates may apply silently. Live service-worker candidate activation, persistent version-ledger UI, deployment/rollback rehearsal, other targets, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-124",
@@ -1951,8 +1956,15 @@
         "line": 4182
       },
       "text": "A new application shell is activated by the runtime while a schema migration remains unapproved. The new shell either refuses control or starts read-compatible against the unmigrated data, performs no part of the migration, and leaves the system fully usable after the user declines. Exactly one shell version holds control throughout, and a shell that cannot operate against the unmigrated data reports that condition instead of migrating to resolve it.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/migration.ts#evaluateShellActivation",
+        "src/core/migration.ts#interruptedMigration",
+        "src/core/migration.test.ts#rejects-stale-or-malformed-backup-receipts-instead-of-treating-them-as-verified",
+        "src/core/storage.test.ts#preserves-canonical-data-when-an-indexeddb-migration-transaction-is-interrupted",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-schema-update-approval-and-shell-activation-receipt"
+      ],
+      "notes": "Source revision fb7775a is test/build qualified. An unapproved schema candidate either remains read-compatible or refuses control, never migrates to resolve the condition; an interrupted migration retains the current schema/current shell and rollback path, while existing storage tests prove stale-client fencing and aborted IndexedDB-upgrade preservation. Live service-worker candidate activation, exact one-shell browser rehearsal, deployment, other targets, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-129",

@@ -7,8 +7,8 @@
     {"id": "COMP-001", "from": "none", "to": "schema-1", "case": "fresh install", "expected": "empty canonical store and usable Recovery", "status": "TESTED_INITIAL"},
     {"id": "COMP-002", "from": "schema-1", "to": "schema-1", "case": "same-origin reopen", "expected": "records and tombstones preserved", "status": "TESTED_INITIAL"},
     {"id": "COMP-003", "from": "vault-1", "to": "schema-1", "case": "cross-origin restore", "expected": "IDs, revisions, provenance preserved", "status": "PARTIAL_LOCAL_CROSS_STORE"},
-    {"id": "COMP-004", "from": "older-schema", "to": "current", "case": "future migration", "expected": "explicit migrator or safe refusal; no reset", "status": "TESTED_SAFE_REFUSAL_SPIKE"},
-    {"id": "COMP-005", "from": "current", "to": "current", "case": "interrupted update or stale client", "expected": "repair/recovery path, stale-client fencing, and no silent data loss", "status": "PARTIAL_INTERRUPTED_UPGRADE_AND_CLIENT_FENCE"}
+    {"id": "COMP-004", "from": "older-schema", "to": "current", "case": "future migration", "expected": "explicit migrator or safe refusal; no reset", "status": "TESTED_SAFE_REFUSAL_SPIKE", "evidence": "src/core/migration.ts#evaluateUpdate"},
+    {"id": "COMP-005", "from": "current", "to": "current", "case": "interrupted update or stale client", "expected": "repair/recovery path, stale-client fencing, and no silent data loss", "status": "PARTIAL_INTERRUPTED_UPGRADE_AND_CLIENT_FENCE", "evidence": "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-schema-update-approval-and-shell-activation-receipt"}
   ],
   "rule": "Every schema, Vault, provider, package, and origin change adds a fixture and an explicit migration/rollback disposition before promotion."
 }
