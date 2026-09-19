@@ -77,6 +77,14 @@ describe("canonical Finance projection", () => {
     expect(projection.financeGoalPlans[0]?.plan).toMatchObject({ goalId: goal.id, funded: { amountMinor: "7000", currency: "CAD" }, remaining: { amountMinor: "8000", currency: "CAD" }, fundingConflict: false });
   });
 
+  it("projects a portfolio funding conflict once and exposes review-only alternatives", () => {
+    const reserve = record("finance-goal-reserve", { kind: "finance-goal", label: "Emergency reserve", text: "Emergency reserve", targetAmountMinor: "120000", currency: "CAD", targetDate: "2027-01-01", sustainableMonthlySurplusMinor: "50000" });
+    const travel = record("finance-goal-travel", { kind: "finance-goal", label: "Travel", text: "Travel", targetAmountMinor: "120000", currency: "CAD", targetDate: "2027-01-01", sustainableMonthlySurplusMinor: "50000" });
+    const projection = projectFinanceState([reserve, travel]);
+    expect(projection.financeFundingAnalysis).toMatchObject({ currency: "CAD", fundingConflict: true, hardConstraintConflict: false, alternatives: [{ id: "PROPORTIONAL_SOFT_GOALS" }, { id: "DEFER_SOFT_GOALS" }] });
+    expect(projection.financeFundingAnalysis?.aggregateShortfall.amountMinor).toBeTruthy();
+  });
+
   it("excludes confirmed cross-account movements from aggregate totals while retaining unresolved candidates", () => {
     const outgoing = record("checking-transfer", { kind: "finance-transaction", merchant: "transfer to savings", description: "Transfer to savings", amountMinor: "-2500", currency: "CAD", accountId: "checking", postedAt: "2026-01-02T00:00:00.000Z", status: "POSTED" }, { truthClass: "IMPORTED_RECORD" });
     const incoming = record("savings-transfer", { kind: "finance-transaction", merchant: "transfer from checking", description: "Transfer from checking", amountMinor: "2500", currency: "CAD", accountId: "savings", postedAt: "2026-01-03T00:00:00.000Z", status: "POSTED" }, { truthClass: "IMPORTED_RECORD" });

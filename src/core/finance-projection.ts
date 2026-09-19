@@ -2,7 +2,7 @@ import { projectDependencyGraph, projectDependencyImpact, type DependencyGraph, 
 import { addMoney, parseMoney, type MoneyValue } from "./money";
 import type { CanonicalRecord, TruthClass } from "./model";
 import type { FinanceLineage, FinanceTransaction, FinanceTransactionStatus } from "./finance";
-import { allocateFinanceResource, assessFinanceDataQuality, analyzeFinanceGraph, detectFinanceReviewCases, inferFinanceRecurringPatterns, matchFinanceTransfers, projectFinanceGoal, summarizeFinanceTransactions, type FinanceAllocationResult, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastVintage, type FinanceGoalPlan, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceReviewCase, type FinanceTransactionSummary, type FinanceTransferAnalysis } from "./finance-model";
+import { allocateFinanceResource, assessFinanceDataQuality, analyzeFinanceGraph, detectFinanceReviewCases, inferFinanceRecurringPatterns, matchFinanceTransfers, planFinanceAllocationAlternatives, projectFinanceGoal, summarizeFinanceTransactions, type FinanceAllocationResult, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastVintage, type FinanceFundingAnalysis, type FinanceGoalPlan, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceReviewCase, type FinanceTransactionSummary, type FinanceTransferAnalysis } from "./finance-model";
 
 /**
  * Read-only Finance projection over canonical records and the shared typed
@@ -34,6 +34,7 @@ export interface FinanceProjection {
   financeGraphAnalysis: FinanceGraphAnalysis;
   financeAllocationResults: Array<{ resourceId: string; result: FinanceAllocationResult }>;
   financeGoalPlans: Array<{ recordId: string; plan: FinanceGoalPlan }>;
+  financeFundingAnalysis?: FinanceFundingAnalysis;
   invalidatedFinanceIds: string[];
   forecastVintages: FinanceForecastVintage[];
 }
@@ -112,6 +113,17 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
       return [];
     }
   });
+  const fundingCandidates = financeGoalPlans.filter((entry): entry is { recordId: string; plan: FinanceGoalPlan & { requiredMonthlyContribution: MoneyValue; sustainableMonthlySurplus: MoneyValue } } => Boolean(entry.plan.requiredMonthlyContribution && entry.plan.sustainableMonthlySurplus));
+  const commonSurplus = fundingCandidates[0]?.plan.sustainableMonthlySurplus;
+  const financeFundingAnalysis = commonSurplus && fundingCandidates.every((entry) => entry.plan.sustainableMonthlySurplus.currency === commonSurplus.currency && entry.plan.sustainableMonthlySurplus.amountMinor === commonSurplus.amountMinor)
+    ? (() => {
+        try {
+          return planFinanceAllocationAlternatives(fundingCandidates.map((entry) => ({ goalId: entry.recordId, requiredMonthlyContribution: entry.plan.requiredMonthlyContribution, hardConstraint: false })), commonSurplus);
+        } catch {
+          return undefined;
+        }
+      })()
+    : undefined;
   const invalidatedFinanceIds = dependencyImpact.invalidatedDerivedIds.filter((id) => financeNodeIds.has(id)).sort();
   const status = transactions.length === 0 ? "NO_DATA" : quality.status === "SUFFICIENT" && reviewCases.length === 0 ? "READY" : "LIMITED";
   return {
@@ -132,6 +144,7 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
     financeGraphAnalysis,
     financeAllocationResults,
     financeGoalPlans,
+    ...(financeFundingAnalysis ? { financeFundingAnalysis } : {}),
     invalidatedFinanceIds,
     forecastVintages: [...(options.forecastVintages ?? [])]
   };

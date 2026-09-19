@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseFinanceCsv, type FinanceStatementSource } from "./finance";
-import { allocateFinanceResource, analyzeFinanceGraph, assessFinanceDataQuality, classifyFinanceSource, createFinanceForecast, detectFinanceParserDrift, detectFinanceReviewCases, evaluateFinanceFeedbackLoop, inferFinanceRecurringPatterns, matchFinanceTransfers, projectFinanceGoal, projectFireScenario, propagateFinanceGraph, summarizeFinanceTransactions, type FinanceDependencyGraph } from "./finance-model";
+import { allocateFinanceResource, analyzeFinanceGraph, assessFinanceDataQuality, classifyFinanceSource, createFinanceForecast, detectFinanceParserDrift, detectFinanceReviewCases, evaluateFinanceFeedbackLoop, inferFinanceRecurringPatterns, matchFinanceTransfers, planFinanceAllocationAlternatives, projectFinanceGoal, projectFireScenario, propagateFinanceGraph, summarizeFinanceTransactions, type FinanceDependencyGraph } from "./finance-model";
 
 const source: FinanceStatementSource = { sourceId: "source:model", name: "model.csv", sha256: "c".repeat(64), accountId: "checking", currency: "CAD" };
 
@@ -81,6 +81,28 @@ describe("shared Finance/Synergy model", () => {
     expect(summary.postedSpending.amountMinor).toBe("500");
     expect(summary.netCashFlow.amountMinor).toBe("-500");
     expect(summary.transferNet.amountMinor).toBe("0");
+  });
+
+  it("returns deterministic review-only alternatives for conflicting soft goals", () => {
+    const analysis = planFinanceAllocationAlternatives([
+      { goalId: "travel", requiredMonthlyContribution: { amountMinor: "50000", currency: "CAD" } },
+      { goalId: "reserve", requiredMonthlyContribution: { amountMinor: "80000", currency: "CAD" }, hardConstraint: true },
+      { goalId: "learning", requiredMonthlyContribution: { amountMinor: "20000", currency: "CAD" } }
+    ], { amountMinor: "100000", currency: "CAD" });
+    expect(analysis).toMatchObject({ currency: "CAD", requestedMonthlyContribution: { amountMinor: "150000", currency: "CAD" }, sustainableMonthlySurplus: { amountMinor: "100000", currency: "CAD" }, fundingConflict: true, hardConstraintConflict: false });
+    expect(analysis.alternatives.map((alternative) => alternative.id)).toEqual(["PROPORTIONAL_SOFT_GOALS", "DEFER_SOFT_GOALS"]);
+    expect(analysis.alternatives[0]).toMatchObject({ monthlyContributions: { learning: { amountMinor: "5715" }, reserve: { amountMinor: "80000" }, travel: { amountMinor: "14285" } }, totalMonthlyContribution: { amountMinor: "100000" }, shortfallByGoal: { learning: { amountMinor: "14285" }, travel: { amountMinor: "35715" } }, preservesHardConstraints: true, truthClass: "MODELED" });
+    expect(analysis.alternatives[1]).toMatchObject({ monthlyContributions: { learning: { amountMinor: "0" }, reserve: { amountMinor: "80000" }, travel: { amountMinor: "0" } }, totalMonthlyContribution: { amountMinor: "80000" }, preservesHardConstraints: true });
+  });
+
+  it("rejects duplicate or currency-incompatible funding requests and exposes hard conflicts without fake alternatives", () => {
+    expect(() => planFinanceAllocationAlternatives([
+      { goalId: " reserve ", requiredMonthlyContribution: { amountMinor: "100", currency: "CAD" } },
+      { goalId: "reserve", requiredMonthlyContribution: { amountMinor: "100", currency: "CAD" } }
+    ], { amountMinor: "1000", currency: "CAD" })).toThrow("unique and non-empty");
+    expect(() => planFinanceAllocationAlternatives([{ goalId: "usd", requiredMonthlyContribution: { amountMinor: "100", currency: "USD" } }], { amountMinor: "1000", currency: "CAD" })).toThrow("surplus currency");
+    const hardConflict = planFinanceAllocationAlternatives([{ goalId: "reserve", requiredMonthlyContribution: { amountMinor: "1200", currency: "CAD" }, hardConstraint: true }, { goalId: "travel", requiredMonthlyContribution: { amountMinor: "100", currency: "CAD" } }], { amountMinor: "1000", currency: "CAD" });
+    expect(hardConflict).toMatchObject({ fundingConflict: true, hardConstraintConflict: true, alternatives: [] });
   });
 
   it("keeps source-class/parser drift, recurrence, anomaly, forecast, and quality state explicit", () => {

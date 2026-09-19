@@ -2666,8 +2666,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const allocationConflicts = finance.financeAllocationResults.reduce((total, entry) => total + entry.result.conflictIds.length, 0);
       const goalConflicts = finance.financeGoalPlans.filter((entry) => entry.plan.fundingConflict).length;
       const goalProgress = finance.financeGoalPlans.map((entry) => copy.financeGoalProgress(finance.financeGraph.nodes.find((node) => node.id === entry.recordId)?.label ?? entry.recordId, formatMoney(entry.plan.funded, presentation.locale), formatMoney(entry.plan.target, presentation.locale), formatMoney(entry.plan.remaining, presentation.locale), entry.plan.fundingConflict)).join(" ");
-      const transferStatus = copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length);
-      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${transferStatus} ${goalProgress}`;
+      const funding = finance.financeFundingAnalysis;
+      const fundingAlternative = funding?.alternatives[0];
+      const fundingStatus = funding?.fundingConflict ? copy.financeFundingStatus(formatMoney(funding.aggregateShortfall, presentation.locale), Object.keys(fundingAlternative?.shortfallByGoal ?? {}).length || finance.financeGoalPlans.length, funding.alternatives.length, funding.hardConstraintConflict) : "";
+      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${fundingStatus} ${goalProgress}`;
       insightsGrid.append(financeStatus);
     } else if (finance.transactionCount === 0 && finance.financeGraph.nodes.length === 0) {
       const financeStatus = document.createElement("p");
@@ -2680,8 +2682,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const allocationConflicts = finance.financeAllocationResults.reduce((total, entry) => total + entry.result.conflictIds.length, 0);
       const goalConflicts = finance.financeGoalPlans.filter((entry) => entry.plan.fundingConflict).length;
       const goalProgress = finance.financeGoalPlans.map((entry) => copy.financeGoalProgress(finance.financeGraph.nodes.find((node) => node.id === entry.recordId)?.label ?? entry.recordId, formatMoney(entry.plan.funded, presentation.locale), formatMoney(entry.plan.target, presentation.locale), formatMoney(entry.plan.remaining, presentation.locale), entry.plan.fundingConflict)).join(" ");
-      const transferStatus = copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length);
-      financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${transferStatus} ${goalProgress}`;
+      const funding = finance.financeFundingAnalysis;
+      const fundingAlternative = funding?.alternatives[0];
+      const fundingStatus = funding?.fundingConflict ? copy.financeFundingStatus(formatMoney(funding.aggregateShortfall, presentation.locale), Object.keys(fundingAlternative?.shortfallByGoal ?? {}).length || finance.financeGoalPlans.length, funding.alternatives.length, funding.hardConstraintConflict) : "";
+      financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${fundingStatus} ${goalProgress}`;
       insightsGrid.append(financeStatus);
     }
     const considerations = projectDueReminderConsiderations(records);

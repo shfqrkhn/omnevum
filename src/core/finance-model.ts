@@ -683,6 +683,115 @@ export function projectFinanceGoal(input: FinanceGoalInput, now = new Date()): F
   return { goalId: input.goalId, target, funded: input.funded, remaining, ...(requiredMonthlyContribution ? { requiredMonthlyContribution } : {}), ...(sustainable ? { sustainableMonthlySurplus: sustainable } : {}), fundingConflict, truthClass: "MODELED" };
 }
 
+export interface FinanceFundingRequest {
+  goalId: string;
+  requiredMonthlyContribution: MoneyValue;
+  hardConstraint?: boolean;
+}
+
+export interface FinanceFundingAlternative {
+  id: string;
+  label: string;
+  monthlyContributions: Record<string, MoneyValue>;
+  totalMonthlyContribution: MoneyValue;
+  shortfallByGoal: Record<string, MoneyValue>;
+  preservesHardConstraints: boolean;
+  truthClass: "MODELED";
+}
+
+export interface FinanceFundingAnalysis {
+  currency: string;
+  requestedMonthlyContribution: MoneyValue;
+  sustainableMonthlySurplus: MoneyValue;
+  aggregateShortfall: MoneyValue;
+  fundingConflict: boolean;
+  hardConstraintConflict: boolean;
+  alternatives: FinanceFundingAlternative[];
+}
+
+/**
+ * Produce transparent review-only funding plans. Hard constraints are fully
+ * funded when mathematically possible; soft-goal tradeoffs are explicit and
+ * deterministic. No priority score or canonical allocation is changed.
+ */
+export function planFinanceAllocationAlternatives(requests: readonly FinanceFundingRequest[], sustainableMonthlySurplus: MoneyValue): FinanceFundingAnalysis {
+  const currency = parseMoney("0", sustainableMonthlySurplus.currency).currency;
+  assertNonNegativeMoney(sustainableMonthlySurplus, "Sustainable monthly surplus");
+  const sustainable = moneyFromMinor(BigInt(sustainableMonthlySurplus.amountMinor), currency);
+  const seen = new Set<string>();
+  const normalized = requests.slice().sort((left, right) => left.goalId.localeCompare(right.goalId)).map((request) => {
+    const goalId = request.goalId.trim();
+    if (!goalId || seen.has(goalId)) throw new Error("Funding request goal IDs must be unique and non-empty");
+    seen.add(goalId);
+    if (request.requiredMonthlyContribution.currency !== currency) throw new Error("Funding requests must use the surplus currency");
+    assertNonNegativeMoney(request.requiredMonthlyContribution, "Required monthly contribution");
+    return { ...request, goalId, hardConstraint: request.hardConstraint === true };
+  });
+  const requested = normalized.reduce((total, request) => addMoney(total, request.requiredMonthlyContribution), parseMoney("0", currency));
+  const hard = normalized.filter((request) => request.hardConstraint);
+  const soft = normalized.filter((request) => !request.hardConstraint);
+  const hardTotal = hard.reduce((total, request) => addMoney(total, request.requiredMonthlyContribution), parseMoney("0", currency));
+  const fundingConflict = BigInt(requested.amountMinor) > BigInt(sustainable.amountMinor);
+  const hardConstraintConflict = BigInt(hardTotal.amountMinor) > BigInt(sustainable.amountMinor);
+  const aggregateShortfall = positiveDifference(requested, sustainable);
+  if (!fundingConflict || hardConstraintConflict || soft.length === 0) return { currency, requestedMonthlyContribution: requested, sustainableMonthlySurplus: sustainable, aggregateShortfall, fundingConflict, hardConstraintConflict, alternatives: [] };
+  const capacityForSoft = subtractMoney(sustainable, hardTotal);
+  const proportional = allocateSoftProportionally(soft, capacityForSoft);
+  const deferred = Object.fromEntries(soft.map((request) => [request.goalId, parseMoney("0", currency)]));
+  const alternatives = [
+    buildFundingAlternative("PROPORTIONAL_SOFT_GOALS", "Preserve hard constraints; share remaining surplus proportionally.", hard, soft, proportional, sustainable),
+    buildFundingAlternative("DEFER_SOFT_GOALS", "Preserve hard constraints; defer soft-goal contributions for explicit review.", hard, soft, deferred, sustainable)
+  ];
+  return { currency, requestedMonthlyContribution: requested, sustainableMonthlySurplus: sustainable, aggregateShortfall, fundingConflict, hardConstraintConflict, alternatives: deduplicateFundingAlternatives(alternatives) };
+}
+
+function allocateSoftProportionally(requests: readonly FinanceFundingRequest[], capacity: MoneyValue): Record<string, MoneyValue> {
+  const total = requests.reduce((sum, request) => addMoney(sum, request.requiredMonthlyContribution), parseMoney("0", capacity.currency));
+  const capacityMinor = BigInt(capacity.amountMinor);
+  const totalMinor = BigInt(total.amountMinor);
+  const allocations: Record<string, MoneyValue> = {};
+  let allocated = 0n;
+  for (const request of requests) {
+    const amount = totalMinor === 0n ? 0n : (capacityMinor * BigInt(request.requiredMonthlyContribution.amountMinor)) / totalMinor;
+    allocations[request.goalId] = moneyFromMinor(amount, capacity.currency);
+    allocated += amount;
+  }
+  let remainder = capacityMinor - allocated;
+  for (const request of requests) {
+    if (remainder <= 0n) break;
+    const current = BigInt(allocations[request.goalId]!.amountMinor);
+    const maximum = BigInt(request.requiredMonthlyContribution.amountMinor);
+    if (current < maximum) {
+      allocations[request.goalId] = moneyFromMinor(current + 1n, capacity.currency);
+      remainder -= 1n;
+    }
+  }
+  return allocations;
+}
+
+function buildFundingAlternative(id: string, label: string, hard: readonly FinanceFundingRequest[], soft: readonly FinanceFundingRequest[], softAllocations: Record<string, MoneyValue>, sustainable: MoneyValue): FinanceFundingAlternative {
+  const monthlyContributions: Record<string, MoneyValue> = {};
+  for (const request of hard) monthlyContributions[request.goalId] = request.requiredMonthlyContribution;
+  for (const request of soft) monthlyContributions[request.goalId] = softAllocations[request.goalId] ?? parseMoney("0", sustainable.currency);
+  const total = Object.values(monthlyContributions).reduce((sum, amount) => addMoney(sum, amount), parseMoney("0", sustainable.currency));
+  const shortfallByGoal: Record<string, MoneyValue> = {};
+  for (const request of [...hard, ...soft]) {
+    const shortfall = positiveDifference(request.requiredMonthlyContribution, monthlyContributions[request.goalId]!);
+    if (BigInt(shortfall.amountMinor) > 0n) shortfallByGoal[request.goalId] = shortfall;
+  }
+  return { id, label, monthlyContributions, totalMonthlyContribution: total, shortfallByGoal, preservesHardConstraints: hard.every((request) => monthlyContributions[request.goalId]?.amountMinor === request.requiredMonthlyContribution.amountMinor), truthClass: "MODELED" };
+}
+
+function deduplicateFundingAlternatives(alternatives: readonly FinanceFundingAlternative[]): FinanceFundingAlternative[] {
+  const seen = new Set<string>();
+  return alternatives.filter((alternative) => {
+    const key = JSON.stringify(Object.entries(alternative.monthlyContributions).sort(([left], [right]) => left.localeCompare(right)));
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 export interface FireScenarioInput {
   scenarioId: string;
   currency: string;
