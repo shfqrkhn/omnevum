@@ -9,7 +9,7 @@ export interface UiCopy {
   productHeading: string; foundation: string; lede: string; system: string; ready: string; local: string; healthInitial: string; healthy: string; degraded: string;
   home: string; currentPicture: string; activeRecordCount: string; visualize: string; signals: string; openTasks: string; completedTasks: string; focusMinutes: string; relationships: string; personalization: string; makeItYours: string; lenses: string; lensOverflow: string; lensHint: string; lensPinned: string; lensActive: string; lensNoRecords: string; openRecord: string; closeRecord: string; recordDetail: string; recordOverview: string; recordRelationships: string; recordEvidence: string; noRecordRelationships: string; noRecordEvidence: string; recordIdLabel: string; recordOwnerLabel: string; recordTruthLabel: string; recordSensitivityLabel: string; recordProvenanceLabel: string; recordEditLabel: string; recordEditHint: string; saveRecordEdit: string; recordEditSaved: (revision: number, index: string) => string; recordEditUnavailable: string; recordEditSegmentStatus: (label: string) => string; onboardingHeading: string; onboardingHint: string; onboardingCapture: string; onboardingReview: string; onboardingRecovery: string; onboardingStart: string; onboardingDismiss: string; onboardingShow: string;
   derivedStatus: (records: number, sourceIds: number, groups: number) => string;
-  appName: string; language: string; english: string; french: string; save: string; presentationHint: string; tagline: string; density: string; comfortable: string; compact: string; typeface: string; systemTypeface: string; serifTypeface: string; monoTypeface: string; iconography: string; labelIconography: string; glyphIconography: string; homeLabel: string; captureLabel: string; recordsLabel: string; navigationSections: string; navigationHint: string; homeWidgets: string; homeWidgetsHint: string; resetPresentation: string; exportPresentationProfile: string; importPresentationProfile: string; presentationProfileExported: string; presentationProfileImported: string; editLabel: string; labelRequired: string; pinSection: (label: string) => string; unpinSection: (label: string) => string;
+  appName: string; language: string; english: string; french: string; save: string; presentationHint: string; tagline: string; density: string; comfortable: string; compact: string; typeface: string; systemTypeface: string; serifTypeface: string; monoTypeface: string; iconography: string; labelIconography: string; glyphIconography: string; homeLabel: string; captureLabel: string; recordsLabel: string; navigationSections: string; navigationHint: string; homeWidgets: string; homeWidgetsHint: string; resetPresentation: string; exportPresentationProfile: string; importPresentationProfile: string; presentationProfileExported: string; presentationProfileImported: string; editLabel: string; labelRequired: string;
   capture: string; getItOut: string; kind: string; note: string; task: string; observation: string; space: string; acquireHeading: string; stageImport: string; acquireFile: string; readClipboard: string; acceptStaged: string; acquirePlaceholder: string; acquireHint: string; stagedMessage: (count: number, warnings: number) => string; cleanupHeading: string; cleanupHint: string; cleanupImportedOnly: string; cleanupTrim: string; cleanupWhitespace: string; cleanupPreview: string; cleanupApply: string; cleanupStatus: (records: number, sources: number, proposals: number) => string; cleanupEmpty: string; cleanupTransform: string; cleanupDuplicate: string; cleanupAmbiguous: string; cleanupArchive: string; cleanupMarkReview: string; cleanupApplied: (updated: number, archived: number, review: number) => string; cleanupHistory: string; cleanupHistoryEmpty: string; cleanupHistoryEntry: (recipe: string, acceptedAt: string, inputs: number, updated: number, archived: number, review: number, chunks: number) => string;
   personal: string; household: string; work: string; captureContent: string; capturePlaceholder: string;
   captureHint: string; safeDirectRoute: string; safeDirectRouteHint: string; saveCapture: string; searchExplore: string; findCaptures: string; searchTerms: string; searchFilters: string; searchFacetLens: string; searchFacetType: string; searchFacetSpace: string; searchFacetArtifact: string; searchAll: string; searchHasArtifact: string; searchScope: (scope: string) => string; searchMatch: (owner: string, lens: string) => string; searchSaveView: string; searchViewName: string; searchViewSaved: string; searchViewQueryRequired: string; searchFacetChip: (key: string, value: string) => string; searchGroup: (lens: string) => string;
@@ -193,18 +193,14 @@ const cleanupFrench: CleanupCopy = {
   cleanupHistoryEntry: (recipe, acceptedAt, inputs, updated, archived, review, chunks) => `${recipe} a ${acceptedAt}: ${inputs} entree(s), ${updated} transformee(s), ${archived} archivee(s), ${review} marque(s) pour revue, ${chunks} bloc(s) de recu.`
 };
 
-const presentationQuickEnglish: Pick<UiCopy, "editLabel" | "labelRequired" | "pinSection" | "unpinSection"> = {
+const presentationQuickEnglish: Pick<UiCopy, "editLabel" | "labelRequired"> = {
   editLabel: "Edit this label",
-  labelRequired: "Enter a non-empty label.",
-  pinSection: (label) => `Pin ${label}`,
-  unpinSection: (label) => `Unpin ${label}`
+  labelRequired: "Enter a non-empty label."
 };
 
-const presentationQuickFrench: Pick<UiCopy, "editLabel" | "labelRequired" | "pinSection" | "unpinSection"> = {
+const presentationQuickFrench: Pick<UiCopy, "editLabel" | "labelRequired"> = {
   editLabel: "Modifier ce libelle",
-  labelRequired: "Entrez un libelle non vide.",
-  pinSection: (label) => `Epingler ${label}`,
-  unpinSection: (label) => `Desepingler ${label}`
+  labelRequired: "Entrez un libelle non vide."
 };
 
 const presentationLensEnglish: Pick<UiCopy, "lenses" | "lensOverflow" | "lensHint" | "lensPinned" | "lensActive" | "lensNoRecords" | "openRecord" | "closeRecord" | "recordDetail" | "recordOverview" | "recordRelationships" | "recordEvidence" | "noRecordRelationships" | "noRecordEvidence" | "recordIdLabel" | "recordOwnerLabel" | "recordTruthLabel" | "recordSensitivityLabel" | "recordProvenanceLabel" | "recordEditLabel" | "recordEditHint" | "saveRecordEdit" | "recordEditSaved" | "recordEditUnavailable" | "recordEditSegmentStatus"> = {

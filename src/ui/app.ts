@@ -1929,16 +1929,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       link.href = `#${id}`;
       link.textContent = sectionLabel(id);
       link.dataset.navIcon = sectionIcon(id);
-      const pin = document.createElement("button");
-      pin.type = "button";
-      pin.className = "secondary icon-button nav-pin-toggle";
-      pin.dataset.navPin = id;
-      pin.textContent = "📌";
-      pin.disabled = id === "recovery" || id === "presentation";
-      pin.setAttribute("aria-pressed", "true");
-      pin.setAttribute("aria-label", `${copy.unpinSection(sectionLabel(id))}`);
-      pin.setAttribute("title", copy.unpinSection(sectionLabel(id)));
-      item.append(link, pin);
+      item.append(link);
       primaryNavList.append(item);
     }
     quickDensity.textContent = `${copy.density}: ${presentation.density === "compact" ? copy.compact : copy.comfortable}`;
@@ -1972,19 +1963,6 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     presentationLabelInput.focus();
     presentationLabelInput.select();
   };
-  const setSectionPinned = async (id: PresentationSectionId): Promise<void> => {
-    if (id === "recovery" || id === "presentation") return;
-    const visible = new Set(presentation.navigation.visible);
-    const pin = !visible.has(id);
-    if (pin) visible.add(id);
-    else visible.delete(id);
-    const nextVisible = PRESENTATION_SECTION_IDS.filter((sectionId) => visible.has(sectionId));
-    try {
-      await persistPresentation(parsePresentationProfile({ ...presentation, navigation: { ...presentation.navigation, visible: nextVisible } }), copy.savedName(sectionLabel(id)));
-    } catch (error) {
-      presentationStatus.textContent = describeError(error, "Navigation pinning was not saved; canonical data was not changed.");
-    }
-  };
   const activateLens = async (id: PresentationLensId): Promise<void> => {
     try {
       await persistPresentation(parsePresentationProfile({ ...presentation, activeLens: id }), copy.savedName(PRESENTATION_LENS_DEFINITIONS[id].label));
@@ -1999,17 +1977,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     if (button) movePresentationRow(container, button);
   });
   primaryNavList.addEventListener("click", (event) => {
-    const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-nav-pin]");
-    const id = button?.dataset.navPin as PresentationSectionId | undefined;
-    if (!id) {
-      const link = (event.target as HTMLElement).closest<HTMLAnchorElement>("a[href^='#']");
-      const sectionId = link?.getAttribute("href")?.slice(1) as PresentationSectionId | undefined;
-      if (sectionId) root.querySelector<HTMLDetailsElement>(`#${sectionId}[data-section-disclosure]`)?.setAttribute("open", "");
-      if (window.matchMedia("(max-width: 560px)").matches) primaryNavMenu.open = false;
-      return;
-    }
-    event.preventDefault();
-    void setSectionPinned(id);
+    const link = (event.target as HTMLElement).closest<HTMLAnchorElement>("a[href^='#']");
+    const sectionId = link?.getAttribute("href")?.slice(1) as PresentationSectionId | undefined;
+    if (sectionId) root.querySelector<HTMLDetailsElement>(`#${sectionId}[data-section-disclosure]`)?.setAttribute("open", "");
+    if (window.matchMedia("(max-width: 560px)").matches) primaryNavMenu.open = false;
   });
   lensNavList.addEventListener("click", (event) => {
     const id = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-lens-id]")?.dataset.lensId as PresentationLensId | undefined;
