@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "d31509dfe46ef65f6e46bd938a17758b74a3bbccd9a1df75acef025d0ac59466",
-        "bytes": 176409
+        "sha256": "9044f98a29f4512b83785732b835ef5db886b91e2e8cd8d4c3e3cb34b177da93",
+        "bytes": 176808
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "bedf66a44ae2211bf4d82058f3649c552d03f8d1a0a4266dd946a969c280a195",
-        "bytes": 53704
+        "sha256": "d67fe01ca144f9856679f202d1ef8e749528ae59e9361109e0cbe9e5683049ec",
+        "bytes": 54348
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -224,12 +224,12 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "b1847fbc065cbc23d3919afeda88cd35a4cd266381656c624e0b04842be215bd",
-        "bytes": 4025
+        "sha256": "0f261b24300ad0d33dc70e7614e20e14a51eb3c1216e7fbb5f6e8cbb29170a1a",
+        "bytes": 4154
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "a1532c55be777f249a56f1767eacda4f3a048c42cd08577610ddfeae94a67fd6",
+        "sha256": "b0ea2c35809e74d6ca1ad68e5af7d83b967441f7b772820714abfd016fd64e76",
         "bytes": 2399
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "8bc13d10dd7e50d1085b211e3809bf42f26f791a7d882252fa55f31cf0f6e369",
-        "bytes": 252030
+        "sha256": "6d7a5b8df52557ca133ccef2641d79f106333b5742dd600056ff37952c3a69ba",
+        "bytes": 253648
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -694,13 +694,13 @@
       },
       {
         "path": "src/core/lenses.test.ts",
-        "sha256": "ee772e6acaf555823ee1fa4ab6d25f7141e9c6fc3d83cac3cba4550fcda14341",
-        "bytes": 1526
+        "sha256": "664932d6015e528ac948b2ced054756b6edb51cc266d28a5e4d89a55d8776073",
+        "bytes": 2994
       },
       {
         "path": "src/core/lenses.ts",
-        "sha256": "b740a9db03133e38cba36da909c6d016515b46cb13dd748cd09b0be7f97d5d3e",
-        "bytes": 3259
+        "sha256": "2b0ce1d9d9934d7018178c2d3efc6d413a55556a671139474ca96023b233fdb9",
+        "bytes": 3667
       },
       {
         "path": "src/core/migration.test.ts",

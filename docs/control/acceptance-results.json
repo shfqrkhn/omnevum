@@ -1648,9 +1648,10 @@
       "text": "Opening the same canonical record from two different lenses reaches the same record identity with no writable duplicate, shows the appropriate owning-lens breadcrumb/context, and renders cross-lens relationships as navigable references. Lens navigation reachability at 320 CSS pixels is governed by OMN-ACC-111.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-canonical-lens-projection-and-detail-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-canonical-lens-projection-and-detail-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-deterministic-domain-lens-projection-receipt"
       ],
-      "notes": "Current Chromium receipt proves one canonical Work task can be reached from Direction and Work projections with the same ID/revision, and a relationship target opens as a navigable reference with a corrected owning-lens breadcrumb. Broader lens/domain mappings, strict 320px geometry, browser-family breadth, assistive technology, deployment, and human acceptance remain open."
+      "notes": "Current Chromium receipts prove one canonical Work task can be reached from Direction and Work projections with the same ID/revision, a relationship target opens as a navigable reference with a corrected owning-lens breadcrumb, and Work/People domain projection is covered by a built-artifact smoke plus deterministic source tests. Broader lens/domain mappings, strict 320px geometry, browser-family breadth, assistive technology, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-107",
@@ -1707,9 +1708,10 @@
       "text": "With four lenses pinned, all eight default lenses are reached from any primary surface in one interaction through the overflow grid at 320 CSS pixels and at 200% text scaling. An unpinned lens made active remains visible in the bar, no lens becomes unreachable, and the grid ranks, hides, or demotes no lens by usage.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-compact-lens-overflow-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-compact-lens-overflow-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-deterministic-domain-lens-projection-receipt"
       ],
-      "notes": "Current Chromium receipt proves four pinned lenses, one-interaction overflow reachability for all eight identities, active unpinned visibility, equal-prominence buttons, presentation-only pin/active persistence through reload, and the exercised 200% layout at the available viewport. True lens-specific semantics, strict 320px geometry for this surface, browser-family breadth, assistive technology, physical touch, deployment, and human acceptance remain open."
+      "notes": "Current Chromium receipts prove four pinned lenses, one-interaction overflow reachability for all eight identities, active unpinned visibility, Work/People projection semantics, equal-prominence buttons, presentation-only pin/active persistence through reload, and the exercised 200% layout at the available viewport. Full domain fixture breadth, strict 320px geometry for this surface, browser-family breadth, assistive technology, physical touch, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-112",
