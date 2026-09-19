@@ -1135,8 +1135,15 @@
         "line": 4052
       },
       "text": "The user imports bibliographic data from at least two qualified interchange families such as BibTeX/RIS/CSL-JSON, links a reference to an Artifact/source plus user annotations, and renders citations/bibliography through a selectable style. Changing the style changes only derived presentation; it does not mutate source/evidence identity or annotation truth.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/bibliography.ts",
+        "src/core/bibliography.test.ts",
+        "src/core/acquire.ts",
+        "docs/control/capability-coverage.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-bibliography-projection-contract-receipt"
+      ],
+      "notes": "The bounded Knowledge projection imports BibTeX, RIS, and CSL-JSON, preserves source format/source identity, links entries to an Artifact with an annotation without becoming a canonical owner, and renders APA/Chicago/IEEE derived rows without mutating entry identity or annotations. Qualified browser Artifact intake, richer interchange semantics, style breadth, target/deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-064",
