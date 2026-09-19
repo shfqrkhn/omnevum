@@ -1613,8 +1613,11 @@
         "line": 4134
       },
       "text": "A Home consideration item is inspected without navigating away from Home. It renders its source/evidence count with a path to the sources, an uncertainty value or an explicit UNKNOWN, a \"why this appeared\" statement naming the originating signals, and working one-tap snooze and dismiss. The empty state renders as a calm first-class state containing no counter, streak, score, or prompt to engage.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-home-consideration-receipt"
+      ],
+      "notes": "Current Chromium receipt proves the exact built Home surface, source/evidence link, explicit UNKNOWN uncertainty, named due/resume rationale, canonical snooze and dismiss revisions, and calm empty state. Broader originating signals, target breadth, accessibility/human acceptance, and deployment remain open."
     },
     {
       "id": "OMN-ACC-105",
