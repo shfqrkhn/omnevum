@@ -22,7 +22,8 @@ import type { CapabilityRuntime } from "../core/capability-runtime";
 import { DeviceInputBroker } from "../core/device";
 import { isSpaceMembership, SpaceService } from "../core/space";
 import { historyWithDiffs, revertToRevision } from "../core/history";
-import { makeUserDashboard, projectView, ViewRegistry } from "../core/compose";
+import { makeSearchView, makeUserDashboard, projectView, ViewRegistry } from "../core/compose";
+import { matchesSearchFacets, parseSearchQuery, serializeSearchQuery, type ParsedSearchQuery } from "../core/search";
 import { readPath } from "../core/data";
 import { assessTextAnchor, createTextAnnotation } from "../core/annotation";
 import { createEvidenceLink, type EvidenceRelation } from "../core/evidence";
@@ -514,6 +515,22 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <button type="submit">${copy.search}</button>
             <button id="clear-search" class="secondary" type="button">${copy.clear}</button>
           </div>
+          <button id="search-filters-toggle" class="secondary" type="button" aria-expanded="false">${copy.searchFilters}</button>
+          <div id="search-filters" class="search-filters" hidden>
+            <div id="search-facet-chips" class="facet-chips" aria-live="polite"></div>
+            <div class="search-facet-grid">
+              <div><label for="search-facet-lens">${copy.searchFacetLens}</label><select id="search-facet-lens"><option value="">${copy.searchAll}</option><option value="direction">Direction</option><option value="people">People</option><option value="self">Self</option><option value="resources">Resources</option><option value="work">Work</option><option value="environment">Environment</option><option value="knowledge">Knowledge</option><option value="change">Change</option></select></div>
+              <div><label for="search-facet-type">${copy.searchFacetType}</label><select id="search-facet-type"><option value="">${copy.searchAll}</option><option value="note">${copy.note}</option><option value="task">${copy.task}</option><option value="observation">${copy.observation}</option><option value="relationship">${copy.relationship}</option><option value="artifact">${copy.attachArtifact}</option></select></div>
+              <div><label for="search-facet-space">${copy.searchFacetSpace}</label><select id="search-facet-space"><option value="">${copy.searchAll}</option><option value="personal">${copy.personal}</option><option value="household">${copy.household}</option><option value="work">${copy.work}</option></select></div>
+              <div><label for="search-facet-artifact">${copy.searchFacetArtifact}</label><select id="search-facet-artifact"><option value="">${copy.searchAll}</option><option value="true">${copy.searchHasArtifact}</option></select></div>
+            </div>
+            <div class="form-row">
+              <label for="search-view-name">${copy.searchViewName}</label>
+              <input id="search-view-name" type="text" maxlength="120" placeholder="${copy.defaultViewTitle}" />
+              <button id="search-save-view" class="secondary" type="button">${copy.searchSaveView}</button>
+            </div>
+          </div>
+          <p id="search-scope-status" class="hint"></p>
           <p id="search-status" class="hint" role="status"></p>
         </form>
       </section>
@@ -926,6 +943,16 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const searchForm = root.querySelector<HTMLFormElement>("#search-form");
   const searchQuery = root.querySelector<HTMLInputElement>("#search-query");
   const clearSearch = root.querySelector<HTMLButtonElement>("#clear-search");
+  const searchFiltersToggle = root.querySelector<HTMLButtonElement>("#search-filters-toggle");
+  const searchFilters = root.querySelector<HTMLElement>("#search-filters");
+  const searchFacetChips = root.querySelector<HTMLElement>("#search-facet-chips");
+  const searchFacetLens = root.querySelector<HTMLSelectElement>("#search-facet-lens");
+  const searchFacetType = root.querySelector<HTMLSelectElement>("#search-facet-type");
+  const searchFacetSpace = root.querySelector<HTMLSelectElement>("#search-facet-space");
+  const searchFacetArtifact = root.querySelector<HTMLSelectElement>("#search-facet-artifact");
+  const searchViewName = root.querySelector<HTMLInputElement>("#search-view-name");
+  const searchSaveView = root.querySelector<HTMLButtonElement>("#search-save-view");
+  const searchScopeStatus = root.querySelector<HTMLElement>("#search-scope-status");
   const searchStatus = root.querySelector<HTMLElement>("#search-status");
   const spaceCreateForm = root.querySelector<HTMLFormElement>("#space-create-form");
   const spaceName = root.querySelector<HTMLInputElement>("#space-name");
@@ -1124,7 +1151,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const packageAutomationStatus = root.querySelector<HTMLElement>("#package-automation-status");
   const packageAutomationList = root.querySelector<HTMLUListElement>("#package-automation-list");
   const packageAutomationProposals = root.querySelector<HTMLUListElement>("#package-automation-proposals");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchFiltersToggle || !searchFilters || !searchFacetChips || !searchFacetLens || !searchFacetType || !searchFacetSpace || !searchFacetArtifact || !searchViewName || !searchSaveView || !searchScopeStatus || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!financeImportForm || !financeImportFile || !financeImportAccount || !financeImportCurrency || !financeImportOpening || !financeImportClosing || !financeImportStatus) {
@@ -1157,6 +1184,56 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const trackService = new TrackService(store, commands);
   const spaceService = new SpaceService(store, commands);
   const viewRegistry = new ViewRegistry(store);
+  const renderSearchFacets = (parsed: ParsedSearchQuery): void => {
+    const selections: Array<{ key: string; value: string; select: HTMLSelectElement }> = [
+      ...(parsed.facets.lens ? [{ key: copy.searchFacetLens, value: parsed.facets.lens, select: searchFacetLens }] : []),
+      ...(parsed.facets.recordType ? [{ key: copy.searchFacetType, value: parsed.facets.recordType, select: searchFacetType }] : []),
+      ...(parsed.facets.space ? [{ key: copy.searchFacetSpace, value: parsed.facets.space, select: searchFacetSpace }] : []),
+      ...(parsed.facets.hasArtifact ? [{ key: copy.searchFacetArtifact, value: "artifact", select: searchFacetArtifact }] : [])
+    ];
+    searchFacetChips.replaceChildren();
+    for (const selection of selections) {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "secondary facet-chip";
+      chip.textContent = copy.searchFacetChip(selection.key, selection.value);
+      chip.addEventListener("click", () => {
+        selection.select.value = "";
+        const next = parseSearchQuery(searchQuery.value);
+        if (selection.select === searchFacetLens) delete next.facets.lens;
+        if (selection.select === searchFacetType) delete next.facets.recordType;
+        if (selection.select === searchFacetSpace) delete next.facets.space;
+        if (selection.select === searchFacetArtifact) delete next.facets.hasArtifact;
+        searchQuery.value = serializeSearchQuery(next);
+        void renderRecords(searchQuery.value);
+      });
+      searchFacetChips.append(chip);
+    }
+  };
+  const syncSearchFacetControls = (parsed: ParsedSearchQuery): void => {
+    searchFacetLens.value = parsed.facets.lens ?? "";
+    searchFacetType.value = parsed.facets.recordType ?? "";
+    searchFacetSpace.value = parsed.facets.space ?? "";
+    searchFacetArtifact.value = parsed.facets.hasArtifact ? "true" : "";
+    renderSearchFacets(parsed);
+  };
+  const updateSearchQueryFromFacetControls = (): void => {
+    const parsed = parseSearchQuery(searchQuery.value);
+    parsed.facets = {
+      ...(searchFacetLens.value ? { lens: searchFacetLens.value as NonNullable<ParsedSearchQuery["facets"]["lens"]> } : {}),
+      ...(searchFacetType.value ? { recordType: searchFacetType.value as NonNullable<ParsedSearchQuery["facets"]["recordType"]> } : {}),
+      ...(searchFacetSpace.value ? { space: searchFacetSpace.value as NonNullable<ParsedSearchQuery["facets"]["space"]> } : {}),
+      ...(searchFacetArtifact.value === "true" ? { hasArtifact: true } : {})
+    };
+    searchQuery.value = serializeSearchQuery(parsed);
+    renderSearchFacets(parsed);
+    void renderRecords(searchQuery.value);
+  };
+  searchFiltersToggle.addEventListener("click", () => {
+    searchFilters.hidden = !searchFilters.hidden;
+    searchFiltersToggle.setAttribute("aria-expanded", String(!searchFilters.hidden));
+  });
+  for (const facet of [searchFacetLens, searchFacetType, searchFacetSpace, searchFacetArtifact]) facet.addEventListener("change", updateSearchQueryFromFacetControls);
   const deviceInput = new DeviceInputBroker();
   const deviceCapabilitySnapshot = deviceInput.capabilities();
   const availableDeviceCapabilities = Object.entries(deviceCapabilitySnapshot).filter(([, available]) => available).map(([id]) => id);
@@ -1168,6 +1245,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   deviceBarcodeInput.disabled = !deviceCapabilitySnapshot.barcode;
   let stagedCandidates: AcquireCandidate[] = [];
   let cleanupPreviewState: CleanupPreview | undefined;
+  let recordsRenderRevision = 0;
   let packageAutomationProposalsState: PackageAutomationProposal[] = [];
   const ARCHIVE_UNDO_WINDOW_MS = 10_000;
   let archiveUndoState: { recordId: string; expiresAt: number } | undefined;
@@ -2150,8 +2228,15 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
     let records = await scopedRecords();
     if (view.space) records = (await spaceService.project(await store.list(), view.space)).filter((record) => record.owner !== "platform.space" && !isCleanupHistoryRecord(record));
+    const scopedIds = new Set(records.map((record) => record.id));
+    if (view.searchQuery) {
+      const parsedQuery = parseSearchQuery(view.searchQuery);
+      const candidates = parsedQuery.text ? await store.search(parsedQuery.text, scopedIds) : records;
+      records = candidates.filter((record) => scopedIds.has(record.id) && matchesSearchFacets(record, parsedQuery.facets));
+    }
     const viewForProjection = structuredClone(view);
     delete viewForProjection.space;
+    delete viewForProjection.searchQuery;
     records = projectView(viewForProjection, records).slice(0, 100);
     const heading = document.createElement("h3");
     heading.textContent = view.title;
@@ -3129,6 +3214,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   renderPackageAutomationProposals();
 
   const renderRecords = async (query = ""): Promise<number> => {
+    const renderRevision = ++recordsRenderRevision;
+    const isCurrentRender = (): boolean => renderRevision === recordsRenderRevision;
+    const parsedQuery = parseSearchQuery(query);
+    syncSearchFacetControls(parsedQuery);
     const allRecords = await store.list();
     renderPackageAutomationChoices(allRecords);
     if (activeSpace) {
@@ -3139,15 +3228,32 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         spaceStatus.textContent = copy.spaceAccessRevoked(revokedSpace);
       }
     }
+    searchScopeStatus.textContent = copy.searchScope(activeSpace ? spaceLabel(activeSpace) : copy.allSpaces);
+    if (!isCurrentRender()) return 0;
     const allowedIds = activeSpace ? new Set((await spaceService.project(allRecords, activeSpace)).map((record) => record.id)) : undefined;
-    const candidateRecords = query.trim() ? await store.search(query, allowedIds) : allRecords;
-    const records = candidateRecords.filter((record) => record.owner !== "platform.space" && !isCleanupHistoryRecord(record) && (!allowedIds || allowedIds.has(record.id)));
+    const candidateRecords = parsedQuery.text ? await store.search(parsedQuery.text, allowedIds) : allRecords;
+    const records = candidateRecords.filter((record) => record.owner !== "platform.space" && !isCleanupHistoryRecord(record) && (!allowedIds || allowedIds.has(record.id)) && matchesSearchFacets(record, parsedQuery.facets));
+    if (!isCurrentRender()) return 0;
     recordList.replaceChildren();
     recordCount.textContent = formatNumber(presentation.locale, records.length);
     emptyState.hidden = records.length > 0;
     emptyState.textContent = query.trim() ? copy.noMatching : copy.nothingCaptured;
 
-    for (const record of [...records].reverse()) {
+    const groupedRecords = new Map<PresentationLensId, CanonicalRecord[]>();
+    for (const record of records) {
+      const groupId = parsedQuery.facets.lens ?? lensIdsForRecord(record)[0] ?? "direction";
+      const group = groupedRecords.get(groupId) ?? [];
+      group.push(record);
+      groupedRecords.set(groupId, group);
+    }
+    for (const [groupId, groupRecords] of groupedRecords) {
+      if (!isCurrentRender()) return 0;
+      const groupHeading = document.createElement("li");
+      groupHeading.className = "search-group-heading";
+      groupHeading.textContent = copy.searchGroup(PRESENTATION_LENS_DEFINITIONS[groupId].label);
+      recordList.append(groupHeading);
+      for (const record of [...groupRecords].reverse()) {
+      if (!isCurrentRender()) return 0;
       const item = document.createElement("li");
       item.className = "record-item";
       const content = document.createElement("div");
@@ -3156,9 +3262,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const text = document.createElement("p");
       text.textContent = recordText(record);
       const meta = document.createElement("small");
-      meta.textContent = `${record.owner} - revision ${record.revision}`;
+      meta.textContent = `${record.owner} - revision ${record.revision}. ${copy.searchMatch(record.owner, PRESENTATION_LENS_DEFINITIONS[groupId].label)}`;
       content.append(title, text, meta);
       const history = await renderHistory(record);
+      if (!isCurrentRender()) return 0;
       if (history) content.append(history);
       const open = document.createElement("button");
       open.type = "button";
@@ -3211,7 +3318,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       });
       item.append(content, archive);
       recordList.append(item);
+      }
     }
+    if (!isCurrentRender()) return 0;
     await renderSpaceChoices();
     await renderDocumentFinishChoices();
     await renderSummary();
@@ -3535,6 +3644,24 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       searchStatus.textContent = query ? copy.resultMessage(resultCount, health.valid ? copy.healthy : copy.degraded) : copy.showingAll;
     } catch (error) {
       searchStatus.textContent = describeError(error, "Search failed; canonical data was not changed.");
+    }
+  });
+
+  searchSaveView.addEventListener("click", async () => {
+    const query = searchQuery.value.trim();
+    if (!query) {
+      searchStatus.textContent = copy.searchViewQueryRequired;
+      searchQuery.focus();
+      return;
+    }
+    try {
+      const view = makeSearchView(searchViewName.value || copy.defaultViewTitle, query, activeSpace);
+      await viewRegistry.save(view);
+      searchViewName.value = "";
+      searchStatus.textContent = copy.searchViewSaved;
+      await renderComposeView();
+    } catch (error) {
+      searchStatus.textContent = describeError(error, "Search view was not saved; canonical records were not changed.");
     }
   });
 

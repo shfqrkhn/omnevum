@@ -10,7 +10,7 @@ export interface UiCopy {
   appName: string; language: string; english: string; french: string; save: string; presentationHint: string; tagline: string; density: string; comfortable: string; compact: string; typeface: string; systemTypeface: string; serifTypeface: string; monoTypeface: string; iconography: string; labelIconography: string; glyphIconography: string; homeLabel: string; captureLabel: string; recordsLabel: string; navigationSections: string; navigationHint: string; homeWidgets: string; homeWidgetsHint: string; resetPresentation: string; exportPresentationProfile: string; importPresentationProfile: string; presentationProfileExported: string; presentationProfileImported: string; editLabel: string; labelRequired: string; pinSection: (label: string) => string; unpinSection: (label: string) => string;
   capture: string; getItOut: string; kind: string; note: string; task: string; observation: string; space: string; acquireHeading: string; stageImport: string; acquireFile: string; readClipboard: string; acceptStaged: string; acquirePlaceholder: string; acquireHint: string; stagedMessage: (count: number, warnings: number) => string; cleanupHeading: string; cleanupHint: string; cleanupImportedOnly: string; cleanupTrim: string; cleanupWhitespace: string; cleanupPreview: string; cleanupApply: string; cleanupStatus: (records: number, sources: number, proposals: number) => string; cleanupEmpty: string; cleanupTransform: string; cleanupDuplicate: string; cleanupAmbiguous: string; cleanupArchive: string; cleanupMarkReview: string; cleanupApplied: (updated: number, archived: number, review: number) => string; cleanupHistory: string; cleanupHistoryEmpty: string; cleanupHistoryEntry: (recipe: string, acceptedAt: string, inputs: number, updated: number, archived: number, review: number, chunks: number) => string;
   personal: string; household: string; work: string; captureContent: string; capturePlaceholder: string;
-  captureHint: string; safeDirectRoute: string; safeDirectRouteHint: string; saveCapture: string; searchExplore: string; findCaptures: string; searchTerms: string;
+  captureHint: string; safeDirectRoute: string; safeDirectRouteHint: string; saveCapture: string; searchExplore: string; findCaptures: string; searchTerms: string; searchFilters: string; searchFacetLens: string; searchFacetType: string; searchFacetSpace: string; searchFacetArtifact: string; searchAll: string; searchHasArtifact: string; searchScope: (scope: string) => string; searchMatch: (owner: string, lens: string) => string; searchSaveView: string; searchViewName: string; searchViewSaved: string; searchViewQueryRequired: string; searchFacetChip: (key: string, value: string) => string; searchGroup: (lens: string) => string;
   scopeWithoutCopying: string; spaceName: string; createSpace: string; spaceCreated: (space: string) => string; removeSpace: string; removeSpaceConfirmation: (space: string) => string; assignToSpace: string; filterSpace: string; allSpaces: string; addMembership: string; membershipCreated: (space: string) => string; activeMemberships: string; removeMembership: string; removeMembershipConfirmation: (record: string, space: string) => string; membershipRemoved: (space: string) => string; spaceRemoved: (space: string) => string; spaceAccessRevoked: (space: string) => string;
   compose: string; composeHeading: string; viewTitle: string; viewFields: string; viewSpace: string; defaultViewTitle: string; saveView: string; viewSaved: string; viewEmpty: string; chartLabel: string; tableLabel: string;
   searchPlaceholder: string; search: string; clear: string; triage: string; reviewInbox: string; inboxCount: string;
@@ -205,7 +205,44 @@ const financeFrench: Pick<UiCopy, "financeImportHeading" | "financeFile" | "fina
   financeImportResult: (created, existing, duplicates, conflicts, reconciliation) => `Import financier: ${created} cree(s), ${existing} deja present(s), ${duplicates} doublon(s), ${conflicts} conflit(s); rapprochement ${reconciliation.toLowerCase()}.`
 };
 
+const searchEnglish: Pick<UiCopy, "searchFilters" | "searchFacetLens" | "searchFacetType" | "searchFacetSpace" | "searchFacetArtifact" | "searchAll" | "searchHasArtifact" | "searchScope" | "searchMatch" | "searchSaveView" | "searchViewName" | "searchViewSaved" | "searchViewQueryRequired" | "searchFacetChip" | "searchGroup"> = {
+  searchFilters: "Filters",
+  searchFacetLens: "Lens",
+  searchFacetType: "Record type",
+  searchFacetSpace: "Space",
+  searchFacetArtifact: "Artifact",
+  searchAll: "All",
+  searchHasArtifact: "Has an Artifact",
+  searchScope: (scope) => `Scope: ${scope}. Results remain canonical and uncopied.`,
+  searchMatch: (owner, lens) => `Match reason: ${owner} record projected through ${lens}.`,
+  searchSaveView: "Save filtered view",
+  searchViewName: "View name",
+  searchViewSaved: "Saved a search view; it stores the query only and does not copy canonical records.",
+  searchViewQueryRequired: "Enter search text or choose a facet before saving a view.",
+  searchFacetChip: (key, value) => `${key}: ${value} ×`,
+  searchGroup: (lens) => `${lens} lens results`
+};
+
+const searchFrench: Pick<UiCopy, "searchFilters" | "searchFacetLens" | "searchFacetType" | "searchFacetSpace" | "searchFacetArtifact" | "searchAll" | "searchHasArtifact" | "searchScope" | "searchMatch" | "searchSaveView" | "searchViewName" | "searchViewSaved" | "searchViewQueryRequired" | "searchFacetChip" | "searchGroup"> = {
+  searchFilters: "Filtres",
+  searchFacetLens: "Lentille",
+  searchFacetType: "Type de dossier",
+  searchFacetSpace: "Espace",
+  searchFacetArtifact: "Artefact",
+  searchAll: "Tous",
+  searchHasArtifact: "Avec artefact",
+  searchScope: (scope) => `Portee: ${scope}. Les resultats restent canoniques et non copies.`,
+  searchMatch: (owner, lens) => `Raison: dossier ${owner} projete par ${lens}.`,
+  searchSaveView: "Enregistrer la vue filtree",
+  searchViewName: "Nom de la vue",
+  searchViewSaved: "Vue de recherche enregistree; seule la requete est stockee, sans copie canonique.",
+  searchViewQueryRequired: "Entrez du texte ou choisissez un filtre avant d'enregistrer une vue.",
+  searchFacetChip: (key, value) => `${key}: ${value} ×`,
+  searchGroup: (lens) => `Resultats de la lentille ${lens}`
+};
+
 const english: UiCopy = {
+  ...searchEnglish,
   ...financeEnglish,
   ...presentationQuickEnglish,
   ...presentationLensEnglish,
@@ -242,6 +279,7 @@ const english: UiCopy = {
 
 const french: UiCopy = {
   ...english,
+  ...searchFrench,
   ...financeFrench,
   ...presentationQuickFrench,
   ...presentationLensFrench,

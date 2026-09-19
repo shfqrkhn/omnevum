@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assertViewDefinition, makeUserDashboard, projectView, ViewRegistry, type ViewDefinition } from "./compose";
+import { assertViewDefinition, makeSearchView, makeUserDashboard, projectView, ViewRegistry, type ViewDefinition } from "./compose";
 import type { CanonicalRecord } from "./model";
 import { CanonicalStore } from "./storage";
 
@@ -39,5 +39,16 @@ describe("Compose/View", () => {
 
   it("rejects unsafe dashboard field paths", () => {
     expect(() => makeUserDashboard("Unsafe", ["__proto__.polluted"])).toThrow("safe field");
+  });
+
+  it("stores a bounded search query as view state without canonical records", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-search-views`);
+    await store.open();
+    const registry = new ViewRegistry(store);
+    const view = makeSearchView("Work tasks", "garden lens:work type:task", "work");
+    await registry.save(view);
+    expect((await registry.list())[0]).toMatchObject({ id: "search.work-tasks", searchQuery: "garden lens:work type:task", space: "work", source: "USER" });
+    expect(await store.list()).toEqual([]);
+    store.close();
   });
 });

@@ -169,6 +169,13 @@ select[multiple] { min-height: 9rem; }
 .relationship-form { display: grid; min-width: 0; max-width: 100%; gap: 0.2rem; }
 .search-row input { flex: 1; }
 .search-row button { flex: 0 0 auto; }
+.search-filters { display: grid; gap: 0.75rem; margin-top: 0.45rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.75rem; }
+.search-facet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 0.65rem; }
+.search-facet-grid > div { min-width: 0; }
+.search-facet-grid label { margin-bottom: 0.3rem; font-size: 0.86rem; }
+.facet-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.facet-chip { min-height: 36px; padding: 0.4rem 0.65rem; font-size: 0.8rem; }
+.search-group-heading { list-style: none; border-bottom: 1px solid var(--line); color: var(--accent); padding: 0.35rem 0.15rem; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.65rem; }
 .domain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
 .factory-preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }

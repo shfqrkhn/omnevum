@@ -16,6 +16,7 @@ export interface ViewDefinition {
   schemaVersion: 1;
   id: string;
   title: string;
+  searchQuery?: string;
   recordType?: RecordType;
   space?: SpaceId;
   widgets: ComposeWidget[];
@@ -35,7 +36,7 @@ export function assertViewDefinition(value: unknown): asserts value is ViewDefin
 export function isViewDefinition(value: unknown): value is ViewDefinition {
   if (typeof value !== "object" || value === null) return false;
   const candidate = value as Record<string, unknown>;
-  if (candidate.schemaVersion !== 1 || typeof candidate.id !== "string" || !/^[a-z][a-z0-9._-]{1,120}$/.test(candidate.id) || typeof candidate.title !== "string" || !candidate.title.trim() || candidate.title.length > MAX_VIEW_TEXT || (candidate.layout !== "stack" && candidate.layout !== "grid") || !["SYSTEM", "USER", "PACKAGE"].includes(String(candidate.source)) || !Array.isArray(candidate.widgets) || candidate.widgets.length === 0 || candidate.widgets.length > 32) return false;
+  if (candidate.schemaVersion !== 1 || typeof candidate.id !== "string" || !/^[a-z][a-z0-9._-]{1,120}$/.test(candidate.id) || typeof candidate.title !== "string" || !candidate.title.trim() || candidate.title.length > MAX_VIEW_TEXT || (candidate.searchQuery !== undefined && (typeof candidate.searchQuery !== "string" || candidate.searchQuery.length > 320 || !candidate.searchQuery.trim())) || (candidate.layout !== "stack" && candidate.layout !== "grid") || !["SYSTEM", "USER", "PACKAGE"].includes(String(candidate.source)) || !Array.isArray(candidate.widgets) || candidate.widgets.length === 0 || candidate.widgets.length > 32) return false;
   if (candidate.recordType !== undefined && !["note", "task", "observation", "relationship", "artifact"].includes(String(candidate.recordType))) return false;
   if (candidate.space !== undefined && !isSpaceId(candidate.space)) return false;
   return candidate.widgets.every((widget) => {
@@ -83,6 +84,17 @@ export function makeUserDashboard(title: string, fields: string[], space?: Space
     { id: "table", type: "table", title: "Table", fields: safeFields },
     { id: "chart", type: "chart", title: "Chart", fields: safeFields }
   ], layout: "grid", source: "USER" };
+}
+
+export function makeSearchView(title: string, query: string, space?: SpaceId): ViewDefinition {
+  const normalizedTitle = title.trim().slice(0, MAX_VIEW_TEXT);
+  const normalizedQuery = query.trim().slice(0, 320);
+  if (!normalizedTitle || !normalizedQuery) throw new Error("A view title and a search query are required");
+  const slug = normalizedTitle.toLocaleLowerCase("en-CA").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 100) || "results";
+  return { schemaVersion: 1, id: `search.${slug}`, title: normalizedTitle, searchQuery: normalizedQuery, ...(space ? { space } : {}), widgets: [
+    { id: "search-list", type: "list", title: "Search results", fields: ["recordType", "data.text", "owner", "modifiedAt"] },
+    { id: "search-table", type: "table", title: "Search table", fields: ["recordType", "data.text", "owner", "modifiedAt"] }
+  ], layout: "stack", source: "USER" };
 }
 
 function isSafeField(value: unknown): value is string {

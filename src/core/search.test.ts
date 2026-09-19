@@ -1,7 +1,24 @@
 import { describe, expect, it } from "vitest";
-import { searchDocuments } from "./search";
+import { matchesSearchFacets, parseSearchQuery, searchDocuments, serializeSearchQuery } from "./search";
+import type { CanonicalRecord } from "./model";
 
 describe("derived multilingual search", () => {
+  it("parses bounded facet tokens and round-trips an inspectable query", () => {
+    const parsed = parseSearchQuery("garden lens:work type:task space:work has:artifact");
+    expect(parsed).toEqual({ text: "garden", facets: { lens: "work", recordType: "task", space: "work", hasArtifact: true } });
+    expect(serializeSearchQuery(parsed)).toBe("garden lens:work type:task space:work has:artifact");
+    expect(parseSearchQuery(serializeSearchQuery(parsed))).toEqual(parsed);
+    expect(parseSearchQuery("garden lens:unknown type:task nope")).toEqual({ text: "garden lens:unknown nope", facets: { recordType: "task" } });
+  });
+
+  it("applies facet projections without creating a second record owner", () => {
+    const now = new Date().toISOString();
+    const workTask: CanonicalRecord = { id: "task", recordType: "task", owner: "core.capture", schemaVersion: 1, createdAt: now, modifiedAt: now, provenance: { source: "USER_INPUT", capturedAt: now }, truthClass: "USER_OBSERVATION", sensitivity: "PRIVATE", revision: 1, deleted: false, data: { text: "plan", space: "work", sourceArtifactId: "artifact-1" } };
+    expect(matchesSearchFacets(workTask, { lens: "work", recordType: "task", space: "work", hasArtifact: true })).toBe(true);
+    expect(matchesSearchFacets(workTask, { lens: "people" })).toBe(false);
+    expect(matchesSearchFacets(workTask, { space: "personal" })).toBe(false);
+  });
+
   it("supports normalized prefix, typo tolerance, AND semantics, and deterministic empty queries", () => {
     const documents = [
       { id: "older", terms: "cafe resume project", modifiedAt: "2024-01-01T00:00:00.000Z" },
