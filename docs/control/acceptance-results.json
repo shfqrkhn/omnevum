@@ -1891,9 +1891,10 @@
       "text": "A user selects Alpha, then Beta, then Gamma, restarts, upgrades across a compatible release, exports/imports the presentation profile, and resets presentation. The selected family/mode persists where policy says it should, remains separately resettable from canonical data, and no switch or reset changes canonical IDs, records, permissions, sync identity, or Space/Scope.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-presentation-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-presentation-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-presentation-profile-lifecycle-receipt"
       ],
-      "notes": "The current Chromium run selected Alpha, then Beta, then Gamma in both modes through the normal Presentation setting path, preserved one canonical sentinel and its revision, and retained the final Gamma Dark choice after reload. Compatible upgrade, profile export/import, explicit reset, other targets, and human acceptance remain open."
+      "notes": "The current Chromium run selected Alpha, Beta, and Gamma in both modes through the normal Presentation setting path, then visibly invoked profile export, imported a bounded valid profile, reset to default Gamma Light, and reloaded with one active sentinel record and a healthy index unchanged. Compatible upgrade, exported-file inspection, malformed-import recovery, other targets, installed-host behavior, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-133",
