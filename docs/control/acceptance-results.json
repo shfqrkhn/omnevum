@@ -1547,9 +1547,10 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-responsive-target-geometry-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt"
       ],
-      "notes": "The current exact artifact now covers all Alpha/Beta/Gamma Light/Dark combinations at strict 320x844 with 100% and temporary 2x page-scale profiles: no page horizontal overflow or horizontal target clipping was observed, and the canonical sentinel remained present. True OS/browser text-size scaling, physical touch, Assistant availability, vertical reachability, browser-family breadth, assistive technology, and human acceptance remain open."
+      "notes": "The current exact artifact covers all Alpha/Beta/Gamma Light/Dark combinations at strict 320x844 with 100% and temporary 2x page-scale profiles, and the accessibility-profile receipt adds explicit 200% text scale plus 125% large-target coverage: no page horizontal overflow or consequential target clipping was observed. True OS/browser text-size settings, physical touch, Assistant availability, vertical reachability, browser-family breadth, assistive technology, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-100",
@@ -1561,9 +1562,10 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-responsive-target-geometry-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt"
       ],
-      "notes": "The current exact artifact measured 216 visible consequential targets for each of 12 Alpha/Beta/Gamma Light/Dark × 100%/2x narrow runs; none was below 44x44 CSS pixels and none was horizontally clipped, with page scrollWidth equal to clientWidth. Independent-target 8px separation, lower-half placement, true touch accuracy, all density/profile combinations, browser-family/accessibility breadth, and human acceptance remain open."
+      "notes": "The current exact artifact measured 216 visible consequential targets for each of 12 Alpha/Beta/Gamma Light/Dark × 100%/2x narrow runs and 162 controls in the accessibility-profile runs; none was below 44x44 CSS pixels and none was horizontally clipped, with page and body scrollWidth equal to clientWidth. Independent-target 8px separation, lower-half placement, true touch accuracy, all density/profile combinations, browser-family/accessibility breadth, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-101",
@@ -1766,8 +1768,11 @@
         "line": 4166
       },
       "text": "Admitted motion is measured to complete within 200ms, to occur only at state-change origins, and never to delay availability of the resulting control. A platform reduced-motion preference automatically selects zero-motion mode, in which every transition becomes an instant state swap with no loss of function or information. Haptics fire only on user-initiated commits and are independently disableable without losing any outcome signal.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt"
+      ],
+      "notes": "The current artifact exposes a persisted zero-motion setting, automatically adopts zero-motion on a fresh origin under the platform-reported reduced-motion preference, and verifies computed transition duration `0s` while the full UI remains available. Motion-origin timing, haptics, physical hardware, other engines, assistive technology, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-121",
@@ -1786,8 +1791,11 @@
         "line": 4170
       },
       "text": "Each named accessibility profile is selected in turn. Each expands to reveal every individual setting it changed, user edits to those settings survive and are not silently reverted, no function is gated, and the standard profile's accessible baseline is never reduced. A platform-reported accessibility preference is honored on first run without the user locating a setting.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt"
+      ],
+      "notes": "The current Chromium receipt selects Standard, Low vision, Motor / large target, and Low cognitive load, exposes each changed setting in the Presentation surface, preserves a user edit as `custom`, retains the selected profile through reload, and leaves canonical data available. Native OS profile breadth, screen-reader/assistive-technology conformance, physical touch, other engines, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-123",
@@ -1878,9 +1886,10 @@
       "text": "Every built-in family is exercised in Light and AMOLED Dark at 320 CSS pixels, 100% and 200% text scaling, and the admitted touch/input profiles. No family introduces page-level horizontal scrolling, clipped controls, sub-44 x 44 consequential targets, color-only state, or an alternate mutation path.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt"
       ],
-      "notes": "All six family/mode combinations were exercised at a strict 320x844 viewport and a temporary 2x page-scale rehearsal; all 12 runs had no page horizontal overflow, no horizontal target clipping, no consequential target below 44x44, and the same canonical sentinel. True text-size settings, physical touch/input profiles, color-only state/CVD, alternate mutation paths, other engines, and human acceptance remain open."
+      "notes": "All six family/mode combinations were exercised at a strict 320x844 viewport and a temporary 2x page-scale rehearsal; the accessibility receipt additionally exercises large-target 125% and explicit 200% text scale. The current runs had no page/body horizontal overflow, no horizontal target clipping, no consequential target below 44x44, and the same canonical sentinel. Physical touch/input profiles, color-only state/CVD, alternate mutation paths, other engines, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-132",
