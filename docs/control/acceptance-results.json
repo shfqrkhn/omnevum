@@ -130,9 +130,10 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-accessibility-tree-and-keyboard-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capturesearchreload-and-accessibility-tree-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-built-artifact-palette-contrast-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-presentation-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-presentation-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-semantic-boundary-and-focus-contrast-receipt"
       ],
-      "notes": "The exact current artifact now exercises Alpha, Beta, and Gamma in both Light and AMOLED Dark through the persisted Presentation axis; all six DOM text audits report zero pairs below 4.5:1, the canonical sentinel remains unchanged, and Gamma Dark survives reload. Painted boundaries/focus/state graphics, deliberate failing-pair behavior, monochrome/CVD carriers, 320px/200% scaling, browser/accessibility breadth, lifecycle export/import/reset, and human qualification remain open."
+      "notes": "The exact current artifact exercises Alpha, Beta, and Gamma in both Light and AMOLED Dark through the persisted Presentation axis; all six DOM text audits report zero pairs below 4.5:1, the semantic interactive-boundary/focus audit reports minimum contrast above 3:1 in every run, the canonical sentinel remains unchanged, and Gamma Dark survives reload. Painted state graphics, deliberate failing-pair behavior, monochrome/CVD carriers, 320px/200% scaling, browser/accessibility breadth, lifecycle export/import/reset, and human qualification remain open."
     },
     {
       "id": "OMN-ACC-005",
@@ -1577,9 +1578,10 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-built-artifact-palette-contrast-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-presentation-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-presentation-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-semantic-boundary-and-focus-contrast-receipt"
       ],
-      "notes": "The exact current Chromium artifact now audits all six Alpha/Beta/Gamma Light/Dark combinations with zero rendered text pairs below 4.5:1 and no desktop overflow after the family-axis implementation. Interactive boundaries, focus/state graphics, large-text rules, deliberate failing-pair gate behavior, monochrome/CVD, other engines, assistive technology, and human acceptance remain open."
+      "notes": "The exact current Chromium artifact audits all six Alpha/Beta/Gamma Light/Dark combinations with zero rendered text pairs below 4.5:1 and semantic border/focus/action/conflict tokens above 3:1 against each exercised adjacent plane. Every painted state graphic, large-text classification, deliberate failing-pair gate behavior, monochrome/CVD, other engines, assistive technology, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-102",
@@ -1901,9 +1903,10 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-presentation-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-presentation-profile-lifecycle-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-presentation-profile-lifecycle-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-malformed-presentation-import-recovery-receipt"
       ],
-      "notes": "The current Chromium run selected Alpha, Beta, and Gamma in both modes through the normal Presentation setting path, then visibly invoked profile export, imported a bounded valid profile, reset to default Gamma Light, and reloaded with one active sentinel record and a healthy index unchanged. Compatible upgrade, exported-file inspection, malformed-import recovery, other targets, installed-host behavior, and human acceptance remain open."
+      "notes": "The current Chromium run selected Alpha, Beta, and Gamma in both modes through the normal Presentation setting path, visibly invoked profile export, imported a bounded valid profile, rejected a bounded malformed profile with an explicit status, reset to default Gamma Light, and reloaded with one active sentinel record and a healthy index unchanged. Compatible upgrade, exported-file inspection, stored-profile Safe Presentation breadth, other targets, installed-host behavior, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-133",
