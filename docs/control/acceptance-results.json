@@ -471,12 +471,13 @@
       "status": "PARTIAL",
       "evidence": [
         "src/core/presentation.test.ts",
+        "src/core/presentation.test.ts#upgrades-a-compatible-version-1-profile-with-omitted-newer-optional-fields",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-personalization-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-presentation-metadata-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#historical-built-artifact-presentation-profile-portability-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-presentation-and-locale-profile-follow-up"
       ],
-      "notes": "Current and historical built previews prove bounded declarative branding, terminology, navigation visibility/order controls, Home composition, typeface, icon treatment, density, locale/theme contract, document metadata binding, standalone profile export/import, reload persistence, Recovery reachability, and unchanged canonical counts. Target accessibility/browser breadth, icon/logo assets, installed-host metadata, profile migration across future schemas, and release qualification remain open."
+      "notes": "Current and historical built previews prove bounded declarative branding, terminology, navigation visibility/order controls, Home composition, typeface, icon treatment, density, locale/theme contract, document metadata binding, standalone profile export/import, reload persistence, Recovery reachability, and unchanged canonical counts. Core regression now also proves a compatible version-1 profile with omitted newer optional fields upgrades to safe defaults; target accessibility/browser breadth, icon/logo assets, installed-host metadata, future schema migration, and release qualification remain open."
     },
     {
       "id": "OMN-ACC-024",
@@ -1946,9 +1947,10 @@
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-presentation-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-presentation-profile-lifecycle-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-malformed-presentation-import-recovery-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-malformed-presentation-import-recovery-receipt",
+        "src/core/presentation.test.ts#upgrades-a-compatible-version-1-profile-with-omitted-newer-optional-fields"
       ],
-      "notes": "The current Chromium run selected Alpha, Beta, and Gamma in both modes through the normal Presentation setting path, visibly invoked profile export, imported a bounded valid profile, rejected a bounded malformed profile with an explicit status, reset to default Gamma Light, and reloaded with one active sentinel record and a healthy index unchanged. Compatible upgrade, exported-file inspection, stored-profile Safe Presentation breadth, other targets, installed-host behavior, and human acceptance remain open."
+      "notes": "The current Chromium run selected Alpha, Beta, and Gamma in both modes through the normal Presentation setting path, visibly invoked profile export, imported a bounded valid profile, rejected a bounded malformed profile with an explicit status, reset to default Gamma Light, and reloaded with one active sentinel record and a healthy index unchanged. Core regression now proves a compatible version-1 import with omitted newer optional fields upgrades to safe defaults without canonical mutation; future schema migration, exported-file inspection, stored-profile Safe Presentation breadth, other targets, installed-host behavior, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-133",

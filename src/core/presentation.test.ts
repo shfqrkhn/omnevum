@@ -79,6 +79,26 @@ describe("presentation profile", () => {
     expect(parsePresentationProfileDocument(document)).toEqual(profile);
   });
 
+  it("upgrades a compatible version-1 profile with omitted newer optional fields", () => {
+    const legacyDocument = {
+      format: "OMNEVUM_PRESENTATION_PROFILE",
+      version: 1,
+      exportedAt: "2026-09-18T00:00:00.000Z",
+      profile: { schemaVersion: 1, productName: "Legacy", theme: "dark", locale: "en-CA" }
+    };
+    expect(parsePresentationProfileDocument(legacyDocument)).toMatchObject({
+      schemaVersion: 1,
+      productName: "Legacy",
+      theme: "dark",
+      locale: "en-CA",
+      density: "comfortable",
+      lensPins: ["direction", "people", "self", "resources"],
+      activeLens: "direction",
+      homeWidgets: ["summary", "insights", "attention"],
+      navigation: { visible: expect.arrayContaining(["recovery", "presentation"]), order: expect.arrayContaining(["recovery", "presentation"]) }
+    });
+  });
+
   it("rejects malformed or stale presentation profile documents", () => {
     expect(() => parsePresentationProfileDocument(null)).toThrow("Presentation profile document is invalid");
     expect(() => parsePresentationProfileDocument({ format: "OMNEVUM_PRESENTATION_PROFILE", version: 2, exportedAt: "2026-09-18T00:00:00.000Z", profile: DEFAULT_PRESENTATION })).toThrow("Presentation profile document is invalid");
