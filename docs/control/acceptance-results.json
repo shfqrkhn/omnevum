@@ -660,8 +660,15 @@
         "line": 3996
       },
       "text": "A material upstream FOSS dependency publishes a new major release. Automation detects it, records release notes/currentness, stages an isolated candidate, runs characterization/contract/migration/target gates, and either adopts/adapts/defers/rejects it without modifying the accepted runtime until promotion.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/currentness.ts#evaluateUpstreamCandidate",
+        "src/core/currentness.test.ts",
+        "docs/control/currentness-radar.json",
+        "docs/control/upstream.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-upstream-candidate-gate-receipt"
+      ],
+      "notes": "The isolated candidate gate detects newer semantic versions, distinguishes major updates, requires exact source/release identity and an isolated candidate reference, evaluates currentness/license/security/contract/migration/target gates, rejects policy-critical failure, defers unknown or incomplete gates, and never mutates the accepted runtime. The synthetic contract is source/unit qualified; registry detection, a real upstream major candidate, dependency installation, migration/target breadth, promotion, and release evidence remain open."
     },
     {
       "id": "OMN-ACC-036",
@@ -1190,8 +1197,13 @@
         "line": 4064
       },
       "text": "A user enables a supported passkey/WebAuthn device-unlock wrapper for protected Vault/recovery secret access, then loses that browser profile or migrates Omnevum to a different HTTPS origin. Portable recovery using the independent recovery secret/key still succeeds, the old origin-bound passkey is not falsely treated as portable ownership, and the user can re-enroll a new local wrapper after restore.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "NOT_APPLICABLE",
+      "evidence": [
+        "docs/control/decision-log.json#OMN-DEC-007",
+        "docs/control/credential-key-policy.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-passkey-scope-boundary-receipt"
+      ],
+      "notes": "The v0.17.4 static-core release does not admit a passkey/WebAuthn wrapper. Its broker and portable Vault/recovery path remain active, but no authenticator-bound unlock, origin/profile-loss migration, or re-enrolment claim is made. Reopen this scenario when a WebAuthn-PRF or equivalent candidate is explicitly admitted and all MPES recovery, target, security, and human-acceptance gates are qualified. This is a bounded NOT_APPLICABLE decision, not a security PASS."
     },
     {
       "id": "OMN-ACC-070",

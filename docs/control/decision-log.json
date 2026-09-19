@@ -61,6 +61,16 @@
       "alternatives": ["admit a schema UI framework to the core", "admit DuckDB-Wasm to the core", "replace MiniSearch before target qualification", "build bespoke full document/analytical engines"],
       "revisitWhen": "A representative accepted target/workload demonstrates a material capability gap or lower lifecycle-cost candidate, with exact current source, license, security, migration, accessibility, resource, and replacement evidence.",
       "evidence": ["docs/evidence/phase0-bakeoff-2026-09-17.md", "docs/control/capability-coverage.json", "src/core/search.ts", "src/core/search.test.ts"]
+    },
+    {
+      "id": "OMN-DEC-007",
+      "title": "Passkey/WebAuthn scope boundary",
+      "status": "DECIDED_FOR_PHASE0",
+      "decision": "Do not admit a passkey/WebAuthn device-unlock wrapper in the v0.17.4 static-core release. Keep the credential/key broker and portable Vault/recovery path active; represent passkey convenience as a deferred PLATFORM_LIMITED candidate until exact authenticator capability, origin/profile loss, portable recovery, and re-enrolment evidence is qualified.",
+      "why": "The MPES makes passkey convenience optional and prohibits it from becoming the sole recovery authority. No current implementation or qualified authenticator harness exists in this release, so treating OMN-ACC-069 as an admitted capability would overclaim security and origin portability. The bounded core remains usable without it.",
+      "alternatives": ["admit an unqualified WebAuthn wrapper", "make passkey the only protected Vault key", "qualify a WebAuthn-PRF or equivalent wrapper in a future isolated candidate"],
+      "revisitWhen": "A current browser/authenticator candidate passes origin/profile-loss, independent recovery, re-enrolment, revocation, secret-handling, target, accessibility, and human acceptance gates.",
+      "evidence": ["docs/control/credential-key-policy.json", "src/core/credential.ts", "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-passkey-scope-boundary-receipt"]
     }
   ]
 }
