@@ -31,4 +31,19 @@ describe("presentation lens projections", () => {
     const cleanup = record("cleanup", { data: { text: "cleanup", kind: "cleanup-history", space: "personal" } });
     expect(projectLensRecords([archived, cleanup], "self")).toEqual([]);
   });
+
+  it("covers the built-in domain kinds without projecting references into Self", () => {
+    const cases: Array<[string, Partial<CanonicalRecord>, string[]]> = [
+      ["person", { data: { text: "person", kind: "person", space: "personal" }, subjectId: "person-1" }, ["people", "self"]],
+      ["expense", { recordType: "observation", owner: "domain.finance", data: { text: "expense", kind: "expense", space: "personal" } }, ["self", "resources", "change"]],
+      ["health", { recordType: "observation", owner: "domain.health", subjectId: "person-1", data: { text: "health", kind: "health-measurement", space: "personal" } }, ["people", "self", "resources", "change"]],
+      ["place", { recordType: "observation", owner: "platform.place", data: { text: "place", kind: "place", space: "personal" } }, ["self", "environment", "change"]],
+      ["source", { recordType: "artifact", owner: "platform.artifact", data: { text: "source", kind: "source" } }, ["resources", "knowledge"]],
+      ["reference", { recordType: "relationship", owner: "platform.relate", data: { text: "reference", kind: "related", space: "personal" } }, ["knowledge"]],
+      ["workout", { recordType: "observation", owner: "platform.track", data: { text: "workout", kind: "workout", space: "work" } }, ["resources", "work", "environment", "change"]]
+    ];
+    for (const [id, overrides, expected] of cases) {
+      expect(lensIdsForRecord(record(id, overrides))).toEqual(expected);
+    }
+  });
 });
