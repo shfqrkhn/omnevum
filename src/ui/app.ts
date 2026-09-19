@@ -44,6 +44,7 @@ import { CORE_AUTOMATION_PACKAGE, type PackageAutomationRuntime } from "../core/
 import type { PackageAutomationProposal } from "../core/package-automation-registry";
 import { shouldAutoShowOnboarding } from "../core/onboarding";
 import { REVIEW_SESSION_SETTING, REVIEW_TEMPLATES, advanceReviewSession, getReviewTemplate, isReviewSession, makeReviewSession, type ReviewSession } from "../core/review";
+import { projectTelemetry } from "../core/telemetry";
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -2145,6 +2146,18 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     capabilityStatus.textContent = degradedCapabilities.length === 0 ? copy.local : `${copy.local} - ${degradedCapabilities.length} degraded`;
     capabilityStatus.title = degradedCapabilities.length === 0 ? "Core capabilities are ready." : degradedCapabilities.map((status) => `${status.id}: ${status.reason ?? "degraded"}`).join("; ");
   };
+  const formatHealth = (health: Awaited<ReturnType<CanonicalStore["health"]>>): string => {
+    const telemetry = projectTelemetry({
+      replication: { enabled: false },
+      backup: "UNKNOWN",
+      pendingEffects: health.pendingEffects,
+      degradedCapabilities: capabilityRuntime ? capabilityRuntime.snapshot().filter((status) => status.state === "DEGRADED").map((status) => status.id) : "UNKNOWN",
+      unresolvedConflicts: "UNKNOWN",
+      storagePressure: health.storage?.pressure ?? "UNKNOWN"
+    });
+    const status = telemetry.facts.map((fact) => fact.status);
+    return `${copy.healthMessage(health.activeRecords, health.archivedRecords, health.historyEntries, health.artifactPayloads, health.searchIndexValid ? copy.healthy : copy.degraded, health.storage?.pressure)} ${copy.telemetryMessage(status[0] ?? "UNKNOWN", status[1] ?? "UNKNOWN", status[2] ?? "UNKNOWN", status[3] ?? "UNKNOWN", status[4] ?? "UNKNOWN", status[5] ?? "UNKNOWN")} ${getStoragePersistenceNotice(presentation.locale, health.storage?.persistence ?? "UNAVAILABLE")}`;
+  };
   refreshCapabilityStatus();
 
   presentationStatus.textContent = safePresentationMode ? recoveryCopy.safePresentationHint : presentationResolution.storedProfileValid ? copy.presentationHint : `Safe presentation fallback is active. ${copy.presentationHint}`;
@@ -3555,7 +3568,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     await renderCleanupHistory();
     await renderActiveLens();
     const healthAfter = await store.health();
-    healthStatus.textContent = `${copy.healthMessage(healthAfter.activeRecords, healthAfter.archivedRecords, healthAfter.historyEntries, healthAfter.artifactPayloads, healthAfter.searchIndexValid ? copy.healthy : copy.degraded, healthAfter.storage?.pressure)} ${getStoragePersistenceNotice(presentation.locale, healthAfter.storage?.persistence ?? "UNAVAILABLE")}`;
+    healthStatus.textContent = formatHealth(healthAfter);
     await renderEffects();
     if (!archivePanel.hidden) await renderArchived();
     return records.length;
@@ -4301,7 +4314,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     try {
       const persistence = await store.requestPersistence();
       const health = await store.health();
-      healthStatus.textContent = `${copy.healthMessage(health.activeRecords, health.archivedRecords, health.historyEntries, health.artifactPayloads, health.searchIndexValid ? copy.healthy : copy.degraded, health.storage?.pressure)} ${getStoragePersistenceNotice(presentation.locale, health.storage?.persistence ?? persistence)}`;
+      healthStatus.textContent = formatHealth(health);
       recoveryStatus.textContent = getStoragePersistenceNotice(presentation.locale, persistence);
     } catch (error) {
       recoveryStatus.textContent = describeError(error, "Persistent storage request failed; export a Vault for portability.");
