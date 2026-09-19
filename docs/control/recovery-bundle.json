@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "005a353d5eca1e2cd87a860829475fe178bdd2653299fcc652f9b2388e743dc8",
-        "bytes": 214846
+        "sha256": "673df824230ece8abd377a1ba4f06784a1970f564703b0af6ecf8a7070d27a41",
+        "bytes": 215469
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -159,8 +159,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "1c3bca0aa16a6c86e2e99ed6cb51a89e0ef1d92215f6d917bd982f4dbf359ffe",
-        "bytes": 7795
+        "sha256": "ade363b4c2e9a3f8bdecf26daed97ac087b56f594b27ee34831a1bfcd6dc2b53",
+        "bytes": 7832
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "8b2df266298ac414ca84922b1c82bab2f9376c62d0e750518077278b116b8725",
-        "bytes": 79265
+        "sha256": "3b3b9ebb897f180be2a6daab6358aea920e89e98690791ea61ea8d0286b50237",
+        "bytes": 79336
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "cde3451261aae28bb87e94c0cd217eb72384e17148b3c7c69c482c7cbacd244c",
-        "bytes": 2720
+        "sha256": "2e3d39fc7da706509d85b8d915d1de4e5cdd58de7304b5c0db17ec6b671f91a0",
+        "bytes": 2775
       },
       {
         "path": "docs/control/requirements.json",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "5d6d4f1491387e8fb9511be41862e1182d7c6152a3039104aa6e05e606cb5664",
-        "bytes": 339042
+        "sha256": "20c3c316e44c79ffbddf10d1648c06430460da5b0e15661c47e3ae3cdf4dce50",
+        "bytes": 340983
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -319,8 +319,8 @@
       },
       {
         "path": "public/sw.js",
-        "sha256": "1daee5e2591407d44536bc51fba258651dda4572e99c1ccb4f5681b0d899522a",
-        "bytes": 3362
+        "sha256": "ee209c3b183ba5b372717555dc9fec0b6e96c894bcb362701024bf73bc84fa96",
+        "bytes": 3324
       },
       {
         "path": "scripts/acceptance-audit.mjs",
@@ -1074,8 +1074,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "53e420e4e739a77bd4eafc44492c49c5e8f59e1968f681ba5709ef77a277e180",
-        "bytes": 316243
+        "sha256": "92c36d6cbf7563757f7c0ed656cb4924984d39f499c185c06c090c4f410c915d",
+        "bytes": 316306
       },
       {
         "path": "tsconfig.json",
