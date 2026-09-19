@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "3b50ed69f3d23e3ac1d9fd5fd226bf90092ded213c2486e11e7153600fbc016e",
-        "bytes": 201821
+        "sha256": "8dbe4b108c290baca8f5bec8b87adfa67a84883b4d0fed4d7c71b3ee848bb16d",
+        "bytes": 202081
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -159,8 +159,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "fbfab233466b3ef4e7e128cb7a382ecab49081cb564066f2a47b0d782fc76fdf",
-        "bytes": 5247
+        "sha256": "dccf78fceba19ff853a439c0c095da32490095cb470bf50c8b3eaf160bd75c90",
+        "bytes": 5413
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "0d0d7157e8afffa5f7164b727bf8620af8c06b747b32fc3c77bd96f17e48fa10",
-        "bytes": 68640
+        "sha256": "c800f66820cbcbe6e6ab2335166a2bc4f07bde6a01040801488958279eda3e24",
+        "bytes": 69398
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -224,12 +224,12 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "90071ef32ec2e56cb2bc6386dc81802f95ca10c2c5f65ab8a0b0f485b9c6239b",
-        "bytes": 4755
+        "sha256": "b2f24b58d86649a31cc53cc7fe88d22b5f85292710fe2f8ce1c04f1abd1def73",
+        "bytes": 4865
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "8172ad265d8c50dbaf4c9f85e0bdf7ce5eff2ee9d6e4013a3f2baf057aaa4c5c",
+        "sha256": "c9bb64c0ffb62ea63d6982314c8782a5e239bdced2664f29b60f9659bfdd93f4",
         "bytes": 2433
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "2e7b2abd0ad6dd1ca2ecba4146c56d8a89842f52c57076c64aed22f7521cdab5",
-        "bytes": 311312
+        "sha256": "7911aff1cb5f08d0ba4f1898816635272c25e092121ac4e021c992d1ca879ea5",
+        "bytes": 312790
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -839,13 +839,13 @@
       },
       {
         "path": "src/core/presentation.test.ts",
-        "sha256": "2227164dc7165b813be691e670bcad583fff80e7822d18e7b93908e26b2c32ca",
-        "bytes": 8447
+        "sha256": "4e3fe80e750f3c37af7261d8d91799f5e5b046a7ac9f881eecaa272d604ff8db",
+        "bytes": 8917
       },
       {
         "path": "src/core/presentation.ts",
-        "sha256": "90bb564f92eb33654a324cd978ea4e2dec1349e30dd9350dec96859dc92e6c87",
-        "bytes": 13028
+        "sha256": "e79a8c8d1dc0ed30517c47ec1967b9b06aa03ffc27974456a6d5ca2e27527fe1",
+        "bytes": 13180
       },
       {
         "path": "src/core/proposal-router.test.ts",

@@ -1869,9 +1869,10 @@
       "text": "A presentation preference is changed in place - lens pinning from the bar, density from the surface being read, a term from its label - and appears identically in System > Presentation; the reverse edit propagates identically back. Neither path exposes a preference the other cannot reach, and the resulting profile resets cleanly without touching canonical records.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-in-place-presentation-control-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-in-place-presentation-control-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-default-navigation-receipt"
       ],
-      "notes": "The current built Chromium artifact exposes presentation-only density from a persistent sticky topbar, pin/unpin controls from the navigation bar, and an accessible bounded label editor from Home/Capture/Records; each round-trips to System > Presentation, survives reload, and leaves canonical count/revision state unchanged. Compatible profile upgrade, broader target/accessibility/human acceptance, and complete in-place parity for every preference remain open."
+      "notes": "The current built Chromium artifact exposes presentation-only density from a persistent sticky topbar, pin/unpin controls from the navigation bar, and an accessible bounded label editor from Home/Capture/Records; each round-trips to System > Presentation, survives reload, and leaves canonical count/revision state unchanged. The current fresh-origin profile keeps the daily navigation spine visible while preserving the complete ordered section set and optional pinning. Compatible profile upgrade, broader target/accessibility/human acceptance, and complete in-place parity for every preference remain open."
     },
     {
       "id": "OMN-ACC-122",
