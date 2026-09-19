@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { CanonicalRecord } from "./model";
 import { CommandBus } from "./commands";
 import { CanonicalStore } from "./storage";
+import { recordText } from "./domain";
 import { acceptDeterministicDependencyLinks, analyzeDependencyGraph, createDependencyLink, discoverDependencyLinks, projectDependencyGraph, projectDependencyImpact, type DependencyGraph } from "./dependency-graph";
 
 function record(id: string, data: Record<string, unknown> = {}, sensitivity: "PRIVATE" | "SHARED" = "PRIVATE"): CanonicalRecord {
@@ -80,6 +81,7 @@ describe("typed dependency and synergy graph", () => {
     const projected = projectDependencyGraph(await commands.list());
     expect(projected.nodes).toEqual([source.id, target.id].sort());
     expect(projected.edges).toMatchObject([{ sourceId: source.id, targetId: target.id, edgeKind: "ALLOCATION", allocationMode: "EXCLUSIVE" }]);
+    expect(recordText(first)).toContain("ALLOCATION: funds");
     store.close();
   });
 

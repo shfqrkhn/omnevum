@@ -31,7 +31,12 @@ export interface TriageProposal {
 
 export function recordText(record: CanonicalRecord): string {
   if (record.recordType === "relationship" && typeof record.data.sourceId === "string" && typeof record.data.targetId === "string") {
-    return `${record.data.sourceId} -> ${record.data.targetId}: ${typeof record.data.relation === "string" ? record.data.relation : "related"}`;
+    const relation = typeof record.data.relation === "string"
+      ? record.data.relation
+      : record.data.kind === "dependency-link" && typeof record.data.edgeKind === "string" && typeof record.data.label === "string"
+        ? `${record.data.edgeKind}: ${record.data.label}`
+        : "related";
+    return `${record.data.sourceId} -> ${record.data.targetId}: ${relation}`;
   }
   if (record.data.kind === "evidence-link" && typeof record.data.claim === "string") return record.data.claim;
   return typeof record.data.text === "string" ? record.data.text : record.recordType;
