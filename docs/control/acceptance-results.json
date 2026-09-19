@@ -1152,8 +1152,15 @@
         "line": 4054
       },
       "text": "A spatial Compose/View canvas contains freeform drawing plus references to canonical records. Moving/styling/grouping referenced nodes changes only view state unless the user invokes an admitted semantic command; a standalone drawing can be exported/backed up as an Artifact, and upgrading/replacing the underlying canvas engine does not require canonical-record migration.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/spatial-canvas.ts",
+        "src/core/spatial-canvas.test.ts",
+        "src/core/compose.ts",
+        "docs/control/capability-coverage.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-spatial-canvas-contract-receipt"
+      ],
+      "notes": "The engine-neutral Canvas contract preserves canonical record references while bounded view-only move/style/group/connect actions change layout state, supports freeform drawing nodes, exports/restores an inert JSON Canvas Artifact projection, and replaces the rendering engine without record migration. A qualified reusable canvas engine, browser interaction, Artifact command wiring, target/deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-065",

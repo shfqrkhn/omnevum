@@ -15,6 +15,7 @@
     ,{"source": "duckdb/duckdb-wasm", "capability": "browser analytical projection", "disposition": "DEFER_ISOLATED_CANDIDATE", "coverage": "REFERENCE_ONLY", "evidence": "docs/evidence/phase0-bakeoff-2026-09-17.md"}
     ,{"source": "mozilla/pdf.js; SheetJS/sheetjs", "capability": "browser document/spreadsheet parsing", "disposition": "DEFER_WORKER_CANDIDATE", "coverage": "REFERENCE_ONLY", "evidence": "docs/evidence/phase0-bakeoff-2026-09-17.md"}
     ,{"source": "Omnevum-owned bibliography projection", "capability": "BibTeX/RIS/CSL-JSON import, Artifact/source links, derived citation styles", "disposition": "ADOPT_CONTRACT_PENDING_ARTIFACT_TARGET", "coverage": "SOURCE_UNIT_QUALIFIED_BROWSER_INTAKE_PENDING", "evidence": "src/core/bibliography.test.ts; docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-bibliography-projection-contract-receipt"}
+    ,{"source": "Omnevum-owned spatial canvas seam", "capability": "engine-neutral drawing, canonical record references, view state, export/restore", "disposition": "ADOPT_CONTRACT_PENDING_ENGINE_TARGET", "coverage": "SOURCE_UNIT_QUALIFIED_REUSABLE_ENGINE_PENDING", "evidence": "src/core/spatial-canvas.test.ts; docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-spatial-canvas-contract-receipt"}
   ],
   "rule": "No candidate is adopted from name or feature list alone; exact source, license, target, security, migration, and replacement evidence is required."
 }

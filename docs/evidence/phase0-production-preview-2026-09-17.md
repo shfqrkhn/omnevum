@@ -1898,3 +1898,9 @@ This advances `OMN-ACC-043` from `UNKNOWN` to `PARTIAL`. No real large-Vault bro
 On 2026-09-19, source revision `12bde59` added the Omnevum-owned bounded bibliography projection. The focused `src/core/bibliography.test.ts` suite passed `3` tests, followed by `npm run typecheck` and `git diff --check`. The contract imports BibTeX and RIS fixtures plus CSL-JSON, normalizes bounded authors/title/year/container/identifier fields while retaining source format and source identity, links a reference to an Artifact/source with a user annotation without creating a bibliography-owned canonical store, and renders APA, Chicago, or IEEE citation/bibliography rows as `DERIVED_BIBLIOGRAPHY`. Switching style changes only derived strings; the imported entry and link remain unchanged.
 
 This advances `OMN-ACC-063` from `UNKNOWN` to `PARTIAL`. Qualified browser Artifact acquisition, full BibTeX/RIS/CSL semantics, broader style/locale coverage, target/deployment, and human acceptance remain open.
+
+## Current v0.17.4 spatial canvas contract receipt
+
+On 2026-09-19, source revision `f22cb93` added the Omnevum-owned engine-neutral spatial Compose/View seam. The focused `src/core/spatial-canvas.test.ts` suite passed `3` tests, followed by `npm run typecheck` and `git diff --check`. The contract holds bounded freeform drawing, text, and canonical-record-reference nodes plus view-only connections, supports move/style/group/viewport operations without changing referenced IDs or canonical data, exports an inert JSON Canvas Artifact projection, restores it through validation, and replaces the renderer through an explicit engine identity without record migration.
+
+This advances `OMN-ACC-064` from `UNKNOWN` to `PARTIAL`. No qualified reusable canvas engine, browser interaction, Artifact command wiring, target/deployment, or human acceptance was performed; those remain open.
