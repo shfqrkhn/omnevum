@@ -159,8 +159,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "9c237b9028273ac4a395bcd953109ea5b53f69f37c315fe3c4de170e1257658f",
-        "bytes": 2644
+        "sha256": "faec3dcbf760ab78892a24a2e6618f1af7b4e54d06c73e81976362e6dfad519d",
+        "bytes": 2782
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "2288c49b7369089a30f19e09dec77f87d1aeb20ae5a9e99ea9c2b7f952cff6b4",
-        "bytes": 39484
+        "sha256": "f6270ba7ea4a0a9169efc44083d6fb87a1c1b10eb56d9b5219d535b4fa27210b",
+        "bytes": 39642
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "47f535db9520a4e965a7885d8a1fa01b83b1e6074efedb200c93e2f7a81df333",
-        "bytes": 2432
+        "sha256": "3f2f35c76e84bbcd4a81d47d858badbf3e0160bc4dd0e573afb717f7cbbd9c24",
+        "bytes": 2399
       },
       {
         "path": "docs/control/requirements.json",
