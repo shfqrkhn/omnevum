@@ -1,6 +1,6 @@
 export type PresentationTheme = "light" | "dark";
 export type PresentationFamily = "alpha" | "beta" | "gamma";
-export type PresentationLocale = "en-CA" | "fr-CA";
+export type PresentationLocale = "en-CA" | "fr-CA" | "ar";
 export type PresentationDensity = "comfortable" | "compact";
 export type PresentationTypeface = "system" | "serif" | "mono";
 export type PresentationIconography = "labels" | "glyphs";
@@ -149,7 +149,7 @@ export function parsePresentationProfile(value: unknown): PresentationProfile {
     family: candidate.family === "alpha" || candidate.family === "beta" ? candidate.family : "gamma",
     tagline: boundedString(candidate.tagline, 160),
     theme: candidate.theme === "dark" ? "dark" : "light",
-    locale: candidate.locale === "fr-CA" ? "fr-CA" : "en-CA",
+    locale: candidate.locale === "fr-CA" || candidate.locale === "ar" ? candidate.locale : "en-CA",
     density: candidate.density === "comfortable" ? "comfortable" : DEFAULT_PRESENTATION.density,
     typeface: candidate.typeface === "serif" || candidate.typeface === "mono" ? candidate.typeface : "system",
     iconography: candidate.iconography === "glyphs" ? "glyphs" : "labels",
@@ -176,7 +176,7 @@ function validList<T extends string>(value: unknown, allowed: readonly T[]): boo
 export function isPresentationProfile(value: unknown): value is PresentationProfile {
   if (typeof value !== "object" || value === null) return false;
   const candidate = value as Record<string, unknown>;
-  if (candidate.schemaVersion !== 1 || !validBoundedString(candidate.productName, 80, true) || (candidate.family !== undefined && candidate.family !== "alpha" && candidate.family !== "beta" && candidate.family !== "gamma") || (candidate.theme !== "light" && candidate.theme !== "dark") || (candidate.locale !== "en-CA" && candidate.locale !== "fr-CA")) return false;
+  if (candidate.schemaVersion !== 1 || !validBoundedString(candidate.productName, 80, true) || (candidate.family !== undefined && candidate.family !== "alpha" && candidate.family !== "beta" && candidate.family !== "gamma") || (candidate.theme !== "light" && candidate.theme !== "dark") || (candidate.locale !== "en-CA" && candidate.locale !== "fr-CA" && candidate.locale !== "ar")) return false;
   if (candidate.tagline !== undefined && !validBoundedString(candidate.tagline, 160)) return false;
   if (candidate.density !== undefined && candidate.density !== "comfortable" && candidate.density !== "compact") return false;
   if (candidate.typeface !== undefined && candidate.typeface !== "system" && candidate.typeface !== "serif" && candidate.typeface !== "mono") return false;

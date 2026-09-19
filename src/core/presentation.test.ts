@@ -55,6 +55,12 @@ describe("presentation profile", () => {
     expect(parsePresentationProfile({ productName: "JohnOS", theme: "dark", locale: "fr-CA" })).toMatchObject({ productName: "JohnOS", theme: "dark", locale: "fr-CA" });
   });
 
+  it("accepts the explicitly experimental Arabic RTL fallback locale", () => {
+    const profile = parsePresentationProfile({ productName: "RTL", locale: "ar" });
+    expect(profile.locale).toBe("ar");
+    expect(isPresentationProfile(profile)).toBe(true);
+  });
+
   it("bounds inert personalization and keeps recovery reachable", () => {
     const profile = parsePresentationProfile({
       productName: "JohnOS",

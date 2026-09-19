@@ -278,11 +278,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <input id="product-name" name="productName" type="text" maxlength="80" required />
             <button type="submit">${copy.save}</button>
           </div>
-          <label for="locale">${copy.language}</label>
-          <select id="locale" name="locale">
-            <option value="en-CA">${copy.english}</option>
-            <option value="fr-CA">${copy.french}</option>
-          </select>
+            <label for="locale">${copy.language}</label>
+            <select id="locale" name="locale">
+              <option value="en-CA">${copy.english}</option>
+              <option value="fr-CA">${copy.french}</option>
+              <option value="ar">العربية (تجريبية)</option>
+            </select>
           <label for="tagline">${copy.tagline}</label>
           <input id="tagline" name="tagline" type="text" maxlength="160" />
           <label for="family">${presentation.locale === "fr-CA" ? "Famille visuelle" : "Visual family"}</label>
@@ -5083,7 +5084,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     event.preventDefault();
     const nextName = productName.value.trim().slice(0, 80);
     if (!nextName) return;
-    const nextLocale: PresentationProfile["locale"] = localeInput.value === "fr-CA" ? "fr-CA" : "en-CA";
+    const nextLocale: PresentationProfile["locale"] = localeInput.value === "fr-CA" ? "fr-CA" : localeInput.value === "ar" ? "ar" : "en-CA";
     const localeChanged = nextLocale !== presentation.locale;
     try {
       const nextPresentation = parsePresentationProfile({

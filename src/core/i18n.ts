@@ -548,8 +548,48 @@ const assistantFrench: AssistantCopy = {
   assistant: "Assistant", assistantHeading: "Demander dans une portee limitee", assistantHint: "L'Assistant est une surface de capacite partagee, pas un proprietaire de donnees. La portee reste explicite et reductible.", assistantProvider: "Fournisseur / route : aucun configure", assistantScope: "Portee", assistantStandaloneScope: "Autonome : aucun dossier canonique n'est lie.", assistantRecordScope: (recordId, relationships) => `Dossier ${recordId} et ${relationships} relation(s) autorisee(s).`, assistantDisclosure: "Divulgation : locale seulement; rien ne sort de ce navigateur.", assistantDisabled: "Les routes IA sont desactivees ou indisponibles. Capture, recherche, revue et recuperation restent accessibles.", assistantQuestion: "Question ou objectif", assistantQuestionPlaceholder: "Posez une question; aucune requete ne sera envoyee tant que l'IA est desactivee.", assistantSubmit: "Envoyer a l'Assistant", assistantClearScope: "Effacer la portee du dossier", assistantOpen: "Demander a l'Assistant sur ce dossier"
 };
 
+const arabicExperimental: Partial<UiCopy & AssistantCopy> = {
+  language: "اللغة",
+  english: "الإنجليزية (كندا)",
+  french: "الفرنسية (كندا)",
+  presentationHint: "العربية تجريبية؛ النصوص غير المترجمة تستخدم الإنجليزية بأمان، ولا تتغير المعرفات الأساسية.",
+  productHeading: "الحياة، في سياقها.",
+  foundation: "الأساس",
+  system: "النظام",
+  ready: "الأساس المحلي جاهز",
+  home: "الرئيسية",
+  currentPicture: "صورتك الحالية",
+  capture: "التقاط",
+  getItOut: "أخرج ما في ذهنك",
+  captureContent: "محتوى الالتقاط",
+  capturePlaceholder: "التقط فكرة أو مهمة أو ملاحظة أو سؤالاً.",
+  saveCapture: "حفظ الالتقاط",
+  searchExplore: "بحث / استكشاف",
+  triage: "فرز / توضيح",
+  reviewInbox: "مراجعة الوارد",
+  assistant: "المساعد",
+  assistantHeading: "اسأل ضمن نطاق محدود",
+  assistantHint: "المساعد مساحة قدرة مشتركة وليس مالكاً للبيانات. يبقى النطاق صريحاً وقابلاً للتضييق.",
+  assistantProvider: "المزوّد / المسار: غير مضبوط",
+  assistantScope: "النطاق",
+  assistantStandaloneScope: "مستقل: لا توجد سجلات أساسية مرتبطة.",
+  assistantRecordScope: (recordId, relationships) => `السجل ${recordId} مع ${relationships} علاقة مصرح بها.`,
+  assistantDisclosure: "الإفصاح: محلي فقط؛ لا يغادر شيء هذا المتصفح.",
+  assistantDisabled: "مسارات الذكاء الاصطناعي معطلة أو غير متاحة. تبقى الالتقاطات والبحث والمراجعة والاسترداد متاحة.",
+  assistantQuestion: "السؤال أو الهدف",
+  assistantQuestionPlaceholder: "اكتب سؤالاً؛ لن يرسل أي طلب ما دام الذكاء الاصطناعي معطلاً.",
+  assistantSubmit: "إرسال إلى المساعد",
+  assistantClearScope: "مسح نطاق السجل",
+  assistantOpen: "اسأل المساعد عن هذا السجل",
+  canonicalRecords: "السجلات الأساسية",
+  recovery: "الاسترداد",
+  keepPortable: "الاحتفاظ بنسخة محمولة",
+  personalization: "التخصيص"
+};
+
 export function getUiCopy(locale: PresentationLocale): UiCopy & AssistantCopy {
-  return locale === "fr-CA" ? { ...french, ...assistantFrench } : english as UiCopy & AssistantCopy;
+  if (locale === "fr-CA") return { ...french, ...assistantFrench };
+  return locale === "ar" ? { ...english, ...arabicExperimental } as UiCopy & AssistantCopy : english as UiCopy & AssistantCopy;
 }
 
 export interface ConfidenceCopy {
@@ -576,8 +616,16 @@ const confidenceFrench: ConfidenceCopy = {
   conflict: (count) => `${count} conflit(s) non resolu(s) restent explicites; aucune valeur n'a ete resolue automatiquement.`
 };
 
+const confidenceArabic: ConfidenceCopy = {
+  toggle: "الثقة / المصدر",
+  hidden: "تفاصيل الثقة مخفية افتراضياً.",
+  visible: "تفاصيل الثقة ظاهرة لحقول هذا العرض.",
+  fieldMeta: (confidence, sources, verified) => `الثقة ${confidence}؛ المصادر ${sources}؛ آخر تحقق ${verified}.`,
+  conflict: (count) => `تبقى ${count} من التعارضات غير المحلولة واضحة؛ لم تُحل أي قيمة تلقائياً.`
+};
+
 export function getConfidenceCopy(locale: PresentationLocale): ConfidenceCopy {
-  return locale === "fr-CA" ? confidenceFrench : confidenceEnglish;
+  return locale === "fr-CA" ? confidenceFrench : locale === "ar" ? confidenceArabic : confidenceEnglish;
 }
 
 export function getInstalledMetadataStatus(locale: PresentationLocale, standalone: boolean): string {
@@ -592,7 +640,7 @@ export function getInstalledMetadataStatus(locale: PresentationLocale, standalon
 }
 
 export function localeDirection(locale: PresentationLocale): "ltr" | "rtl" {
-  return locale === "fr-CA" ? "ltr" : "ltr";
+  return locale === "ar" ? "rtl" : "ltr";
 }
 
 export function formatNumber(locale: PresentationLocale, value: number): string {
@@ -604,13 +652,13 @@ export function formatDateTime(locale: PresentationLocale, value: string): strin
   return Number.isFinite(timestamp) ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(timestamp) : value;
 }
 
-const captureKindLabels: Record<PresentationLocale, Record<CaptureKind, string>> = {
+const captureKindLabels: Record<"en-CA" | "fr-CA", Record<CaptureKind, string>> = {
   "en-CA": { note: "Note", task: "Task", observation: "Observation", expense: "Expense", measurement: "Measurement", workout: "Workout", event: "Event", person: "Person", goal: "Goal", decision: "Decision", url: "URL", voice: "Voice transcript", file: "File reference", image: "Image reference", source: "Source" },
   "fr-CA": { note: "Note", task: "Tache", observation: "Observation", expense: "Depense", measurement: "Mesure", workout: "Entrainement", event: "Evenement", person: "Personne", goal: "Objectif", decision: "Decision", url: "URL", voice: "Transcription vocale", file: "Reference de fichier", image: "Reference d'image", source: "Source" }
 };
 
 export function captureKindLabel(locale: PresentationLocale, kind: CaptureKind): string {
-  return captureKindLabels[locale][kind];
+  return captureKindLabels[locale === "fr-CA" ? "fr-CA" : "en-CA"][kind];
 }
 
 export interface RecoveryCopy {
@@ -650,12 +698,12 @@ export interface RecoveryCopy {
   clearedCanonical: string;
 }
 
-const recoveryCopy: Record<PresentationLocale, Pick<RecoveryCopy, "clearImpact"> & Record<string, unknown>> = {
+const recoveryCopy: Record<"en-CA" | "fr-CA", Pick<RecoveryCopy, "clearImpact"> & Record<string, unknown>> = {
   "en-CA": { password: "Optional Vault password", passwordHint: "Used only for this action; it is never stored.", exportEncrypted: "Export encrypted Vault", encryptedExported: "Exported an integrity-protected encrypted Vault.", passwordRequired: "Enter an 8-character Vault password for encrypted recovery.", requestPersistence: "Request persistent storage", safePresentation: "Use Safe Presentation Mode", safePresentationActive: "Exit Safe Presentation Mode", safePresentationHint: "Safe mode uses a known-good built-in presentation for this session and preserves the stored profile.", clearCanonical: "Clear canonical data", clearConfirmation: "Clear all canonical records, history, artifacts, effect operations, and package saves? Export a Vault first if you may need recovery.", clearImpact: (impact) => `Hard clear impact: ${impact.canonicalRecords} canonical record(s), ${impact.relationships} relationship record(s), ${impact.historyEntries} history entr${impact.historyEntries === 1 ? "y" : "ies"}, ${impact.artifactPayloads} artifact payload(s), all ${impact.effectOperations} effect operation(s) including ${impact.pendingEffects} pending/uncertain one(s), ${impact.packageStates} package save(s), and ${impact.automationRules} automation rule(s) will be removed. ${impact.orphanedRelationships > 0 ? `Graph impact is UNKNOWN for ${impact.orphanedRelationships} relationship(s) with unresolved endpoints. ` : "Graph impact is fully enumerated. "}Preserved relationships: ${impact.preservedRelationships}; recovery window: ${impact.reversibilityWindowSeconds} seconds (no undo). Export and verify a Vault first.`, clearedCanonical: "Canonical data cleared. Presentation settings remain available." },
   "fr-CA": { password: "Mot de passe Vault facultatif", passwordHint: "Utilise seulement pour cette action; il n'est jamais stocke.", exportEncrypted: "Exporter le Vault chiffre", encryptedExported: "Vault chiffre et protege par integrite exporte.", passwordRequired: "Entrez un mot de passe Vault de 8 caracteres pour la recuperation chiffre.", requestPersistence: "Demander la persistance du stockage", safePresentation: "Utiliser le mode de presentation securise", safePresentationActive: "Quitter le mode de presentation securise", safePresentationHint: "Le mode securise utilise une presentation integree fiable pour cette session et preserve le profil stocke.", clearCanonical: "Effacer les donnees canoniques", clearConfirmation: "Effacer tous les dossiers canoniques, l'historique, les artefacts, les operations d'effet et les sauvegardes de paquets? Exportez d'abord un Vault si vous pourriez avoir besoin d'une recuperation.", clearImpact: (impact) => `Impact de l'effacement: ${impact.canonicalRecords} dossier(s), ${impact.relationships} relation(s), ${impact.historyEntries} entree(s) d'historique, ${impact.artifactPayloads} artefact(s), les ${impact.effectOperations} operation(s) d'effet dont ${impact.pendingEffects} en attente/incertaine(s), ${impact.packageStates} sauvegarde(s) de paquet et ${impact.automationRules} regle(s) d'automatisation seront supprimes. ${impact.orphanedRelationships > 0 ? `Impact du graphe INCONNU pour ${impact.orphanedRelationships} relation(s) sans extremites resolues. ` : "Impact du graphe entierement enumere. "}Relations preservees: ${impact.preservedRelationships}; fenetre de recuperation: ${impact.reversibilityWindowSeconds} seconde(s) (aucune annulation). Exportez et verifiez un Vault d'abord.`, clearedCanonical: "Donnees canoniques effacees. Les reglages de presentation restent disponibles." }
 };
 
-const recoveryCopyExtras: Record<PresentationLocale, Partial<RecoveryCopy>> = {
+const recoveryCopyExtras: Record<"en-CA" | "fr-CA", Partial<RecoveryCopy>> = {
   "en-CA": {
     fullVaultMessage: (records, bytes, artifacts) => `Exported full Vault: ${records} record(s), ${artifacts} artifact payload(s), ${bytes} bytes.`,
     exportHuman: "Export human-readable copy",
@@ -707,7 +755,7 @@ Object.assign(recoveryCopy["en-CA"], recoveryCopyExtras["en-CA"]);
 Object.assign(recoveryCopy["fr-CA"], recoveryCopyExtras["fr-CA"]);
 
 export function getRecoveryCopy(locale: PresentationLocale): RecoveryCopy {
-  return recoveryCopy[locale] as unknown as RecoveryCopy;
+  return recoveryCopy[locale === "fr-CA" ? "fr-CA" : "en-CA"] as unknown as RecoveryCopy;
 }
 
 export interface TimeCopy {
@@ -745,13 +793,13 @@ export interface TimeCopy {
   telemetryState: (fact: string, status: TelemetryStatus) => string;
 }
 
-const timeCopy: Record<PresentationLocale, TimeCopy> = {
+const timeCopy: Record<"en-CA" | "fr-CA", TimeCopy> = {
   "en-CA": { reminders: "Attention / reminders", considerations: "Considerations", considerationsHeading: "What deserves consideration?", focusMode: "Focus mode", focusModeActive: "Exit focus mode", noDue: "Nothing deserves attention.", dueOnResume: "Due on resume", deliveryLimited: "Delivery is opportunistic; the reminder remains canonical.", sourceEvidence: "Source/evidence", uncertainty: "Uncertainty", whyAppeared: "Why this appeared", whyDueOnResume: "The due time was reached and this reminder was reconciled on resume.", snooze: "Snooze 24 hours", dismiss: "Dismiss", reminderHeading: "Create a reminder", reminderTitle: "Reminder title", reminderDueAt: "Due date and time", saveReminder: "Save reminder", reminderSaved: "Reminder saved.", reminderHint: "The due state remains canonical; exact closed-app delivery is not promised.", telemetry: "Runtime telemetry", telemetryThresholds: "Telemetry thresholds", telemetryThresholdHint: "Thresholds are local, inspectable, and used only for explicit Home escalation; no background notification is created.", telemetryBackupAge: "Backup stale after days", telemetryOutboxThreshold: "Outbox attention at pending effects", telemetryConflictThreshold: "Conflict attention at unresolved conflicts", telemetrySaveThresholds: "Save thresholds", telemetryThresholdsSaved: "Telemetry thresholds saved locally.", telemetryEvidence: "Evidence", telemetryDismiss: "Dismiss item", telemetryRestore: "Restore item", telemetryState: (fact, status) => `Telemetry ${fact}: ${status}.` },
   "fr-CA": { reminders: "Attention / rappels", considerations: "Considerations", considerationsHeading: "Qu'est-ce qui merite votre attention?", focusMode: "Mode concentration", focusModeActive: "Quitter le mode concentration", noDue: "Rien ne merite votre attention.", dueOnResume: "Du a la reprise", deliveryLimited: "La livraison est opportuniste; le rappel reste canonique.", sourceEvidence: "Source/preuve", uncertainty: "Incertitude", whyAppeared: "Pourquoi cet element apparait", whyDueOnResume: "L'echeance est atteinte et ce rappel a ete reconcilie a la reprise.", snooze: "Reporter de 24 heures", dismiss: "Ignorer", reminderHeading: "Creer un rappel", reminderTitle: "Titre du rappel", reminderDueAt: "Date et heure d'echeance", saveReminder: "Enregistrer le rappel", reminderSaved: "Rappel enregistre.", reminderHint: "L'etat d'echeance reste canonique; aucune livraison exacte hors application n'est promise.", telemetry: "Telemetrie d'execution", telemetryThresholds: "Seuils de telemetrie", telemetryThresholdHint: "Les seuils sont locaux et inspectables; ils servent seulement a une escalade explicite sur l'Accueil, sans notification en arriere-plan.", telemetryBackupAge: "Sauvegarde perimee apres jours", telemetryOutboxThreshold: "Attention Outbox a partir des effets en attente", telemetryConflictThreshold: "Attention conflit a partir des conflits non resolus", telemetrySaveThresholds: "Enregistrer les seuils", telemetryThresholdsSaved: "Seuils de telemetrie enregistres localement.", telemetryEvidence: "Preuve", telemetryDismiss: "Ignorer l'element", telemetryRestore: "Restaurer l'element", telemetryState: (fact, status) => `Telemetrie ${fact} : ${status}.` }
 };
 
 export function getTimeCopy(locale: PresentationLocale): TimeCopy {
-  return timeCopy[locale];
+  return timeCopy[locale === "fr-CA" ? "fr-CA" : "en-CA"];
 }
 
 export interface DeviceInputCopy {
@@ -773,7 +821,7 @@ export interface DeviceInputCopy {
   currentLocation: string;
 }
 
-const deviceInputCopy: Record<PresentationLocale, DeviceInputCopy> = {
+const deviceInputCopy: Record<"en-CA" | "fr-CA", DeviceInputCopy> = {
   "en-CA": {
     heading: "Device / Input",
     hint: "Access is requested only after an explicit action. Captured values route through Acquire or Place; camera and microphone streams are released immediately.",
@@ -813,7 +861,7 @@ const deviceInputCopy: Record<PresentationLocale, DeviceInputCopy> = {
 };
 
 export function getDeviceInputCopy(locale: PresentationLocale): DeviceInputCopy {
-  return deviceInputCopy[locale];
+  return deviceInputCopy[locale === "fr-CA" ? "fr-CA" : "en-CA"];
 }
 
 export type StoragePersistenceState = "GRANTED" | "DENIED" | "UNAVAILABLE";
