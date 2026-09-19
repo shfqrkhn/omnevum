@@ -1827,7 +1827,7 @@ This advances `OMN-ACC-115` and the Assistant portion of `OMN-ACC-130` from `UNK
 
 ## Current v0.17.4 confidence/provenance disclosure receipt
 
-On 2026-09-19, source revision `3023958` passed `npx vitest run src/core/i18n.test.ts` (`1` file, `4` tests), `npm run typecheck`, `npm run build`, and `git diff --check`. The exact built artifact is bound in `docs/control/release-evidence.json` to digest `1451975789f0cc6f7ae8c2861ffe930336667156362498acc4434ffb3c202e9a` and service-worker cache `omnevum-shell-17f39fa03d65c285`.
+On 2026-09-19, source revision `3023958` passed `npx vitest run src/core/i18n.test.ts` (`1` file, `4` tests), `npm run typecheck`, `npm run build`, and `git diff --check`. The exact built artifact is bound in `docs/control/release-evidence.json` to digest `f8fdb7ad49dd669ee8e87eb9d1e7a4e4b6c0865a754fabf6bd00123b39ad2e26` and service-worker cache `omnevum-shell-17f39fa03d65c285`.
 
 In the fresh exact Chromium artifact at `http://127.0.0.1:4364/`, one synthetic note `Confidence proof 2026-09-19` was captured locally and opened through Canonical records. Record detail initially reported `Confidence / provenance` with `aria-pressed=false`, `Confidence details hidden by default.`, and no confidence metadata in the visible fields. Selecting the control exposed `Confidence UNKNOWN; sources 1; last verified UNKNOWN.` for the fields in view and the visible-state status. Closing and reopening the same detail retained the preference; selecting it again hid the field metadata and restored the compact hidden state. The record remained revision 1 with unchanged text; no conflict fixture was injected and no confidence value was fabricated.
 
