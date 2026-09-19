@@ -62,7 +62,8 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-exact-current-artifact-offline-capturesearchreload-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-exact-current-artifact-offline-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-bilingual-onboarding-and-dismissal-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capturesearchreload-and-accessibility-tree-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capturesearchreload-and-accessibility-tree-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-service-worker-updaterollbackoffline-receipt"
       ],
       "notes": "Fresh current-artifact Chromium evidence now covers a localized, no-account, skippable onboarding guide with Capture and Vault/Recovery guidance plus persisted dismissal, and the exact cleanup-bound artifact captures, searches, reloads, and exposes labelled controls. GitHub Pages, supported mobile rows, screen-reader/WCAG qualification, and human acceptance remain open."
     },
@@ -354,7 +355,8 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-recovery-repair-completion-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-edge-recovery-repair-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-built-artifact-service-worker-updaterollback-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-touch-profile-recovery-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-touch-profile-recovery-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-service-worker-updaterollbackoffline-receipt"
       ],
       "notes": "Local static Chromium service-worker update/rollback on the exact current artifact, malformed-state recovery snapshot, explicit repair-from-snapshot preserving valid records, deterministic stale-client fencing, an aborted IndexedDB upgrade followed by exact-record reopen, exact-current-artifact Edge recovery-shell/read-only-export/repair interaction, and a current 390x844 touch-capable Recovery interaction are covered; native quota/corruption behavior, browser-family breadth, accessibility, and production deployment remain open."
     },
@@ -1926,7 +1928,8 @@
         "scripts/service-worker-rehearsal-server.mjs",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-schema-update-approval-and-shell-activation-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-service-worker-update-ledger-and-compact-recovery-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-explicit-waiting-shell-activation-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-explicit-waiting-shell-activation-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-service-worker-updaterollbackoffline-receipt"
       ],
       "notes": "Source revision 3cb2254 is test/build/browser qualified. The migration owner gates canonical-schema candidates behind explicit approval and a current verified Vault backup, reports migration IDs/affected record classes/backup state/rollback path, records update identity, and refuses malformed or stale backup receipts; the stamped worker now leaves a changed shell waiting until the explicit Recovery activation action, and the compact ledger persists the activated cache across reload. A schema-carrying candidate, deployment/rollback promotion, other targets, and human acceptance remain open."
     },
@@ -2018,7 +2021,8 @@
         "scripts/service-worker-rehearsal-server.mjs",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-schema-update-approval-and-shell-activation-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-service-worker-update-ledger-and-compact-recovery-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-explicit-waiting-shell-activation-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-explicit-waiting-shell-activation-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-service-worker-updaterollbackoffline-receipt"
       ],
       "notes": "Source revision 3cb2254 is test/build/browser qualified. An unapproved schema candidate either remains read-compatible or refuses control, never migrates to resolve the condition; an interrupted migration retains the current schema/current shell and rollback path. A fresh-origin harness now proves one prior shell remains active while the changed shell waits, explicit activation promotes it, and the new cache/ledger remains usable after reload. Full schema-carrying interruption, deployment, other targets, and human acceptance remain open."
     },

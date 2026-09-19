@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "21dc7ff22e32f2e175bbb40d1bfd6580de9139a445cdcfac0c112cd4d3727076",
-        "bytes": 221471
+        "sha256": "8160c446366053d6e3216d46d973efa22281e53b367b7d5b6dd9c573f16384a8",
+        "bytes": 221967
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -159,8 +159,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "a536b0370e39f872f6eaa96448a611c22965b8d9487fb918e7c43326b64577e4",
-        "bytes": 7978
+        "sha256": "4103afd3e639aa1b3480de5d1330b78ebaca4ee9c667f92a07ba658a8c759575",
+        "bytes": 7918
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "e8e419ece3ce77beea8518a59b939e33384ea09dc9d20bf0b73f7946bbce9f5e",
-        "bytes": 85930
+        "sha256": "a68b8d79263a35c602a5a0c5785f60e19f6a473fb2b0a97a9b449f59bb20afb9",
+        "bytes": 86605
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -224,13 +224,13 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "62bf058d30107a26794502fcec1b3d0364659c197f9d4737dca4d2e6fd6723a7",
-        "bytes": 6475
+        "sha256": "a39f9e98a7a0e1df5b1dfb196333c9819f0a24c028aeb3926ce9cb3c54cc1271",
+        "bytes": 6595
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "103da2b0f4ed47341706608c903024466dd02202604657be0941026668d89fdc",
-        "bytes": 4028
+        "sha256": "464771f91f23beaf456bb2c1f649e227afffcae831d434da048c485de16064c7",
+        "bytes": 4270
       },
       {
         "path": "docs/control/requirements.json",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "d4fba5906ec93a232e8e45b4a1c18ffeb49c6dfc411ea1e445d9bf98cef0efd5",
-        "bytes": 360192
+        "sha256": "9bc4a826b620479084fde85c09cb40a49dcc7fc91eacf6423ef41b0a2534306f",
+        "bytes": 362247
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
