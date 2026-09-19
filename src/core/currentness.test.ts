@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { evaluateFossEntrant, evaluateUpstreamCandidate, evaluateVulnerabilityFastLane, type FossEntrantInput, type UpstreamCandidateInput, type VulnerabilityFastLaneInput } from "./currentness";
+import { evaluateCopyleftObligations, evaluateFossEntrant, evaluateFossRemoval, evaluateUpstreamCandidate, evaluateUpstreamParity, evaluateVulnerabilityFastLane, type CopyleftObligationInput, type FossEntrantInput, type FossRemovalInput, type UpstreamCandidateInput, type UpstreamParityInput, type VulnerabilityFastLaneInput } from "./currentness";
 
 const baseCandidate = (): UpstreamCandidateInput => ({
   candidateId: "vite-9.0.0-candidate-2026-09-19",
@@ -31,6 +31,10 @@ const baseAdvisory = (): VulnerabilityFastLaneInput => ({
   coreRegressionPass: true,
   coreDataPreserved: true
 });
+
+const baseRemoval = (): FossRemovalInput => ({ componentId: "optional-parser", retainedInputsAvailable: true, reconstruction: "PASS", boundedLimitationRecorded: false, coreRegressionPass: true, canonicalStatePreserved: true });
+const baseCopyleft = (): CopyleftObligationInput => ({ componentId: "copyleft-parser", license: "MPL-2.0", noticePresent: true, correspondingSourceAvailable: true, isolationOrComplianceProven: true, legalReview: "PASS" });
+const baseParity = (): UpstreamParityInput => ({ componentId: "local-search-patch", upstreamIdentity: "upstream@9.0.0|sha256:fixture", localPatchPresent: true, parity: "PASS", regression: "PASS", migration: "PASS", deltaReduced: true });
 
 describe("isolated upstream/FOSS candidate gate", () => {
   it("adopts only an isolated major candidate and keeps promotion explicit", () => {
@@ -89,5 +93,23 @@ describe("isolated upstream/FOSS candidate gate", () => {
     expect(disabled.decision).toBe("DISABLE_OPTIONAL");
     const fixed = evaluateVulnerabilityFastLane({ ...baseAdvisory(), fixVersion: "2.0.1", fixGates: { source: "PASS", security: "PASS", contract: "PASS", target: "PASS" } });
     expect(fixed.decision).toBe("FIX_CANDIDATE");
+  });
+
+  it("continues safely after FOSS removal only with reconstruction or a bounded limitation", () => {
+    expect(evaluateFossRemoval(baseRemoval()).decision).toBe("CONTINUE_RECONSTRUCTED");
+    expect(evaluateFossRemoval({ ...baseRemoval(), retainedInputsAvailable: false, reconstruction: "FAIL", boundedLimitationRecorded: true }).decision).toBe("CONTINUE_WITH_BOUNDED_LIMITATION");
+    expect(evaluateFossRemoval({ ...baseRemoval(), retainedInputsAvailable: false, reconstruction: "FAIL", boundedLimitationRecorded: false }).decision).toBe("BLOCK_RELEASE");
+  });
+
+  it("requires reviewed copyleft obligations or keeps the entrant isolated", () => {
+    expect(evaluateCopyleftObligations(baseCopyleft()).decision).toBe("ADMIT_COMPLIANT");
+    expect(evaluateCopyleftObligations({ ...baseCopyleft(), correspondingSourceAvailable: false }).decision).toBe("ISOLATE_CANDIDATE");
+    expect(evaluateCopyleftObligations({ ...baseCopyleft(), isolationOrComplianceProven: false }).decision).toBe("REJECT");
+  });
+
+  it("removes a local patch only after parity, migration, regression, and delta gates pass", () => {
+    expect(evaluateUpstreamParity(baseParity()).decision).toBe("REMOVE_LOCAL_PATCH");
+    expect(evaluateUpstreamParity({ ...baseParity(), parity: "UNKNOWN" as const }).decision).toBe("DEFER");
+    expect(evaluateUpstreamParity({ ...baseParity(), parity: "FAIL" as const }).decision).toBe("RETAIN_LOCAL_PATH");
   });
 });

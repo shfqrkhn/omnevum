@@ -72,6 +72,58 @@ export interface VulnerabilityFastLaneEvaluation {
   reasons: string[];
 }
 
+export interface FossRemovalInput {
+  componentId: string;
+  retainedInputsAvailable: boolean;
+  reconstruction: CandidateGateState;
+  boundedLimitationRecorded: boolean;
+  coreRegressionPass: boolean;
+  canonicalStatePreserved: boolean;
+}
+
+export type FossRemovalDecision = "CONTINUE_RECONSTRUCTED" | "CONTINUE_WITH_BOUNDED_LIMITATION" | "BLOCK_RELEASE";
+
+export interface FossRemovalEvaluation {
+  componentId: string;
+  decision: FossRemovalDecision;
+  reasons: string[];
+}
+
+export interface CopyleftObligationInput {
+  componentId: string;
+  license: string;
+  noticePresent: boolean;
+  correspondingSourceAvailable: boolean;
+  isolationOrComplianceProven: boolean;
+  legalReview: CandidateGateState;
+}
+
+export type CopyleftObligationDecision = "ADMIT_COMPLIANT" | "ISOLATE_CANDIDATE" | "REJECT";
+
+export interface CopyleftObligationEvaluation {
+  componentId: string;
+  decision: CopyleftObligationDecision;
+  reasons: string[];
+}
+
+export interface UpstreamParityInput {
+  componentId: string;
+  upstreamIdentity: string;
+  localPatchPresent: boolean;
+  parity: CandidateGateState;
+  regression: CandidateGateState;
+  migration: CandidateGateState;
+  deltaReduced: boolean;
+}
+
+export type UpstreamParityDecision = "REMOVE_LOCAL_PATCH" | "ADAPT_LOCAL_PATH" | "RETAIN_LOCAL_PATH" | "DEFER";
+
+export interface UpstreamParityEvaluation {
+  componentId: string;
+  decision: UpstreamParityDecision;
+  reasons: string[];
+}
+
 type ParsedVersion = { major: number; minor: number; patch: number };
 
 function parseVersion(value: string): ParsedVersion | undefined {
@@ -160,4 +212,54 @@ export function evaluateVulnerabilityFastLane(input: VulnerabilityFastLaneInput)
   }
   reasons.push("no fully qualified fix or safe optional disable path exists; release must remain blocked rather than report false PASS");
   return { advisoryId: input.advisoryId, packageName: input.packageName, decision: "BLOCK_RELEASE", falsePassPrevented: true, coreOperationPreserved: input.coreRegressionPass && input.coreDataPreserved, reasons };
+}
+
+export function evaluateFossRemoval(input: FossRemovalInput): FossRemovalEvaluation {
+  const reasons: string[] = [];
+  if (!input.componentId.trim()) return { componentId: input.componentId, decision: "BLOCK_RELEASE", reasons: ["component identity is required"] };
+  if (input.retainedInputsAvailable && input.reconstruction === "PASS" && input.coreRegressionPass && input.canonicalStatePreserved) {
+    reasons.push("retained lawful inputs reconstruct the component path and core/canonical regression passes");
+    return { componentId: input.componentId, decision: "CONTINUE_RECONSTRUCTED", reasons };
+  }
+  if (input.boundedLimitationRecorded && input.coreRegressionPass && input.canonicalStatePreserved) {
+    reasons.push("reconstruction is bounded by an explicit limitation while core operation and canonical state remain preserved");
+    return { componentId: input.componentId, decision: "CONTINUE_WITH_BOUNDED_LIMITATION", reasons };
+  }
+  reasons.push("component removal lacks a verified reconstruction or bounded limitation with core/canonical preservation");
+  return { componentId: input.componentId, decision: "BLOCK_RELEASE", reasons };
+}
+
+export function evaluateCopyleftObligations(input: CopyleftObligationInput): CopyleftObligationEvaluation {
+  const reasons: string[] = [];
+  if (!input.componentId.trim() || !input.license.trim()) return { componentId: input.componentId, decision: "REJECT", reasons: ["component identity and exact license are required"] };
+  const obligationsComplete = input.noticePresent && input.correspondingSourceAvailable;
+  if (input.isolationOrComplianceProven && input.legalReview === "PASS" && obligationsComplete) {
+    reasons.push(`exact ${input.license} obligations are represented by notice, corresponding-source, and reviewed compliance evidence`);
+    return { componentId: input.componentId, decision: "ADMIT_COMPLIANT", reasons };
+  }
+  if (input.isolationOrComplianceProven && input.legalReview !== "FAIL") {
+    reasons.push("component remains isolated until notice, corresponding-source, and legal/compliance evidence is complete");
+    return { componentId: input.componentId, decision: "ISOLATE_CANDIDATE", reasons };
+  }
+  reasons.push("copyleft obligation or isolation evidence failed; component is rejected");
+  return { componentId: input.componentId, decision: "REJECT", reasons };
+}
+
+export function evaluateUpstreamParity(input: UpstreamParityInput): UpstreamParityEvaluation {
+  const reasons: string[] = [];
+  if (!input.componentId.trim() || !input.upstreamIdentity.trim()) return { componentId: input.componentId, decision: "DEFER", reasons: ["component and exact upstream identity are required"] };
+  if (!input.localPatchPresent) return { componentId: input.componentId, decision: "RETAIN_LOCAL_PATH", reasons: ["no local patch is present to remove"] };
+  if (input.parity === "UNKNOWN" || input.regression === "UNKNOWN" || input.migration === "UNKNOWN") {
+    return { componentId: input.componentId, decision: "DEFER", reasons: ["parity, regression, and migration gates must be current before changing the accepted path"] };
+  }
+  if (input.parity === "PASS" && input.regression === "PASS" && input.migration === "PASS" && input.deltaReduced) {
+    reasons.push("upstream behavior is equivalent, affected regressions pass, migration is explicit, and local delta is reduced");
+    return { componentId: input.componentId, decision: "REMOVE_LOCAL_PATCH", reasons };
+  }
+  if (input.parity === "PASS" && input.regression === "PASS" && input.migration === "PASS") {
+    reasons.push("upstream is compatible but the local delta is not yet reduced; adapt or consolidate behind the owner");
+    return { componentId: input.componentId, decision: "ADAPT_LOCAL_PATH", reasons };
+  }
+  reasons.push("upstream parity or affected regression failed; retain the local path and record the difference");
+  return { componentId: input.componentId, decision: "RETAIN_LOCAL_PATH", reasons };
 }

@@ -710,8 +710,14 @@
         "line": 4002
       },
       "text": "An adopted FOSS component is removed from public package/repository infrastructure. The accepted Omnevum release continues to run, and the documented reconstruction path either succeeds from retained lawful inputs or reports the exact bounded reconstruction limitation without silently substituting content.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/currentness.ts#evaluateFossRemoval",
+        "src/core/currentness.test.ts",
+        "docs/control/recovery-bundle.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-upstream-maintenance-boundary-receipt"
+      ],
+      "notes": "The removal gate continues only when retained lawful inputs reconstruct the path with core/canonical preservation or when an explicit bounded reconstruction limitation is recorded with the same preservation checks; otherwise it blocks release. Synthetic source/unit cases are qualified. Real package/source disappearance, lawful reconstruction assets, and release-profile recovery remain open."
     },
     {
       "id": "OMN-ACC-039",
@@ -720,8 +726,15 @@
         "line": 4004
       },
       "text": "A copyleft FOSS capability is selected because it materially dominates alternatives. The release proves exact license/provenance/notice/corresponding-source obligations or isolates the component through a compliant integration; no license is silently misrepresented.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/currentness.ts#evaluateCopyleftObligations",
+        "src/core/currentness.test.ts",
+        "docs/control/license-provenance.json",
+        "docs/control/foss-compliance.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-upstream-maintenance-boundary-receipt"
+      ],
+      "notes": "The copyleft gate requires exact license identity, notice, corresponding-source availability, isolation/compliance evidence, and reviewed legal state before admission; incomplete obligations isolate the candidate and failed isolation rejects it. This is an engineering control contract, not legal advice or a claim that a new copyleft capability was selected."
     },
     {
       "id": "OMN-ACC-040",
@@ -730,8 +743,14 @@
         "line": 4006
       },
       "text": "An upstream project adds functionality that supersedes an Omnevum local patch or duplicate subsystem. The maintenance cycle proves parity, removes the obsolete local path, reduces the patch/delta burden, and reruns affected regression/release evidence.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/currentness.ts#evaluateUpstreamParity",
+        "src/core/currentness.test.ts",
+        "docs/control/patch-fork-delta.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-upstream-maintenance-boundary-receipt"
+      ],
+      "notes": "The parity gate defers stale/unknown evidence, retains a local path after parity/regression failure, adapts when upstream is compatible but local delta remains, and returns REMOVE_LOCAL_PATCH only when parity, migration, regression, and delta-reduction gates pass. No real upstream patch removal occurred; current upstream comparison and release rerun remain open."
     },
     {
       "id": "OMN-ACC-041",
