@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseFinanceCsv, type FinanceStatementSource } from "./finance";
-import { allocateFinanceResource, analyzeFinanceGraph, assessFinanceDataQuality, classifyFinanceSource, createFinanceForecast, detectFinanceParserDrift, detectFinanceReviewCases, evaluateFinanceFeedbackLoop, inferFinanceRecurringPatterns, projectFinanceGoal, projectFireScenario, propagateFinanceGraph, summarizeFinanceTransactions, type FinanceDependencyGraph } from "./finance-model";
+import { allocateFinanceResource, analyzeFinanceGraph, assessFinanceDataQuality, classifyFinanceSource, createFinanceForecast, detectFinanceParserDrift, detectFinanceReviewCases, evaluateFinanceFeedbackLoop, inferFinanceRecurringPatterns, matchFinanceTransfers, projectFinanceGoal, projectFireScenario, propagateFinanceGraph, summarizeFinanceTransactions, type FinanceDependencyGraph } from "./finance-model";
 
 const source: FinanceStatementSource = { sourceId: "source:model", name: "model.csv", sha256: "c".repeat(64), accountId: "checking", currency: "CAD" };
 
@@ -65,6 +65,22 @@ describe("shared Finance/Synergy model", () => {
     expect(fire.truthClass).toBe("MODELED");
     expect(fire.downsideSequenceEnd).toBeLessThan(fire.upsideSequenceEnd);
     expect(fire.limitations.length).toBeGreaterThan(0);
+  });
+
+  it("matches only exact evidenced cross-account transfers and leaves unmatched movements visible", () => {
+    const checking = parseFinanceCsv("Date,Description,Amount,Id\n2026-01-02,Payment to credit card,-100.00,checking-card\n2026-01-03,Transfer to savings,-25.00,checking-savings\n2026-01-04,Transfer to brokerage,-5.00,unmatched\n", source);
+    const creditCard = parseFinanceCsv("Date,Description,Amount,Id\n2026-01-02,Credit card payment,100.00,card-checking\n", { ...source, sourceId: "source:card", accountId: "credit-card", sha256: "d".repeat(64) });
+    const savings = parseFinanceCsv("Date,Description,Amount,Id\n2026-01-03,Transfer from checking,25.00,savings-checking\n", { ...source, sourceId: "source:savings", accountId: "savings", sha256: "e".repeat(64) });
+    const transactions = [...checking, ...creditCard, ...savings];
+    const analysis = matchFinanceTransfers(transactions);
+    expect(analysis.matches).toHaveLength(2);
+    expect(analysis.matches.map((match) => match.kind).sort()).toEqual(["CARD_PAYMENT", "INTERNAL_TRANSFER"]);
+    expect(analysis.unmatchedTransactionIds).toEqual([checking[2]?.id]);
+    const summary = summarizeFinanceTransactions(transactions, "CAD", { excludedTransferIds: analysis.matches.flatMap((match) => [match.outgoingTransactionId, match.incomingTransactionId]) });
+    expect(summary.postedIncome.amountMinor).toBe("0");
+    expect(summary.postedSpending.amountMinor).toBe("500");
+    expect(summary.netCashFlow.amountMinor).toBe("-500");
+    expect(summary.transferNet.amountMinor).toBe("0");
   });
 
   it("keeps source-class/parser drift, recurrence, anomaly, forecast, and quality state explicit", () => {

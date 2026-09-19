@@ -76,4 +76,16 @@ describe("canonical Finance projection", () => {
     expect(projection.financeGoalPlans).toHaveLength(1);
     expect(projection.financeGoalPlans[0]?.plan).toMatchObject({ goalId: goal.id, funded: { amountMinor: "7000", currency: "CAD" }, remaining: { amountMinor: "8000", currency: "CAD" }, fundingConflict: false });
   });
+
+  it("excludes confirmed cross-account movements from aggregate totals while retaining unresolved candidates", () => {
+    const outgoing = record("checking-transfer", { kind: "finance-transaction", merchant: "transfer to savings", description: "Transfer to savings", amountMinor: "-2500", currency: "CAD", accountId: "checking", postedAt: "2026-01-02T00:00:00.000Z", status: "POSTED" }, { truthClass: "IMPORTED_RECORD" });
+    const incoming = record("savings-transfer", { kind: "finance-transaction", merchant: "transfer from checking", description: "Transfer from checking", amountMinor: "2500", currency: "CAD", accountId: "savings", postedAt: "2026-01-03T00:00:00.000Z", status: "POSTED" }, { truthClass: "IMPORTED_RECORD" });
+    const unmatched = record("unmatched-transfer", { kind: "finance-transaction", merchant: "transfer to brokerage", description: "Transfer to brokerage", amountMinor: "-500", currency: "CAD", accountId: "checking", postedAt: "2026-01-04T00:00:00.000Z", status: "POSTED" }, { truthClass: "IMPORTED_RECORD" });
+    const projection = projectFinanceState([outgoing, incoming, unmatched]);
+    expect(projection.transferAnalysis.matches).toHaveLength(1);
+    expect(projection.transferAnalysis.unmatchedTransactionIds).toEqual([unmatched.id]);
+    expect(projection.summary?.postedIncome.amountMinor).toBe("0");
+    expect(projection.summary?.postedSpending.amountMinor).toBe("500");
+    expect(projection.summary?.netCashFlow.amountMinor).toBe("-500");
+  });
 });

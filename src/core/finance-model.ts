@@ -264,9 +264,77 @@ export interface FinanceTransactionSummary {
   sourceIds: string[];
 }
 
+export interface FinanceSummaryOptions {
+  /** IDs of both sides of a confirmed cross-account transfer/card payment. */
+  excludedTransferIds?: readonly string[];
+}
+
+export type FinanceTransferKind = "INTERNAL_TRANSFER" | "CARD_PAYMENT";
+
+export interface FinanceTransferMatch {
+  id: string;
+  outgoingTransactionId: string;
+  incomingTransactionId: string;
+  amount: MoneyValue;
+  kind: FinanceTransferKind;
+  confidence: "HIGH";
+  reasons: string[];
+  sourceIds: string[];
+}
+
+export interface FinanceTransferAnalysis {
+  matches: FinanceTransferMatch[];
+  unmatchedTransactionIds: string[];
+}
+
+/**
+ * Pair only strongly evidenced cross-account movements. The matcher is a
+ * projection: it never changes a transaction, creates a permission, or
+ * suppresses an unmatched movement. Ties remain unresolved rather than
+ * being assigned by arbitrary ordering.
+ */
+export function matchFinanceTransfers(transactions: readonly FinanceTransaction[], maxDayDistance = 3): FinanceTransferAnalysis {
+  if (!Number.isInteger(maxDayDistance) || maxDayDistance < 0 || maxDayDistance > 31) throw new Error("Transfer matching date bound is invalid");
+  const candidates = transactions.filter((transaction) => {
+    if (transaction.status !== "POSTED" && transaction.status !== "CORRECTED") return false;
+    if (BigInt(transaction.amount.amountMinor) === 0n) return false;
+    return isTransferLike(transaction.description);
+  }).slice().sort((left, right) => left.postedAt.localeCompare(right.postedAt) || left.id.localeCompare(right.id));
+  const outgoing = candidates.filter((transaction) => BigInt(transaction.amount.amountMinor) < 0n);
+  const incoming = candidates.filter((transaction) => BigInt(transaction.amount.amountMinor) > 0n);
+  const matchedIds = new Set<string>();
+  const matches: FinanceTransferMatch[] = [];
+  for (const debit of outgoing) {
+    const ranked = incoming.filter((credit) => {
+      if (matchedIds.has(credit.id) || credit.accountId === debit.accountId || credit.amount.currency !== debit.amount.currency) return false;
+      if (absMinor(credit.amount.amountMinor) !== absMinor(debit.amount.amountMinor)) return false;
+      return dayDistance(debit.postedAt, credit.postedAt) <= maxDayDistance;
+    }).map((credit) => ({ credit, score: transferMatchScore(debit, credit, maxDayDistance) })).sort((left, right) => right.score - left.score || left.credit.id.localeCompare(right.credit.id));
+    if (ranked.length === 0) continue;
+    const best = ranked[0]!;
+    if (ranked[1] && ranked[1].score === best.score) continue;
+    const credit = best.credit;
+    matchedIds.add(debit.id);
+    matchedIds.add(credit.id);
+    const kind: FinanceTransferKind = /\b(?:card|credit card|payment to card|card payment)\b/iu.test(`${debit.description} ${credit.description}`) ? "CARD_PAYMENT" : "INTERNAL_TRANSFER";
+    matches.push({
+      id: `finance-transfer:${debit.id}:${credit.id}`,
+      outgoingTransactionId: debit.id,
+      incomingTransactionId: credit.id,
+      amount: { amountMinor: absMinor(debit.amount.amountMinor), currency: debit.amount.currency },
+      kind,
+      confidence: "HIGH",
+      reasons: ["equal and opposite exact-money amounts", `postings are within ${maxDayDistance} days`, "transfer-like descriptions", "distinct accounts"],
+      sourceIds: [...new Set([debit.lineage.sourceId, credit.lineage.sourceId])].sort()
+    });
+  }
+  return { matches: matches.sort((left, right) => left.id.localeCompare(right.id)), unmatchedTransactionIds: candidates.filter((transaction) => !matchedIds.has(transaction.id)).map((transaction) => transaction.id).sort() };
+}
+
 /** A descriptive projection; it never changes transaction ownership or truth. */
-export function summarizeFinanceTransactions(transactions: readonly FinanceTransaction[], currency: string): FinanceTransactionSummary {
+export function summarizeFinanceTransactions(transactions: readonly FinanceTransaction[], currency: string, options: FinanceSummaryOptions = {}): FinanceTransactionSummary {
   const normalizedCurrency = parseMoney("0", currency).currency;
+  const excludedTransferIds = new Set(options.excludedTransferIds ?? []);
   let postedIncome = parseMoney("0", normalizedCurrency);
   let postedSpending = parseMoney("0", normalizedCurrency);
   let pendingNet = parseMoney("0", normalizedCurrency);
@@ -280,6 +348,10 @@ export function summarizeFinanceTransactions(transactions: readonly FinanceTrans
       pendingNet = addMoney(pendingNet, transaction.amount);
       continue;
     }
+    if (excludedTransferIds.has(transaction.id)) {
+      transferNet = addMoney(transferNet, transaction.amount);
+      continue;
+    }
     netCashFlow = addMoney(netCashFlow, transaction.amount);
     if (BigInt(transaction.amount.amountMinor) > 0n) postedIncome = addMoney(postedIncome, transaction.amount);
     if (BigInt(transaction.amount.amountMinor) < 0n) {
@@ -288,9 +360,30 @@ export function summarizeFinanceTransactions(transactions: readonly FinanceTrans
       postedSpending = addMoney(postedSpending, spending);
       if (/\b(?:fee|interest|overdraft|atm|foreign exchange|fx)\b/i.test(transaction.description)) feeSpending = addMoney(feeSpending, spending);
     }
-    if (/\b(?:transfer|payment to card|card payment)\b/i.test(transaction.description)) transferNet = addMoney(transferNet, transaction.amount);
   }
   return { currency: normalizedCurrency, postedIncome, postedSpending, pendingNet, netCashFlow, transferNet, feeSpending, sourceIds: [...new Set(transactions.map((transaction) => transaction.lineage.sourceId))].sort() };
+}
+
+function isTransferLike(description: string): boolean {
+  return /\b(?:transfer|payment to card|card payment|credit card|savings|investment|internal)\b/iu.test(description);
+}
+
+function transferMatchScore(debit: FinanceTransaction, credit: FinanceTransaction, maxDayDistance: number): number {
+  const distance = dayDistance(debit.postedAt, credit.postedAt);
+  const description = `${debit.description} ${credit.description}`;
+  return (isTransferLike(debit.description) ? 2 : 0) + (isTransferLike(credit.description) ? 2 : 0) + (/\b(?:card|credit card|payment)\b/iu.test(description) ? 1 : 0) + Math.max(0, maxDayDistance - distance);
+}
+
+function dayDistance(left: string, right: string): number {
+  const leftTime = Date.parse(left);
+  const rightTime = Date.parse(right);
+  if (!Number.isFinite(leftTime) || !Number.isFinite(rightTime)) return Number.POSITIVE_INFINITY;
+  return Math.floor(Math.abs(leftTime - rightTime) / 86_400_000);
+}
+
+function absMinor(value: string): string {
+  const minor = BigInt(value);
+  return (minor < 0n ? -minor : minor).toString();
 }
 
 export type FinanceSourceClass = "TRANSACTION_ACCOUNT" | "CREDIT_CARD" | "INVESTMENT" | "DEBT" | "INCOME" | "INSURANCE" | "TAX_BENEFIT" | "RECEIPT" | "UNKNOWN";

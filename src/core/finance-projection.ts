@@ -2,7 +2,7 @@ import { projectDependencyGraph, projectDependencyImpact, type DependencyGraph, 
 import { addMoney, parseMoney, type MoneyValue } from "./money";
 import type { CanonicalRecord, TruthClass } from "./model";
 import type { FinanceLineage, FinanceTransaction, FinanceTransactionStatus } from "./finance";
-import { allocateFinanceResource, assessFinanceDataQuality, analyzeFinanceGraph, detectFinanceReviewCases, inferFinanceRecurringPatterns, projectFinanceGoal, summarizeFinanceTransactions, type FinanceAllocationResult, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastVintage, type FinanceGoalPlan, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceReviewCase, type FinanceTransactionSummary } from "./finance-model";
+import { allocateFinanceResource, assessFinanceDataQuality, analyzeFinanceGraph, detectFinanceReviewCases, inferFinanceRecurringPatterns, matchFinanceTransfers, projectFinanceGoal, summarizeFinanceTransactions, type FinanceAllocationResult, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastVintage, type FinanceGoalPlan, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceReviewCase, type FinanceTransactionSummary, type FinanceTransferAnalysis } from "./finance-model";
 
 /**
  * Read-only Finance projection over canonical records and the shared typed
@@ -24,6 +24,7 @@ export interface FinanceProjection {
   sourceIds: string[];
   summariesByCurrency: Record<string, FinanceTransactionSummary>;
   summary?: FinanceTransactionSummary;
+  transferAnalysis: FinanceTransferAnalysis;
   recurringPatterns: FinanceRecurringPattern[];
   reviewCases: FinanceReviewCase[];
   quality: FinanceDataQuality;
@@ -60,8 +61,10 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
   const transactions = activeRecords.map(toFinanceTransaction).filter((transaction): transaction is FinanceTransaction => transaction !== undefined);
   const byCurrency = new Map<string, FinanceTransaction[]>();
   for (const transaction of transactions) byCurrency.set(transaction.amount.currency, [...(byCurrency.get(transaction.amount.currency) ?? []), transaction]);
+  const transferAnalysis = matchFinanceTransfers(transactions);
+  const excludedTransferIds = transferAnalysis.matches.flatMap((match) => [match.outgoingTransactionId, match.incomingTransactionId]);
   const summariesByCurrency: Record<string, FinanceTransactionSummary> = {};
-  for (const currency of [...byCurrency.keys()].sort()) summariesByCurrency[currency] = summarizeFinanceTransactions(byCurrency.get(currency) ?? [], currency);
+  for (const currency of [...byCurrency.keys()].sort()) summariesByCurrency[currency] = summarizeFinanceTransactions(byCurrency.get(currency) ?? [], currency, { excludedTransferIds });
   const currency = resolveCurrency(options.currency, [...byCurrency.keys()]);
   const summary = currency ? summariesByCurrency[currency] : undefined;
   const selectedTransactions = currency ? byCurrency.get(currency) ?? [] : transactions;
@@ -119,6 +122,7 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
     sourceIds: [...new Set(transactions.map((transaction) => transaction.lineage.sourceId))].sort(),
     summariesByCurrency,
     ...(summary ? { summary } : {}),
+    transferAnalysis,
     recurringPatterns,
     reviewCases,
     quality: transactions.length === 0 ? { ...quality, status: "UNKNOWN", limitations: ["no Finance transactions are available for this projection"] } : quality,
