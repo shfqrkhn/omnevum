@@ -14,6 +14,9 @@ if (!root) throw new Error("Omnevum app root is missing");
 const store = new CanonicalStore();
 try {
   await store.open();
+  if (new URLSearchParams(window.location.search).get("search-degraded-preview") === "1") {
+    await store.invalidateSearchIndex();
+  }
   await new EffectRunner(store).recoverInterrupted();
   const commands = new CommandBus(store);
   const packages = new PackageRegistry();
