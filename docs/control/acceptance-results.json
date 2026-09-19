@@ -2343,8 +2343,11 @@
         "line": 4249
       },
       "text": "A user changes a planned vacation's estimated cost/date in the Travel-owned plan. Finance receives only the authorized financial projection, updates the vacation funding requirement and cash-flow forecast, recalculates affected home/retirement/FIRE trajectories where the shared resource conflict is material, and leaves itinerary/travel semantics under the Travel owner.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-authorized-cross-domain-finance-projection-receipt"
+      ],
+      "notes": "The current Finance projection consumes only an explicitly authorized financialProjection payload from a Travel-owned plan, emits the exact estimated cost/due month as a read-only cash-flow signal, preserves itinerary ownership, and reports affected Finance IDs through the shared dependency impact path. Travel adapter/UI mutation, connected goal trajectory recomputation, target breadth, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-161",
@@ -2353,8 +2356,11 @@
         "line": 4251
       },
       "text": "A compensation change is imported from a supported Work/pay source. Without duplicate entry, Omnevum updates actual/forecast income, budget capacity, savings rate, debt capacity, retirement contributions/trajectory, FIRE trajectory, and other dependent goals. The impact view identifies the common originating change and does not represent each downstream update as an independent source fact.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-authorized-cross-domain-finance-projection-receipt"
+      ],
+      "notes": "The current Finance projection consumes only an explicitly authorized Work compensation-change payload, preserves the originating Work record/source identity, emits exact monthly income by effective month, and exposes shared impact inputs without duplicating it as a Finance source fact. Real supported pay adapters, budget/debt/retirement trajectory integration, target breadth, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-162",
