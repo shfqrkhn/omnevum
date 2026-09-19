@@ -3,17 +3,17 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "eb49a189d25b892836df971cd8a1ec2ba57133391b4de3bd0f0820e5035a7963", "sourceRevision": "1a99713", "serviceWorkerCache": "omnevum-shell-9441371600d8f060"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "4c847b6fea4db0ef7d0cab9a757c6f8c49c382bfe1d7b679f503445038f9206a", "sourceRevision": "6e21dcf", "serviceWorkerCache": "omnevum-shell-8f76fed68cba8182"},
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF; captured after the full npm run build on 2026-09-19.",
   "artifactFiles": [
     {"path": "dist/assets/index-5Bomwce_.css", "sha256": "1c11d276ca2f5c25d1e54f84910a73a0b7c2f87d9983897d4972e1848d041446", "bytes": 24102},
-    {"path": "dist/assets/index-RSDt2IbG.js", "sha256": "f062fb61494a10675b478aaf25ded41209baf328ef76d71d271d306bc79939d5", "bytes": 508540},
-    {"path": "dist/assets/index-RSDt2IbG.js.map", "sha256": "f5b596a4329bd430d718e0170b300fe7fb1d1b5cb5958d3f18d83db5e6566919", "bytes": 1471977},
+    {"path": "dist/assets/index-Y6TlIUXt.js", "sha256": "6f250e9d7c8f4f23379317e9434c933e041b5f581e9a5237c0bdb4743368b138", "bytes": 509235},
+    {"path": "dist/assets/index-Y6TlIUXt.js.map", "sha256": "774d0b186a81651ce3070672dcbb2a04d06e342dfbdbedde5816958c13ecb594", "bytes": 1473532},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "56595ceb37c31867b2751a2140b8874887322a2fab8ddeaa8c1fcebfc5eb2bdf", "bytes": 933},
+    {"path": "dist/index.html", "sha256": "1e5642b03cec5c937926d2c899ddbbc1e4104c4c0136fca019ac3ec0be2211f2", "bytes": 933},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
     {"path": "dist/recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
-    {"path": "dist/sw.js", "sha256": "c8a3978c99ec48ae1cb19d1c3386b7ed1d08c73fd9364d62a1e9736d41fd00a1", "bytes": 3501}
+    {"path": "dist/sw.js", "sha256": "9d24de145970c18ddde8a1c135aa2f9ee964f063e886692236e3bb4bbead59c8", "bytes": 3501}
   ],
   "requiredEvidence": [
     "control-generation-and-drift",
@@ -29,5 +29,5 @@
     "human-acceptance-where-required"
   ],
   "evidencePolicy": "Generated status text cannot create PASS. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains NOT_RUN/UNKNOWN.",
-  "currentDecision": "Continue Phase 0; the current artifact adds an independent dependency-free last-resort recovery console at ./recovery.html, deterministic human-readable and artifact-originals exports, plus a storage-owned retirement gate requiring a current full Vault readback or separately recorded explicit destroy intent. Compact Recovery keeps low-frequency data-exit controls collapsed by default and leaves hard clear disabled until authorized. OMN-ACC-125 advances only to PARTIAL; production deployment/rollback, target qualification, native fault matrices, and human acceptance remain open. OMN-ACC-094 remains bounded NOT_APPLICABLE and do not publish a completion or production-release claim."
+  "currentDecision": "Continue Phase 0; the current artifact adds a strict pre-delivery Effect/Outbox withdrawal owner and removes undo affordances after execution starts or becomes ambiguous, alongside the independent dependency-free last-resort recovery console at ./recovery.html, deterministic human-readable and artifact-originals exports, and a storage-owned retirement gate requiring a current full Vault readback or separately recorded explicit destroy intent. Compact Recovery keeps low-frequency data-exit and Effect/Outbox controls collapsed by default and leaves hard clear disabled until authorized. OMN-ACC-125 and OMN-ACC-127 advance only to PARTIAL; production deployment/rollback, target qualification, native fault matrices, and human acceptance remain open. OMN-ACC-094 remains bounded NOT_APPLICABLE and do not publish a completion or production-release claim."
 }

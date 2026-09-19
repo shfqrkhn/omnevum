@@ -1972,8 +1972,15 @@
         "line": 4180
       },
       "text": "An operation carrying an externally-observable effect is undone within its window. The effect is withdrawn from the Outbox undelivered and never reaches the external system. A second operation whose effect the transport will not defer is verified to take the pre-confirmation path instead, showing no undo affordance, and an effect that has already left the system is never presented as undoable.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/effect-service.ts#withdrawDeferredEffect",
+        "src/core/effect-service.test.ts#withdraws-only-a-still-pending-operation-before-delivery",
+        "src/core/effect-service.test.ts#does-not-present-started-or-ambiguous-effects-as-undoable",
+        "src/ui/app.ts#renderEffects",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-effectoutbox-withdrawal-boundary-receipt"
+      ],
+      "notes": "Only a PENDING operation can be withdrawn through the platform owner, and the current Chromium UI labels that affordance Withdraw before delivery; IN_FLIGHT, OUTCOME_UNKNOWN, RECONCILE, and SUCCEEDED operations expose no undo/withdraw affordance. The focused effect/runner/remote suite and a current Chromium static preview prove local staging and withdrawal without contacting the endpoint. A qualified transport that cannot defer and its explicit pre-confirmation path, real external delivery/compensation, other targets, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-128",
