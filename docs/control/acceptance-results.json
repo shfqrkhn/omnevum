@@ -1701,9 +1701,10 @@
       "text": "A fresh install is opened and used immediately - a record captured and retrieved - with no account, no configuration step, and no dismissible tour presented. The opening state truthfully declares local-only empty storage. The later shaping prompt appears only after accumulated real use, is permanently dismissible, remains available on demand, and gates no capability; every lens is reachable before and after it.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-delayed-onboarding-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-delayed-onboarding-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-delayed-onboarding-disclosure-receipt"
       ],
-      "notes": "The current Chromium artifact opens with empty local-only health and no tour panel, exposes only an on-demand guide action, auto-shows the guide after three real canonical captures, persists explicit dismissal across reload, and reopens it on demand without changing canonical counts/revisions. Fresh mobile/install breadth, every lens reachability row, production deployment, and human acceptance remain open."
+      "notes": "The current Chromium artifact opens with empty local-only health and no tour panel, exposes only an on-demand guide action, auto-shows the guide after three real canonical captures as a collapsed native disclosure, persists explicit dismissal across reload, and reopens it on demand without changing canonical counts/revisions. Fresh mobile/install breadth, every lens reachability row, production deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-110",
