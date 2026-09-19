@@ -144,6 +144,28 @@ export interface FinanceTransactionCorrection {
   essential?: boolean | null;
 }
 
+export interface FinanceBatchEntry {
+  source: FinanceStatementSource;
+  transactions: FinanceTransaction[];
+  statementFacts?: FinanceStatementFacts;
+}
+
+export interface FinanceBatchSourceResult {
+  sourceId: string;
+  import: FinanceImportResult;
+  reconciliation: FinanceReconciliation;
+  limitations: string[];
+}
+
+export interface FinanceBatchResult {
+  records: CanonicalRecord[];
+  sourceResults: FinanceBatchSourceResult[];
+  created: number;
+  existing: number;
+  duplicates: number;
+  conflicts: FinanceTransactionConflict[];
+}
+
 export function createFinanceSourceId(sourceSha256: string, accountId: string, currency: string): string {
   if (!/^[a-f0-9]{64}$/i.test(sourceSha256)) throw new Error("Finance source SHA-256 is required");
   const normalizedAccount = accountId.trim().slice(0, 160);
@@ -481,6 +503,37 @@ export async function acceptFinanceTransactions(commands: CommandBus, source: Fi
     byProvenance.set(provenanceId, record);
   }
   return { records, created, existing, duplicates: deduplicated.duplicates.length, conflicts };
+}
+
+/** Accept a bounded monthly batch through the same per-source canonical owner. */
+export async function acceptFinanceBatch(commands: CommandBus, entries: readonly FinanceBatchEntry[]): Promise<FinanceBatchResult> {
+  if (entries.length === 0 || entries.length > 32) throw new Error("Finance batch must contain between 1 and 32 sources");
+  const sourceIds = entries.map((entry) => entry.source.sourceId);
+  if (new Set(sourceIds).size !== sourceIds.length) throw new Error("Finance batch source identities must be unique");
+  const records: CanonicalRecord[] = [];
+  const sourceResults: FinanceBatchSourceResult[] = [];
+  const conflicts: FinanceTransactionConflict[] = [];
+  let created = 0;
+  let existing = 0;
+  let duplicates = 0;
+  for (const entry of [...entries].sort((left, right) => left.source.sourceId.localeCompare(right.source.sourceId))) {
+    const factRecord = entry.statementFacts ? await acceptFinanceStatementFacts(commands, entry.source, entry.statementFacts) : undefined;
+    const imported = await acceptFinanceTransactions(commands, entry.source, entry.transactions);
+    const reconciliation = reconcileFinanceStatement(entry.source, entry.transactions);
+    const limitations = [
+      ...(entry.statementFacts?.limitations ?? []),
+      ...imported.conflicts.map((conflict) => `source transaction ${conflict.sourceTransactionId} has conflicting meanings`),
+      ...(reconciliation.status === "MATCH" ? [] : [`statement reconciliation is ${reconciliation.status.toLowerCase()}`])
+    ];
+    if (factRecord) records.push(factRecord);
+    records.push(...imported.records);
+    sourceResults.push({ sourceId: entry.source.sourceId, import: imported, reconciliation, limitations: [...new Set(limitations)].sort() });
+    created += imported.created;
+    existing += imported.existing;
+    duplicates += imported.duplicates;
+    conflicts.push(...imported.conflicts);
+  }
+  return { records, sourceResults, created, existing, duplicates, conflicts };
 }
 
 /** Apply one explicit user correction through the canonical Finance owner. */

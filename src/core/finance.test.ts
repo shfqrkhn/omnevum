@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { acceptFinanceStatementFacts, acceptFinanceTransactions, computeFinanceInvestmentPerformance, correctFinanceTransaction, createFinanceSourceId, deduplicateFinanceTransactions, parseFinanceCsv, parseFinanceStatementFactsCsv, reconcileFinanceStatement, type FinanceStatementSource } from "./finance";
+import { acceptFinanceBatch, acceptFinanceStatementFacts, acceptFinanceTransactions, computeFinanceInvestmentPerformance, correctFinanceTransaction, createFinanceSourceId, deduplicateFinanceTransactions, parseFinanceCsv, parseFinanceStatementFactsCsv, reconcileFinanceStatement, type FinanceStatementSource } from "./finance";
 import { CommandBus } from "./commands";
 import { CanonicalStore } from "./storage";
 
@@ -139,6 +139,23 @@ describe("credential-free Finance statement semantics", () => {
     expect(corrected.data).toMatchObject({ amountMinor: "-1200", currency: "CAD", status: "CORRECTED", essential: true, sourceTransactionId: "tx-correct" });
     expect((await store.history(original.id)).map((entry) => entry.revision)).toEqual([1, 2]);
     await expect(correctFinanceTransaction(commands, original.id, { description: "Stale correction" }, original.revision)).rejects.toThrow("Canonical record changed");
+    store.close();
+  });
+
+  it("accepts a bounded monthly batch once and returns per-source reconciliation exceptions", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-finance-batch`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const transactions = parseFinanceCsv("Date,Description,Amount,Id\n2026-01-02,Cafe,-10.00,tx-batch\n2026-01-03,Payroll,15.00,tx-pay\n", source);
+    const facts = parseFinanceStatementFactsCsv("StatementBalance,DueDate,MinimumDue\n105.00,2026-02-15,25.00\n", source, "CREDIT_CARD");
+    const entry = { source, transactions, statementFacts: facts };
+    const first = await acceptFinanceBatch(commands, [entry]);
+    expect(first).toMatchObject({ created: 2, existing: 0, duplicates: 0, conflicts: [] });
+    expect(first.sourceResults).toMatchObject([{ sourceId: source.sourceId, reconciliation: { status: "MATCH" }, limitations: [] }]);
+    expect(first.records).toHaveLength(3);
+    const second = await acceptFinanceBatch(commands, [entry]);
+    expect(second).toMatchObject({ created: 0, existing: 2, duplicates: 0, conflicts: [] });
+    expect(second.sourceResults[0]?.reconciliation.status).toBe("MATCH");
     store.close();
   });
 });
