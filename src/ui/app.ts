@@ -7,7 +7,8 @@ import { captureKindLabel, formatDateTime, formatNumber, getDeviceInputCopy, get
 import { CAPTURE_KINDS, type CanonicalRecord, type CaptureKind } from "../core/model";
 import { accessibilityPreset, DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationAccessibilityProfile, type PresentationFamily, type PresentationHomeWidgetId, type PresentationProfile, type PresentationSectionId, type PresentationTargetSize, type PresentationTextScale } from "../core/presentation";
 import { TrackService } from "../core/track";
-import { makeReminderData, reconcileReminders } from "../core/time";
+import { makeReminderData } from "../core/time";
+import { projectDueReminderConsiderations } from "../core/considerations";
 import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/crypto";
 import { MAX_VAULT_JSON_BYTES, parseVault } from "../core/vault";
 import type { CanonicalStore } from "../core/storage";
@@ -155,11 +156,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <div data-home-widget="attention">
           <div class="section-heading insight-heading">
             <div>
-              <p class="eyebrow">${timeCopy.reminders}</p>
-              <h3>${timeCopy.dueOnResume}</h3>
+              <p class="eyebrow">${timeCopy.considerations}</p>
+              <h3 id="home-attention-heading">${timeCopy.considerationsHeading}</h3>
             </div>
           </div>
-          <div id="attention-panel" class="attention-panel" role="status"></div>
+          <div id="attention-panel" class="attention-panel" role="region" aria-labelledby="home-attention-heading" aria-live="polite"></div>
         </div>
       </section>
 
@@ -1231,7 +1232,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
   };
 
-  const homeWidgetLabel = (id: PresentationHomeWidgetId): string => id === "summary" ? copy.currentPicture : id === "insights" ? copy.signals : timeCopy.dueOnResume;
+  const homeWidgetLabel = (id: PresentationHomeWidgetId): string => id === "summary" ? copy.currentPicture : id === "insights" ? copy.signals : timeCopy.considerationsHeading;
   const sectionIcon = (id: PresentationSectionId): string => ({ "home-summary": "⌂", capture: "✎", acquire: "↓", track: "◌", domains: "◇", search: "⌕", spaces: "▦", compose: "▤", review: "✓", relate: "↔", knowledge: "§", sharing: "⇧", sync: "⟳", focus: "◷", reminders: "!", records: "☷", recovery: "↺", presentation: "⚙" })[id];
   const presentationSections = new Map(PRESENTATION_SECTION_IDS.map((id) => [id, root.querySelector<HTMLElement>(`#${id}`)] as const));
   const movePresentationRow = (container: HTMLElement, button: HTMLButtonElement): void => {
@@ -1785,16 +1786,65 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       card.append(labelElement, valueElement);
       insightsGrid.append(card);
     }
-    const dueReminders = reconcileReminders(records).filter((reminder) => reminder.state === "DUE");
+    const considerations = projectDueReminderConsiderations(records);
     attentionPanel.replaceChildren();
-    if (dueReminders.length === 0) {
+    if (considerations.length === 0) {
       attentionPanel.textContent = timeCopy.noDue;
     } else {
       const list = document.createElement("ul");
       list.className = "attention-list";
-      for (const reminder of dueReminders) {
+      for (const consideration of considerations) {
         const item = document.createElement("li");
-        item.textContent = `${reminder.recordId} - ${timeCopy.dueOnResume}. ${timeCopy.deliveryLimited}`;
+        item.className = "consideration-item";
+        const title = document.createElement("strong");
+        title.textContent = consideration.title;
+        const source = document.createElement("p");
+        source.className = "consideration-detail";
+        const sourceLabel = document.createElement("span");
+        sourceLabel.textContent = `${timeCopy.sourceEvidence}: ${consideration.evidenceCount} `;
+        const sourceLink = document.createElement("a");
+        sourceLink.href = "#records";
+        sourceLink.textContent = timeCopy.reminders;
+        sourceLink.title = consideration.recordId;
+        source.append(sourceLabel, sourceLink);
+        const uncertainty = document.createElement("p");
+        uncertainty.className = "consideration-detail";
+        uncertainty.textContent = `${timeCopy.uncertainty}: ${consideration.uncertainty}`;
+        const why = document.createElement("p");
+        why.className = "consideration-detail";
+        why.textContent = `${timeCopy.whyAppeared}: ${timeCopy.whyDueOnResume} ${timeCopy.deliveryLimited}`;
+        const actions = document.createElement("div");
+        actions.className = "consideration-actions";
+        const snooze = document.createElement("button");
+        snooze.type = "button";
+        snooze.className = "secondary";
+        snooze.textContent = timeCopy.snooze;
+        snooze.addEventListener("click", async () => {
+          const current = await commands.get(consideration.recordId);
+          if (!current) return;
+          try {
+            await commands.update(current.id, { ...current.data, dueAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), status: "OPEN" }, current.revision);
+            await renderRecords(searchQuery.value);
+          } catch (error) {
+            healthStatus.textContent = describeError(error, "The consideration could not be snoozed; canonical data was not changed.");
+          }
+        });
+        const dismiss = document.createElement("button");
+        dismiss.type = "button";
+        dismiss.className = "icon-button";
+        dismiss.textContent = timeCopy.dismiss;
+        dismiss.addEventListener("click", async () => {
+          const current = await commands.get(consideration.recordId);
+          if (!current) return;
+          try {
+            await commands.update(current.id, { ...current.data, status: "DONE" }, current.revision);
+            await renderRecords(searchQuery.value);
+          } catch (error) {
+            healthStatus.textContent = describeError(error, "The consideration could not be dismissed; canonical data was not changed.");
+          }
+        });
+        actions.append(snooze, dismiss);
+        item.append(title, source, uncertainty, why, actions);
         list.append(item);
       }
       attentionPanel.append(list);

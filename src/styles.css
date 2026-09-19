@@ -172,7 +172,11 @@ select[multiple] { min-height: 9rem; }
 .domain-form > *, .relationship-form > * { min-width: 0; max-width: 100%; }
 .domain-form h3 { margin: 0 0 0.35rem; }
 .attention-panel { min-height: 2.5rem; padding: 0.65rem 0.8rem; border: 1px solid var(--line); border-radius: 12px; background: color-mix(in srgb, var(--accent) 8%, transparent); }
-.attention-list { margin: 0; padding-left: 1.2rem; }
+.attention-list { display: grid; gap: 0.7rem; margin: 0; padding: 0; list-style: none; }
+.consideration-item { display: grid; gap: 0.25rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.75rem; }
+.consideration-item strong { overflow-wrap: anywhere; }
+.consideration-detail { margin: 0; color: var(--muted); font-size: 0.86rem; overflow-wrap: anywhere; }
+.consideration-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.35rem; }
 .summary-item { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.8rem; }
 .summary-item span { color: var(--muted); font-size: 0.85rem; }
 .summary-item strong { color: var(--accent); font-size: 1.3rem; }
