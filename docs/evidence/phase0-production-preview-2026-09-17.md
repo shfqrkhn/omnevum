@@ -1940,3 +1940,9 @@ This advances `OMN-ACC-073`, `OMN-ACC-074`, `OMN-ACC-075`, and `OMN-ACC-076` fro
 On 2026-09-19, the exact clean source revision `3733f0c5aabb0ed48515f315990e09d8f7e3f9a7` ran `npm run benchmark:fresh-agent`. The benchmark created a detached fresh worktree with no prior conversation state, passed `npm ci`, the Recovery audit, the full `npm run ci` gate (`541` requirements, `172` scenarios, `73` test files with `343` tests passed and `1` skipped), and the factory interruption benchmark. It reported `FRESH_AGENT_RESUME_PASS`, removed the temporary worktree, and left the original checkout clean. The completion ledger remained explicitly `IN_PROGRESS`, and recovery-bundle secrets exclusion was verified before work resumed.
 
 This advances `OMN-ACC-077` from `UNKNOWN` to `PARTIAL`. The run proves one-host clean-room continuation and interruption/resume only; two materially different qualified agent hosts, cross-host state transfer, subscription/FOSS host comparison, and human acceptance remain open.
+
+## Current v0.17.4 release attestation contract receipt
+
+On 2026-09-19, source revision `00746f8` added the Omnevum-owned Web Crypto release-attestation verifier. The focused `src/core/release-attestation.test.ts` suite passed `3` tests, followed by `npm run typecheck` and `git diff --check`. A generated ECDSA P-256 fixture verifies a retained public JWK and signature over the exact artifact digest, source revision, and key identity; a mismatched digest and tampered signature are rejected before acceptance. The result explicitly separates identity/integrity verification from safety assurance (`safetyAssurance: false`).
+
+This advances `OMN-ACC-096` from `UNKNOWN` to `PARTIAL`. No signed production release bundle, Sigstore/cosign or in-toto transparency identity, consumer verification package, deployment, or human acceptance was performed; those remain open.

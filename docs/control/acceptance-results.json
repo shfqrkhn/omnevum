@@ -1662,8 +1662,14 @@
         "line": 4118
       },
       "text": "If an official release profile claims cryptographic signing or supply-chain attestation, the exact release artifact digest is verified against its signed bundle/attestation through a qualified open scheme such as Sigstore/cosign or in-toto-compatible metadata. Verification remains possible using the retained verification material required by the claim; provenance is not presented as safety assurance; and any identity/transparency-log disclosure is explicit in the release profile rather than a hidden side effect.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/release-attestation.ts",
+        "src/core/release-attestation.test.ts",
+        "docs/control/release-evidence.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-release-attestation-contract-receipt"
+      ],
+      "notes": "The Web Crypto attestation contract verifies a retained ECDSA P-256 public key and signature over the exact artifact digest, source revision, and key identity, rejects digest/signature tampering, and always reports safetyAssurance false. A real release signing/attestation bundle, transparency identity, consumer verification material, deployment artifact, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-097",
