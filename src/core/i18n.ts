@@ -257,6 +257,8 @@ export interface TimeCopy {
   reminders: string;
   considerations: string;
   considerationsHeading: string;
+  focusMode: string;
+  focusModeActive: string;
   noDue: string;
   dueOnResume: string;
   deliveryLimited: string;
@@ -275,8 +277,8 @@ export interface TimeCopy {
 }
 
 const timeCopy: Record<PresentationLocale, TimeCopy> = {
-  "en-CA": { reminders: "Attention / reminders", considerations: "Considerations", considerationsHeading: "What deserves consideration?", noDue: "Nothing deserves attention.", dueOnResume: "Due on resume", deliveryLimited: "Delivery is opportunistic; the reminder remains canonical.", sourceEvidence: "Source/evidence", uncertainty: "Uncertainty", whyAppeared: "Why this appeared", whyDueOnResume: "The due time was reached and this reminder was reconciled on resume.", snooze: "Snooze 24 hours", dismiss: "Dismiss", reminderHeading: "Create a reminder", reminderTitle: "Reminder title", reminderDueAt: "Due date and time", saveReminder: "Save reminder", reminderSaved: "Reminder saved.", reminderHint: "The due state remains canonical; exact closed-app delivery is not promised." },
-  "fr-CA": { reminders: "Attention / rappels", considerations: "Considerations", considerationsHeading: "Qu'est-ce qui merite votre attention?", noDue: "Rien ne merite votre attention.", dueOnResume: "Du a la reprise", deliveryLimited: "La livraison est opportuniste; le rappel reste canonique.", sourceEvidence: "Source/preuve", uncertainty: "Incertitude", whyAppeared: "Pourquoi cet element apparait", whyDueOnResume: "L'echeance est atteinte et ce rappel a ete reconcilie a la reprise.", snooze: "Reporter de 24 heures", dismiss: "Ignorer", reminderHeading: "Creer un rappel", reminderTitle: "Titre du rappel", reminderDueAt: "Date et heure d'echeance", saveReminder: "Enregistrer le rappel", reminderSaved: "Rappel enregistre.", reminderHint: "L'etat d'echeance reste canonique; aucune livraison exacte hors application n'est promise." }
+  "en-CA": { reminders: "Attention / reminders", considerations: "Considerations", considerationsHeading: "What deserves consideration?", focusMode: "Focus mode", focusModeActive: "Exit focus mode", noDue: "Nothing deserves attention.", dueOnResume: "Due on resume", deliveryLimited: "Delivery is opportunistic; the reminder remains canonical.", sourceEvidence: "Source/evidence", uncertainty: "Uncertainty", whyAppeared: "Why this appeared", whyDueOnResume: "The due time was reached and this reminder was reconciled on resume.", snooze: "Snooze 24 hours", dismiss: "Dismiss", reminderHeading: "Create a reminder", reminderTitle: "Reminder title", reminderDueAt: "Due date and time", saveReminder: "Save reminder", reminderSaved: "Reminder saved.", reminderHint: "The due state remains canonical; exact closed-app delivery is not promised." },
+  "fr-CA": { reminders: "Attention / rappels", considerations: "Considerations", considerationsHeading: "Qu'est-ce qui merite votre attention?", focusMode: "Mode concentration", focusModeActive: "Quitter le mode concentration", noDue: "Rien ne merite votre attention.", dueOnResume: "Du a la reprise", deliveryLimited: "La livraison est opportuniste; le rappel reste canonique.", sourceEvidence: "Source/preuve", uncertainty: "Incertitude", whyAppeared: "Pourquoi cet element apparait", whyDueOnResume: "L'echeance est atteinte et ce rappel a ete reconcilie a la reprise.", snooze: "Reporter de 24 heures", dismiss: "Ignorer", reminderHeading: "Creer un rappel", reminderTitle: "Titre du rappel", reminderDueAt: "Date et heure d'echeance", saveReminder: "Enregistrer le rappel", reminderSaved: "Rappel enregistre.", reminderHint: "L'etat d'echeance reste canonique; aucune livraison exacte hors application n'est promise." }
 };
 
 export function getTimeCopy(locale: PresentationLocale): TimeCopy {

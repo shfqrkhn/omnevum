@@ -177,6 +177,9 @@ select[multiple] { min-height: 9rem; }
 .consideration-item strong { overflow-wrap: anywhere; }
 .consideration-detail { margin: 0; color: var(--muted); font-size: 0.86rem; overflow-wrap: anywhere; }
 .consideration-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.35rem; }
+#home-summary[data-focus-mode="true"] .consideration-item { gap: 0.55rem; padding: 1rem; font-size: 1.08rem; }
+#home-summary[data-focus-mode="true"] .consideration-detail { font-size: 1rem; }
+#home-summary[data-focus-mode="true"] .consideration-actions button { min-height: 52px; }
 .summary-item { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.8rem; }
 .summary-item span { color: var(--muted); font-size: 0.85rem; }
 .summary-item strong { color: var(--accent); font-size: 1.3rem; }
