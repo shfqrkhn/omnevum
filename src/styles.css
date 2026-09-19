@@ -17,6 +17,7 @@
   --omn-conflict: #952525;
   --omn-synergy: #0F5C42;
   --omn-focus: #0A3D8F;
+  --omn-text-scale: 1;
   --bg: var(--omn-canvas);
   --surface: var(--omn-surface);
   --surface-muted: var(--omn-surface-raised);
@@ -48,6 +49,14 @@
   --omn-focus: #8FC6FF;
   --shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
 }
+
+:root[data-text-scale="1.25"] { --omn-text-scale: 1.25; }
+:root[data-text-scale="1.5"] { --omn-text-scale: 1.5; }
+:root[data-text-scale="2"] { --omn-text-scale: 2; }
+:root { font-size: calc(100% * var(--omn-text-scale)); }
+:root[data-target-size="large"] button, :root[data-target-size="large"] .file-button, :root[data-target-size="large"] .primary-nav a, :root[data-target-size="large"] select, :root[data-target-size="large"] input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]) { min-height: 52px; }
+:root[data-target-size="large"] .icon-button { min-width: 52px; }
+:root[data-reduced-motion="true"] *, :root[data-reduced-motion="true"] *::before, :root[data-reduced-motion="true"] *::after { animation-duration: 0ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0ms !important; }
 
 :root[data-family="alpha"][data-theme="light"] {
   --omn-canvas: #F2F2EE; --omn-surface: #FFFFFF; --omn-surface-raised: #F7F7F2;

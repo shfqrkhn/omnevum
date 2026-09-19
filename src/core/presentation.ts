@@ -4,6 +4,16 @@ export type PresentationLocale = "en-CA" | "fr-CA";
 export type PresentationDensity = "comfortable" | "compact";
 export type PresentationTypeface = "system" | "serif" | "mono";
 export type PresentationIconography = "labels" | "glyphs";
+export type PresentationAccessibilityProfile = "standard" | "low-vision" | "motor-large-target" | "low-cognitive-load" | "custom";
+export type PresentationTextScale = 1 | 1.25 | 1.5 | 2;
+export type PresentationTargetSize = "standard" | "large";
+
+export interface PresentationAccessibilitySettings {
+  profile: PresentationAccessibilityProfile;
+  textScale: PresentationTextScale;
+  targetSize: PresentationTargetSize;
+  reducedMotion: boolean;
+}
 
 export const PRESENTATION_PROFILE_FORMAT = "OMNEVUM_PRESENTATION_PROFILE" as const;
 export const PRESENTATION_PROFILE_VERSION = 1 as const;
@@ -28,6 +38,7 @@ export interface PresentationProfile {
   density: PresentationDensity;
   typeface: PresentationTypeface;
   iconography: PresentationIconography;
+  accessibility: PresentationAccessibilitySettings;
   labels: { home: string; capture: string; records: string };
   navigation: { visible: PresentationSectionId[]; order: PresentationSectionId[] };
   homeWidgets: PresentationHomeWidgetId[];
@@ -43,6 +54,24 @@ export interface PresentationProfileDocument {
 const DEFAULT_SECTION_ORDER: PresentationSectionId[] = [...PRESENTATION_SECTION_IDS];
 const DEFAULT_HOME_WIDGETS: PresentationHomeWidgetId[] = [...PRESENTATION_HOME_WIDGET_IDS];
 
+export const DEFAULT_ACCESSIBILITY: PresentationAccessibilitySettings = {
+  profile: "standard",
+  textScale: 1,
+  targetSize: "standard",
+  reducedMotion: false
+};
+
+const ACCESSIBILITY_PRESETS: Record<Exclude<PresentationAccessibilityProfile, "custom">, PresentationAccessibilitySettings> = {
+  standard: { ...DEFAULT_ACCESSIBILITY },
+  "low-vision": { profile: "low-vision", textScale: 1.5, targetSize: "large", reducedMotion: false },
+  "motor-large-target": { profile: "motor-large-target", textScale: 1.25, targetSize: "large", reducedMotion: false },
+  "low-cognitive-load": { profile: "low-cognitive-load", textScale: 1.25, targetSize: "large", reducedMotion: true }
+};
+
+export function accessibilityPreset(profile: Exclude<PresentationAccessibilityProfile, "custom">): PresentationAccessibilitySettings {
+  return { ...ACCESSIBILITY_PRESETS[profile] };
+}
+
 export const DEFAULT_PRESENTATION: PresentationProfile = {
   schemaVersion: 1,
   productName: "Omnevum",
@@ -53,6 +82,7 @@ export const DEFAULT_PRESENTATION: PresentationProfile = {
   density: "comfortable",
   typeface: "system",
   iconography: "labels",
+  accessibility: { ...DEFAULT_ACCESSIBILITY },
   labels: { home: "", capture: "", records: "" },
   navigation: { visible: [...DEFAULT_SECTION_ORDER], order: [...DEFAULT_SECTION_ORDER] },
   homeWidgets: [...DEFAULT_HOME_WIDGETS]
@@ -87,6 +117,15 @@ function parseLabels(value: unknown): PresentationProfile["labels"] {
   return { home: boundedString(candidate.home, 40), capture: boundedString(candidate.capture, 40), records: boundedString(candidate.records, 40) };
 }
 
+function parseAccessibility(value: unknown): PresentationAccessibilitySettings {
+  if (typeof value !== "object" || value === null) return { ...DEFAULT_ACCESSIBILITY };
+  const candidate = value as Record<string, unknown>;
+  const profile = candidate.profile === "low-vision" || candidate.profile === "motor-large-target" || candidate.profile === "low-cognitive-load" || candidate.profile === "custom" ? candidate.profile : "standard";
+  const textScale = candidate.textScale === 1.25 || candidate.textScale === 1.5 || candidate.textScale === 2 ? candidate.textScale : 1;
+  const targetSize = candidate.targetSize === "large" ? "large" : "standard";
+  return { profile, textScale, targetSize, reducedMotion: candidate.reducedMotion === true };
+}
+
 export function parsePresentationProfile(value: unknown): PresentationProfile {
   if (typeof value !== "object" || value === null) return structuredClone(DEFAULT_PRESENTATION);
   const candidate = value as Record<string, unknown>;
@@ -105,6 +144,7 @@ export function parsePresentationProfile(value: unknown): PresentationProfile {
     density: candidate.density === "compact" ? "compact" : "comfortable",
     typeface: candidate.typeface === "serif" || candidate.typeface === "mono" ? candidate.typeface : "system",
     iconography: candidate.iconography === "glyphs" ? "glyphs" : "labels",
+    accessibility: parseAccessibility(candidate.accessibility),
     labels: parseLabels(candidate.labels),
     navigation: {
       visible,
@@ -130,6 +170,12 @@ export function isPresentationProfile(value: unknown): value is PresentationProf
   if (candidate.density !== undefined && candidate.density !== "comfortable" && candidate.density !== "compact") return false;
   if (candidate.typeface !== undefined && candidate.typeface !== "system" && candidate.typeface !== "serif" && candidate.typeface !== "mono") return false;
   if (candidate.iconography !== undefined && candidate.iconography !== "labels" && candidate.iconography !== "glyphs") return false;
+  if (candidate.accessibility !== undefined) {
+    if (typeof candidate.accessibility !== "object" || candidate.accessibility === null) return false;
+    const accessibility = candidate.accessibility as Record<string, unknown>;
+    if (!["standard", "low-vision", "motor-large-target", "low-cognitive-load", "custom"].includes(String(accessibility.profile))) return false;
+    if (![1, 1.25, 1.5, 2].includes(accessibility.textScale as number) || (accessibility.targetSize !== "standard" && accessibility.targetSize !== "large") || typeof accessibility.reducedMotion !== "boolean") return false;
+  }
   if (candidate.labels !== undefined) {
     if (typeof candidate.labels !== "object" || candidate.labels === null) return false;
     const labels = candidate.labels as Record<string, unknown>;

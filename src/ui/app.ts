@@ -5,7 +5,7 @@ import { redactTextArtifact } from "../core/document";
 import { isCompletedTask, isSpaceId, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, SPACE_LABELS, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getDeviceInputCopy, getInstalledMetadataStatus, getRecoveryCopy, getStoragePersistenceNotice, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CanonicalRecord, type CaptureKind } from "../core/model";
-import { DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationFamily, type PresentationHomeWidgetId, type PresentationProfile, type PresentationSectionId } from "../core/presentation";
+import { accessibilityPreset, DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationAccessibilityProfile, type PresentationFamily, type PresentationHomeWidgetId, type PresentationProfile, type PresentationSectionId, type PresentationTargetSize, type PresentationTextScale } from "../core/presentation";
 import { TrackService } from "../core/track";
 import { makeReminderData, reconcileReminders } from "../core/time";
 import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/crypto";
@@ -59,6 +59,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const safePresentationMode = readSafePresentationMode();
   const presentationResolution = resolvePresentationProfile(rawPresentation, safePresentationMode);
   let presentation: PresentationProfile = presentationResolution.profile;
+  const platformReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
+  if (!safePresentationMode && rawPresentation === undefined && platformReducedMotion) {
+    presentation = { ...presentation, accessibility: { ...presentation.accessibility, profile: "custom", reducedMotion: true } };
+    await store.setSetting("presentation", presentation);
+  }
   const copy = getUiCopy(presentation.locale);
   const deviceCopy = getDeviceInputCopy(presentation.locale);
   const recoveryCopy = getRecoveryCopy(presentation.locale);
@@ -66,6 +71,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const familyLabels: Record<PresentationFamily, string> = presentation.locale === "fr-CA"
     ? { alpha: "Concept Alpha - Monastique tactile", beta: "Concept Beta - Editorial humaniste", gamma: "Concept Gamma - Utilitaire industriel" }
     : { alpha: "Concept Alpha - Tactile Monastic", beta: "Concept Beta - Humanist Editorial", gamma: "Concept Gamma - Industrial Utility" };
+  const accessibilityCopy = presentation.locale === "fr-CA"
+    ? { profile: "Profil d'accessibilite", standard: "Standard", lowVision: "Vision reduite", motor: "Cibles larges / motricite", cognitive: "Charge cognitive reduite", custom: "Personnalise", textScale: "Echelle du texte", scale100: "100 %", scale125: "125 %", scale150: "150 %", scale200: "200 %", targetSize: "Taille des cibles", targetStandard: "Cibles standard", targetLarge: "Cibles larges", reducedMotion: "Mode sans mouvement", hint: "Les profils changent uniquement la presentation; chaque reglage reste modifiable." }
+    : { profile: "Accessibility profile", standard: "Standard", lowVision: "Low vision", motor: "Motor / large target", cognitive: "Low cognitive load", custom: "Custom", textScale: "Text scale", scale100: "100%", scale125: "125%", scale150: "150%", scale200: "200%", targetSize: "Target size", targetStandard: "Standard targets", targetLarge: "Large targets", reducedMotion: "Zero-motion mode", hint: "Profiles change presentation only; every underlying setting remains editable." };
   const factoryPreviewMode = new URLSearchParams(window.location.search).get("factory-preview") === "1";
   const effectRevocationPreviewMode = new URLSearchParams(window.location.search).get("effect-revocation-preview") === "1";
   const effectCredentialedPreviewMode = new URLSearchParams(window.location.search).get("effect-credentialed-preview") === "1";
@@ -185,6 +193,29 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
               <select id="iconography" name="iconography"><option value="labels">${copy.labelIconography}</option><option value="glyphs">${copy.glyphIconography}</option></select>
             </div>
           </div>
+          <fieldset class="presentation-fieldset accessibility-fieldset">
+            <legend>${accessibilityCopy.profile}</legend>
+            <label for="accessibility-profile">${accessibilityCopy.profile}</label>
+            <select id="accessibility-profile" name="accessibilityProfile">
+              <option value="standard">${accessibilityCopy.standard}</option>
+              <option value="low-vision">${accessibilityCopy.lowVision}</option>
+              <option value="motor-large-target">${accessibilityCopy.motor}</option>
+              <option value="low-cognitive-load">${accessibilityCopy.cognitive}</option>
+              <option value="custom">${accessibilityCopy.custom}</option>
+            </select>
+            <div class="presentation-grid">
+              <div>
+                <label for="accessibility-text-scale">${accessibilityCopy.textScale}</label>
+                <select id="accessibility-text-scale" name="accessibilityTextScale"><option value="1">${accessibilityCopy.scale100}</option><option value="1.25">${accessibilityCopy.scale125}</option><option value="1.5">${accessibilityCopy.scale150}</option><option value="2">${accessibilityCopy.scale200}</option></select>
+              </div>
+              <div>
+                <label for="accessibility-target-size">${accessibilityCopy.targetSize}</label>
+                <select id="accessibility-target-size" name="accessibilityTargetSize"><option value="standard">${accessibilityCopy.targetStandard}</option><option value="large">${accessibilityCopy.targetLarge}</option></select>
+              </div>
+            </div>
+            <label class="check-row" for="accessibility-reduced-motion"><input id="accessibility-reduced-motion" name="accessibilityReducedMotion" type="checkbox" /> ${accessibilityCopy.reducedMotion}</label>
+            <p class="hint">${accessibilityCopy.hint}</p>
+          </fieldset>
           <div class="presentation-grid">
             <div>
               <label for="home-label-input">${copy.homeLabel}</label>
@@ -873,6 +904,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const densityInput = root.querySelector<HTMLSelectElement>("#density");
   const typefaceInput = root.querySelector<HTMLSelectElement>("#typeface");
   const iconographyInput = root.querySelector<HTMLSelectElement>("#iconography");
+  const accessibilityProfileInput = root.querySelector<HTMLSelectElement>("#accessibility-profile");
+  const accessibilityTextScaleInput = root.querySelector<HTMLSelectElement>("#accessibility-text-scale");
+  const accessibilityTargetSizeInput = root.querySelector<HTMLSelectElement>("#accessibility-target-size");
+  const accessibilityReducedMotionInput = root.querySelector<HTMLInputElement>("#accessibility-reduced-motion");
   const homeLabelInput = root.querySelector<HTMLInputElement>("#home-label-input");
   const captureLabelInput = root.querySelector<HTMLInputElement>("#capture-label-input");
   const recordsLabelInput = root.querySelector<HTMLInputElement>("#records-label-input");
@@ -950,7 +985,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!factoryPreview || !factoryAppForm || !factoryAppStatus || !factoryAppList || !factoryGameStatus || !factoryGameBoard || !factoryGameMove || !factoryGameCollect || !factoryGamePause || !factoryGameSave || !factoryGameLoad) {
     throw new Error("Omnevum factory preview controls are missing");
   }
-  if (!familyInput) throw new Error("Omnevum presentation family control is missing");
+  if (!familyInput || !accessibilityProfileInput || !accessibilityTextScaleInput || !accessibilityTargetSizeInput || !accessibilityReducedMotionInput) throw new Error("Omnevum presentation accessibility controls are missing");
   if (!packageAutomationForm || !packageAutomationRecord || !packageAutomationDocument || !packageAutomationPreviewButton || !packageAutomationStatus || !packageAutomationList || !packageAutomationProposals) {
     throw new Error("Omnevum package-automation controls are missing");
   }
@@ -1241,9 +1276,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     root.dataset.density = presentation.density;
     root.dataset.typeface = presentation.typeface;
     root.dataset.iconography = presentation.iconography;
+    root.dataset.accessibilityProfile = presentation.accessibility.profile;
+    root.dataset.textScale = String(presentation.accessibility.textScale);
+    root.dataset.targetSize = presentation.accessibility.targetSize;
+    root.dataset.reducedMotion = String(presentation.accessibility.reducedMotion);
     document.documentElement.dataset.theme = presentation.theme;
     document.documentElement.dataset.family = presentation.family;
     document.documentElement.dataset.typeface = presentation.typeface;
+    document.documentElement.dataset.accessibilityProfile = presentation.accessibility.profile;
+    document.documentElement.dataset.textScale = String(presentation.accessibility.textScale);
+    document.documentElement.dataset.targetSize = presentation.accessibility.targetSize;
+    document.documentElement.dataset.reducedMotion = String(presentation.accessibility.reducedMotion);
     document.title = `${presentation.productName} - ${copy.productHeading}`;
     const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
     if (themeColor) themeColor.content = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() || (presentation.theme === "dark" ? "#000000" : "#f7f8fa");
@@ -1256,6 +1299,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     densityInput.value = presentation.density;
     typefaceInput.value = presentation.typeface;
     iconographyInput.value = presentation.iconography;
+    accessibilityProfileInput.value = presentation.accessibility.profile;
+    accessibilityTextScaleInput.value = String(presentation.accessibility.textScale);
+    accessibilityTargetSizeInput.value = presentation.accessibility.targetSize;
+    accessibilityReducedMotionInput.checked = presentation.accessibility.reducedMotion;
     homeLabelInput.value = presentation.labels.home;
     captureLabelInput.value = presentation.labels.capture;
     recordsLabelInput.value = presentation.labels.records;
@@ -1295,6 +1342,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   for (const container of [navigationOptions, homeWidgetOptions]) container.addEventListener("click", (event) => {
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-direction]");
     if (button) movePresentationRow(container, button);
+  });
+  accessibilityProfileInput.addEventListener("change", () => {
+    const profile = accessibilityProfileInput.value as PresentationAccessibilityProfile;
+    if (profile === "custom") return;
+    const preset = accessibilityPreset(profile);
+    accessibilityTextScaleInput.value = String(preset.textScale);
+    accessibilityTargetSizeInput.value = preset.targetSize;
+    accessibilityReducedMotionInput.checked = preset.reducedMotion;
+  });
+  for (const input of [accessibilityTextScaleInput, accessibilityTargetSizeInput, accessibilityReducedMotionInput]) input.addEventListener("change", () => {
+    if (accessibilityProfileInput.value !== "custom") accessibilityProfileInput.value = "custom";
   });
   applyPresentationProfile();
 
@@ -3148,6 +3206,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         density: densityInput.value,
         typeface: typefaceInput.value,
         iconography: iconographyInput.value,
+        accessibility: {
+          profile: accessibilityProfileInput.value,
+          textScale: Number(accessibilityTextScaleInput.value) as PresentationTextScale,
+          targetSize: accessibilityTargetSizeInput.value as PresentationTargetSize,
+          reducedMotion: accessibilityReducedMotionInput.checked
+        },
         labels: { home: homeLabelInput.value, capture: captureLabelInput.value, records: recordsLabelInput.value },
         navigation: {
           visible: readOptionVisibility<PresentationSectionId>(navigationOptions),

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_PRESENTATION, isPresentationProfile, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile } from "./presentation";
+import { accessibilityPreset, DEFAULT_PRESENTATION, isPresentationProfile, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile } from "./presentation";
 import { CanonicalStore } from "./storage";
 
 describe("presentation profile", () => {
@@ -23,6 +23,14 @@ describe("presentation profile", () => {
     expect(parsePresentationProfile({ productName: "Gamma", family: "neon" })).toMatchObject({ family: "gamma" });
     expect(isPresentationProfile({ ...DEFAULT_PRESENTATION, family: "alpha" })).toBe(true);
     expect(isPresentationProfile({ ...DEFAULT_PRESENTATION, family: "neon" } as unknown)).toBe(false);
+  });
+
+  it("supports named accessibility profiles with independently persisted settings", () => {
+    expect(accessibilityPreset("low-vision")).toMatchObject({ profile: "low-vision", textScale: 1.5, targetSize: "large", reducedMotion: false });
+    expect(parsePresentationProfile({ productName: "Accessible", accessibility: { profile: "motor-large-target", textScale: 2, targetSize: "large", reducedMotion: true } })).toMatchObject({ accessibility: { profile: "motor-large-target", textScale: 2, targetSize: "large", reducedMotion: true } });
+    expect(parsePresentationProfile({ productName: "Custom", accessibility: { profile: "custom", textScale: 1.25, targetSize: "standard", reducedMotion: false } })).toMatchObject({ accessibility: { profile: "custom", textScale: 1.25, targetSize: "standard", reducedMotion: false } });
+    expect(isPresentationProfile({ ...DEFAULT_PRESENTATION, accessibility: { profile: "custom", textScale: 2, targetSize: "large", reducedMotion: true } })).toBe(true);
+    expect(isPresentationProfile({ ...DEFAULT_PRESENTATION, accessibility: { profile: "standard", textScale: 3, targetSize: "standard", reducedMotion: false } } as unknown)).toBe(false);
   });
 
   it("never accepts an empty custom name or arbitrary theme", () => {
