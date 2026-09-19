@@ -583,6 +583,7 @@ describe("CanonicalStore", () => {
     await store.open();
     await store.setSetting("presentation", { productName: "JohnOS" });
     await store.setPackageState({ packageId: "preview.constellation", schemaVersion: 1, state: { tick: 3 } });
+    await store.setAutomationRules([automationRule()]);
     const original = record("record-clear");
     await store.put(original);
       await store.enqueueEffect({ operationId: "effect-clear", owner: "platform.test", originatingCommand: "test.command", purpose: "test", destination: "test://destination", payloadOrReference: { value: "safe" }, idempotencyKey: "effect-clear-idempotency", createdAt: new Date().toISOString(), status: "PENDING", retryCount: 0, retryPolicy: { maxAttempts: 3, backoffSeconds: 1 }, evidence: [] });
@@ -592,6 +593,7 @@ describe("CanonicalStore", () => {
     expect(await store.listEffects()).toEqual([]);
     expect(await store.getSetting("presentation")).toEqual({ productName: "JohnOS" });
     expect(await store.listPackageStates()).toEqual([]);
+    expect(await store.getAutomationRules()).toEqual([]);
     store.close();
   });
 

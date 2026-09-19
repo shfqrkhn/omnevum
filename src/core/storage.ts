@@ -290,6 +290,7 @@ export class CanonicalStore {
     transaction.objectStore(EFFECT_STORE).clear();
     const settingsStore = transaction.objectStore(SETTINGS_STORE);
     packageSettingIds.forEach((id) => settingsStore.delete(id));
+    settingsStore.delete(AUTOMATION_RULES_SETTING_ID);
     try {
       await transactionDone(transaction);
     } catch (error) {
