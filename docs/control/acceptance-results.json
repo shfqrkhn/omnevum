@@ -789,8 +789,16 @@
         "line": 4012
       },
       "text": "A large Vault uses qualified incremental repository mode to create two coherent snapshots with deduplication/chunk reuse, interrupt/resume an upload, verify integrity, prune unreachable data safely, and restore the selected snapshot through a different qualified transport without changing canonical IDs. The same product also supports a simple portable archive for a small Vault.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/incremental-repository.ts",
+        "src/core/incremental-repository.test.ts",
+        "src/core/portable-export.ts",
+        "src/core/vault.ts",
+        "docs/control/capability-coverage.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-incremental-repository-contract-receipt"
+      ],
+      "notes": "The bounded content-addressed repository contract creates coherent Vault manifests, reuses identical chunks, resumes interrupted uploads, verifies chunk and full-content integrity, prunes only unreachable snapshots/chunks while retaining active uploads, and restores canonical records through the existing Vault validator. The small portable archive remains available. Browser quota/eviction, a real large-Vault workload, a different qualified transport, and deployment/target/human acceptance remain open."
     },
     {
       "id": "OMN-ACC-044",
