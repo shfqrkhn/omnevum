@@ -63,7 +63,8 @@
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-hard-clear-removes-persisted-automation-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-hard-clear-explicit-effect-and-reversibility-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-service-worker-updaterollbackoffline-receipt",
-    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-edge-compact-default-receipt"
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-edge-compact-default-receipt",
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-recipient-eye-bounded-share-preview-receipt"
   ],
   "focus": [
     "static-host shell and base-path routing",

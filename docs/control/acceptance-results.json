@@ -1942,8 +1942,11 @@
         "line": 4174
       },
       "text": "A bounded share is constructed with every linked record, artifact, relationship, and history element defaulting to excluded and each inclusion stating its transitive consequence. The unskippable recipient-eye preview renders exactly what leaves the system, explicitly names what is excluded, and the exported payload matches the preview in content. Credentials, AI authority, and out-of-scope linked records do not leak.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-recipient-eye-bounded-share-preview-receipt"
+      ],
+      "notes": "The exact current artifact stages the authorized ShareProjection in an unskippable recipient-eye dialog, reports included/selected/omitted counts, names default exclusions, clears on cancel, and uses the same serializer for preview and download. Chromium browser proof covered default private exclusion, explicit private inclusion, cancel, confirmation, and local downloaded-payload readback with secrets/provenance scrubbed. The full individually configurable transitive scope builder for artifacts/relationships/history, remote delivery, other targets, accessibility/input breadth, deployment, native faults, and human acceptance remains open."
     },
     {
       "id": "OMN-ACC-125",
