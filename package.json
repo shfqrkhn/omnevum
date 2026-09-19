@@ -15,6 +15,7 @@
     "benchmark:fresh-agent": "node scripts/fresh-agent-resume-benchmark.mjs",
     "benchmark:factory": "vitest run src/core/factory.test.ts",
     "benchmark:factory-interruption": "node scripts/factory-interruption-benchmark.mjs",
+    "benchmark:ordinary-use": "node scripts/ordinary-use-benchmark.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -28,7 +29,7 @@
     "audit:licenses": "node scripts/license-audit.mjs",
     "audit:security": "npm audit --audit-level=high",
     "audit:drift": "npm run generate:control && git diff --exit-code -- docs/control",
-    "ci": "npm run generate:control && npm run audit:structure && npm run audit:references && npm run audit:acceptance && npm run audit:architecture && npm run audit:licenses && npm run audit:security && npm run typecheck && npm test && npm run build && npm run audit:static && npm run audit:recovery && npm run audit:drift && git diff --check"
+    "ci": "npm run generate:control && npm run audit:structure && npm run audit:references && npm run audit:acceptance && npm run benchmark:ordinary-use && npm run audit:architecture && npm run audit:licenses && npm run audit:security && npm run typecheck && npm test && npm run build && npm run audit:static && npm run audit:recovery && npm run audit:drift && git diff --check"
   },
   "devDependencies": {
     "@types/node": "26.6.1",
