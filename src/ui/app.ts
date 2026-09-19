@@ -6,6 +6,7 @@ import { isCompletedTask, isSpaceId, proposeTriage, recordSpace, recordText, rec
 import { captureKindLabel, formatDateTime, formatNumber, getDeviceInputCopy, getInstalledMetadataStatus, getRecoveryCopy, getStoragePersistenceNotice, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CanonicalRecord, type CaptureKind } from "../core/model";
 import { accessibilityPreset, DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_LENS_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationAccessibilityProfile, type PresentationFamily, type PresentationHomeWidgetId, type PresentationLensId, type PresentationProfile, type PresentationSectionId, type PresentationTargetSize, type PresentationTextScale } from "../core/presentation";
+import { PRESENTATION_LENS_DEFINITIONS, lensIdsForRecord, projectLensRecords } from "../core/lenses";
 import { TrackService } from "../core/track";
 import { makeReminderData } from "../core/time";
 import { projectDueReminderConsiderations } from "../core/considerations";
@@ -39,17 +40,6 @@ import { isCleanupHistoryRecord, previewCleanup, reconstructCleanupHistory, type
 import { CORE_AUTOMATION_PACKAGE, type PackageAutomationRuntime } from "../core/package-automation-runtime";
 import type { PackageAutomationProposal } from "../core/package-automation-registry";
 import { shouldAutoShowOnboarding } from "../core/onboarding";
-
-const PRESENTATION_LENS_LABELS: Record<PresentationLensId, string> = {
-  direction: "Direction",
-  people: "People",
-  self: "Self",
-  resources: "Resources",
-  work: "Work",
-  environment: "Environment",
-  knowledge: "Knowledge",
-  change: "Change"
-};
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -197,13 +187,44 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <div class="section-heading">
           <div>
             <p id="active-lens-label" class="eyebrow">${copy.lenses}</p>
-            <h2 id="active-lens-heading">${PRESENTATION_LENS_LABELS[presentation.activeLens]}</h2>
+            <h2 id="active-lens-heading">${PRESENTATION_LENS_DEFINITIONS[presentation.activeLens].label}</h2>
           </div>
           <span id="active-lens-status" class="status-pill">${copy.lensPinned}</span>
         </div>
         <p id="active-lens-hint" class="hint">${copy.lensHint}</p>
         <ul id="active-lens-records" class="record-list"></ul>
       </section>
+
+      <dialog id="record-detail-dialog" aria-labelledby="record-detail-heading" aria-describedby="record-detail-context">
+        <div class="record-detail-content">
+          <p id="record-detail-context" class="eyebrow"></p>
+          <h2 id="record-detail-heading">${copy.recordDetail}</h2>
+          <p id="record-detail-text" class="record-detail-lede"></p>
+          <nav id="record-detail-segments" class="detail-segment-bar" aria-label="${copy.recordDetail}">
+            <button type="button" class="secondary" data-detail-segment="overview" aria-selected="true">${copy.recordOverview}</button>
+            <button type="button" class="secondary" data-detail-segment="relationships" aria-selected="false">${copy.recordRelationships}</button>
+            <button type="button" class="secondary" data-detail-segment="evidence" aria-selected="false">${copy.recordEvidence}</button>
+            <button type="button" class="secondary" data-detail-segment="history" aria-selected="false">${copy.historyHeading}</button>
+          </nav>
+          <section id="record-detail-overview" class="record-detail-segment" data-detail-panel="overview" aria-labelledby="record-detail-overview-heading">
+            <h3 id="record-detail-overview-heading">${copy.recordOverview}</h3>
+            <dl id="record-detail-metadata" class="record-detail-metadata"></dl>
+          </section>
+          <section id="record-detail-relationships" class="record-detail-segment" data-detail-panel="relationships" aria-labelledby="record-detail-relationships-heading" hidden>
+            <h3 id="record-detail-relationships-heading">${copy.recordRelationships}</h3>
+            <ul id="record-detail-relationship-list" class="record-list"></ul>
+          </section>
+          <section id="record-detail-evidence" class="record-detail-segment" data-detail-panel="evidence" aria-labelledby="record-detail-evidence-heading" hidden>
+            <h3 id="record-detail-evidence-heading">${copy.recordEvidence}</h3>
+            <ul id="record-detail-evidence-list" class="record-list"></ul>
+          </section>
+          <section id="record-detail-history" class="record-detail-segment" data-detail-panel="history" aria-labelledby="record-detail-history-heading" hidden>
+            <h3 id="record-detail-history-heading">${copy.historyHeading}</h3>
+            <ol id="record-detail-history-list" class="record-detail-history"></ol>
+          </section>
+          <button id="record-detail-close" class="secondary" type="button">${copy.closeRecord}</button>
+        </div>
+      </dialog>
 
       <section id="presentation" class="panel" aria-labelledby="presentation-heading">
         <p class="eyebrow">${copy.personalization}</p>
@@ -1005,6 +1026,16 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const activeLensHint = root.querySelector<HTMLElement>("#active-lens-hint");
   const activeLensRecords = root.querySelector<HTMLUListElement>("#active-lens-records");
   const lensPinOptions = root.querySelector<HTMLElement>("#lens-pin-options");
+  const recordDetailDialog = root.querySelector<HTMLDialogElement>("#record-detail-dialog");
+  const recordDetailContext = root.querySelector<HTMLElement>("#record-detail-context");
+  const recordDetailHeading = root.querySelector<HTMLElement>("#record-detail-heading");
+  const recordDetailText = root.querySelector<HTMLElement>("#record-detail-text");
+  const recordDetailMetadata = root.querySelector<HTMLDListElement>("#record-detail-metadata");
+  const recordDetailRelationshipList = root.querySelector<HTMLUListElement>("#record-detail-relationship-list");
+  const recordDetailEvidenceList = root.querySelector<HTMLUListElement>("#record-detail-evidence-list");
+  const recordDetailHistoryList = root.querySelector<HTMLOListElement>("#record-detail-history-list");
+  const recordDetailClose = root.querySelector<HTMLButtonElement>("#record-detail-close");
+  const recordDetailSegments = root.querySelector<HTMLElement>("#record-detail-segments");
   const homeLabel = root.querySelector<HTMLElement>("#home-label");
   const recordsLabel = root.querySelector<HTMLElement>("#records-label");
   const presentationForm = root.querySelector<HTMLFormElement>("#presentation-form");
@@ -1075,6 +1106,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   }
   if (!lensNavList || !lensOverflowToggle || !lensOverflowDialog || !lensOverflowGrid || !lensOverflowClose || !lensNavStatus || !activeLensHeading || !activeLensStatus || !activeLensHint || !activeLensRecords || !lensPinOptions) {
     throw new Error("Omnevum lens navigation controls are missing");
+  }
+  if (!recordDetailDialog || !recordDetailContext || !recordDetailHeading || !recordDetailText || !recordDetailMetadata || !recordDetailRelationshipList || !recordDetailEvidenceList || !recordDetailHistoryList || !recordDetailClose || !recordDetailSegments) {
+    throw new Error("Omnevum record detail controls are missing");
   }
   if (!familyInput || !accessibilityProfileInput || !accessibilityTextScaleInput || !accessibilityTargetSizeInput || !accessibilityReducedMotionInput) throw new Error("Omnevum presentation accessibility controls are missing");
   if (!packageAutomationForm || !packageAutomationRecord || !packageAutomationDocument || !packageAutomationPreviewButton || !packageAutomationStatus || !packageAutomationList || !packageAutomationProposals) {
@@ -1336,7 +1370,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       checkbox.checked = presentation.lensPins.includes(id);
       checkbox.value = id;
       checkbox.dataset.presentationLensPin = "true";
-      label.append(checkbox, document.createTextNode(PRESENTATION_LENS_LABELS[id]));
+      label.append(checkbox, document.createTextNode(PRESENTATION_LENS_DEFINITIONS[id].label));
       row.append(label);
       lensPinOptions.append(row);
     }
@@ -1352,7 +1386,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       button.type = "button";
       button.className = "secondary lens-nav-button";
       button.dataset.lensId = id;
-      button.textContent = PRESENTATION_LENS_LABELS[id];
+      button.textContent = PRESENTATION_LENS_DEFINITIONS[id].label;
       button.setAttribute("aria-current", id === presentation.activeLens ? "page" : "false");
       item.append(button);
       lensNavList.append(item);
@@ -1363,17 +1397,104 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       button.type = "button";
       button.className = "secondary lens-grid-button";
       button.dataset.lensId = id;
-      button.textContent = PRESENTATION_LENS_LABELS[id];
+      button.textContent = PRESENTATION_LENS_DEFINITIONS[id].label;
       button.setAttribute("aria-current", id === presentation.activeLens ? "page" : "false");
       lensOverflowGrid.append(button);
     }
     lensNavStatus.textContent = `${copy.lensHint} ${barLensIds.length} visible in the bar; ${PRESENTATION_LENS_IDS.length} available in ${copy.lensOverflow.toLowerCase()}.`;
   };
+  const setRecordDetailSegment = (segment: string): void => {
+    for (const button of recordDetailSegments.querySelectorAll<HTMLButtonElement>("button[data-detail-segment]")) {
+      const selected = button.dataset.detailSegment === segment;
+      button.setAttribute("aria-selected", String(selected));
+    }
+    for (const panel of recordDetailDialog.querySelectorAll<HTMLElement>("[data-detail-panel]")) panel.hidden = panel.dataset.detailPanel !== segment;
+  };
+  const openRecordDetail = async (recordId: string, lensId: PresentationLensId = presentation.activeLens): Promise<void> => {
+    const record = await store.get(recordId, true);
+    if (!record) return;
+    const allRecords = await store.list(true);
+    const recordLensIds = lensIdsForRecord(record);
+    const contextLens = recordLensIds.includes(lensId) ? lensId : (recordLensIds[0] ?? lensId);
+    const definition = PRESENTATION_LENS_DEFINITIONS[contextLens];
+    recordDetailContext.textContent = `${copy.lenses} / ${definition.label} / ${record.owner}`;
+    recordDetailHeading.textContent = `${typeLabel(record.recordType)} · revision ${record.revision}`;
+    recordDetailText.textContent = recordText(record);
+    recordDetailMetadata.replaceChildren();
+    const metadata: Array<[string, string]> = [
+      [copy.recordIdLabel, record.id],
+      [copy.recordOwnerLabel, record.owner],
+      [copy.recordTruthLabel, record.truthClass],
+      [copy.recordSensitivityLabel, record.sensitivity],
+      [copy.recordProvenanceLabel, `${record.provenance.source}${record.provenance.sourceId ? ` / ${record.provenance.sourceId}` : ""}`]
+    ];
+    for (const [label, value] of metadata) {
+      const term = document.createElement("dt");
+      term.textContent = label;
+      const description = document.createElement("dd");
+      description.textContent = value;
+      recordDetailMetadata.append(term, description);
+    }
+    const related = allRecords.filter((candidate) => !candidate.deleted && candidate.recordType === "relationship" && (candidate.data.sourceId === record.id || candidate.data.targetId === record.id));
+    recordDetailRelationshipList.replaceChildren();
+    if (related.length === 0) {
+      const empty = document.createElement("li");
+      empty.className = "empty-state";
+      empty.textContent = copy.noRecordRelationships;
+      recordDetailRelationshipList.append(empty);
+    } else {
+      for (const relationship of related) {
+        const item = document.createElement("li");
+        item.className = "record-item";
+        const otherId = relationship.data.sourceId === record.id ? relationship.data.targetId : relationship.data.sourceId;
+        const relation = typeof relationship.data.relation === "string" ? relationship.data.relation : "related";
+        const label = document.createElement("span");
+        label.textContent = `${relation} · ${typeof otherId === "string" ? otherId : "unknown"}`;
+        item.append(label);
+        if (typeof otherId === "string") {
+          const open = document.createElement("button");
+          open.type = "button";
+          open.className = "secondary";
+          open.dataset.detailRecordId = otherId;
+          open.textContent = copy.openRecord;
+          item.append(open);
+        }
+        recordDetailRelationshipList.append(item);
+      }
+    }
+    const evidence = allRecords.filter((candidate) => !candidate.deleted && ((candidate.owner === "platform.evidence" && (candidate.data.subjectId === record.id || candidate.data.sourceId === record.id)) || (candidate.owner === "platform.annotate" && candidate.data.sourceId === record.id)));
+    recordDetailEvidenceList.replaceChildren();
+    if (evidence.length === 0) {
+      const empty = document.createElement("li");
+      empty.className = "empty-state";
+      empty.textContent = copy.noRecordEvidence;
+      recordDetailEvidenceList.append(empty);
+    } else {
+      for (const evidenceRecord of evidence) {
+        const item = document.createElement("li");
+        item.className = "record-item";
+        const text = document.createElement("span");
+        text.textContent = `${evidenceRecord.owner} · ${recordText(evidenceRecord)}`;
+        item.append(text);
+        recordDetailEvidenceList.append(item);
+      }
+    }
+    const entries = await historyWithDiffs(store, record.id);
+    recordDetailHistoryList.replaceChildren();
+    for (const entry of entries) {
+      const item = document.createElement("li");
+      const changes = entry.changesFromPrevious.length > 0 ? entry.changesFromPrevious.map((change) => change.path).join(", ") : "initial";
+      item.textContent = copy.historyEntry(entry.revision, formatDateTime(presentation.locale, entry.recordedAt), changes);
+      recordDetailHistoryList.append(item);
+    }
+    setRecordDetailSegment("overview");
+    recordDetailDialog.showModal();
+  };
   const renderActiveLens = async (): Promise<void> => {
-    activeLensHeading.textContent = PRESENTATION_LENS_LABELS[presentation.activeLens];
+    activeLensHeading.textContent = PRESENTATION_LENS_DEFINITIONS[presentation.activeLens].label;
     activeLensStatus.textContent = presentation.lensPins.includes(presentation.activeLens) ? copy.lensPinned : copy.lensActive;
     activeLensHint.textContent = copy.lensHint;
-    const records = (await store.list()).filter((record) => !record.deleted).slice(0, 20);
+    const records = projectLensRecords(await store.list(), presentation.activeLens).slice(0, 20);
     activeLensRecords.replaceChildren();
     if (records.length === 0) {
       const empty = document.createElement("li");
@@ -1385,7 +1506,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     for (const record of records) {
       const item = document.createElement("li");
       item.className = "record-item";
-      item.textContent = `${record.recordType} - ${recordText(record).slice(0, 160)}`;
+      const text = document.createElement("span");
+      text.textContent = `${record.recordType} - ${recordText(record).slice(0, 160)}`;
+      const open = document.createElement("button");
+      open.type = "button";
+      open.className = "secondary";
+      open.dataset.lensRecordId = record.id;
+      open.textContent = copy.openRecord;
+      item.append(text, open);
       activeLensRecords.append(item);
     }
   };
@@ -1545,7 +1673,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   };
   const activateLens = async (id: PresentationLensId): Promise<void> => {
     try {
-      await persistPresentation(parsePresentationProfile({ ...presentation, activeLens: id }), copy.savedName(PRESENTATION_LENS_LABELS[id]));
+      await persistPresentation(parsePresentationProfile({ ...presentation, activeLens: id }), copy.savedName(PRESENTATION_LENS_DEFINITIONS[id].label));
       if (lensOverflowDialog.open) lensOverflowDialog.close();
       document.querySelector<HTMLElement>("#active-lens")?.scrollIntoView({ block: "start" });
     } catch (error) {
@@ -1571,6 +1699,19 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const id = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-lens-id]")?.dataset.lensId as PresentationLensId | undefined;
     if (id) void activateLens(id);
   });
+  activeLensRecords.addEventListener("click", (event) => {
+    const recordId = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-lens-record-id]")?.dataset.lensRecordId;
+    if (recordId) void openRecordDetail(recordId, presentation.activeLens);
+  });
+  recordDetailSegments.addEventListener("click", (event) => {
+    const segment = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-detail-segment]")?.dataset.detailSegment;
+    if (segment) setRecordDetailSegment(segment);
+  });
+  recordDetailDialog.addEventListener("click", (event) => {
+    const recordId = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-detail-record-id]")?.dataset.detailRecordId;
+    if (recordId) void openRecordDetail(recordId, presentation.activeLens);
+  });
+  recordDetailClose.addEventListener("click", () => recordDetailDialog.close());
   lensOverflowToggle.addEventListener("click", () => lensOverflowDialog.showModal());
   lensOverflowClose.addEventListener("click", () => lensOverflowDialog.close());
   accessibilityProfileInput.addEventListener("change", () => {
@@ -2955,6 +3096,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       content.append(title, text, meta);
       const history = await renderHistory(record);
       if (history) content.append(history);
+      const open = document.createElement("button");
+      open.type = "button";
+      open.className = "secondary";
+      open.textContent = copy.openRecord;
+      open.addEventListener("click", () => { void openRecordDetail(record.id); });
+      content.append(open);
       if (record.recordType === "task" && !isCompletedTask(record)) {
         const complete = document.createElement("button");
         complete.type = "button";
@@ -3011,6 +3158,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     await renderShareChoices();
     await renderShareGrants();
     await renderCleanupHistory();
+    await renderActiveLens();
     const healthBefore = await store.health();
     if (!healthBefore.searchIndexValid) {
       await store.rebuildSearchIndex();

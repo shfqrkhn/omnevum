@@ -220,6 +220,16 @@ select[multiple] { min-height: 9rem; }
 .history-details { margin-top: 0.6rem; color: var(--muted); font-size: 0.82rem; }
 .history-details summary { cursor: pointer; color: var(--accent); font-weight: 700; }
 .history-details ol { margin: 0.45rem 0 0; padding-left: 1.25rem; }
+.record-detail-content { display: grid; gap: 0.8rem; min-width: 0; }
+.record-detail-lede { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.detail-segment-bar { position: sticky; top: 0; z-index: 1; display: flex; flex-wrap: wrap; gap: 0.45rem; padding: 0.35rem 0; background: var(--surface); }
+.detail-segment-bar button[aria-selected="true"] { border-color: var(--accent-strong); box-shadow: 0 0 0 2px color-mix(in srgb, var(--focus) 35%, transparent); }
+.record-detail-segment { min-width: 0; }
+.record-detail-metadata { display: grid; grid-template-columns: minmax(7rem, 0.45fr) minmax(0, 1fr); gap: 0.45rem 0.8rem; margin: 0; }
+.record-detail-metadata dt { color: var(--muted); font-weight: 700; overflow-wrap: anywhere; }
+.record-detail-metadata dd { margin: 0; overflow-wrap: anywhere; }
+.record-detail-history { display: grid; gap: 0.55rem; margin: 0; padding-left: 1.35rem; }
+.record-detail-history li { overflow-wrap: anywhere; }
 .icon-button { min-width: 44px; min-height: 44px; padding: 0.45rem 0.7rem; background: transparent; border-color: var(--line); color: var(--danger); font-size: 0.82rem; }
 .icon-button:hover { background: var(--surface-muted); }
 .complete-button { color: var(--accent); }

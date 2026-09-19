@@ -4,7 +4,7 @@ import type { TriageStatus } from "./domain";
 
 export interface UiCopy {
   productHeading: string; foundation: string; lede: string; system: string; ready: string; local: string; healthInitial: string; healthy: string; degraded: string;
-  home: string; currentPicture: string; activeRecordCount: string; visualize: string; signals: string; openTasks: string; completedTasks: string; focusMinutes: string; relationships: string; personalization: string; makeItYours: string; lenses: string; lensOverflow: string; lensHint: string; lensPinned: string; lensActive: string; lensNoRecords: string; onboardingHeading: string; onboardingHint: string; onboardingCapture: string; onboardingReview: string; onboardingRecovery: string; onboardingStart: string; onboardingDismiss: string; onboardingShow: string;
+  home: string; currentPicture: string; activeRecordCount: string; visualize: string; signals: string; openTasks: string; completedTasks: string; focusMinutes: string; relationships: string; personalization: string; makeItYours: string; lenses: string; lensOverflow: string; lensHint: string; lensPinned: string; lensActive: string; lensNoRecords: string; openRecord: string; closeRecord: string; recordDetail: string; recordOverview: string; recordRelationships: string; recordEvidence: string; noRecordRelationships: string; noRecordEvidence: string; recordIdLabel: string; recordOwnerLabel: string; recordTruthLabel: string; recordSensitivityLabel: string; recordProvenanceLabel: string; onboardingHeading: string; onboardingHint: string; onboardingCapture: string; onboardingReview: string; onboardingRecovery: string; onboardingStart: string; onboardingDismiss: string; onboardingShow: string;
   derivedStatus: (records: number, sourceIds: number, groups: number) => string;
   appName: string; language: string; english: string; french: string; save: string; presentationHint: string; tagline: string; density: string; comfortable: string; compact: string; typeface: string; systemTypeface: string; serifTypeface: string; monoTypeface: string; iconography: string; labelIconography: string; glyphIconography: string; homeLabel: string; captureLabel: string; recordsLabel: string; navigationSections: string; navigationHint: string; homeWidgets: string; homeWidgetsHint: string; resetPresentation: string; exportPresentationProfile: string; importPresentationProfile: string; presentationProfileExported: string; presentationProfileImported: string; editLabel: string; labelRequired: string; pinSection: (label: string) => string; unpinSection: (label: string) => string;
   capture: string; getItOut: string; kind: string; note: string; task: string; observation: string; space: string; acquireHeading: string; stageImport: string; acquireFile: string; readClipboard: string; acceptStaged: string; acquirePlaceholder: string; acquireHint: string; stagedMessage: (count: number, warnings: number) => string; cleanupHeading: string; cleanupHint: string; cleanupImportedOnly: string; cleanupTrim: string; cleanupWhitespace: string; cleanupPreview: string; cleanupApply: string; cleanupStatus: (records: number, sources: number, proposals: number) => string; cleanupEmpty: string; cleanupTransform: string; cleanupDuplicate: string; cleanupAmbiguous: string; cleanupArchive: string; cleanupMarkReview: string; cleanupApplied: (updated: number, archived: number, review: number) => string; cleanupHistory: string; cleanupHistoryEmpty: string; cleanupHistoryEntry: (recipe: string, acceptedAt: string, inputs: number, updated: number, archived: number, review: number, chunks: number) => string;
@@ -138,22 +138,48 @@ const presentationQuickFrench: Pick<UiCopy, "editLabel" | "labelRequired" | "pin
   unpinSection: (label) => `Desepingler ${label}`
 };
 
-const presentationLensEnglish: Pick<UiCopy, "lenses" | "lensOverflow" | "lensHint" | "lensPinned" | "lensActive" | "lensNoRecords"> = {
+const presentationLensEnglish: Pick<UiCopy, "lenses" | "lensOverflow" | "lensHint" | "lensPinned" | "lensActive" | "lensNoRecords" | "openRecord" | "closeRecord" | "recordDetail" | "recordOverview" | "recordRelationships" | "recordEvidence" | "noRecordRelationships" | "noRecordEvidence" | "recordIdLabel" | "recordOwnerLabel" | "recordTruthLabel" | "recordSensitivityLabel" | "recordProvenanceLabel"> = {
   lenses: "Lenses",
   lensOverflow: "All lenses",
   lensHint: "Lenses are projection paths over canonical records; pinning changes presentation only.",
   lensPinned: "Pinned lenses",
   lensActive: "Active from overflow",
-  lensNoRecords: "No records are currently projected here. Capture or retrieve a canonical record to populate this lens."
+  lensNoRecords: "No records are currently projected here. Capture or retrieve a canonical record to populate this lens.",
+  openRecord: "Open record",
+  closeRecord: "Close record",
+  recordDetail: "Canonical record detail",
+  recordOverview: "Overview",
+  recordRelationships: "Relationships",
+  recordEvidence: "Evidence",
+  noRecordRelationships: "No linked relationship records are available.",
+  noRecordEvidence: "No linked evidence or annotation records are available.",
+  recordIdLabel: "Canonical ID",
+  recordOwnerLabel: "Owner",
+  recordTruthLabel: "Truth class",
+  recordSensitivityLabel: "Sensitivity",
+  recordProvenanceLabel: "Provenance"
 };
 
-const presentationLensFrench: Pick<UiCopy, "lenses" | "lensOverflow" | "lensHint" | "lensPinned" | "lensActive" | "lensNoRecords"> = {
+const presentationLensFrench: Pick<UiCopy, "lenses" | "lensOverflow" | "lensHint" | "lensPinned" | "lensActive" | "lensNoRecords" | "openRecord" | "closeRecord" | "recordDetail" | "recordOverview" | "recordRelationships" | "recordEvidence" | "noRecordRelationships" | "noRecordEvidence" | "recordIdLabel" | "recordOwnerLabel" | "recordTruthLabel" | "recordSensitivityLabel" | "recordProvenanceLabel"> = {
   lenses: "Lentilles",
   lensOverflow: "Toutes les lentilles",
   lensHint: "Les lentilles sont des projections des dossiers canoniques; l'epinglage ne change que la presentation.",
   lensPinned: "Lentilles epinglees",
   lensActive: "Active depuis le debordement",
-  lensNoRecords: "Aucun dossier n'est actuellement projete ici. Capturez ou retrouvez un dossier canonique pour remplir cette lentille."
+  lensNoRecords: "Aucun dossier n'est actuellement projete ici. Capturez ou retrouvez un dossier canonique pour remplir cette lentille.",
+  openRecord: "Ouvrir le dossier",
+  closeRecord: "Fermer le dossier",
+  recordDetail: "Detail du dossier canonique",
+  recordOverview: "Apercu",
+  recordRelationships: "Relations",
+  recordEvidence: "Preuves",
+  noRecordRelationships: "Aucune relation liee n'est disponible.",
+  noRecordEvidence: "Aucune preuve ou annotation liee n'est disponible.",
+  recordIdLabel: "Identifiant canonique",
+  recordOwnerLabel: "Proprietaire",
+  recordTruthLabel: "Classe de verite",
+  recordSensitivityLabel: "Sensibilite",
+  recordProvenanceLabel: "Provenance"
 };
 
 const english: UiCopy = {
