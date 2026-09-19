@@ -1721,9 +1721,10 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-canonical-lens-projection-and-detail-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-degraded-index-detail-and-explicit-repair-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-degraded-index-detail-and-explicit-repair-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-strict-detail-geometry-receipt"
       ],
-      "notes": "Current Chromium receipts prove a shared detail surface with continuous Overview, Relationships, Evidence, and History segments, provenance/owner/ID metadata, navigable relationship references, revision history, deliberate derived-index degradation, and explicit repair without canonical mutation. Edit-path breadth while degraded, sticky in-view announcements beyond the exercised controls, strict target geometry, other engines, assistive technology, deployment, and human acceptance remain open."
+      "notes": "Current Chromium receipts prove a shared detail surface with continuous Overview, Relationships, Evidence, and History segments, provenance/owner/ID metadata, navigable relationship references, revision history, deliberate derived-index degradation, explicit repair without canonical mutation, and the exercised 320px/200% detail geometry with aria-selected segment state. Edit-path breadth while degraded, sticky in-view announcements beyond the exercised controls, independent-target separation, other engines, assistive technology, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-113",
@@ -1927,9 +1928,10 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-narrow-geometry-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-accessibility-profile-and-scaled-layout-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-strict-detail-geometry-receipt"
       ],
-      "notes": "All six family/mode combinations were exercised at a strict 320x844 viewport and a temporary 2x page-scale rehearsal; the accessibility receipt additionally exercises large-target 125% and explicit 200% text scale. The current runs had no page/body horizontal overflow, no horizontal target clipping, no consequential target below 44x44, and the same canonical sentinel. Physical touch/input profiles, color-only state/CVD, alternate mutation paths, other engines, and human acceptance remain open."
+      "notes": "All six family/mode combinations were exercised at a strict 320x844 viewport and a temporary 2x page-scale rehearsal; the accessibility receipt additionally exercises large-target 125% and explicit 200% text scale, and the detail receipt measures the canonical detail surface at 320px/200% with no page overflow. The current runs had no page/body horizontal overflow, no horizontal target clipping, no consequential target below 44x44, and the same canonical sentinel. Physical touch/input profiles, color-only state/CVD, alternate mutation paths, other engines, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-132",

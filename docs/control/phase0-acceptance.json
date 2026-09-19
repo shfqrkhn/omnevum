@@ -39,7 +39,8 @@
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-compact-lens-overflow-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-canonical-lens-projection-and-detail-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-bounded-archive-undo-and-hard-clear-impact-receipt",
-    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-degraded-index-detail-and-explicit-repair-receipt"
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-degraded-index-detail-and-explicit-repair-receipt",
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-strict-detail-geometry-receipt"
   ],
   "focus": [
     "static-host shell and base-path routing",

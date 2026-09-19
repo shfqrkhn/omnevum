@@ -1280,6 +1280,12 @@ The record's visible `Open record` action opened the shared detail dialog while 
 
 This advances `OMN-ACC-112` with receipt-bound deliberate degradation, continuous detail reachability, and explicit derived-state repair on current Chromium. It does not qualify every edit path while degraded, sticky in-view announcements beyond the exercised segment controls, strict 320px detail geometry, browser-family breadth, assistive technology, physical touch, deployment, or human acceptance; `OMN-ACC-112` remains `PARTIAL`.
 
+## Current v0.17.4 Chromium strict detail geometry receipt
+
+On 2026-09-19, the same exact artifact (`023aae6`, digest `b6ea9484f1dddc4acdae983e97fb17e8b3d54a2fe1846e8d151f8bafebef9148`, worker `omnevum-shell-4fdfa76168ce468e`) was exercised at an emulated Chromium viewport of `320x844`. The canonical detail dialog opened from the Records surface at a degraded-index-repaired origin with a `266.67px` dialog width; page and body scroll widths were both `305px`, so no page-level horizontal overflow occurred. Overview, Relationships, Evidence, and Revision history segment buttons all remained present, each measured at least `44px` high, and clicking Relationships set the app-owned `aria-selected=true` state while exposing the corresponding panel.
+
+The same detail path was repeated after selecting the visible `200%` text-scale profile. Page/body scroll widths remained `305px`, the detail remained `266.67px` wide, and all segment/close controls remained visible with no horizontal overflow. The temporary viewport and scale overrides were reset afterward. This qualifies the exercised detail geometry and segment navigation at 320 CSS pixels and 200% text scale on current Chromium; it does not qualify every primary surface, lens/domain content shape, independent-target separation/lower-half placement, browser-family breadth, assistive technology, physical touch, deployment, or human acceptance; `OMN-ACC-112` and `OMN-ACC-131` remain `PARTIAL`.
+
 ## Current v0.17.4 Chromium bounded archive undo and hard-clear impact receipt
 
 On 2026-09-19, the current built artifact at source revision `79cd0de` was served from `dist/` at `http://127.0.0.1:4329/` in a fresh Chromium origin. `docs/control/release-evidence.json` binds it to artifact digest `8c8ffca20e76175ea8dd2b355ba59769274e7ead8097ffb560d39a613d006a42` and service-worker cache `omnevum-shell-64d0e3934748aa31`.
