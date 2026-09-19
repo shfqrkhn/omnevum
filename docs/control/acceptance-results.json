@@ -1349,8 +1349,14 @@
         "line": 4072
       },
       "text": "A user with an eligible paid AI subscription enables a provider-supported subscription route through the official SDK/agent/CLI or a qualified local companion without entering an API key. An Omnevum workflow uses only the authorized context projection, the result is marked DERIVED with route/provenance, and disabling the companion leaves all non-AI/core functions intact.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/ai.ts",
+        "src/core/ai-route-policy.ts#evaluateSubscriptionRoute",
+        "src/core/ai-route-policy.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-ai-route-policy-receipt"
+      ],
+      "notes": "The AI route owner now fail-closes official entitled agent/companion admission to a bounded context without API-key substitution, marks core behavior unaffected on disable, and blocks/defer stale, unentitled, or piggyback routes. A real official subscription/companion, DERIVED provider result, credential isolation, target, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-074",
@@ -1359,8 +1365,13 @@
         "line": 4074
       },
       "text": "The selected subscription route reaches its included quota or reports uncertain quota state. Omnevum does not silently purchase credits, activate usage-based billing, switch to a metered API key, or widen disclosure. It stops/degrades or moves only to another route explicitly allowed by the user's route policy.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/ai-route-policy.ts#evaluateQuotaBoundary",
+        "src/core/ai-route-policy.test.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-ai-route-policy-receipt"
+      ],
+      "notes": "Quota policy stops and notifies on included exhaustion or uncertain state, never activates billing, automatic fallback, or wider disclosure, and requires explicit policy for alternatives or metered routes. Provider quota observation and shipped UI/target/human evidence remain open."
     },
     {
       "id": "OMN-ACC-075",
@@ -1369,8 +1380,14 @@
         "line": 4076
       },
       "text": "Provider currentness marks a consumer-web/OAuth-piggyback technique as TERMS_BLOCKED (for example current ChatGPT web automatic extraction or current Google legacy Gemini-CLI OAuth harvesting). Omnevum refuses that programmatic route without attempting stealth/browser impersonation and instead offers an official subscription agent, reverse integration, manual handoff, local model, or explicit API route where available.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/ai-route-policy.ts#evaluateTermsRoute",
+        "src/core/ai-route-policy.test.ts",
+        "docs/control/currentness-radar.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-ai-route-policy-receipt"
+      ],
+      "notes": "Terms-aware policy explicitly blocks OAuth piggyback and non-current browser automation without stealth or impersonation, while current allowed routes remain subject to bounded disclosure. Current provider terms, official alternative route, and browser/target/human evidence remain open."
     },
     {
       "id": "OMN-ACC-076",
@@ -1379,8 +1396,15 @@
         "line": 4078
       },
       "text": "A plan/workspace that supports a reverse app/MCP/connector integration lets an external subscribed assistant query a deliberately bounded Omnevum projection. Read-only provider limits remain read-only; a write-capable provider action still traverses Omnevum's semantic-command/permission/Effect-Outbox path. Removing the external integration revokes future access without deleting canonical records.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/ai-route-policy.ts#evaluateReverseIntegration",
+        "src/core/ai-route-policy.test.ts",
+        "src/core/context-export.ts",
+        "src/core/effect.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-ai-route-policy-receipt"
+      ],
+      "notes": "The reverse-integration contract admits read-only access only for a bounded projection with verified revocation and admits writes only when semantic-command, permission, and Effect/Outbox paths are all present; disablement preserves canonical data. No live MCP/connector/assistant integration, provider authentication, revocation UI, target, or human evidence was performed."
     },
     {
       "id": "OMN-ACC-077",
