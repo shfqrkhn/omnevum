@@ -922,6 +922,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       <details id="recovery" class="panel compact-panel" aria-labelledby="recovery-heading" data-section-disclosure>
         <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h2 id="recovery-heading">${copy.keepPortable}</h2></span></summary>
         <p class="hint">${copy.recoveryHint}</p>
+        <p class="hint"><a href="./recovery.html">${recoveryCopy.lastResortConsole}</a> — ${recoveryCopy.lastResortHint}</p>
         <details id="update-ledger" class="relationship-form compact-panel">
           <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h3>${copy.updateLedgerHeading}</h3></span><span id="update-ledger-pill" class="status-pill">${copy.updateUnavailable}</span></summary>
           <p id="update-ledger-hint" class="hint">${copy.updateLedgerHint}</p>

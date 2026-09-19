@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; img-src 'none'" />
+    <title>Omnevum last-resort recovery console</title>
+    <style>
+      :root { color-scheme: dark; font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; background: #17110b; color: #f8ead2; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-width: 18rem; background: #17110b; }
+      main { min-height: 100vh; display: grid; place-items: start center; padding: 1.25rem; }
+      section { width: min(100%, 48rem); border: 2px solid #f2b84b; background: #21180d; box-shadow: 0 0 0 4px #17110b, 0 0 0 6px #84591f; padding: clamp(1rem, 3vw, 2rem); }
+      .eyebrow { color: #f2b84b; font-size: .75rem; letter-spacing: .12em; margin: 0 0 .75rem; text-transform: uppercase; }
+      h1 { font-size: clamp(1.35rem, 4vw, 2.25rem); line-height: 1.1; margin: 0 0 .75rem; }
+      p { line-height: 1.5; }
+      .warning { border-left: 4px solid #f2b84b; padding-left: .75rem; }
+      dl { display: grid; grid-template-columns: minmax(9rem, 1fr) minmax(0, 2fr); gap: .5rem 1rem; margin: 1.25rem 0; }
+      dt { color: #d5b986; }
+      dd { margin: 0; overflow-wrap: anywhere; }
+      .actions { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1.25rem 0; }
+      button { min-height: 2.75rem; border: 1px solid #f2b84b; border-radius: .25rem; background: #f2b84b; color: #17110b; cursor: pointer; font: inherit; font-weight: 700; padding: .6rem .8rem; }
+      button.secondary { background: transparent; color: #f8ead2; }
+      button:disabled { cursor: not-allowed; opacity: .45; }
+      [role="status"] { min-height: 1.5rem; color: #f2b84b; overflow-wrap: anywhere; }
+      details { border-top: 1px solid #5d4323; margin-top: 1.25rem; padding-top: .9rem; }
+      summary { cursor: pointer; color: #f2b84b; }
+      code { color: #fff2c9; overflow-wrap: anywhere; }
+      @media (max-width: 38rem) { dl { grid-template-columns: 1fr; gap: .2rem; } dd { margin-bottom: .45rem; } }
+    </style>
+  </head>
+  <body>
+    <main id="omnevum-last-resort" data-console="OMNEVUM_LAST_RESORT_RECOVERY" aria-labelledby="console-heading">
+      <section>
+        <p class="eyebrow">Last-resort recovery console</p>
+        <h1 id="console-heading">Read-only local state rescue</h1>
+        <p class="warning">This independent page is intentionally separate from the normal application shell. It uses no Omnevum module, theme, language pack, font, network, or service dependency. It never writes, repairs, clears, or deletes local data.</p>
+        <dl aria-label="Recovery state">
+          <dt>Canonical store</dt><dd id="database-state">Not scanned</dd>
+          <dt>Record integrity</dt><dd id="record-state">Not scanned</dd>
+          <dt>Vault state</dt><dd id="vault-state">Not scanned</dd>
+          <dt>Read-only snapshot</dt><dd id="snapshot-state">Not scanned</dd>
+        </dl>
+        <div class="actions">
+          <button id="scan-state" type="button">Scan local state</button>
+          <button id="export-state" class="secondary" type="button" disabled>Export retained snapshot</button>
+        </div>
+        <p id="console-status" role="status" aria-live="polite"></p>
+        <details>
+          <summary>Scope and next step</summary>
+          <p>The export is a bounded <code>OMNEVUM_RECOVERY_SNAPSHOT</code>. Keep it safe, then reopen the normal app or use its validated restore/repair flow. The snapshot preserves raw records and history for diagnosis; malformed rows are reported rather than presented as a valid Vault.</p>
+          <p>Stable route: <code>./recovery.html</code>. Database: <code>omnevum-canonical-v1</code>.</p>
+        </details>
+      </section>
+    </main>
+    <script>
+      (() => {
+        "use strict";
+
+        const DB_NAME = "omnevum-canonical-v1";
+        const MAX_EXPORT_BYTES = 64 * 1024 * 1024;
+        const MAX_ARTIFACT_BYTES = 10 * 1024 * 1024;
+        const RECORD_TYPES = new Set(["note", "task", "observation", "relationship", "artifact"]);
+        const TRUTH_CLASSES = new Set(["USER_OBSERVATION", "IMPORTED_RECORD", "SOURCE_CLAIM", "ASSUMPTION", "ESTIMATE", "DERIVED", "AI_HYPOTHESIS", "UNKNOWN"]);
+        const $ = (id) => document.getElementById(id);
+        let retainedSnapshot;
+
+        function isObject(value) {
+          return typeof value === "object" && value !== null && !Array.isArray(value);
+        }
+
+        function isTimestamp(value) {
+          return typeof value === "string" && value.length <= 100 && Number.isFinite(Date.parse(value));
+        }
+
+        function isBoundedData(value, depth = 0) {
+          if (!isObject(value) || depth > 16 || Object.keys(value).length > 200) return false;
+          return Object.entries(value).every(([key, child]) => {
+            if (!key || key.length > 160) return false;
+            if (typeof child === "string") return child.length <= 100000;
+            if (Array.isArray(child)) return child.length <= 500 && child.every((item) => item === null || typeof item !== "object" || (isObject(item) && isBoundedData(item, depth + 1)));
+            return child === null || typeof child === "number" && Number.isFinite(child) || typeof child === "boolean" || typeof child === "string" || (isObject(child) && isBoundedData(child, depth + 1));
+          });
+        }
+
+        function isRecord(value) {
+          return isObject(value) && typeof value.id === "string" && value.id.length > 0 && value.id.length <= 160 && /^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(value.id)
+            && typeof value.owner === "string" && value.owner.length > 0 && value.owner.length <= 160
+            && RECORD_TYPES.has(value.recordType) && value.schemaVersion === 1
+            && isTimestamp(value.createdAt) && isTimestamp(value.modifiedAt)
+            && (value.effectiveAt === undefined || isTimestamp(value.effectiveAt))
+            && isObject(value.provenance) && (value.provenance.source === "USER_INPUT" || value.provenance.source === "IMPORT") && isTimestamp(value.provenance.capturedAt)
+            && (value.provenance.sourceId === undefined || typeof value.provenance.sourceId === "string")
+            && TRUTH_CLASSES.has(value.truthClass) && (value.sensitivity === "PRIVATE" || value.sensitivity === "SHARED")
+            && Number.isSafeInteger(value.revision) && value.revision >= 1 && typeof value.deleted === "boolean" && isBoundedData(value.data);
+        }
+
+        function isHistory(value) {
+          return isObject(value) && typeof value.id === "string" && typeof value.recordId === "string" && Number.isSafeInteger(value.revision) && value.revision >= 1
+            && isTimestamp(value.recordedAt) && isRecord(value.record) && value.record.id === value.recordId && value.record.revision === value.revision;
+        }
+
+        function requestResult(request) {
+          return new Promise((resolve, reject) => {
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error || new Error("IndexedDB read failed"));
+          });
+        }
+
+        async function readStore(database, name) {
+          if (!database.objectStoreNames.contains(name)) return [];
+          const transaction = database.transaction(name, "readonly");
+          return requestResult(transaction.objectStore(name).getAll());
+        }
+
+        function openExistingDatabase() {
+          return new Promise((resolve, reject) => {
+            if (!window.indexedDB) {
+              reject(new Error("IndexedDB is unavailable on this target"));
+              return;
+            }
+            const request = window.indexedDB.open(DB_NAME);
+            let created = false;
+            request.onupgradeneeded = (event) => {
+              if (event.oldVersion === 0) {
+                created = true;
+                request.transaction?.abort();
+              }
+            };
+            request.onsuccess = () => {
+              const database = request.result;
+              if (created) {
+                database.close();
+                reject(new Error("No existing Omnevum store was found; no database was created."));
+                return;
+              }
+              resolve(database);
+            };
+            request.onerror = () => reject(created ? new Error("No existing Omnevum store was found; no database was created.") : request.error || new Error("The canonical store could not be opened"));
+            request.onblocked = () => reject(new Error("The canonical store is blocked by another tab; close it and scan again."));
+          });
+        }
+
+        function base64FromBytes(bytes) {
+          let result = "";
+          const chunkSize = 0x8000;
+          for (let offset = 0; offset < bytes.length; offset += chunkSize) result += String.fromCharCode(...bytes.subarray(offset, Math.min(offset + chunkSize, bytes.length)));
+          return btoa(result);
+        }
+
+        async function artifactEntry(record, raw) {
+          const blob = raw && raw.blob instanceof Blob ? raw.blob : undefined;
+          if (!blob || blob.size > MAX_ARTIFACT_BYTES) return undefined;
+          return { id: record.id, mimeType: typeof record.data?.mimeType === "string" && record.data.mimeType ? record.data.mimeType : blob.type || "application/octet-stream", dataBase64: base64FromBytes(new Uint8Array(await blob.arrayBuffer())) };
+        }
+
+        function stableJson(value) {
+          if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
+          if (isObject(value)) return `{${Object.entries(value).sort(([left], [right]) => left.localeCompare(right)).map(([key, child]) => `${JSON.stringify(key)}:${stableJson(child)}`).join(",")}}`;
+          return JSON.stringify(value);
+        }
+
+        async function sha256(value) {
+          const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+          return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+        }
+
+        async function scan() {
+          retainedSnapshot = undefined;
+          $("export-state").disabled = true;
+          $("console-status").textContent = "Scanning the existing store read-only…";
+          $("database-state").textContent = "Opening read-only";
+          $("record-state").textContent = "Checking";
+          $("vault-state").textContent = "Checking";
+          $("snapshot-state").textContent = "Preparing";
+          let database;
+          try {
+            database = await openExistingDatabase();
+            const [rawRecords, rawHistory, rawArtifacts, rawSettings] = await Promise.all([readStore(database, "records"), readStore(database, "history"), readStore(database, "artifactBlobs"), readStore(database, "settings")]);
+            const validRecords = rawRecords.filter(isRecord);
+            const validHistory = rawHistory.filter(isHistory);
+            const recordIds = new Set(validRecords.map((record) => record.id));
+            const artifactRecords = validRecords.filter((record) => record.recordType === "artifact").map((record) => record.id);
+            const rawArtifactById = new Map(rawArtifacts.filter((entry) => isObject(entry) && typeof entry.id === "string").map((entry) => [entry.id, entry]));
+            const artifacts = [];
+            let skippedArtifacts = 0;
+            for (const record of validRecords.filter((candidate) => candidate.recordType === "artifact")) {
+              const entry = await artifactEntry(record, rawArtifactById.get(record.id));
+              if (entry) artifacts.push(entry);
+              else skippedArtifacts += 1;
+            }
+            const settingsById = new Map(rawSettings.filter((setting) => isObject(setting) && typeof setting.id === "string").map((setting) => [setting.id, setting.value]));
+            const packageStates = rawSettings.filter((setting) => isObject(setting) && typeof setting.id === "string" && setting.id.startsWith("packageState:")).map((setting) => setting.value);
+            const automationRules = settingsById.get("automation.rules");
+            const presentation = settingsById.get("presentation");
+            const missingArtifacts = artifactRecords.filter((id) => !artifacts.some((artifact) => artifact.id === id));
+            const historyForKnownRecords = validHistory.filter((entry) => recordIds.has(entry.recordId));
+            const orphanHistoryCount = validHistory.length - historyForKnownRecords.length;
+            const invalidRecordCount = rawRecords.length - validRecords.length;
+            const invalidHistoryCount = rawHistory.length - validHistory.length;
+            const canonicalIntegrity = invalidRecordCount === 0 && invalidHistoryCount === 0 && orphanHistoryCount === 0 && missingArtifacts.length === 0 ? "STRUCTURALLY_VALID" : "PARTIAL_OR_MALFORMED";
+            const vaultState = canonicalIntegrity === "STRUCTURALLY_VALID" ? "FULL_CANONICAL_READ" : "RECOVERY_SNAPSHOT_ONLY";
+            const snapshot = {
+              format: "OMNEVUM_RECOVERY_SNAPSHOT",
+              version: 1,
+              exportedAt: new Date().toISOString(),
+              records: rawRecords,
+              history: rawHistory,
+              artifacts,
+              ...(packageStates.length > 0 ? { packageStates } : {}),
+              ...(Array.isArray(automationRules) && automationRules.length > 0 ? { automationRules } : {}),
+              ...(presentation !== undefined ? { presentation } : {}),
+              summary: {
+                recordCount: rawRecords.length,
+                validRecordCount: validRecords.length,
+                invalidRecordCount,
+                historyCount: rawHistory.length,
+                validHistoryCount: historyForKnownRecords.length,
+                invalidHistoryCount,
+                artifactPayloadCount: artifacts.length,
+                skippedArtifactPayloadCount: skippedArtifacts
+              }
+            };
+            const serialized = JSON.stringify(snapshot, null, 2);
+            const sizeBytes = new TextEncoder().encode(serialized).byteLength;
+            if (sizeBytes > MAX_EXPORT_BYTES) throw new Error("The retained recovery snapshot exceeds the bounded 64 MiB export limit");
+            retainedSnapshot = { serialized, sizeBytes };
+            const digest = await sha256(stableJson(validRecords.slice().sort((left, right) => left.id.localeCompare(right.id))));
+            $("database-state").textContent = `Readable; version ${database.version}; ${rawRecords.length} raw record(s)`;
+            $("record-state").textContent = `${canonicalIntegrity}; ${validRecords.length} valid, ${invalidRecordCount} invalid; SHA-256 ${digest.slice(0, 16)}…`;
+            $("vault-state").textContent = `${vaultState}; ${artifacts.length} artifact payload(s), ${rawHistory.length} history row(s)`;
+            $("snapshot-state").textContent = `${sizeBytes.toLocaleString()} bytes; ${skippedArtifacts} artifact payload(s) omitted`;
+            $("export-state").disabled = false;
+            $("console-status").textContent = "Read-only scan complete. Export is ready; canonical state was not changed.";
+          } catch (error) {
+            $("database-state").textContent = "Unavailable";
+            $("record-state").textContent = "UNKNOWN";
+            $("vault-state").textContent = "UNKNOWN";
+            $("snapshot-state").textContent = "Not available";
+            $("console-status").textContent = error instanceof Error ? error.message : "The read-only recovery scan failed";
+          } finally {
+            database?.close();
+          }
+        }
+
+        function exportSnapshot() {
+          if (!retainedSnapshot) return;
+          const blob = new Blob([retainedSnapshot.serialized], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "omnevum-recovery-snapshot.json";
+          link.click();
+          window.setTimeout(() => URL.revokeObjectURL(url), 0);
+          $("console-status").textContent = `Exported ${retainedSnapshot.sizeBytes.toLocaleString()} bytes. Canonical state was not changed.`;
+        }
+
+        $("scan-state").addEventListener("click", () => void scan());
+        $("export-state").addEventListener("click", exportSnapshot);
+        void scan();
+      })();
+    </script>
+  </body>
+</html>

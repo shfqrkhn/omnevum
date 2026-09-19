@@ -3,6 +3,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { Script } from "node:vm";
 
 const root = join(fileURLToPath(new URL(".", import.meta.url)), "..");
 const dist = join(root, "dist");
@@ -29,6 +30,18 @@ else {
 if (!existsSync(dist)) failures.push("missing dist");
 if (failures.length === 0) {
   const index = readFileSync(join(dist, "index.html"), "utf8");
+  const lastResortPath = join(dist, "recovery.html");
+  if (!existsSync(lastResortPath)) failures.push("missing independent last-resort recovery route");
+  else {
+    const lastResort = readFileSync(lastResortPath, "utf8");
+    if (!lastResort.includes('data-console="OMNEVUM_LAST_RESORT_RECOVERY"') || !lastResort.includes("omnevum-canonical-v1") || !lastResort.includes("Export retained snapshot")) failures.push("last-resort recovery route is missing its stable read/export contract");
+    if (/<(?:script|link|img)[^>]+(?:src|href)=['"](?:https?:|\/\/)/iu.test(lastResort) || /<script[^>]+type=['"]module['"]/iu.test(lastResort)) failures.push("last-resort recovery route has a remote or module dependency");
+    const inlineScript = lastResort.match(/<script>([\s\S]*?)<\/script>/iu)?.[1];
+    if (!inlineScript) failures.push("last-resort recovery route is missing its inline controller");
+    else {
+      try { new Script(inlineScript); } catch { failures.push("last-resort recovery controller is not valid JavaScript"); }
+    }
+  }
   const manifest = readFileSync(join(dist, "manifest.webmanifest"), "utf8");
   const serviceWorker = readFileSync(join(dist, "sw.js"), "utf8");
   if (!index.includes("./assets/") || !index.includes("./manifest.webmanifest")) failures.push("index is not relative-base deployable");
