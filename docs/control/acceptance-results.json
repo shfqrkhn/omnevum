@@ -531,8 +531,11 @@
         "line": 3980
       },
       "text": "A fork/self-host deployment changes origin and configures its own supported Google/Microsoft public-client connector identity without changing canonical data schemas; where provider registration is unavailable, a qualified WebDAV/manual Vault path still permits zero-required-payment backup/portability without an Omnevum backend.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-non-color-state-carrier-receipt"
+      ],
+      "notes": "The current Chromium artifact creates and completes a Task through the visible Capture and Records surfaces, and Triage/Home expose explicit textual statuses, counts, action labels, revision history, and Undo rather than relying on hue. All built-in family/mode combinations, every active lens/state graphic, monochrome/CVD simulation, other engines, physical touch, assistive technology, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-028",
