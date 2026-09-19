@@ -44,7 +44,7 @@ import { CORE_AUTOMATION_PACKAGE, type PackageAutomationRuntime } from "../core/
 import type { PackageAutomationProposal } from "../core/package-automation-registry";
 import { shouldAutoShowOnboarding } from "../core/onboarding";
 import { REVIEW_SESSION_SETTING, REVIEW_TEMPLATES, advanceReviewSession, getReviewTemplate, isReviewSession, makeReviewSession, type ReviewSession } from "../core/review";
-import { projectTelemetry } from "../core/telemetry";
+import { projectTelemetry, projectTelemetryConsiderations, parseTelemetryDispositions, parseTelemetryThresholds, TELEMETRY_DISPOSITIONS_SETTING, TELEMETRY_THRESHOLDS_SETTING, type TelemetryDispositions, type TelemetryThresholds } from "../core/telemetry";
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -65,6 +65,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const rawPresentation = await store.getSetting<unknown>("presentation");
   const onboardingDismissed = await store.getSetting<boolean>("onboarding.dismissed") === true;
   let homeFocusMode = await store.getSetting<boolean>("home.focusMode") === true;
+  let telemetryThresholds: TelemetryThresholds = parseTelemetryThresholds(await store.getSetting<unknown>(TELEMETRY_THRESHOLDS_SETTING));
+  let telemetryDispositions: TelemetryDispositions = parseTelemetryDispositions(await store.getSetting<unknown>(TELEMETRY_DISPOSITIONS_SETTING));
   const initialRecordCount = (await store.list()).length;
   const onboardingAutoShown = shouldAutoShowOnboarding(initialRecordCount, onboardingDismissed);
   const safePresentationMode = readSafePresentationMode();
@@ -2146,15 +2148,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     capabilityStatus.textContent = degradedCapabilities.length === 0 ? copy.local : `${copy.local} - ${degradedCapabilities.length} degraded`;
     capabilityStatus.title = degradedCapabilities.length === 0 ? "Core capabilities are ready." : degradedCapabilities.map((status) => `${status.id}: ${status.reason ?? "degraded"}`).join("; ");
   };
+  const projectHealthTelemetry = (health: Awaited<ReturnType<CanonicalStore["health"]>>): ReturnType<typeof projectTelemetry> => projectTelemetry({
+    replication: { enabled: false },
+    backup: "UNKNOWN",
+    pendingEffects: health.pendingEffects,
+    degradedCapabilities: capabilityRuntime ? capabilityRuntime.snapshot().filter((status) => status.state === "DEGRADED").map((status) => status.id) : "UNKNOWN",
+    unresolvedConflicts: "UNKNOWN",
+    storagePressure: health.storage?.pressure ?? "UNKNOWN",
+    thresholds: telemetryThresholds
+  });
   const formatHealth = (health: Awaited<ReturnType<CanonicalStore["health"]>>): string => {
-    const telemetry = projectTelemetry({
-      replication: { enabled: false },
-      backup: "UNKNOWN",
-      pendingEffects: health.pendingEffects,
-      degradedCapabilities: capabilityRuntime ? capabilityRuntime.snapshot().filter((status) => status.state === "DEGRADED").map((status) => status.id) : "UNKNOWN",
-      unresolvedConflicts: "UNKNOWN",
-      storagePressure: health.storage?.pressure ?? "UNKNOWN"
-    });
+    const telemetry = projectHealthTelemetry(health);
     const status = telemetry.facts.map((fact) => fact.status);
     return `${copy.healthMessage(health.activeRecords, health.archivedRecords, health.historyEntries, health.artifactPayloads, health.searchIndexValid ? copy.healthy : copy.degraded, health.storage?.pressure)} ${copy.telemetryMessage(status[0] ?? "UNKNOWN", status[1] ?? "UNKNOWN", status[2] ?? "UNKNOWN", status[3] ?? "UNKNOWN", status[4] ?? "UNKNOWN", status[5] ?? "UNKNOWN")} ${getStoragePersistenceNotice(presentation.locale, health.storage?.persistence ?? "UNAVAILABLE")}`;
   };
@@ -2384,6 +2388,83 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     return table;
   };
 
+  const renderTelemetryThresholdEditor = (): HTMLDetailsElement => {
+    const details = document.createElement("details");
+    details.className = "telemetry-thresholds";
+    const summary = document.createElement("summary");
+    summary.textContent = timeCopy.telemetryThresholds;
+    details.append(summary);
+    const hint = document.createElement("p");
+    hint.className = "hint";
+    hint.textContent = timeCopy.telemetryThresholdHint;
+    details.append(hint);
+    const form = document.createElement("form");
+    form.className = "form-row telemetry-threshold-form";
+    const backupAge = document.createElement("input");
+    backupAge.type = "number";
+    backupAge.min = "1";
+    backupAge.max = "365";
+    backupAge.step = "1";
+    backupAge.required = true;
+    backupAge.value = String(Math.max(1, Math.round(telemetryThresholds.backupMaxAgeMs / (24 * 60 * 60 * 1000))));
+    backupAge.setAttribute("aria-label", timeCopy.telemetryBackupAge);
+    const backupLabel = document.createElement("label");
+    backupLabel.textContent = timeCopy.telemetryBackupAge;
+    backupLabel.append(backupAge);
+    const outbox = document.createElement("input");
+    outbox.type = "number";
+    outbox.min = "1";
+    outbox.max = "100000";
+    outbox.step = "1";
+    outbox.required = true;
+    outbox.value = String(telemetryThresholds.pendingEffects);
+    outbox.setAttribute("aria-label", timeCopy.telemetryOutboxThreshold);
+    const outboxLabel = document.createElement("label");
+    outboxLabel.textContent = timeCopy.telemetryOutboxThreshold;
+    outboxLabel.append(outbox);
+    const conflicts = document.createElement("input");
+    conflicts.type = "number";
+    conflicts.min = "1";
+    conflicts.max = "100000";
+    conflicts.step = "1";
+    conflicts.required = true;
+    conflicts.value = String(telemetryThresholds.unresolvedConflicts);
+    conflicts.setAttribute("aria-label", timeCopy.telemetryConflictThreshold);
+    const conflictsLabel = document.createElement("label");
+    conflictsLabel.textContent = timeCopy.telemetryConflictThreshold;
+    conflictsLabel.append(conflicts);
+    const save = document.createElement("button");
+    save.type = "submit";
+    save.className = "secondary";
+    save.textContent = timeCopy.telemetrySaveThresholds;
+    const status = document.createElement("span");
+    status.className = "hint";
+    status.setAttribute("role", "status");
+    form.append(backupLabel, outboxLabel, conflictsLabel, save, status);
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      const next = parseTelemetryThresholds({
+        backupMaxAgeMs: Number(backupAge.value) * 24 * 60 * 60 * 1000,
+        pendingEffects: Number(outbox.value),
+        unresolvedConflicts: Number(conflicts.value)
+      });
+      try {
+        telemetryThresholds = next;
+        await store.setSetting(TELEMETRY_THRESHOLDS_SETTING, next);
+        status.textContent = timeCopy.telemetryThresholdsSaved;
+        await renderRecords(searchQuery.value);
+      } catch (error) {
+        status.textContent = describeError(error, "Telemetry thresholds could not be saved; durable state was not changed.");
+      }
+    });
+    details.append(form);
+    return details;
+  };
+
   const renderSummary = async (): Promise<void> => {
     const records = await scopedRecords();
     summaryTotal.textContent = formatNumber(presentation.locale, records.length);
@@ -2415,9 +2496,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
     const considerations = projectDueReminderConsiderations(records);
     attentionPanel.replaceChildren();
-    if (considerations.length === 0) {
-      attentionPanel.textContent = timeCopy.noDue;
-    } else {
+    if (considerations.length > 0) {
       const list = document.createElement("ul");
       list.className = "attention-list";
       for (const consideration of considerations) {
@@ -2476,6 +2555,57 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       }
       attentionPanel.append(list);
     }
+    const telemetryItems = projectTelemetryConsiderations(projectHealthTelemetry(await store.health()), telemetryDispositions);
+    if (telemetryItems.length > 0) {
+      const telemetryList = document.createElement("ul");
+      telemetryList.className = "attention-list telemetry-list";
+      for (const item of telemetryItems) {
+        const entry = document.createElement("li");
+        entry.className = "consideration-item telemetry-item";
+        entry.dataset.telemetryFact = item.fact.id;
+        entry.dataset.disposition = item.disposition;
+        const title = document.createElement("strong");
+        title.textContent = `${timeCopy.telemetry}: ${item.fact.id}`;
+        const state = document.createElement("p");
+        state.className = "consideration-detail";
+        state.textContent = timeCopy.telemetryState(item.fact.id, item.fact.status);
+        const evidence = document.createElement("p");
+        evidence.className = "consideration-detail";
+        evidence.textContent = `${timeCopy.telemetryEvidence}: ${item.fact.evidence.join("; ")}`;
+        const disposition = document.createElement("p");
+        disposition.className = "consideration-detail";
+        disposition.textContent = item.disposition === "DISMISSED" ? timeCopy.telemetryDismiss : timeCopy.considerations;
+        const action = document.createElement("button");
+        action.type = "button";
+        action.className = item.disposition === "DISMISSED" ? "secondary" : "icon-button";
+        action.textContent = item.disposition === "DISMISSED" ? timeCopy.telemetryRestore : timeCopy.telemetryDismiss;
+        action.addEventListener("click", async () => {
+          try {
+            const next = { ...telemetryDispositions };
+            if (item.disposition === "DISMISSED") delete next[item.fact.id];
+            else next[item.fact.id] = { fingerprint: item.fingerprint, state: "DISMISSED", changedAt: new Date().toISOString() };
+            telemetryDispositions = parseTelemetryDispositions(next);
+            await store.setSetting(TELEMETRY_DISPOSITIONS_SETTING, telemetryDispositions);
+            await renderRecords(searchQuery.value);
+          } catch (error) {
+            healthStatus.textContent = describeError(error, "Telemetry disposition could not be saved; durable state was not changed.");
+          }
+        });
+        const actions = document.createElement("div");
+        actions.className = "consideration-actions";
+        actions.append(action);
+        entry.append(title, state, evidence, disposition, actions);
+        telemetryList.append(entry);
+      }
+      attentionPanel.append(telemetryList);
+    }
+    if (considerations.length === 0 && telemetryItems.length === 0) {
+      const empty = document.createElement("p");
+      empty.className = "hint";
+      empty.textContent = timeCopy.noDue;
+      attentionPanel.append(empty);
+    }
+    attentionPanel.append(renderTelemetryThresholdEditor());
     if (entries.length === 0) {
       const empty = document.createElement("p");
       empty.className = "hint";
