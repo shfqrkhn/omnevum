@@ -14,7 +14,7 @@ import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/cr
 import { MAX_VAULT_JSON_BYTES, parseVault } from "../core/vault";
 import type { CanonicalStore } from "../core/storage";
 import { captureExpense, captureHealthMeasurement } from "../core/workflows";
-import { acceptFinanceTransactions, deduplicateFinanceTransactions, parseFinanceCsv, reconcileFinanceStatement, type FinanceStatementSource } from "../core/finance";
+import { acceptFinanceTransactions, createFinanceSourceId, deduplicateFinanceTransactions, parseFinanceCsv, reconcileFinanceStatement, type FinanceStatementSource } from "../core/finance";
 import { parseMoney } from "../core/money";
 import { projectDataset } from "../core/data";
 import { countRecords, groupCounts } from "../core/analysis";
@@ -3453,7 +3453,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const currency = financeImportCurrency.value;
       if (!file || !accountId) throw new Error("Choose a statement file and enter an account identity");
       const inspection = await inspectArtifact(file, file.name, file.type || "text/csv");
-      const sourceId = `finance-source:${inspection.sha256}`;
+      const sourceId = createFinanceSourceId(inspection.sha256, accountId, currency);
       const openingBalance = financeImportOpening.value.trim() ? parseMoney(financeImportOpening.value.trim(), currency) : undefined;
       const closingBalance = financeImportClosing.value.trim() ? parseMoney(financeImportClosing.value.trim(), currency) : undefined;
       const source: FinanceStatementSource = { sourceId, name: file.name, sha256: inspection.sha256, accountId, currency, ...(openingBalance ? { openingBalance } : {}), ...(closingBalance ? { closingBalance } : {}) };

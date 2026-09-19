@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { acceptFinanceTransactions, deduplicateFinanceTransactions, parseFinanceCsv, reconcileFinanceStatement, type FinanceStatementSource } from "./finance";
+import { acceptFinanceTransactions, createFinanceSourceId, deduplicateFinanceTransactions, parseFinanceCsv, reconcileFinanceStatement, type FinanceStatementSource } from "./finance";
 import { CommandBus } from "./commands";
 import { CanonicalStore } from "./storage";
 
@@ -14,6 +14,13 @@ const source: FinanceStatementSource = {
 };
 
 describe("credential-free Finance statement semantics", () => {
+  it("scopes source identity to the account and currency without exposing the account", () => {
+    const first = createFinanceSourceId(source.sha256, source.accountId, source.currency);
+    expect(first).toBe(createFinanceSourceId(source.sha256, source.accountId, source.currency));
+    expect(first).not.toBe(createFinanceSourceId(source.sha256, "savings-2", source.currency));
+    expect(first).not.toContain(source.accountId);
+  });
+
   it("parses quoted CSV, stores exact minor units, and retains source-row lineage", () => {
     const transactions = parseFinanceCsv('Date,Description,Debit,Credit,Id\n2026-01-02,"Cafe, Main",10.00,,tx-1\n2026-01-03,Payroll,,15.00,tx-2\n', source);
     expect(transactions).toHaveLength(2);
@@ -68,6 +75,20 @@ describe("credential-free Finance statement semantics", () => {
     expect(second).toMatchObject({ created: 0, existing: 1, duplicates: 0, conflicts: [] });
     expect((await store.list()).filter((record) => record.owner === "domain.finance")).toHaveLength(1);
     expect((await store.list())[0]?.data).toMatchObject({ kind: "finance-transaction", amountMinor: "-1000", sourceArtifactId: source.sourceId });
+    store.close();
+  });
+
+  it("deduplicates a renamed or reformatted source against persisted natural identity", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-finance-overlap`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const original = parseFinanceCsv('Date,Description,Amount,Id\n2026-01-02,Cafe,-10.00,tx-1\n', source);
+    const renamed = parseFinanceCsv('Date\tDescription\tAmount\tId\n2026-01-02\tCafe\t-10.00\ttx-1\n', { ...source, sourceId: "source:statement-renamed", name: "renamed.tsv", sha256: "b".repeat(64) });
+    const first = await acceptFinanceTransactions(commands, source, original);
+    const second = await acceptFinanceTransactions(commands, { ...source, sourceId: "source:statement-renamed", name: "renamed.tsv", sha256: "b".repeat(64) }, renamed);
+    expect(first).toMatchObject({ created: 1, existing: 0 });
+    expect(second).toMatchObject({ created: 0, existing: 1, conflicts: [] });
+    expect((await store.list(true)).filter((record) => record.owner === "domain.finance")).toHaveLength(1);
     store.close();
   });
 });

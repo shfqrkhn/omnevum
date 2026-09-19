@@ -77,6 +77,14 @@ export interface FinanceImportResult {
   conflicts: FinanceTransactionConflict[];
 }
 
+export function createFinanceSourceId(sourceSha256: string, accountId: string, currency: string): string {
+  if (!/^[a-f0-9]{64}$/i.test(sourceSha256)) throw new Error("Finance source SHA-256 is required");
+  const normalizedAccount = accountId.trim().slice(0, 160);
+  if (!normalizedAccount) throw new Error("Finance account identity is required");
+  const normalizedCurrency = parseMoney("0", currency).currency;
+  return `finance-source:${sourceSha256.toLowerCase()}:${stableKey(`${normalizedAccount}|${normalizedCurrency}`)}`;
+}
+
 const headerAliases: Record<string, string> = {
   date: "postedAt",
   postdate: "postedAt",
@@ -193,11 +201,32 @@ export async function acceptFinanceTransactions(commands: CommandBus, source: Fi
   const records: CanonicalRecord[] = [];
   let created = 0;
   let existing = 0;
+  const conflicts = [...deduplicated.conflicts];
+  const existingFinance = (await commands.list(true)).filter((record) => record.owner === "domain.finance" && record.data.kind === "finance-transaction");
+  const byNaturalKey = new Map<string, CanonicalRecord>(existingFinance.flatMap((record) => typeof record.data.naturalKey === "string" ? [[record.data.naturalKey, record] as const] : []));
+  const bySourceKey = new Map<string, CanonicalRecord>(existingFinance.flatMap((record) => typeof record.data.accountId === "string" && typeof record.data.sourceTransactionId === "string" ? [[`${record.data.accountId}|${record.data.sourceTransactionId}`, record] as const] : []));
+  const byProvenance = new Map<string, CanonicalRecord>(existingFinance.flatMap((record) => record.provenance.sourceId ? [[record.provenance.sourceId, record] as const] : []));
+  const addConflict = (transaction: FinanceTransaction, prior: CanonicalRecord): void => {
+    if (!transaction.sourceTransactionId || typeof prior.data.sourceTransactionId !== "string") return;
+    const transactionIds = [String(prior.data.id ?? prior.id), transaction.id].sort();
+    if (!conflicts.some((conflict) => conflict.sourceTransactionId === transaction.sourceTransactionId && conflict.transactionIds.slice().sort().join("|") === transactionIds.join("|"))) {
+      conflicts.push({ sourceTransactionId: transaction.sourceTransactionId, transactionIds, reason: "SOURCE_ID_REUSED_WITH_DIFFERENT_MEANING" });
+    }
+  };
   for (const transaction of deduplicated.unique) {
     const provenanceId = `${source.sourceId}:row:${transaction.lineage.sourceRow}`;
-    const prior = (await commands.findBySourceId(provenanceId)).find((record) => record.owner === "domain.finance" && record.data.kind === "finance-transaction");
+    const prior = byProvenance.get(provenanceId);
     if (prior) {
       records.push(prior);
+      existing += 1;
+      continue;
+    }
+    const sourceKey = transaction.sourceTransactionId ? `${transaction.accountId}|${transaction.sourceTransactionId}` : undefined;
+    const priorSource = sourceKey ? bySourceKey.get(sourceKey) : undefined;
+    const priorNatural = byNaturalKey.get(transaction.naturalKey);
+    if (priorSource && priorSource.data.naturalKey !== transaction.naturalKey) addConflict(transaction, priorSource);
+    if (priorNatural && (!priorSource || priorSource.data.naturalKey === transaction.naturalKey)) {
+      records.push(priorNatural);
       existing += 1;
       continue;
     }
@@ -221,13 +250,16 @@ export async function acceptFinanceTransactions(commands: CommandBus, source: Fi
         sourceArtifactId: source.sourceArtifactId ?? source.sourceId,
         sourceTransactionId: transaction.sourceTransactionId,
         financeLineage: transaction.lineage,
-        ...(deduplicated.conflicts.some((conflict) => conflict.transactionIds.includes(transaction.id)) ? { reviewRequired: true, reviewReason: "source transaction identifier was reused with a different meaning" } : {})
+        ...(conflicts.some((conflict) => conflict.transactionIds.includes(transaction.id)) || (priorSource && priorSource.data.naturalKey !== transaction.naturalKey) ? { reviewRequired: true, reviewReason: "source transaction identifier was reused with a different meaning" } : {})
       }
     });
     records.push(record);
     created += 1;
+    byNaturalKey.set(transaction.naturalKey, record);
+    if (sourceKey) bySourceKey.set(sourceKey, record);
+    byProvenance.set(provenanceId, record);
   }
-  return { records, created, existing, duplicates: deduplicated.duplicates.length, conflicts: deduplicated.conflicts };
+  return { records, created, existing, duplicates: deduplicated.duplicates.length, conflicts };
 }
 
 export function reconcileFinanceStatement(source: FinanceStatementSource, transactions: FinanceTransaction[]): FinanceReconciliation {
