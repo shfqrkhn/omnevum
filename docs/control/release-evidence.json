@@ -3,17 +3,17 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "cd06f7761467158e7f561239879dd93c849dce10164aaa8779220ea53b0d04b7", "sourceRevision": "282c6a8", "serviceWorkerCache": "omnevum-shell-9f991e28869a0dcf"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "a7fa55b7bf846eebc4cd44ca3b2c917d9d4dc1774bfb2f78b86fc0884dbd464d", "sourceRevision": "74f66bd4b31b764707f47b71bf8fe88cb0cf9503", "serviceWorkerCache": "omnevum-shell-f545de829b7ff166"},
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF; captured after the full npm run build on 2026-09-19.",
   "artifactFiles": [
-    {"path": "dist/assets/index-BhgoS6Pr.css", "sha256": "a7f7b00ebcca7e28c775a1e949b0fe514b2ca28805aa8645065f0902d53f2e68", "bytes": 24208},
-    {"path": "dist/assets/index-DaX5EDd2.js", "sha256": "3d7d79af80a4a33fcd9277bd9bd06742d6997c9e0c1a56a8ab56a0f27742ee30", "bytes": 510833},
-    {"path": "dist/assets/index-DaX5EDd2.js.map", "sha256": "edf772103e33fc4f48b93254fbe7a0418d8a6166810fc55a802e8a68dc45e484", "bytes": 1476360},
+    {"path": "dist/assets/index-DHMw53KP.css", "sha256": "73febe837247b3b1e0e8e475040e0091107701286f26bc85b7cce437e054c942", "bytes": 24405},
+    {"path": "dist/assets/index-aETKKvfT.js", "sha256": "692ea23913423e081875315dcf239dd3403d45fa144f760ded654ba51972d693", "bytes": 510833},
+    {"path": "dist/assets/index-aETKKvfT.js.map", "sha256": "40df107c3be52319f8f3048aabfd0e3e08cbc1c3fed27a29ff276468682a0f8c", "bytes": 1476360},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "98dd7e8293defc473923662cb58ba7230e4bfe26d9a7ac8ca7b5a9247929e42a", "bytes": 933},
+    {"path": "dist/index.html", "sha256": "9591bfc1be2a6a1a6e53448fba417657841f5a068a035f1aae1682a5fde607f5", "bytes": 933},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
     {"path": "dist/recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
-    {"path": "dist/sw.js", "sha256": "afffb90607a29cd40bd10c0f41dbcf66cfff81e46ff4b1b685c7aa261e576aac", "bytes": 3501}
+    {"path": "dist/sw.js", "sha256": "c89503949915be6ef05c07448b1a41d9f7054a1a45cddc9a6a832f1f33207ec6", "bytes": 3501}
   ],
   "requiredEvidence": [
     "control-generation-and-drift",
@@ -29,5 +29,5 @@
     "human-acceptance-where-required"
   ],
   "evidencePolicy": "Generated status text cannot create PASS. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains NOT_RUN/UNKNOWN.",
-  "currentDecision": "Continue Phase 0; the current artifact groups Recovery backup/restore, repair/platform, and local-retirement controls behind labelled native disclosures while preserving existing IDs and owner paths. Closed compact disclosures now suppress non-summary content so low-frequency Recovery/update controls cannot add hidden height or clipped overflow at narrow 200% scale; the bounded lens chip row remains an explicit local horizontal scroller. The artifact retains the strict pre-delivery Effect/Outbox withdrawal owner and fails closed in the core runner when an immediate transport lacks explicit approval: missing or denied approval leaves the operation PENDING, while the UI confirmation supplies approval before delivery; reconciliation remains separate. The current same-origin Chromium qualification restores an opaque broker handle after reload, authorizes one ambiguous bearer POST plus one GET reconciliation, creates one idempotent identity, and leaves no raw secret in durable state. The artifact retains the independent dependency-free last-resort recovery console at ./recovery.html, deterministic human-readable and artifact-originals exports, and a storage-owned retirement gate requiring a current full Vault readback or separately recorded explicit destroy intent. Compact/loopback evidence does not close real-provider/OAuth/ACL, native key restoration, deployment, target/accessibility, native fault, or human-acceptance gaps. OMN-ACC-094 remains bounded NOT_APPLICABLE and no completion or production-release claim is made."
+  "currentDecision": "Continue Phase 0; the current artifact groups Recovery backup/restore, repair/platform, and local-retirement controls behind labelled native disclosures while preserving existing IDs and owner paths. Closed compact disclosures suppress non-summary content, and the active update-ledger status pill now wraps within the compact Recovery summary at narrow 200% scale; the bounded lens chip row remains an explicit local horizontal scroller. The artifact retains the strict pre-delivery Effect/Outbox withdrawal owner and fails closed in the core runner when an immediate transport lacks explicit approval: missing or denied approval leaves the operation PENDING, while the UI confirmation supplies approval before delivery; reconciliation remains separate. The current same-origin Chromium qualification restores an opaque broker handle after reload, authorizes one ambiguous bearer POST plus one GET reconciliation, creates one idempotent identity, and leaves no raw secret in durable state. The artifact retains the independent dependency-free last-resort recovery console at ./recovery.html, deterministic human-readable and artifact-originals exports, and a storage-owned retirement gate requiring a current full Vault readback or separately recorded explicit destroy intent. Compact/loopback evidence does not close real-provider/OAuth/ACL, native key restoration, deployment, target/accessibility, native fault, or human-acceptance gaps. OMN-ACC-094 remains bounded NOT_APPLICABLE and no completion or production-release claim is made."
 }
