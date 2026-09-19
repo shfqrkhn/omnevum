@@ -38,6 +38,8 @@ export interface FinancePlanInput {
   amount: string;
   currency: string;
   space: SpaceId;
+  targetMode?: "FIXED" | "ROLLING_ESSENTIAL_MONTHS";
+  essentialMonths?: number;
   targetDate?: string;
   sustainableMonthlySurplus?: string;
   hardConstraint?: boolean;
@@ -47,9 +49,10 @@ export interface FinancePlanInput {
 export async function captureFinancePlan(commands: CommandBus, input: FinancePlanInput): Promise<CanonicalRecord> {
   const label = input.label.trim().slice(0, 160);
   if (!label) throw new Error("Finance plan label is required");
-  const amount = parseMoney(input.amount, input.currency);
-  if (BigInt(amount.amountMinor) < 0n) throw new Error("Finance plan amount cannot be negative");
+  const targetMode = input.kind === "goal" && input.targetMode === "ROLLING_ESSENTIAL_MONTHS" ? "ROLLING_ESSENTIAL_MONTHS" : "FIXED";
   if (input.kind === "resource") {
+    const amount = parseMoney(input.amount, input.currency);
+    if (BigInt(amount.amountMinor) < 0n) throw new Error("Finance plan amount cannot be negative");
     return commands.create({
       recordType: "observation",
       owner: "domain.finance",
@@ -57,6 +60,12 @@ export async function captureFinancePlan(commands: CommandBus, input: FinancePla
       data: { kind: "finance-resource", label, text: `${label}: ${amount.amountMinor} ${amount.currency} minor units`, amountMinor: amount.amountMinor, currency: amount.currency, space: input.space, triageStatus: "REVIEWED" }
     });
   }
+  if (targetMode === "ROLLING_ESSENTIAL_MONTHS") {
+    const essentialMonths = input.essentialMonths;
+    if (essentialMonths === undefined || !Number.isInteger(essentialMonths) || essentialMonths < 1 || essentialMonths > 120) throw new Error("Rolling essential months must be an integer from 1 to 120");
+  }
+  const amount = targetMode === "FIXED" ? parseMoney(input.amount, input.currency) : undefined;
+  if (amount && BigInt(amount.amountMinor) < 0n) throw new Error("Finance plan amount cannot be negative");
   const targetDate = input.targetDate?.trim();
   if (targetDate && (!/^\d{4}-\d{2}-\d{2}$/.test(targetDate) || !Number.isFinite(new Date(`${targetDate}T00:00:00.000Z`).getTime()))) throw new Error("Finance goal target date is invalid");
   const sustainableMonthlySurplus = input.sustainableMonthlySurplus?.trim() ? parseMoney(input.sustainableMonthlySurplus.trim(), input.currency) : undefined;
@@ -68,9 +77,10 @@ export async function captureFinancePlan(commands: CommandBus, input: FinancePla
     data: {
       kind: "finance-goal",
       label,
-      text: `${label}: target ${amount.amountMinor} ${amount.currency} minor units`,
-      targetAmountMinor: amount.amountMinor,
-      currency: amount.currency,
+      text: targetMode === "FIXED" ? `${label}: target ${amount!.amountMinor} ${amount!.currency} minor units` : `${label}: rolling target ${input.essentialMonths} months of essential spending`,
+      ...(amount ? { targetAmountMinor: amount.amountMinor } : {}),
+      ...(targetMode === "ROLLING_ESSENTIAL_MONTHS" ? { targetKind: targetMode, targetMonths: input.essentialMonths! } : {}),
+      currency: parseMoney("0", input.currency).currency,
       space: input.space,
       ...(targetDate ? { targetDate } : {}),
       ...(sustainableMonthlySurplus ? { sustainableMonthlySurplusMinor: sustainableMonthlySurplus.amountMinor } : {}),

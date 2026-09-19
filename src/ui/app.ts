@@ -100,6 +100,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const accessibilityCopy = presentation.locale === "fr-CA"
     ? { profile: "Profil d'accessibilite", standard: "Standard", lowVision: "Vision reduite", motor: "Cibles larges / motricite", cognitive: "Charge cognitive reduite", custom: "Personnalise", textScale: "Echelle du texte", scale100: "100 %", scale125: "125 %", scale150: "150 %", scale200: "200 %", targetSize: "Taille des cibles", targetStandard: "Cibles standard", targetLarge: "Cibles larges", reducedMotion: "Mode sans mouvement", hint: "Les profils changent uniquement la presentation; chaque reglage reste modifiable." }
     : { profile: "Accessibility profile", standard: "Standard", lowVision: "Low vision", motor: "Motor / large target", cognitive: "Low cognitive load", custom: "Custom", textScale: "Text scale", scale100: "100%", scale125: "125%", scale150: "150%", scale200: "200%", targetSize: "Target size", targetStandard: "Standard targets", targetLarge: "Large targets", reducedMotion: "Zero-motion mode", hint: "Profiles change presentation only; every underlying setting remains editable." };
+  const financePlanTargetCopy = presentation.locale === "fr-CA"
+    ? { label: "Type de cible", fixed: "Montant/date fixe", rolling: "Mois de depenses essentielles", months: "Mois essentiels" }
+    : { label: "Target type", fixed: "Fixed amount/date", rolling: "Rolling essential-spending months", months: "Essential months" };
   const factoryPreviewMode = new URLSearchParams(window.location.search).get("factory-preview") === "1";
   const effectRevocationPreviewMode = new URLSearchParams(window.location.search).get("effect-revocation-preview") === "1";
   const effectCredentialedPreviewMode = new URLSearchParams(window.location.search).get("effect-credentialed-preview") === "1";
@@ -488,10 +491,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
               <option value="resource">${copy.financeResource}</option>
               <option value="goal">${copy.financeGoal}</option>
             </select>
+            <label for="finance-plan-target">${financePlanTargetCopy.label}</label>
+            <select id="finance-plan-target" name="targetMode">
+              <option value="FIXED">${financePlanTargetCopy.fixed}</option>
+              <option value="ROLLING_ESSENTIAL_MONTHS">${financePlanTargetCopy.rolling}</option>
+            </select>
             <label for="finance-plan-label">${copy.financePlanLabel}</label>
             <input id="finance-plan-label" name="label" type="text" maxlength="160" required />
             <label for="finance-plan-amount">${copy.financePlanAmount}</label>
             <input id="finance-plan-amount" name="amount" type="text" inputmode="decimal" maxlength="32" required />
+            <label for="finance-plan-essential-months">${financePlanTargetCopy.months}</label>
+            <input id="finance-plan-essential-months" name="essentialMonths" type="number" inputmode="numeric" min="1" max="120" step="1" disabled />
             <label for="finance-plan-currency">${copy.currency}</label>
             <select id="finance-plan-currency" name="currency"><option value="CAD">CAD</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="JPY">JPY</option></select>
             <label for="finance-plan-space">${copy.space}</label>
@@ -1020,8 +1030,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const expenseStatus = root.querySelector<HTMLElement>("#expense-status");
   const financePlanForm = root.querySelector<HTMLFormElement>("#finance-plan-form");
   const financePlanKind = root.querySelector<HTMLSelectElement>("#finance-plan-kind");
+  const financePlanTarget = root.querySelector<HTMLSelectElement>("#finance-plan-target");
   const financePlanLabel = root.querySelector<HTMLInputElement>("#finance-plan-label");
   const financePlanAmount = root.querySelector<HTMLInputElement>("#finance-plan-amount");
+  const financePlanEssentialMonths = root.querySelector<HTMLInputElement>("#finance-plan-essential-months");
   const financePlanCurrency = root.querySelector<HTMLSelectElement>("#finance-plan-currency");
   const financePlanSpace = root.querySelector<HTMLSelectElement>("#finance-plan-space");
    const financePlanDate = root.querySelector<HTMLInputElement>("#finance-plan-date");
@@ -1297,7 +1309,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!financeImportForm || !financeImportFile || !financeImportAccount || !financeImportCurrency || !financeImportOpening || !financeImportClosing || !financeImportStatus) {
     throw new Error("Omnevum Finance import controls are missing");
   }
-  if (!financePlanForm || !financePlanKind || !financePlanLabel || !financePlanAmount || !financePlanCurrency || !financePlanSpace || !financePlanDate || !financePlanSurplus || !financePlanHardConstraint || !financePlanStatus) {
+  if (!financePlanForm || !financePlanKind || !financePlanTarget || !financePlanLabel || !financePlanAmount || !financePlanEssentialMonths || !financePlanCurrency || !financePlanSpace || !financePlanDate || !financePlanSurplus || !financePlanHardConstraint || !financePlanStatus) {
     throw new Error("Omnevum Finance planning controls are missing");
   }
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
@@ -2640,6 +2652,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const funding = finance.financeFundingAnalysis;
     const fundingAlternative = funding?.alternatives[0];
     const fundingStatus = funding?.fundingConflict ? copy.financeFundingStatus(formatMoney(funding.aggregateShortfall, presentation.locale), Object.keys(fundingAlternative?.shortfallByGoal ?? {}).length || finance.financeGoalPlans.length, funding.alternatives.length, funding.hardConstraintConflict) : "";
+    const goalLimitations = finance.financeGoalLimitations.length > 0 ? ` Goal limitations: ${finance.financeGoalLimitations.join("; ")}.` : "";
     const crossDomainStatus = finance.crossDomain.travelPlans.length > 0 || finance.crossDomain.compensationChanges.length > 0 || finance.crossDomain.limitations.length > 0
       ? copy.financeCrossDomainStatus(finance.crossDomain.travelPlans.length, finance.crossDomain.compensationChanges.length, Object.keys(finance.crossDomain.cashFlowByMonth).length, finance.crossDomain.affectedFinanceIds.length, finance.crossDomain.limitations.length)
       : "";
@@ -2698,7 +2711,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       appendFinanceInsight(copy.financePending, formatMoney(finance.summary.pendingNet, presentation.locale));
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
-      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${fireStatus} ${goalProgress}`;
+      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${fireStatus} ${goalLimitations} ${goalProgress}`;
       insightsGrid.append(financeStatus);
       if (funding) appendFundingReview(funding);
     } else if (finance.transactionCount === 0 && finance.financeGraph.nodes.length === 0) {
@@ -2709,7 +2722,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     } else {
       const financeStatus = document.createElement("p");
       financeStatus.className = "hint";
-      financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${fireStatus} ${goalProgress}`;
+      financeStatus.textContent = `${copy.financeNoData} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)} ${copy.financeAllocationConflicts(allocationConflicts)} ${copy.financeGoalStatus(finance.financeGoalPlans.length, goalConflicts)} ${copy.financeTransferStatus(finance.transferAnalysis.matches.length, finance.transferAnalysis.unmatchedTransactionIds.length)} ${crossDomainStatus} ${fundingStatus} ${fireStatus} ${goalLimitations} ${goalProgress}`;
       insightsGrid.append(financeStatus);
       if (funding) appendFundingReview(funding);
     }
@@ -3210,12 +3223,19 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
 
   const updateFinancePlanControls = (): void => {
     const goal = financePlanKind.value === "goal";
+    const rolling = goal && financePlanTarget.value === "ROLLING_ESSENTIAL_MONTHS";
+    financePlanTarget.disabled = !goal;
+    financePlanAmount.disabled = rolling;
+    financePlanAmount.required = !rolling;
+    financePlanEssentialMonths.disabled = !rolling;
+    financePlanEssentialMonths.required = rolling;
     financePlanDate.disabled = !goal;
     financePlanSurplus.disabled = !goal;
     financePlanHardConstraint.disabled = !goal;
     if (!goal) financePlanHardConstraint.checked = false;
   };
   financePlanKind.addEventListener("change", updateFinancePlanControls);
+  financePlanTarget.addEventListener("change", updateFinancePlanControls);
   updateFinancePlanControls();
 
   const renderRelationshipChoices = async (): Promise<void> => {
@@ -4203,7 +4223,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     try {
       const space = (financePlanSpace.value === "household" || financePlanSpace.value === "work" ? financePlanSpace.value : "personal") satisfies SpaceId;
       const kind = financePlanKind.value === "goal" ? "goal" : "resource";
-      const created = await captureFinancePlan(commands, { kind, label: financePlanLabel.value, amount: financePlanAmount.value, currency: financePlanCurrency.value, space, ...(kind === "goal" && financePlanDate.value ? { targetDate: financePlanDate.value } : {}), ...(kind === "goal" && financePlanSurplus.value.trim() ? { sustainableMonthlySurplus: financePlanSurplus.value } : {}), ...(kind === "goal" && financePlanHardConstraint.checked ? { hardConstraint: true } : {}) });
+      const targetMode = financePlanTarget.value === "ROLLING_ESSENTIAL_MONTHS" ? "ROLLING_ESSENTIAL_MONTHS" : "FIXED";
+      const created = await captureFinancePlan(commands, { kind, label: financePlanLabel.value, amount: financePlanAmount.value, currency: financePlanCurrency.value, space, ...(kind === "goal" ? { targetMode, ...(targetMode === "ROLLING_ESSENTIAL_MONTHS" ? { essentialMonths: Number(financePlanEssentialMonths.value) } : {}) } : {}), ...(kind === "goal" && financePlanDate.value ? { targetDate: financePlanDate.value } : {}), ...(kind === "goal" && financePlanSurplus.value.trim() ? { sustainableMonthlySurplus: financePlanSurplus.value } : {}), ...(kind === "goal" && financePlanHardConstraint.checked ? { hardConstraint: true } : {}) });
       financeChangedIds = [created.id];
       financePlanForm.reset();
       updateFinancePlanControls();

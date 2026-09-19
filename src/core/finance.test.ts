@@ -22,10 +22,11 @@ describe("credential-free Finance statement semantics", () => {
   });
 
   it("parses quoted CSV, stores exact minor units, and retains source-row lineage", () => {
-    const transactions = parseFinanceCsv('Date,Description,Debit,Credit,Id\n2026-01-02,"Cafe, Main",10.00,,tx-1\n2026-01-03,Payroll,,15.00,tx-2\n', source);
+    const transactions = parseFinanceCsv('Date,Description,Debit,Credit,Id,Category\n2026-01-02,"Cafe, Main",10.00,,tx-1,essential\n2026-01-03,Payroll,,15.00,tx-2,income\n', source);
     expect(transactions).toHaveLength(2);
     expect(transactions[0]).toMatchObject({ amount: { amountMinor: "-1000", currency: "CAD" }, direction: "OUTFLOW", sourceTransactionId: "tx-1", lineage: { sourceId: source.sourceId, sourceSha256: source.sha256, sourceRow: 2, parserProfile: "CSV_HEADER_V1" } });
     expect(transactions[0]?.lineage.rawFields.description).toBe("Cafe, Main");
+    expect(transactions[0]?.essential).toBe(true);
     expect(transactions[1]).toMatchObject({ amount: { amountMinor: "1500", currency: "CAD" }, direction: "INFLOW", sourceTransactionId: "tx-2", lineage: { sourceRow: 3 } });
   });
 

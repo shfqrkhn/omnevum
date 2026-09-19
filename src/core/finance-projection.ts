@@ -2,7 +2,7 @@ import { projectDependencyGraph, projectDependencyImpact, type DependencyGraph, 
 import { addMoney, parseMoney, type MoneyValue } from "./money";
 import type { CanonicalRecord, TruthClass } from "./model";
 import type { FinanceLineage, FinanceStatementFacts, FinanceTransaction, FinanceTransactionStatus } from "./finance";
-import { allocateFinanceResource, assessFinanceDataQuality, analyzeFinanceGraph, detectFinanceReviewCases, inferFinanceRecurringPatterns, matchFinanceTransfers, planFinanceAllocationAlternatives, projectFinanceGoal, projectFireScenario, summarizeFinanceTransactions, type FinanceAllocationResult, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastVintage, type FinanceFundingAnalysis, type FinanceGoalPlan, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceReviewCase, type FinanceTransactionSummary, type FinanceTransferAnalysis, type FireScenarioInput, type FireScenarioProjection } from "./finance-model";
+import { allocateFinanceResource, assessFinanceDataQuality, analyzeFinanceGraph, detectFinanceReviewCases, inferFinanceRecurringPatterns, matchFinanceTransfers, planFinanceAllocationAlternatives, projectFinanceGoal, projectFireScenario, summarizeFinanceTransactions, type FinanceAllocationResult, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastVintage, type FinanceFundingAnalysis, type FinanceGoalPlan, type FinanceGoalTarget, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceReviewCase, type FinanceTransactionSummary, type FinanceTransferAnalysis, type FireScenarioInput, type FireScenarioProjection } from "./finance-model";
 
 /**
  * Read-only Finance projection over canonical records and the shared typed
@@ -70,6 +70,7 @@ export interface FinanceProjection {
   financeGraphAnalysis: FinanceGraphAnalysis;
   financeAllocationResults: Array<{ resourceId: string; result: FinanceAllocationResult }>;
   financeGoalPlans: Array<{ recordId: string; plan: FinanceGoalPlan; hardConstraint: boolean }>;
+  financeGoalLimitations: string[];
   financeFundingAnalysis?: FinanceFundingAnalysis;
   statementFacts: FinanceStatementFacts[];
   fireScenarios: FinanceFireScenarioProjection[];
@@ -141,16 +142,43 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
       else if (current.currency === amount.currency) fundedByGoal.set(goalId, addMoney(current, amount));
     }
   }
+  const essentialByCurrency = new Map<string, { totalMinor: bigint; periods: Set<string> }>();
+  for (const transaction of transactions) {
+    if (!transaction.essential || transaction.status !== "POSTED" || transaction.direction !== "OUTFLOW") continue;
+    const current = essentialByCurrency.get(transaction.amount.currency) ?? { totalMinor: 0n, periods: new Set<string>() };
+    current.totalMinor += -BigInt(transaction.amount.amountMinor);
+    current.periods.add(transaction.postedAt.slice(0, 7));
+    essentialByCurrency.set(transaction.amount.currency, current);
+  }
+  const essentialMonthlyByCurrency = new Map<string, MoneyValue>();
+  for (const [currencyKey, value] of essentialByCurrency) if (value.periods.size > 0) essentialMonthlyByCurrency.set(currencyKey, { amountMinor: (value.totalMinor / BigInt(value.periods.size)).toString(), currency: currencyKey });
+  const financeGoalLimitations: string[] = [];
   const financeGoalPlans = activeRecords.filter((record) => record.data.kind === "finance-goal").flatMap((goal) => {
-    const target = recordMoneyField(goal, "targetAmountMinor");
-    if (!target) return [];
+    const fixedTarget = recordMoneyField(goal, "targetAmountMinor");
+    let target: FinanceGoalTarget | undefined = fixedTarget;
+    if (!target && goal.data.targetKind === "ROLLING_ESSENTIAL_MONTHS") {
+      const months = typeof goal.data.targetMonths === "number" ? goal.data.targetMonths : typeof goal.data.targetMonths === "string" ? Number(goal.data.targetMonths) : Number.NaN;
+      const currencyValue = typeof goal.data.currency === "string" ? goal.data.currency : "";
+      let normalizedCurrency: string | undefined;
+      try { normalizedCurrency = parseMoney("0", currencyValue).currency; } catch { normalizedCurrency = undefined; }
+      const monthlyEssentialSpending = normalizedCurrency ? essentialMonthlyByCurrency.get(normalizedCurrency) : undefined;
+      if (!Number.isInteger(months) || months < 1 || months > 120) financeGoalLimitations.push(`${goal.id}: rolling essential months is outside the supported range`);
+      else if (!monthlyEssentialSpending) financeGoalLimitations.push(`${goal.id}: no posted essential-spending evidence is available for the rolling target`);
+      else target = { kind: "ROLLING_ESSENTIAL_MONTHS", months, monthlyEssentialSpending };
+    }
+    if (!target) {
+      if (goal.data.targetKind === "ROLLING_ESSENTIAL_MONTHS") return [];
+      financeGoalLimitations.push(`${goal.id}: fixed target amount is missing`);
+      return [];
+    }
     const funded = fundedByGoal.get(goal.id);
     const sustainable = recordMoneyField(goal, "sustainableMonthlySurplusMinor");
     const targetDate = typeof goal.data.targetDate === "string" && /^\d{4}-\d{2}-\d{2}$/.test(goal.data.targetDate) ? goal.data.targetDate : undefined;
-    if (funded && funded.currency !== target.currency) return [];
-    if (sustainable && sustainable.currency !== target.currency) return [];
+    const targetCurrency = "kind" in target ? target.monthlyEssentialSpending.currency : target.currency;
+    if (funded && funded.currency !== targetCurrency) return [];
+    if (sustainable && sustainable.currency !== targetCurrency) return [];
     try {
-      return [{ recordId: goal.id, plan: projectFinanceGoal({ goalId: goal.id, target, funded: funded ?? parseMoney("0", target.currency), ...(targetDate ? { targetDate } : {}), ...(sustainable ? { sustainableMonthlySurplus: sustainable } : {}) }), hardConstraint: goal.data.hardConstraint === true }];
+      return [{ recordId: goal.id, plan: projectFinanceGoal({ goalId: goal.id, target, funded: funded ?? parseMoney("0", targetCurrency), ...(targetDate ? { targetDate } : {}), ...(sustainable ? { sustainableMonthlySurplus: sustainable } : {}) }), hardConstraint: goal.data.hardConstraint === true }];
     } catch {
       return [];
     }
@@ -216,6 +244,7 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
     financeGraphAnalysis,
     financeAllocationResults,
     financeGoalPlans,
+    financeGoalLimitations: [...new Set(financeGoalLimitations)].sort(),
     ...(financeFundingAnalysis ? { financeFundingAnalysis } : {}),
     statementFacts,
     fireScenarios,
@@ -339,6 +368,7 @@ export function toFinanceTransaction(record: CanonicalRecord): FinanceTransactio
     amount: money,
     direction: BigInt(money.amountMinor) > 0n ? "INFLOW" : BigInt(money.amountMinor) < 0n ? "OUTFLOW" : "NEUTRAL",
     status: statusValue,
+    ...(record.data.essential === true ? { essential: true } : {}),
     ...(typeof record.data.sourceTransactionId === "string" && record.data.sourceTransactionId ? { sourceTransactionId: record.data.sourceTransactionId } : {}),
     naturalKey,
     lineage: {

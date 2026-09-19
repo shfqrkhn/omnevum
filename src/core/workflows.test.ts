@@ -32,4 +32,14 @@ describe("first-party domain workflows", () => {
     expect(new Set((await commands.list()).map((record) => record.id))).toEqual(new Set([resource.id, goal.id]));
     store.close();
   });
+
+  it("persists a rolling essential-month goal without inventing a fixed target", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-rolling-goal`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const goal = await captureFinancePlan(commands, { kind: "goal", label: "Emergency reserve", amount: "", currency: "CAD", space: "personal", targetMode: "ROLLING_ESSENTIAL_MONTHS", essentialMonths: 6 });
+    expect(goal.data).toMatchObject({ kind: "finance-goal", targetKind: "ROLLING_ESSENTIAL_MONTHS", targetMonths: 6, currency: "CAD" });
+    expect(goal.data).not.toHaveProperty("targetAmountMinor");
+    store.close();
+  });
 });

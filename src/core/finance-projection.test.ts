@@ -77,6 +77,15 @@ describe("canonical Finance projection", () => {
     expect(projection.financeGoalPlans[0]?.plan).toMatchObject({ goalId: goal.id, funded: { amountMinor: "7000", currency: "CAD" }, remaining: { amountMinor: "8000", currency: "CAD" }, fundingConflict: false });
   });
 
+  it("recomputes rolling essential-month goals from current imported evidence", () => {
+    const essentialJanuary = record("essential-jan", { kind: "finance-transaction", merchant: "rent", description: "Rent", amountMinor: "-10000", currency: "CAD", accountId: "checking", postedAt: "2026-01-02T00:00:00.000Z", status: "POSTED", essential: true }, { truthClass: "IMPORTED_RECORD" });
+    const essentialFebruary = record("essential-feb", { kind: "finance-transaction", merchant: "rent", description: "Rent", amountMinor: "-10000", currency: "CAD", accountId: "checking", postedAt: "2026-02-02T00:00:00.000Z", status: "POSTED", essential: true }, { truthClass: "IMPORTED_RECORD" });
+    const goal = record("rolling-reserve", { kind: "finance-goal", label: "Emergency reserve", text: "Emergency reserve", targetKind: "ROLLING_ESSENTIAL_MONTHS", targetMonths: 6, currency: "CAD", targetDate: "2027-01-01" });
+    const projection = projectFinanceState([essentialJanuary, essentialFebruary, goal]);
+    expect(projection.financeGoalLimitations).toEqual([]);
+    expect(projection.financeGoalPlans[0]?.plan).toMatchObject({ target: { amountMinor: "60000", currency: "CAD" }, remaining: { amountMinor: "60000", currency: "CAD" } });
+  });
+
   it("projects a portfolio funding conflict once and exposes review-only alternatives", () => {
     const reserve = record("finance-goal-reserve", { kind: "finance-goal", label: "Emergency reserve", text: "Emergency reserve", targetAmountMinor: "120000", currency: "CAD", targetDate: "2027-01-01", sustainableMonthlySurplusMinor: "50000" });
     const travel = record("finance-goal-travel", { kind: "finance-goal", label: "Travel", text: "Travel", targetAmountMinor: "120000", currency: "CAD", targetDate: "2027-01-01", sustainableMonthlySurplusMinor: "50000" });

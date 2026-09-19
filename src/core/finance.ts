@@ -101,6 +101,7 @@ export interface FinanceTransaction {
   amount: MoneyValue;
   direction: "INFLOW" | "OUTFLOW" | "NEUTRAL";
   status: FinanceTransactionStatus;
+  essential?: boolean;
   sourceTransactionId?: string;
   naturalKey: string;
   lineage: FinanceLineage;
@@ -173,7 +174,11 @@ const headerAliases: Record<string, string> = {
   reference: "sourceTransactionId",
   ref: "sourceTransactionId",
   status: "status",
-  state: "status"
+  state: "status",
+  essential: "essential",
+  essentialexpense: "essential",
+  necessity: "essential",
+  category: "category"
 };
 
 export function parseFinanceCsv(text: string, source: FinanceStatementSource): FinanceTransaction[] {
@@ -355,6 +360,8 @@ export function normalizeFinanceRows(rows: FinanceRawRow[], source: FinanceState
     const currency = parseMoney("0", readField(fields, "currency") || sourceCurrency).currency;
     const amount = parseRowAmount(fields, currency, row.sourceRow);
     const status = normalizeStatus(readField(fields, "status"));
+    const classification = `${readField(fields, "essential")} ${readField(fields, "category")}`.toLocaleLowerCase("en-CA");
+    const essential = /(^|[\s_-])(true|yes|essential|fixed-essential)(?=$|[\s_-])/u.test(classification);
     const merchant = normalizeMerchant(description);
     const sourceTransactionId = readField(fields, "sourceTransactionId");
     const naturalKey = `${source.accountId}|${postedAt.slice(0, 10)}|${amount.currency}|${amount.amountMinor}|${merchant}`;
@@ -368,6 +375,7 @@ export function normalizeFinanceRows(rows: FinanceRawRow[], source: FinanceState
       amount,
       direction: BigInt(amount.amountMinor) > 0n ? "INFLOW" : BigInt(amount.amountMinor) < 0n ? "OUTFLOW" : "NEUTRAL",
       status,
+      ...(essential ? { essential: true } : {}),
       ...(sourceTransactionId ? { sourceTransactionId: sourceTransactionId.slice(0, 200) } : {}),
       naturalKey,
       lineage: { sourceId: source.sourceId, sourceSha256: source.sha256, sourceRow: row.sourceRow, parserProfile, rawFields: fields }
@@ -452,6 +460,7 @@ export async function acceptFinanceTransactions(commands: CommandBus, source: Fi
         currency: transaction.amount.currency,
         direction: transaction.direction,
         status: transaction.status,
+        ...(transaction.essential ? { essential: true } : {}),
         naturalKey: transaction.naturalKey,
         sourceArtifactId: source.sourceArtifactId ?? source.sourceId,
         sourceTransactionId: transaction.sourceTransactionId,
