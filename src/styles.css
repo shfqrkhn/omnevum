@@ -217,6 +217,12 @@ select[multiple] { min-height: 9rem; }
 .record-list { display: grid; gap: 0.65rem; list-style: none; margin: 0; padding: 0; }
 .triage-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; min-width: 0; max-width: 100%; }
 .triage-actions > * { min-width: 0; max-width: 100%; }
+.triage-batch { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem; margin: 0.8rem 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.7rem; }
+.triage-batch[hidden] { display: none; }
+.triage-batch .check-row { margin: 0; }
+.triage-batch input[type="datetime-local"] { flex: 1 1 13rem; min-width: 13rem; }
+.triage-select-row { flex: 0 0 auto; margin: 0; }
+.triage-select-row input { width: 1.15rem; height: 1.15rem; accent-color: var(--accent); }
 .triage-split { display: grid; grid-template-columns: minmax(6rem, auto) minmax(14rem, 1fr) auto; gap: 0.45rem; flex: 1 1 100%; min-width: 0; max-width: 100%; align-items: start; }
 .triage-split > * { min-width: 0; max-width: 100%; }
 .triage-split textarea { min-height: 3rem; padding: 0.45rem 0.6rem; }

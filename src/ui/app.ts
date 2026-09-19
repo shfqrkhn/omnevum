@@ -1,4 +1,4 @@
-import type { CommandBus, TriageRouteTarget, TriageSplitPart } from "../core/commands";
+import { runTriageBatch, type CommandBus, type TriageBatchAction, type TriageRouteTarget, type TriageSplitPart } from "../core/commands";
 import { acceptCandidates, stageBlob, stageText, stageUrl, type AcquireCandidate, type AcquirePreview } from "../core/acquire";
 import { inspectArtifact } from "../core/artifact";
 import { redactTextArtifact } from "../core/document";
@@ -626,6 +626,13 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           </div>
           <span id="review-count" class="count" aria-label="${copy.inboxCount}">0</span>
         </div>
+        <div id="triage-batch" class="triage-batch" hidden>
+          <label class="check-row" for="triage-select-all"><input id="triage-select-all" type="checkbox" /> ${copy.triageSelectAll}</label>
+          <span id="triage-selected" class="hint">${copy.triageSelected(0)}</span>
+          <input id="triage-batch-defer-until" type="datetime-local" aria-label="${copy.triageBatchDeferUntil}" />
+          <button id="triage-batch-review" class="secondary" type="button" disabled>${copy.triageBatchReview}</button>
+          <button id="triage-batch-defer" class="secondary" type="button" disabled>${copy.triageBatchDefer}</button>
+        </div>
         <ul id="review-list" class="record-list"></ul>
         <p id="triage-status" class="hint" role="status"></p>
         <p id="review-empty" class="empty-state">${copy.inboxClear}</p>
@@ -991,6 +998,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const reviewCount = root.querySelector<HTMLElement>("#review-count");
   const triageStatusMessage = root.querySelector<HTMLElement>("#triage-status")!;
   const reviewEmpty = root.querySelector<HTMLElement>("#review-empty");
+  const triageBatch = root.querySelector<HTMLElement>("#triage-batch");
+  const triageSelectAll = root.querySelector<HTMLInputElement>("#triage-select-all");
+  const triageSelected = root.querySelector<HTMLElement>("#triage-selected");
+  const triageBatchDeferUntil = root.querySelector<HTMLInputElement>("#triage-batch-defer-until");
+  const triageBatchReview = root.querySelector<HTMLButtonElement>("#triage-batch-review");
+  const triageBatchDefer = root.querySelector<HTMLButtonElement>("#triage-batch-defer");
   const relateForm = root.querySelector<HTMLFormElement>("#relate-form");
   const relateSource = root.querySelector<HTMLSelectElement>("#relate-source");
   const relateTarget = root.querySelector<HTMLSelectElement>("#relate-target");
@@ -1151,7 +1164,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const packageAutomationStatus = root.querySelector<HTMLElement>("#package-automation-status");
   const packageAutomationList = root.querySelector<HTMLUListElement>("#package-automation-list");
   const packageAutomationProposals = root.querySelector<HTMLUListElement>("#package-automation-proposals");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchFiltersToggle || !searchFilters || !searchFacetChips || !searchFacetLens || !searchFacetType || !searchFacetSpace || !searchFacetArtifact || !searchViewName || !searchSaveView || !searchScopeStatus || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchFiltersToggle || !searchFilters || !searchFacetChips || !searchFacetLens || !searchFacetType || !searchFacetSpace || !searchFacetArtifact || !searchViewName || !searchSaveView || !searchScopeStatus || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !triageBatch || !triageSelectAll || !triageSelected || !triageBatchDeferUntil || !triageBatchReview || !triageBatchDefer || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!financeImportForm || !financeImportFile || !financeImportAccount || !financeImportCurrency || !financeImportOpening || !financeImportClosing || !financeImportStatus) {
@@ -1246,6 +1259,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   let stagedCandidates: AcquireCandidate[] = [];
   let cleanupPreviewState: CleanupPreview | undefined;
   let recordsRenderRevision = 0;
+  const selectedTriageIds = new Set<string>();
+  let visibleTriageRecords = new Map<string, CanonicalRecord>();
   let packageAutomationProposalsState: PackageAutomationProposal[] = [];
   const ARCHIVE_UNDO_WINDOW_MS = 10_000;
   let archiveUndoState: { recordId: string; expiresAt: number } | undefined;
@@ -2430,6 +2445,19 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
   };
 
+  const syncTriageBatchControls = (): void => {
+    const visibleIds = [...visibleTriageRecords.keys()];
+    for (const id of selectedTriageIds) if (!visibleTriageRecords.has(id)) selectedTriageIds.delete(id);
+    const selectedCount = selectedTriageIds.size;
+    triageBatch.hidden = visibleIds.length === 0;
+    triageSelected.textContent = copy.triageSelected(selectedCount);
+    triageBatchReview.disabled = selectedCount === 0;
+    triageBatchDefer.disabled = selectedCount === 0;
+    triageSelectAll.checked = visibleIds.length > 0 && selectedCount === visibleIds.length;
+    triageSelectAll.indeterminate = selectedCount > 0 && selectedCount < visibleIds.length;
+    if (!triageBatchDeferUntil.value) triageBatchDeferUntil.value = new Date(Date.now() + 24 * 60 * 60 * 1000 - new Date().getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 16);
+  };
+
   const renderReview = async (): Promise<void> => {
     const scoped = await scopedRecords();
     const now = Date.now();
@@ -2438,6 +2466,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const deferredUntil = recordTriageDeferredUntil(record);
       return !deferredUntil || Date.parse(deferredUntil) <= now;
     });
+    visibleTriageRecords = new Map(records.map((record) => [record.id, record]));
     const linkTargets = scoped.filter((record) => record.recordType !== "relationship");
     reviewList.replaceChildren();
     reviewCount.textContent = formatNumber(presentation.locale, records.length);
@@ -2445,6 +2474,18 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     for (const record of [...records].reverse()) {
       const item = document.createElement("li");
       item.className = "record-item";
+      const selectLabel = document.createElement("label");
+      selectLabel.className = "check-row triage-select-row";
+      const select = document.createElement("input");
+      select.type = "checkbox";
+      select.checked = selectedTriageIds.has(record.id);
+      select.setAttribute("aria-label", copy.triageSelectItem(recordText(record)));
+      select.addEventListener("change", () => {
+        if (select.checked) selectedTriageIds.add(record.id);
+        else selectedTriageIds.delete(record.id);
+        syncTriageBatchControls();
+      });
+      selectLabel.append(select, copy.triageSelectItem(recordText(record)));
       const text = document.createElement("p");
       const triageStatus = recordTriageStatus(record);
       text.textContent = `${typeLabel(record.recordType)}: ${recordText(record)} (${copy.triageStatus(triageStatus)})`;
@@ -2456,6 +2497,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         proposal.possibleTypes.map((type) => typeLabel(type)).join(", "),
         proposal.possibleActions.map(triageActionLabel).join(", ")
       );
+      const details = document.createElement("details");
+      const detailsSummary = document.createElement("summary");
+      detailsSummary.textContent = copy.triageDetails;
+      const provenance = document.createElement("p");
+      provenance.className = "hint";
+      const sourceId = record.provenance.sourceId ? `; source ${record.provenance.sourceId}` : "";
+      provenance.textContent = `${copy.triageProvenance(record.provenance.source, record.provenance.capturedAt, record.owner, record.revision)}${sourceId}`;
+      details.append(detailsSummary, provenance, proposalText);
       const actions = document.createElement("div");
       actions.className = "triage-actions";
       const updateTriage = (status: TriageStatus, label: string, extraData: Record<string, unknown> = {}): void => {
@@ -2604,9 +2653,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         }
       });
       actions.append(archive);
-      item.append(text, proposalText, actions);
+      item.append(selectLabel, text, details, actions);
       reviewList.append(item);
     }
+    syncTriageBatchControls();
   };
 
   const renderRelationshipChoices = async (): Promise<void> => {
@@ -3339,6 +3389,36 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     if (!archivePanel.hidden) await renderArchived();
     return records.length;
   };
+
+  const runSelectedTriageBatch = async (action: TriageBatchAction): Promise<void> => {
+    const selected = [...selectedTriageIds].map((recordId) => visibleTriageRecords.get(recordId)).filter((record): record is CanonicalRecord => record !== undefined);
+    if (selected.length === 0) {
+      triageStatusMessage.textContent = copy.triageNoSelection;
+      return;
+    }
+    try {
+      const deferredUntil = action === "DEFER" ? new Date(triageBatchDeferUntil.value).toISOString() : undefined;
+      const outcomes = await runTriageBatch(commands, selected.map((record) => ({ recordId: record.id, expectedRevision: record.revision })), action, deferredUntil);
+      const labels = new Map(selected.map((record) => [record.id, recordText(record)]));
+      const successes = outcomes.filter((outcome) => outcome.ok).length;
+      const failures = outcomes.length - successes;
+      const successLabel = action === "REVIEW" ? copy.markReviewed : copy.defer;
+      triageStatusMessage.textContent = `${copy.triageBatchResult(successes, failures)} ${outcomes.map((outcome) => copy.triageBatchOutcome(labels.get(outcome.recordId) ?? outcome.recordId, outcome.ok ? successLabel : outcome.message)).join(" ")}`;
+      selectedTriageIds.clear();
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      triageStatusMessage.textContent = describeError(error, "Triage batch failed; canonical records were not changed.");
+    }
+  };
+
+  triageSelectAll.addEventListener("change", () => {
+    if (triageSelectAll.checked) for (const id of visibleTriageRecords.keys()) selectedTriageIds.add(id);
+    else selectedTriageIds.clear();
+    for (const input of reviewList.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')) input.checked = triageSelectAll.checked;
+    syncTriageBatchControls();
+  });
+  triageBatchReview.addEventListener("click", () => { void runSelectedTriageBatch("REVIEW"); });
+  triageBatchDefer.addEventListener("click", () => { void runSelectedTriageBatch("DEFER"); });
 
   undoArchive.addEventListener("click", async () => {
     const state = archiveUndoState;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CommandBus, RevisionConflictError } from "./commands";
+import { CommandBus, RevisionConflictError, runTriageBatch } from "./commands";
 import { previewCleanup, reconstructCleanupHistory, type CleanupRecipe } from "./cleanup";
 import { CanonicalStore } from "./storage";
 
@@ -129,6 +129,21 @@ describe("CommandBus", () => {
     expect(deleted?.deleted).toBe(true);
     expect(deleted?.data).toMatchObject({ triageStatus: "REVIEWED", triageDisposition: "DELETED" });
     expect(await store.list()).toEqual([]);
+    store.close();
+  });
+
+  it("reports per-item triage batch outcomes and retains a stale failure in staging", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-triage-batch`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const sources = await Promise.all(["one", "two", "three", "four"].map((text) => commands.create({ recordType: "note", owner: "core.capture", data: { text, triageStatus: "INBOX" } })));
+    const items = sources.map((source) => ({ recordId: source.id, expectedRevision: source.revision }));
+    await commands.update(sources[3]!.id, { text: "four changed", triageStatus: "INBOX" }, sources[3]!.revision);
+    const outcomes = await runTriageBatch(commands, items, "REVIEW");
+    expect(outcomes.filter((outcome) => outcome.ok).map((outcome) => outcome.recordId)).toEqual(sources.slice(0, 3).map((source) => source.id));
+    expect(outcomes[3]).toMatchObject({ recordId: sources[3]!.id, ok: false });
+    expect((await store.get(sources[0]!.id))?.data.triageStatus).toBe("REVIEWED");
+    expect((await store.get(sources[3]!.id))?.data.triageStatus).toBe("INBOX");
     store.close();
   });
 

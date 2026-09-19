@@ -35,6 +35,19 @@ export interface TriageSplitPart {
   text: string;
 }
 
+export type TriageBatchAction = "REVIEW" | "DEFER";
+
+export interface TriageBatchItem {
+  recordId: string;
+  expectedRevision: number;
+}
+
+export interface TriageBatchOutcome {
+  recordId: string;
+  ok: boolean;
+  message: string;
+}
+
 export class RevisionConflictError extends Error {
   public constructor(message = "Canonical record changed; reload before retrying") {
     super(message);
@@ -366,4 +379,26 @@ export class CommandBus {
     await this.store.put(restored, undefined, current.revision);
     return restored;
   }
+}
+
+export async function runTriageBatch(commands: CommandBus, items: readonly TriageBatchItem[], action: TriageBatchAction, deferredUntil?: string): Promise<TriageBatchOutcome[]> {
+  if (items.length === 0) throw new Error("Select at least one triage item");
+  if (action === "DEFER" && (!deferredUntil || !Number.isFinite(Date.parse(deferredUntil)))) throw new Error("A valid defer time is required");
+  const outcomes: TriageBatchOutcome[] = [];
+  for (const item of items) {
+    try {
+      const current = await commands.get(item.recordId, true);
+      if (!current || current.deleted) throw new Error("The triage item is no longer active");
+      if (action === "REVIEW") {
+        const { triageDisposition: _previousDisposition, triageDeferredUntil: _previousDeferredUntil, ...dataWithoutDisposition } = current.data;
+        await commands.update(current.id, { ...dataWithoutDisposition, triageStatus: "REVIEWED" }, item.expectedRevision);
+      } else {
+        await commands.deferTriage(current.id, deferredUntil!, item.expectedRevision);
+      }
+      outcomes.push({ recordId: item.recordId, ok: true, message: "completed" });
+    } catch (error) {
+      outcomes.push({ recordId: item.recordId, ok: false, message: error instanceof Error ? error.message.slice(0, 240) : "The item could not be changed" });
+    }
+  }
+  return outcomes;
 }
