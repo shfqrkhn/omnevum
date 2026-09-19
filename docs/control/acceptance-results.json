@@ -2333,9 +2333,10 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-finance-projection-and-graph-recomputation-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-allocation-amount-and-resource-reconciliation-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-finance-planning-and-goal-trajectory-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-canonical-finance-planning-and-goal-trajectory-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-fire-portfolio-projection-receipt"
       ],
-      "notes": "Current core and exact built Chromium UI evidence provides typed graph nodes/edges, canonical platform.dependency persistence, visible typed Relate creation, exact-money exclusive versus enabling allocations, over-allocation detection, dynamic goal target/funding pace, and a read-only Finance projection joining canonical transactions, shared goals, typed graph impact, data quality, and review signals. Automatic multi-goal trajectory refresh and full Finance portfolio adapters remain open."
+      "notes": "Current core and exact built Chromium UI evidence provides typed graph nodes/edges, canonical platform.dependency persistence, visible typed Relate creation, exact-money exclusive versus enabling allocations, over-allocation detection, dynamic goal target/funding pace, retained statement valuations, explicit FIRE scenario projection, and a read-only Finance projection joining canonical transactions, shared goals, typed graph impact, data quality, and review signals. Automatic multi-goal trajectory refresh and full Finance portfolio adapters remain open."
     },
     {
       "id": "OMN-ACC-160",
@@ -2373,9 +2374,10 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-typed-dependency-graph-and-impact-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-fire-portfolio-projection-receipt"
       ],
-      "notes": "Current core and exact built Chromium UI evidence supplies explicit graph truth classes, canonical typed persistence, scenario isolation, dynamic goal funding, and assumption-labelled FIRE projections without a universal recommendation. Persisted composite goal records, prior-scenario comparison, automatic connected portfolio recomputation, and connected Finance UI remain open."
+      "notes": "Current core and exact built Chromium UI evidence supplies explicit graph truth classes, canonical typed persistence, scenario isolation, dynamic goal funding, retained investment valuation inputs, multiple assumption-labelled FIRE scenarios, and no universal recommendation. Persisted composite goal records, full dependency-edge UI, automatic connected portfolio recomputation, and connected Finance UI remain open."
     },
     {
       "id": "OMN-ACC-163",
@@ -2500,9 +2502,10 @@
       "text": "A long-horizon retirement/FIRE scenario uses investment balances, contributions, withdrawals, inflation, fees, taxes, and a retirement date. The projection keeps nominal/real and pre/post-tax bases consistent, exposes sequence/path and longevity assumptions, preserves deterministic and stochastic/sensitivity outputs as model results rather than facts, and shows how changing one assumption propagates through the connected goal portfolio without silently changing the user's adopted plan.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-model-allocation-risk-and-scenario-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-fire-portfolio-projection-receipt"
       ],
-      "notes": "Current core tests project nominal, inflation-adjusted real, after-tax, deterministic, and supplied downside/upside sequence outputs with explicit assumptions and limitations. Investment cash-flow method breadth, longevity/scenario portfolio UI, canonical baseline comparison, and human acceptance remain open."
+      "notes": "Current core and projection tests consume retained investment valuations plus contribution, spending, retirement-date/horizon, inflation, fee, tax, withdrawal, and supplied sequence assumptions; they expose nominal/real/after-tax, deterministic, downside, and upside modeled outputs across multiple scenario records without mutating the adopted records. Stochastic breadth, connected portfolio UI, richer longevity semantics, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-172",
