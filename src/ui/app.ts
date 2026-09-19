@@ -3875,13 +3875,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   });
 
   clearCanonicalButton.addEventListener("click", async () => {
-    const records = (await store.list(true)).filter((record) => !isCleanupHistoryRecord(record));
-    const effects = (await store.listEffects()).filter((operation) => operation.status !== "SUCCEEDED");
-    const relationships = records.filter((record) => record.recordType === "relationship").length;
-    const artifacts = (await store.health()).artifactPayloads;
-    const message = `${recoveryCopy.clearConfirmation}\n\n${recoveryCopy.clearImpact(records.length, relationships, artifacts, effects.length)}`;
-    if (!await requestConfirmation(message, copy.confirmationHeading)) return;
     try {
+      const impact = await store.getClearImpact();
+      const message = `${recoveryCopy.clearConfirmation}\n\n${recoveryCopy.clearImpact(impact.canonicalRecords, impact.relationships, impact.orphanedRelationships, impact.historyEntries, impact.artifactPayloads, impact.pendingEffects, impact.packageStates, impact.automationRules)}`;
+      if (!await requestConfirmation(message, copy.confirmationHeading)) return;
       clearArchiveUndo();
       await store.clear();
       recoveryStatus.textContent = recoveryCopy.clearedCanonical;

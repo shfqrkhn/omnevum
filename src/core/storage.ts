@@ -131,6 +131,17 @@ export interface RecoveryRepairResult {
   skippedAutomationRules: number;
 }
 
+export interface CanonicalClearImpact {
+  canonicalRecords: number;
+  relationships: number;
+  orphanedRelationships: number;
+  historyEntries: number;
+  artifactPayloads: number;
+  pendingEffects: number;
+  packageStates: number;
+  automationRules: number;
+}
+
 type PersistenceState = "GRANTED" | "DENIED" | "UNAVAILABLE";
 
 export class CanonicalStore {
@@ -285,6 +296,34 @@ export class CanonicalStore {
       throw storageWriteError(error);
     }
     this.publishChange({ kind: "STORE_CLEARED" });
+  }
+
+  public async getClearImpact(): Promise<CanonicalClearImpact> {
+    const [records, history, artifacts, effects, packageStates, automationRules] = await Promise.all([
+      this.list(true),
+      this.history(),
+      requestResult(this.requireDatabase().transaction(ARTIFACT_STORE, "readonly").objectStore(ARTIFACT_STORE).getAll()),
+      this.listEffects(),
+      this.listPackageStates(),
+      this.getAutomationRules()
+    ]);
+    const recordIds = new Set(records.map((record) => record.id));
+    const relationships = records.filter((record) => record.recordType === "relationship");
+    const orphanedRelationships = relationships.filter((relationship) => {
+      const sourceId = relationship.data.sourceId;
+      const targetId = relationship.data.targetId;
+      return typeof sourceId !== "string" || typeof targetId !== "string" || !recordIds.has(sourceId) || !recordIds.has(targetId);
+    }).length;
+    return {
+      canonicalRecords: records.length,
+      relationships: relationships.length,
+      orphanedRelationships,
+      historyEntries: history.length,
+      artifactPayloads: artifacts.length,
+      pendingEffects: effects.filter((effect) => ["PENDING", "IN_FLIGHT", "FAILED_RETRYABLE", "OUTCOME_UNKNOWN", "RECONCILE"].includes(effect.status)).length,
+      packageStates: packageStates.length,
+      automationRules: automationRules.length
+    };
   }
 
   public async history(recordId?: string): Promise<HistoryEntry[]> {

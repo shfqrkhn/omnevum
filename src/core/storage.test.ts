@@ -594,4 +594,19 @@ describe("CanonicalStore", () => {
     expect(await store.listPackageStates()).toEqual([]);
     store.close();
   });
+
+  it("computes a complete hard-clear impact and exposes unresolved graph edges", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-clear-impact`);
+    await store.open();
+    const source = record("impact-source");
+    const target = record("impact-target");
+    const relationship = { ...record("impact-relationship"), recordType: "relationship" as const, data: { text: "supports", sourceId: source.id, targetId: target.id, relation: "supports" } };
+    const orphaned = { ...record("impact-orphan"), recordType: "relationship" as const, data: { text: "missing", sourceId: "missing-record", targetId: source.id, relation: "related" } };
+    await store.putMany([{ record: source }, { record: target }, { record: relationship }, { record: orphaned }]);
+    await store.setPackageState({ packageId: "impact.package", schemaVersion: 1, state: { saved: true } });
+    await store.setAutomationRules([automationRule()]);
+    await store.enqueueEffect({ operationId: "impact-effect", owner: "platform.test", originatingCommand: "test.command", purpose: "test", destination: "test://destination", payloadOrReference: { value: "safe" }, idempotencyKey: "impact-effect-idempotency", createdAt: new Date().toISOString(), status: "PENDING", retryCount: 0, retryPolicy: { maxAttempts: 3, backoffSeconds: 1 }, evidence: [] });
+    await expect(store.getClearImpact()).resolves.toMatchObject({ canonicalRecords: 4, relationships: 2, orphanedRelationships: 1, historyEntries: 4, artifactPayloads: 0, pendingEffects: 1, packageStates: 1, automationRules: 1 });
+    store.close();
+  });
 });
