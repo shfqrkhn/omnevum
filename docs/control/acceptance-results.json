@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "0062e5b4d0e78105948f4be0ffa9aad21c0495c973eac8533d030d2e64d070f8"
+      "sha256": "9130933db8abbb786d3bc807d0e14c35024fb67d7c30f07fe8a851947ee57756"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -2257,8 +2257,13 @@
         "line": 4233
       },
       "text": "A representative ordinary-use benchmark compares the accepted release with its predecessor for required user fields, manual classifications, confirmations, review items, navigation steps, and reconciliation/maintenance actions. Any material increase in avoidable human burden without a stronger requirement or measured benefit fails the acceptance gate.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "scripts/ordinary-use-benchmark.mjs",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-ordinary-use-benchmark-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-primary-surface-grid-receipt"
+      ],
+      "notes": "The executable benchmark compares current source revision 713f4c3 with predecessor e6a9be4 for four matching monthly Finance statements plus direct Capture/Search review: required Finance fields remain 2, manual classifications remain 0, source-level review items remain 4, navigation remains 2 direct steps, and confirmations/submissions fall from 4 to 1. Current Chromium compact-layout evidence separately records 3,229px to 2,207px document-height reduction with no horizontal overflow. Timed human study, assistive technology, other engines, mobile input, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-153",

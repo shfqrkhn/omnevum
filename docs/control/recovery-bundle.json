@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "0062e5b4d0e78105948f4be0ffa9aad21c0495c973eac8533d030d2e64d070f8"
+      "sha256": "9130933db8abbb786d3bc807d0e14c35024fb67d7c30f07fe8a851947ee57756"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -134,12 +134,12 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "78323e47082d50966f47c39ba10c1ae7e45970388924d7f605abad8e8631301e",
-        "bytes": 209082
+        "sha256": "b372a068b32743797377279ae6c02579dfd8c04993e09ddee90a466b55a615da",
+        "bytes": 209985
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
-        "sha256": "baf4b222c816b67de0b68ecc63bd2699efe7039d84ea1a869cfe10ecdbc76d96",
+        "sha256": "43cc2fbad057f3d13a0530b3609ee8a4663b96caaf775795db92016e5e5aab16",
         "bytes": 89980
       },
       {
@@ -159,8 +159,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "bc2d636678112860e73a92595e866ac84001b468af2e5106826e4ff59a6af70d",
-        "bytes": 7062
+        "sha256": "b4ba2f284a25cbcc46a3b2c10cb9093c62e1432d71d99ef34fa4ece71f59764a",
+        "bytes": 7422
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -179,7 +179,7 @@
       },
       {
         "path": "docs/control/dependency-sbom.json",
-        "sha256": "65c9db3566706e98bd09d1cebf7d672c11289d4c24ed7ba239184027c4197bf1",
+        "sha256": "9ad90606dfeb815a3100b53f49a3fa45937218096cdf4e08d8b947efe268b3a1",
         "bytes": 35272
       },
       {
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "2a0395647a70b77607de7c916027392135af32a303fb77f79b588d0413119755",
-        "bytes": 75826
+        "sha256": "21feea99b4a3627b5fc9bcc9f2f929235d29e6260dea25fe1b371582dc8961e0",
+        "bytes": 76549
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -224,17 +224,17 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "dc1cd5118d4b4956f199516798281d07b6188ec6e6316c978edbc76a91b1eae2",
-        "bytes": 5899
+        "sha256": "f69164d65bd376c880edf8c145de3901b71612d0de78ab97d2a1758b09a6c6cf",
+        "bytes": 6005
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "df06c00f0416374d62a48150bd8867a66cc0b60e335191d66901436199e7f4b6",
+        "sha256": "6fe5564f7011ad16d3104cfbeb300d392038958c0298eae5eba06f54f14339dc",
         "bytes": 2433
       },
       {
         "path": "docs/control/requirements.json",
-        "sha256": "def552a342b6937e3da4f56886547b84b289f3c95aca038bcef80fb4705db275",
+        "sha256": "f04f4f80d5a88c0cb9d227f4763764384f143a63db7983a263b768e5551d667f",
         "bytes": 372954
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "eccbdb26bd74968614726b165740499332da4195c6efc1bd29788c66b7d39e71",
-        "bytes": 328657
+        "sha256": "82f64960b93d8fedbcd718897d3f1a02dc424155caf25949b06165cf303ada82",
+        "bytes": 330316
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -304,8 +304,8 @@
       },
       {
         "path": "package.json",
-        "sha256": "0062e5b4d0e78105948f4be0ffa9aad21c0495c973eac8533d030d2e64d070f8",
-        "bytes": 1911
+        "sha256": "9130933db8abbb786d3bc807d0e14c35024fb67d7c30f07fe8a851947ee57756",
+        "bytes": 2018
       },
       {
         "path": "public/icon.svg",
@@ -366,6 +366,11 @@
         "path": "scripts/license-audit.mjs",
         "sha256": "be9fb5c6978f33a44e99386811cf62aa19a47937a8334976d3c72ee4fc6797c9",
         "bytes": 3401
+      },
+      {
+        "path": "scripts/ordinary-use-benchmark.mjs",
+        "sha256": "1627c2c1febbf5a1e6f3032f130c53e2a54f54bcb4c18739ad4f76828a0794ff",
+        "bytes": 6038
       },
       {
         "path": "scripts/preview-effect-fixture.mjs",
