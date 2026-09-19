@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "55169401dced0d6bc8ca9e351bbfb31c2223462a8dfefd56f5b4589e4c4ef4eb",
-        "bytes": 198793
+        "sha256": "0fc141dd08d571ec78d1900250aee5189c2e4ebe9157c5b3947eb126647d4db1",
+        "bytes": 199195
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "f27f95cf53b797365b2690bbdebc37201170ce70b069a00ca3033ce7e91ac536",
+        "sha256": "3616d0177161b57bceea70e483ae415e0691d2798db4ad174faba873a9045fea",
         "bytes": 2433
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "67128a3115f51ece5cd3854e75fe85c6cc291707f84384a2f9bf0d5a2daf4b10",
-        "bytes": 292972
+        "sha256": "37aadac8084219ac665016dbff957f29fecc69436ab4fafdc31b6fbab93c4cd5",
+        "bytes": 295492
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -689,13 +689,13 @@
       },
       {
         "path": "src/core/finance-projection.test.ts",
-        "sha256": "10512ab30aa9df7434c07b112e4526d5ac0a39e0596f281237567564a207994b",
-        "bytes": 5617
+        "sha256": "87b0fa96c0e19adfd8ca132b4d78934867ca982d4e2d9cf8426850653db6ab02",
+        "bytes": 6770
       },
       {
         "path": "src/core/finance-projection.ts",
-        "sha256": "44905b88f1a10af1845af1f700a88ea1eba3c5b2f71daa1fe03471d3e100c530",
-        "bytes": 13166
+        "sha256": "9ce94fa49e2ee51273ee843d379053d7aba3310096b5e2069d91e708e94f2453",
+        "bytes": 15180
       },
       {
         "path": "src/core/finance.test.ts",
@@ -734,8 +734,8 @@
       },
       {
         "path": "src/core/i18n.ts",
-        "sha256": "722f44b102d03080e85d472a48dd2e3f21f92ba62a5252011167724e074ee760",
-        "bytes": 92920
+        "sha256": "291e21a273df396851fb8562cfbefd07ffaf0c2205b7608a31bc02fbb18db9ed",
+        "bytes": 96072
       },
       {
         "path": "src/core/id.ts",
@@ -1034,13 +1034,13 @@
       },
       {
         "path": "src/core/workflows.test.ts",
-        "sha256": "35ecdf567a0341763bef90e35df5254c7d8600e53f6c27857c7edfb8ed84296c",
-        "bytes": 1322
+        "sha256": "7b963995421e4d43a4c0f24de2feae19ecc069f68b09b08ce18b8800a71a9f5d",
+        "bytes": 2444
       },
       {
         "path": "src/core/workflows.ts",
-        "sha256": "13be4b453c2c537d5bc7d4dcf5ccfbdc790296270cbdd9a9ebb63b1861070e5e",
-        "bytes": 2087
+        "sha256": "81819bfc97b486cbafc856c465dc25a0a86d001c5330052b340616e37bf8878c",
+        "bytes": 4284
       },
       {
         "path": "src/main.ts",
@@ -1059,8 +1059,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "ba9cbb9ce5a0ee938887dcc65a69444e071df3ae1d5e44b88cbfe2d4e787a444",
-        "bytes": 285250
+        "sha256": "551e0b3132174944f3f678ae0340b6f6f536e93892fa8e6c6ed76480e1348d29",
+        "bytes": 290810
       },
       {
         "path": "tsconfig.json",
