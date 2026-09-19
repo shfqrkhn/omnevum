@@ -149,6 +149,8 @@ main > * { min-width: 0; }
 .panel#home-summary > [data-home-widget][hidden] { display: none; }
 .onboarding-panel { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
 .onboarding-content { display: grid; gap: 0.75rem; }
+.home-widget-disclosure { display: grid; gap: 0.65rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.55rem 0.7rem; }
+.compact-summary-copy h3 { margin: 0; font-size: 1.05rem; }
 .onboarding-steps { display: grid; gap: 0.45rem; margin: 0 0 1rem; padding-left: 1.35rem; }
 .onboarding-start { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
 .panel, .status-card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); padding: 1.25rem; }
