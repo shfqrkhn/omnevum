@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "d04f736b41bb924c8508384ae27d9be87f0bb5e5f6ade15bedcdf61595d37a44",
-        "bytes": 228340
+        "sha256": "8f749b48e25eff1a4d89de25c0ccb13c7e690ea75334d6c91c7ce281dcb5a70a",
+        "bytes": 229852
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -159,8 +159,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "94b36685624f6d1bb25123ac27d375ea05043e586fd491f450113b984a214981",
-        "bytes": 7897
+        "sha256": "7509038d6e1ed03188735e0d576d1527f47dcec9ff41f44d047d2537a0bb8718",
+        "bytes": 7965
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "0dd1965030168c320f34cceb71f9c2b392f584431bfdbde674e9e9868e62c92b",
-        "bytes": 92603
+        "sha256": "72431b0127742a0de6a982fc1fd090b50cf15883710643a0074e59221b2592a7",
+        "bytes": 93103
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -224,8 +224,8 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "b80ff006a99b521e43f3a1a13920aef01dcb3195e7adac3153ff402719b75090",
-        "bytes": 7597
+        "sha256": "dc8e7ee2ce4baba0cdfd8e367fcdb98d8039017bd3601c08e3e85dfbb6e71b7b",
+        "bytes": 7720
       },
       {
         "path": "docs/control/release-evidence.json",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "244fb56d17d07ff66e8d6e8b53155a4b3aceba97650edbfbdd8cc15afea50669",
-        "bytes": 378097
+        "sha256": "e1bfd5b04e17f36cd64ea69fa10291469a0dadd013bc004622b6df86c0d3ca28",
+        "bytes": 379164
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -559,13 +559,13 @@
       },
       {
         "path": "src/core/currentness.test.ts",
-        "sha256": "555ea80192c1a8b0da18cdf4ae319d64b62a2ed6b52d77787cf7be8716e4c4b3",
-        "bytes": 2475
+        "sha256": "cd439fcd3f9edb7ed208e97de5fdaa696458556105e2c959eb6e0021a2448cfc",
+        "bytes": 4736
       },
       {
         "path": "src/core/currentness.ts",
-        "sha256": "edb88bf4f0ac3cb2703bb54c19dc1408b5887e9fc057c997051d316428f24fcb",
-        "bytes": 4609
+        "sha256": "c51863fbac618962bb42963dea0c66ede5c9863f37aba84d27f6651430f4e47b",
+        "bytes": 9479
       },
       {
         "path": "src/core/data.test.ts",

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { evaluateUpstreamCandidate, type UpstreamCandidateInput } from "./currentness";
+import { evaluateFossEntrant, evaluateUpstreamCandidate, evaluateVulnerabilityFastLane, type FossEntrantInput, type UpstreamCandidateInput, type VulnerabilityFastLaneInput } from "./currentness";
 
 const baseCandidate = (): UpstreamCandidateInput => ({
   candidateId: "vite-9.0.0-candidate-2026-09-19",
@@ -10,6 +10,26 @@ const baseCandidate = (): UpstreamCandidateInput => ({
   releaseNotes: "Synthetic fixture: major candidate changes the accepted build tool contract.",
   isolatedCandidateRef: "candidate-worktree/vite-9.0.0",
   gates: { currentness: "PASS", license: "PASS", security: "PASS", contract: "PASS", migration: "PASS", target: "PASS" }
+});
+
+const baseEntrant = (): FossEntrantInput => ({
+  entrantId: "entrant-local-query-2026-09-19",
+  name: "Local Query Candidate",
+  capabilityGap: "large local analytical projection",
+  sourceIdentity: "https://example.invalid/local-query|sha256:fixture",
+  license: "MIT",
+  isolatedCandidateRef: "candidate-worktree/local-query",
+  gates: { source: "PASS", license: "PASS", security: "PASS", fit: "PASS", maintenance: "PASS", target: "PASS" }
+});
+
+const baseAdvisory = (): VulnerabilityFastLaneInput => ({
+  advisoryId: "OSV-FIXTURE-2026-0001",
+  packageName: "optional-adapter",
+  severity: "HIGH",
+  affectedScope: "OPTIONAL",
+  disablePathVerified: false,
+  coreRegressionPass: true,
+  coreDataPreserved: true
 });
 
 describe("isolated upstream/FOSS candidate gate", () => {
@@ -43,5 +63,31 @@ describe("isolated upstream/FOSS candidate gate", () => {
     const sameVersion = evaluateUpstreamCandidate({ ...baseCandidate(), candidateVersion: "8.3.0" });
     expect(sameVersion.decision).toBe("REJECT");
     expect(sameVersion.acceptedRuntimeUnchanged).toBe(true);
+  });
+
+  it("keeps a new FOSS entrant isolated until exact fit and maintenance gates pass", () => {
+    const deferred = evaluateFossEntrant({ ...baseEntrant(), gates: { ...baseEntrant().gates, maintenance: "UNKNOWN" as const } });
+    expect(deferred.decision).toBe("DEFER");
+    const adopted = evaluateFossEntrant(baseEntrant());
+    expect(adopted.decision).toBe("ADOPT_CANDIDATE");
+    expect(adopted.acceptedRuntimeUnchanged).toBe(true);
+  });
+
+  it("rejects an entrant with a policy-critical security failure", () => {
+    const result = evaluateFossEntrant({ ...baseEntrant(), gates: { ...baseEntrant().gates, security: "FAIL" as const } });
+    expect(result.decision).toBe("REJECT");
+  });
+
+  it("blocks a high-severity advisory when no fix or safe optional disable path is proven", () => {
+    const result = evaluateVulnerabilityFastLane(baseAdvisory());
+    expect(result.decision).toBe("BLOCK_RELEASE");
+    expect(result.falsePassPrevented).toBe(true);
+  });
+
+  it("allows only a qualified fix or a proven optional disable path", () => {
+    const disabled = evaluateVulnerabilityFastLane({ ...baseAdvisory(), disablePathVerified: true });
+    expect(disabled.decision).toBe("DISABLE_OPTIONAL");
+    const fixed = evaluateVulnerabilityFastLane({ ...baseAdvisory(), fixVersion: "2.0.1", fixGates: { source: "PASS", security: "PASS", contract: "PASS", target: "PASS" } });
+    expect(fixed.decision).toBe("FIX_CANDIDATE");
   });
 });

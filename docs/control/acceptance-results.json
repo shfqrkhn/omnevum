@@ -677,8 +677,15 @@
         "line": 3998
       },
       "text": "A new FOSS entrant appears that provides a currently missing or locally bespoke capability with materially lower lifecycle cost. The ecosystem radar adds it to the Capability Coverage Matrix, performs exact source/license/security/fit evaluation, and either replaces/consolidates the old path after proof or records why not.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/currentness.ts#evaluateFossEntrant",
+        "src/core/currentness.test.ts",
+        "docs/control/currentness-radar.json",
+        "docs/control/capability-coverage.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-upstream-candidate-gate-receipt"
+      ],
+      "notes": "The shared isolated-candidate owner requires a recorded capability gap, exact source/license/candidate identity, and source/license/security/fit/maintenance/target gates. Policy-critical failure rejects the entrant; incomplete evidence defers it; an all-PASS fixture returns ADOPT_CANDIDATE without replacing the accepted runtime. A real entrant, lifecycle-cost comparison, install/replace proof, and promotion remain open."
     },
     {
       "id": "OMN-ACC-037",
@@ -687,8 +694,14 @@
         "line": 4000
       },
       "text": "A high-severity vulnerability affects a shipped optional dependency. The security fast lane identifies affected scope, prevents false PASS, qualifies a fix/replacement or safely disables/degrades only the affected capability, and preserves unrelated core operation and user data.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/currentness.ts#evaluateVulnerabilityFastLane",
+        "src/core/currentness.test.ts",
+        "docs/control/foss-compliance.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-upstream-candidate-gate-receipt"
+      ],
+      "notes": "The synthetic high-severity fast lane blocks release when no qualified fix or safe disable path exists, returns FIX_CANDIDATE only after source/security/contract/target gates pass, and returns DISABLE_OPTIONAL only when optional isolation, core regression, and data preservation are proven. The result prevents false PASS but does not claim a real advisory, replacement, or runtime disablement; live advisory feeds, dependency isolation, and release qualification remain open."
     },
     {
       "id": "OMN-ACC-038",
