@@ -100,7 +100,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <h1 id="product-heading">${copy.productHeading}</h1>
         <p id="product-tagline" class="lede">${copy.lede}</p>
       </div>
-      <button id="theme-toggle" class="secondary" type="button" aria-pressed="false">${copy.themeDark}</button>
+      <div class="topbar-actions">
+        <button id="quick-density" class="secondary" type="button">${copy.density}: ${presentation.density === "compact" ? copy.compact : copy.comfortable}</button>
+        <button id="theme-toggle" class="secondary" type="button" aria-pressed="false">${copy.themeDark}</button>
+      </div>
     </header>
     <nav id="primary-nav" class="primary-nav" aria-label="${copy.home}"><ol id="primary-nav-list"></ol></nav>
     <main>
@@ -136,7 +139,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       <section id="home-summary" class="panel" aria-labelledby="summary-heading">
         <div class="section-heading">
           <div>
-            <p id="home-label" class="eyebrow">${copy.home}</p>
+            <div class="editable-term"><p id="home-label" class="eyebrow">${copy.home}</p><button id="edit-home-label" class="secondary term-edit-button" type="button">${copy.editLabel}</button></div>
             <h2 id="summary-heading">${copy.currentPicture}</h2>
           </div>
           <span id="summary-total" class="count" aria-label="${copy.activeRecordCount}">0</span>
@@ -260,8 +263,21 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         </form>
       </section>
 
+      <dialog id="presentation-label-dialog" aria-labelledby="presentation-label-dialog-heading">
+        <form id="presentation-label-dialog-form" method="dialog">
+          <h2 id="presentation-label-dialog-heading">${copy.editLabel}</h2>
+          <label for="presentation-label-input">${copy.editLabel}</label>
+          <input id="presentation-label-input" type="text" maxlength="40" required />
+          <div class="dialog-actions">
+            <button id="presentation-label-cancel" class="secondary" type="button">${copy.clear}</button>
+            <button type="submit">${copy.save}</button>
+          </div>
+          <p id="presentation-label-dialog-status" class="hint" role="status"></p>
+        </form>
+      </dialog>
+
       <section id="capture" class="panel" aria-labelledby="capture-heading">
-        <p id="capture-label" class="eyebrow">${copy.capture}</p>
+        <div class="editable-term"><p id="capture-label" class="eyebrow">${copy.capture}</p><button id="edit-capture-label" class="secondary term-edit-button" type="button">${copy.editLabel}</button></div>
         <h2 id="capture-heading">${copy.getItOut}</h2>
         <form id="capture-form">
           <label for="capture-type">${copy.kind}</label>
@@ -655,7 +671,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       <section id="records" class="panel" aria-labelledby="records-heading">
         <div class="section-heading">
           <div>
-            <p id="records-label" class="eyebrow">${copy.canonicalRecords}</p>
+            <div class="editable-term"><p id="records-label" class="eyebrow">${copy.canonicalRecords}</p><button id="edit-records-label" class="secondary term-edit-button" type="button">${copy.editLabel}</button></div>
             <h2 id="records-heading">${copy.recentCaptures}</h2>
           </div>
           <span id="record-count" class="count" aria-label="${copy.recordCount}">0</span>
@@ -908,6 +924,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const productLabel = root.querySelector<HTMLElement>("#product-label");
   const productTagline = root.querySelector<HTMLElement>("#product-tagline");
   const productName = root.querySelector<HTMLInputElement>("#product-name");
+  const quickDensity = root.querySelector<HTMLButtonElement>("#quick-density");
   const localeInput = root.querySelector<HTMLSelectElement>("#locale");
   const taglineInput = root.querySelector<HTMLInputElement>("#tagline");
   const familyInput = root.querySelector<HTMLSelectElement>("#family");
@@ -922,6 +939,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const captureLabelInput = root.querySelector<HTMLInputElement>("#capture-label-input");
   const recordsLabelInput = root.querySelector<HTMLInputElement>("#records-label-input");
   const captureLabel = root.querySelector<HTMLElement>("#capture-label");
+  const editHomeLabel = root.querySelector<HTMLButtonElement>("#edit-home-label");
+  const editCaptureLabel = root.querySelector<HTMLButtonElement>("#edit-capture-label");
+  const editRecordsLabel = root.querySelector<HTMLButtonElement>("#edit-records-label");
+  const presentationLabelDialog = root.querySelector<HTMLDialogElement>("#presentation-label-dialog");
+  const presentationLabelDialogForm = root.querySelector<HTMLFormElement>("#presentation-label-dialog-form");
+  const presentationLabelInput = root.querySelector<HTMLInputElement>("#presentation-label-input");
+  const presentationLabelCancel = root.querySelector<HTMLButtonElement>("#presentation-label-cancel");
+  const presentationLabelDialogStatus = root.querySelector<HTMLElement>("#presentation-label-dialog-status");
   const navigationOptions = root.querySelector<HTMLElement>("#navigation-options");
   const homeWidgetOptions = root.querySelector<HTMLElement>("#home-widget-options");
   const resetPresentation = root.querySelector<HTMLButtonElement>("#reset-presentation");
@@ -984,7 +1009,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const packageAutomationStatus = root.querySelector<HTMLElement>("#package-automation-status");
   const packageAutomationList = root.querySelector<HTMLUListElement>("#package-automation-list");
   const packageAutomationProposals = root.querySelector<HTMLUListElement>("#package-automation-proposals");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
@@ -1320,6 +1345,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     homeLabel.textContent = presentation.labels.home || copy.home;
     captureLabel.textContent = presentation.labels.capture || copy.capture;
     recordsLabel.textContent = presentation.labels.records || copy.canonicalRecords;
+    for (const [button, label] of [[editHomeLabel, homeLabel.textContent], [editCaptureLabel, captureLabel.textContent], [editRecordsLabel, recordsLabel.textContent]] as const) {
+      button.setAttribute("aria-label", `${copy.editLabel}: ${label}`);
+      button.setAttribute("title", `${copy.editLabel}: ${label}`);
+    }
     themeToggle.textContent = presentation.theme === "dark" ? copy.themeLight : copy.themeDark;
     themeToggle.setAttribute("aria-pressed", String(presentation.theme === "dark"));
     presentationHostStatus.textContent = getInstalledMetadataStatus(presentation.locale, isStandaloneDisplayMode());
@@ -1329,13 +1358,25 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     for (const id of presentation.navigation.order) {
       if (!visible.has(id)) continue;
       const item = document.createElement("li");
+      item.className = "primary-nav-item";
       const link = document.createElement("a");
       link.href = `#${id}`;
       link.textContent = sectionLabel(id);
       link.dataset.navIcon = sectionIcon(id);
-      item.append(link);
+      const pin = document.createElement("button");
+      pin.type = "button";
+      pin.className = "secondary icon-button nav-pin-toggle";
+      pin.dataset.navPin = id;
+      pin.textContent = "📌";
+      pin.disabled = id === "recovery" || id === "presentation";
+      pin.setAttribute("aria-pressed", "true");
+      pin.setAttribute("aria-label", `${copy.unpinSection(sectionLabel(id))}`);
+      pin.setAttribute("title", copy.unpinSection(sectionLabel(id)));
+      item.append(link, pin);
       primaryNavList.append(item);
     }
+    quickDensity.textContent = `${copy.density}: ${presentation.density === "compact" ? copy.compact : copy.comfortable}`;
+    quickDensity.setAttribute("aria-label", `${copy.density}: ${presentation.density === "compact" ? copy.compact : copy.comfortable}`);
     const order = new Map(presentation.navigation.order.map((id, index) => [id, index + 1]));
     for (const id of PRESENTATION_SECTION_IDS) {
       const section = presentationSections.get(id);
@@ -1350,9 +1391,44 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       widget.style.order = String(homeOrder.get(id) ?? PRESENTATION_HOME_WIDGET_IDS.length + 1);
     }
   };
+  const persistPresentation = async (next: PresentationProfile, status: string): Promise<void> => {
+    await store.setSetting("presentation", next);
+    presentation = next;
+    applyPresentationProfile();
+    presentationStatus.textContent = status;
+  };
+  let editingPresentationLabel: keyof PresentationProfile["labels"] | undefined;
+  const editPresentationLabel = (key: keyof PresentationProfile["labels"], current: string): void => {
+    editingPresentationLabel = key;
+    presentationLabelInput.value = current;
+    presentationLabelDialogStatus.textContent = "";
+    presentationLabelDialog.showModal();
+    presentationLabelInput.focus();
+    presentationLabelInput.select();
+  };
+  const setSectionPinned = async (id: PresentationSectionId): Promise<void> => {
+    if (id === "recovery" || id === "presentation") return;
+    const visible = new Set(presentation.navigation.visible);
+    const pin = !visible.has(id);
+    if (pin) visible.add(id);
+    else visible.delete(id);
+    const nextVisible = PRESENTATION_SECTION_IDS.filter((sectionId) => visible.has(sectionId));
+    try {
+      await persistPresentation(parsePresentationProfile({ ...presentation, navigation: { ...presentation.navigation, visible: nextVisible } }), copy.savedName(sectionLabel(id)));
+    } catch (error) {
+      presentationStatus.textContent = describeError(error, "Navigation pinning was not saved; canonical data was not changed.");
+    }
+  };
   for (const container of [navigationOptions, homeWidgetOptions]) container.addEventListener("click", (event) => {
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-direction]");
     if (button) movePresentationRow(container, button);
+  });
+  primaryNavList.addEventListener("click", (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-nav-pin]");
+    const id = button?.dataset.navPin as PresentationSectionId | undefined;
+    if (!id) return;
+    event.preventDefault();
+    void setSectionPinned(id);
   });
   accessibilityProfileInput.addEventListener("change", () => {
     const profile = accessibilityProfileInput.value as PresentationAccessibilityProfile;
@@ -1366,6 +1442,38 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     if (accessibilityProfileInput.value !== "custom") accessibilityProfileInput.value = "custom";
   });
   applyPresentationProfile();
+
+  quickDensity.addEventListener("click", () => {
+    const nextDensity = presentation.density === "compact" ? "comfortable" : "compact";
+    void persistPresentation(parsePresentationProfile({ ...presentation, density: nextDensity }), copy.savedName(nextDensity)).catch((error: unknown) => {
+      presentationStatus.textContent = describeError(error, "Density preference was not saved; canonical data was not changed.");
+    });
+  });
+  editHomeLabel.addEventListener("click", () => void editPresentationLabel("home", homeLabel.textContent || copy.home));
+  editCaptureLabel.addEventListener("click", () => void editPresentationLabel("capture", captureLabel.textContent || copy.capture));
+  editRecordsLabel.addEventListener("click", () => void editPresentationLabel("records", recordsLabel.textContent || copy.canonicalRecords));
+  presentationLabelCancel.addEventListener("click", () => {
+    editingPresentationLabel = undefined;
+    presentationLabelDialog.close();
+  });
+  presentationLabelDialogForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const key = editingPresentationLabel;
+    if (!key) return;
+    const value = presentationLabelInput.value.trim().slice(0, 40);
+    if (!value) {
+      presentationLabelDialogStatus.textContent = copy.labelRequired;
+      presentationLabelInput.focus();
+      return;
+    }
+    try {
+      await persistPresentation(parsePresentationProfile({ ...presentation, labels: { ...presentation.labels, [key]: value } }), copy.savedName(value));
+      editingPresentationLabel = undefined;
+      presentationLabelDialog.close();
+    } catch (error) {
+      presentationLabelDialogStatus.textContent = describeError(error, "Presentation label was not saved; canonical data was not changed.");
+    }
+  });
 
   const applyHomeFocusMode = (): void => {
     const homeSummary = root.querySelector<HTMLElement>("#home-summary");
