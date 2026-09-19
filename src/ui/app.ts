@@ -14,6 +14,8 @@ import { decryptVault, encryptVault, isEncryptedVaultEnvelope } from "../core/cr
 import { MAX_VAULT_JSON_BYTES, parseVault } from "../core/vault";
 import type { CanonicalStore } from "../core/storage";
 import { captureExpense, captureHealthMeasurement } from "../core/workflows";
+import { acceptFinanceTransactions, deduplicateFinanceTransactions, parseFinanceCsv, reconcileFinanceStatement, type FinanceStatementSource } from "../core/finance";
+import { parseMoney } from "../core/money";
 import { projectDataset } from "../core/data";
 import { countRecords, groupCounts } from "../core/analysis";
 import type { CapabilityRuntime } from "../core/capability-runtime";
@@ -465,6 +467,22 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <button type="submit">${copy.saveExpense}</button>
             <p id="expense-status" class="hint" role="status"></p>
           </form>
+          <form id="finance-import-form" class="domain-form">
+            <h3>${copy.financeImportHeading}</h3>
+            <label for="finance-import-file">${copy.financeFile}</label>
+            <input id="finance-import-file" type="file" accept="text/csv,text/tab-separated-values,.csv,.tsv" required />
+            <label for="finance-import-account">${copy.financeAccount}</label>
+            <input id="finance-import-account" type="text" maxlength="160" required />
+            <label for="finance-import-currency">${copy.currency}</label>
+            <select id="finance-import-currency"><option value="CAD">CAD</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="JPY">JPY</option></select>
+            <label for="finance-import-opening">${copy.financeOpening}</label>
+            <input id="finance-import-opening" type="text" inputmode="decimal" maxlength="32" />
+            <label for="finance-import-closing">${copy.financeClosing}</label>
+            <input id="finance-import-closing" type="text" inputmode="decimal" maxlength="32" />
+            <p class="hint">${copy.financeImportHint}</p>
+            <button type="submit">${copy.financeImport}</button>
+            <p id="finance-import-status" class="hint" role="status"></p>
+          </form>
           <form id="health-form" class="domain-form">
             <h3>${copy.healthHeading}</h3>
             <label for="health-metric">${copy.metricName}</label>
@@ -890,6 +908,13 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const expenseCurrency = root.querySelector<HTMLSelectElement>("#expense-currency");
   const expenseSpace = root.querySelector<HTMLSelectElement>("#expense-space");
   const expenseStatus = root.querySelector<HTMLElement>("#expense-status");
+  const financeImportForm = root.querySelector<HTMLFormElement>("#finance-import-form");
+  const financeImportFile = root.querySelector<HTMLInputElement>("#finance-import-file");
+  const financeImportAccount = root.querySelector<HTMLInputElement>("#finance-import-account");
+  const financeImportCurrency = root.querySelector<HTMLSelectElement>("#finance-import-currency");
+  const financeImportOpening = root.querySelector<HTMLInputElement>("#finance-import-opening");
+  const financeImportClosing = root.querySelector<HTMLInputElement>("#finance-import-closing");
+  const financeImportStatus = root.querySelector<HTMLElement>("#finance-import-status");
   const healthForm = root.querySelector<HTMLFormElement>("#health-form");
   const healthMetric = root.querySelector<HTMLInputElement>("#health-metric");
   const healthValue = root.querySelector<HTMLInputElement>("#health-value");
@@ -1101,6 +1126,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const packageAutomationProposals = root.querySelector<HTMLUListElement>("#package-automation-proposals");
   if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchStatus || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareGrantSubmit || !shareExport || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput) {
     throw new Error("Omnevum foundation controls are missing");
+  }
+  if (!financeImportForm || !financeImportFile || !financeImportAccount || !financeImportCurrency || !financeImportOpening || !financeImportClosing || !financeImportStatus) {
+    throw new Error("Omnevum Finance import controls are missing");
   }
   if (!documentFinishForm || !documentFinishSource || !documentFinishTerms || !documentFinishReplacement || !documentFinishStatus) {
     throw new Error("Omnevum document-finishing controls are missing");
@@ -3414,6 +3442,34 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       await renderRecords(searchQuery.value);
     } catch (error) {
       expenseStatus.textContent = error instanceof Error ? error.message : "Expense capture failed";
+    }
+  });
+
+  financeImportForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      const file = financeImportFile.files?.[0];
+      const accountId = financeImportAccount.value.trim().slice(0, 160);
+      const currency = financeImportCurrency.value;
+      if (!file || !accountId) throw new Error("Choose a statement file and enter an account identity");
+      const inspection = await inspectArtifact(file, file.name, file.type || "text/csv");
+      const sourceId = `finance-source:${inspection.sha256}`;
+      const openingBalance = financeImportOpening.value.trim() ? parseMoney(financeImportOpening.value.trim(), currency) : undefined;
+      const closingBalance = financeImportClosing.value.trim() ? parseMoney(financeImportClosing.value.trim(), currency) : undefined;
+      const source: FinanceStatementSource = { sourceId, name: file.name, sha256: inspection.sha256, accountId, currency, ...(openingBalance ? { openingBalance } : {}), ...(closingBalance ? { closingBalance } : {}) };
+      const transactions = parseFinanceCsv(await file.text(), source);
+      const deduplicated = deduplicateFinanceTransactions(transactions);
+      const reconciliation = reconcileFinanceStatement(source, transactions);
+      const preview = copy.financeImportResult(deduplicated.unique.length, 0, deduplicated.duplicates.length, deduplicated.conflicts.length, reconciliation.status);
+      if (!await requestConfirmation(`${preview}\n\n${copy.financeImportHint}`, copy.financeImport)) return;
+      const existingArtifact = (await commands.findBySourceId(sourceId)).find((record) => record.recordType === "artifact" && !record.deleted);
+      const artifact = existingArtifact ?? await commands.createArtifact({ fileName: file.name, mimeType: file.type || "text/csv", blob: file, sourceId, adapter: inspection.adapter, metadata: inspection.metadata, ...(inspection.derivedText ? { derivedText: inspection.derivedText } : {}) });
+      const result = await acceptFinanceTransactions(commands, { ...source, sourceArtifactId: artifact.id }, transactions);
+      financeImportForm.reset();
+      financeImportStatus.textContent = copy.financeImportResult(result.created, result.existing, result.duplicates, result.conflicts.length, reconciliation.status);
+      await renderRecords(searchQuery.value);
+    } catch (error) {
+      financeImportStatus.textContent = describeError(error, "Finance statement import failed; no statement rows were accepted.");
     }
   });
 
