@@ -56,6 +56,7 @@ export interface PresentationProfileDocument {
 }
 
 const DEFAULT_SECTION_ORDER: PresentationSectionId[] = [...PRESENTATION_SECTION_IDS];
+const DEFAULT_VISIBLE_SECTIONS: PresentationSectionId[] = ["home-summary", "capture", "search", "review", "records", "recovery", "presentation"];
 const DEFAULT_LENS_PINS: PresentationLensId[] = ["direction", "people", "self", "resources"];
 const DEFAULT_HOME_WIDGETS: PresentationHomeWidgetId[] = [...PRESENTATION_HOME_WIDGET_IDS];
 
@@ -89,7 +90,7 @@ export const DEFAULT_PRESENTATION: PresentationProfile = {
   iconography: "labels",
   accessibility: { ...DEFAULT_ACCESSIBILITY },
   labels: { home: "", capture: "", records: "" },
-  navigation: { visible: [...DEFAULT_SECTION_ORDER], order: [...DEFAULT_SECTION_ORDER] },
+  navigation: { visible: [...DEFAULT_VISIBLE_SECTIONS], order: [...DEFAULT_SECTION_ORDER] },
   lensPins: [...DEFAULT_LENS_PINS],
   activeLens: "direction",
   homeWidgets: [...DEFAULT_HOME_WIDGETS]
@@ -137,7 +138,7 @@ export function parsePresentationProfile(value: unknown): PresentationProfile {
   if (typeof value !== "object" || value === null) return structuredClone(DEFAULT_PRESENTATION);
   const candidate = value as Record<string, unknown>;
   const navigation = typeof candidate.navigation === "object" && candidate.navigation !== null ? candidate.navigation as Record<string, unknown> : {};
-  const visible = orderedValues(navigation.visible, PRESENTATION_SECTION_IDS, DEFAULT_SECTION_ORDER);
+  const visible = orderedValues(navigation.visible, PRESENTATION_SECTION_IDS, DEFAULT_VISIBLE_SECTIONS);
   const lensPins = orderedValues(candidate.lensPins, PRESENTATION_LENS_IDS, DEFAULT_LENS_PINS).slice(0, 4);
   for (const requiredSection of ["recovery", "presentation"] as const) {
     if (!visible.includes(requiredSection)) visible.push(requiredSection);

@@ -17,6 +17,12 @@ describe("presentation profile", () => {
     });
   });
 
+  it("keeps the default navigation focused on the daily spine while preserving mandatory recovery paths", () => {
+    expect(DEFAULT_PRESENTATION.navigation.visible).toEqual(["home-summary", "capture", "search", "review", "records", "recovery", "presentation"]);
+    expect(parsePresentationProfile({ productName: "Fresh" }).navigation.visible).toEqual(DEFAULT_PRESENTATION.navigation.visible);
+    expect(DEFAULT_PRESENTATION.navigation.order).toHaveLength(18);
+  });
+
   it("supports the three persisted built-in presentation families", () => {
     expect(parsePresentationProfile({ productName: "Alpha", family: "alpha" })).toMatchObject({ family: "alpha" });
     expect(parsePresentationProfile({ productName: "Beta", family: "beta", theme: "dark" })).toMatchObject({ family: "beta", theme: "dark" });
