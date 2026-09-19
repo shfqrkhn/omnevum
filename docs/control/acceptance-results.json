@@ -129,9 +129,10 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-local-origin-capture-search-reload-and-keyboard-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-accessibility-tree-and-keyboard-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capturesearchreload-and-accessibility-tree-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-built-artifact-palette-contrast-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-built-artifact-palette-contrast-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-presentation-receipt"
       ],
-      "notes": "Current receipt-bound Chromium evidence covers the exercised Light and AMOLED Dark palette text contrast with zero DOM text pairs below 4.5:1, plus labelled presentation, cleanup, Recovery, and Capture/Search controls. The six-family/mode matrix, painted boundaries/focus/state graphics, deliberate failing-pair gate, browser/accessibility breadth, and human qualification remain open."
+      "notes": "The exact current artifact now exercises Alpha, Beta, and Gamma in both Light and AMOLED Dark through the persisted Presentation axis; all six DOM text audits report zero pairs below 4.5:1, the canonical sentinel remains unchanged, and Gamma Dark survives reload. Painted boundaries/focus/state graphics, deliberate failing-pair behavior, monochrome/CVD carriers, 320px/200% scaling, browser/accessibility breadth, lifecycle export/import/reset, and human qualification remain open."
     },
     {
       "id": "OMN-ACC-005",
@@ -1571,9 +1572,10 @@
       "text": "All six bound built-in family/mode palettes are evaluated programmatically against every painted text/plane pair and every interactive-boundary/focus/state-bearing-graphic pair actually admitted on the primary surfaces. Body and metadata text meets at least 4.5:1, large text at least 3:1, and every interactive boundary, focus indicator, and state-bearing graphic at least 3:1 against every adjacent built-in plane on which it is used. A deliberately introduced failing pair fails the release gate rather than being waived.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-built-artifact-palette-contrast-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-built-artifact-palette-contrast-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-presentation-receipt"
       ],
-      "notes": "The exact receipt-bound Chromium artifact reported zero rendered text pairs below 4.5:1 in the exercised Light and AMOLED Dark themes after correcting dark primary-button foreground contrast. The all-six family/mode palette matrix, large-text and graphic/boundary coverage, focus contrast, deliberate failing-pair gate, other engines, assistive technology, and human acceptance remain open."
+      "notes": "The exact current Chromium artifact now audits all six Alpha/Beta/Gamma Light/Dark combinations with zero rendered text pairs below 4.5:1 and no desktop overflow after the family-axis implementation. Interactive boundaries, focus/state graphics, large-text rules, deliberate failing-pair gate behavior, monochrome/CVD, other engines, assistive technology, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-102",
@@ -1882,8 +1884,11 @@
         "line": 4190
       },
       "text": "A user selects Alpha, then Beta, then Gamma, restarts, upgrades across a compatible release, exports/imports the presentation profile, and resets presentation. The selected family/mode persists where policy says it should, remains separately resettable from canonical data, and no switch or reset changes canonical IDs, records, permissions, sync identity, or Space/Scope.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-six-family-presentation-receipt"
+      ],
+      "notes": "The current Chromium run selected Alpha, then Beta, then Gamma in both modes through the normal Presentation setting path, preserved one canonical sentinel and its revision, and retained the final Gamma Dark choice after reload. Compatible upgrade, profile export/import, explicit reset, other targets, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-133",
