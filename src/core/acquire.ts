@@ -7,7 +7,7 @@ export const MAX_ACQUIRE_BYTES = 5 * 1024 * 1024;
 export const MAX_ACQUIRE_CANDIDATES = 500;
 export const MAX_ACQUIRE_URL_LENGTH = 4096;
 
-export type AcquireFormat = "TEXT" | "JSON" | "CSV" | "URL" | "GPX" | "HTML" | "PDF" | "IMAGE" | "BINARY";
+export type AcquireFormat = "TEXT" | "JSON" | "CSV" | "URL" | "GPX" | "HTML" | "PDF" | "SPREADSHEET" | "IMAGE" | "BINARY";
 
 export interface AcquireSource {
   sourceId: string;
@@ -49,7 +49,7 @@ export interface AcquirePreview {
 export async function stageBlob(blob: Blob, name = "source", mimeType = blob.type || "application/octet-stream", signal?: AbortSignal): Promise<AcquirePreview> {
   if (blob.size > MAX_ACQUIRE_BYTES) throw new Error("Acquire source exceeds the bounded 5 MiB staging limit");
   const inspection = await inspectArtifact(blob, name, mimeType, signal ? { signal, maxBytes: MAX_ACQUIRE_BYTES } : { maxBytes: MAX_ACQUIRE_BYTES });
-  if (inspection.adapter === "PDF" || inspection.adapter === "IMAGE" || inspection.adapter === "HTML" || inspection.adapter === "BINARY") return stageInspectedArtifact(inspection, blob);
+  if (inspection.adapter === "PDF" || inspection.adapter === "SPREADSHEET" || inspection.adapter === "IMAGE" || inspection.adapter === "HTML" || inspection.adapter === "BINARY") return stageInspectedArtifact(inspection, blob);
   const sourceText = await blob.text();
   const format = inspection.adapter === "TEXT" || inspection.adapter === "JSON" || inspection.adapter === "CSV" || inspection.adapter === "GPX" ? inspection.adapter : detectFormat(name, mimeType, sourceText);
   return stageText(sourceText, { name, mimeType, sizeBytes: blob.size, sha256: inspection.sha256, format });

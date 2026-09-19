@@ -3,7 +3,7 @@ import type { SpaceId } from "./domain";
 export const MAX_PORTABLE_ARTIFACT_BYTES = 10 * 1024 * 1024;
 export const MAX_ARTIFACT_INSPECTION_BYTES = 1024 * 1024;
 
-export type ArtifactAdapter = "TEXT" | "JSON" | "CSV" | "GPX" | "HTML" | "PDF" | "IMAGE" | "BINARY";
+export type ArtifactAdapter = "TEXT" | "JSON" | "CSV" | "GPX" | "HTML" | "PDF" | "SPREADSHEET" | "IMAGE" | "BINARY";
 export type ArtifactAdapterStatus = "SUPPORTED" | "BOUNDED" | "UNSUPPORTED";
 export type ArtifactOcrStatus = "NOT_APPLICABLE" | "NOT_CONFIGURED";
 
@@ -25,6 +25,15 @@ export interface ArtifactInspection {
   metadata: Record<string, string | number | boolean>;
   derivedText?: DerivedArtifactText;
   warnings: string[];
+}
+
+export interface SpreadsheetSafetyReport {
+  formulaCells: number;
+  externalResourceCells: number;
+  markupCells: number;
+  activeContent: boolean;
+  transformations: string[];
+  lossless: boolean;
 }
 
 export interface ArtifactInput {
@@ -63,6 +72,11 @@ export async function inspectArtifact(blob: Blob, fileName = "artifact", mimeTyp
   if (adapter === "PDF") {
     metadata = inspectPdf(prefix, warnings);
     adapterStatus = "BOUNDED";
+  } else if (adapter === "SPREADSHEET") {
+    const report = inspectSpreadsheetSafety(decodeLatin1(prefix), true);
+    metadata = spreadsheetMetadata(report);
+    appendSpreadsheetWarnings(report, warnings);
+    adapterStatus = "BOUNDED";
   } else if (adapter === "IMAGE") {
     metadata = inspectImage(prefix, normalizedMimeType, warnings);
     adapterStatus = "BOUNDED";
@@ -76,7 +90,11 @@ export async function inspectArtifact(blob: Blob, fileName = "artifact", mimeTyp
   } else if (adapter === "TEXT" || adapter === "JSON" || adapter === "CSV" || adapter === "GPX") {
     const text = decodeUtf8(prefix);
     derivedText = makeDerivedText(text, blob.size > prefix.byteLength);
-    metadata = { extractedTextBytes: derivedText ? new TextEncoder().encode(derivedText.text).byteLength : 0 };
+    if (adapter === "CSV") {
+      const report = inspectSpreadsheetSafety(text, false);
+      metadata = { extractedTextBytes: derivedText ? new TextEncoder().encode(derivedText.text).byteLength : 0, ...spreadsheetMetadata(report) };
+      appendSpreadsheetWarnings(report, warnings);
+    } else metadata = { extractedTextBytes: derivedText ? new TextEncoder().encode(derivedText.text).byteLength : 0 };
     adapterStatus = blob.size > prefix.byteLength ? "BOUNDED" : "SUPPORTED";
   } else {
     warnings.push("No safe browser-native adapter is configured for this binary format; the original bytes remain available as an Artifact.");
@@ -98,13 +116,53 @@ export async function inspectArtifact(blob: Blob, fileName = "artifact", mimeTyp
 function detectArtifactAdapter(fileName: string, mimeType: string, bytes: Uint8Array): ArtifactAdapter {
   const lowerName = fileName.toLowerCase();
   if (hasPrefix(bytes, [0x25, 0x50, 0x44, 0x46, 0x2d]) || mimeType === "application/pdf" || lowerName.endsWith(".pdf")) return "PDF";
+  if (isSpreadsheetFile(lowerName, mimeType)) return "SPREADSHEET";
   if (isImageBytes(bytes) || mimeType.startsWith("image/") || /\.(?:png|jpe?g|gif|webp|avif|bmp|heic)$/i.test(lowerName)) return "IMAGE";
   if (mimeType.includes("html") || /\.html?$/i.test(lowerName) || /^\s*<!doctype\s+html|^\s*<html\b/i.test(decodeUtf8(bytes))) return "HTML";
   if (mimeType.includes("json") || lowerName.endsWith(".json")) return "JSON";
-  if (mimeType.includes("csv") || lowerName.endsWith(".csv")) return "CSV";
+  if (mimeType.includes("csv") || mimeType.includes("tab-separated") || lowerName.endsWith(".csv") || lowerName.endsWith(".tsv")) return "CSV";
   if (mimeType.includes("gpx") || lowerName.endsWith(".gpx") || /<gpx\b/i.test(decodeUtf8(bytes))) return "GPX";
   if (mimeType.startsWith("text/") || isLikelyText(bytes)) return "TEXT";
   return "BINARY";
+}
+
+function isSpreadsheetFile(fileName: string, mimeType: string): boolean {
+  return /\.(?:xls|xlsx|xlsm|xlsb|ods)$/i.test(fileName) || /spreadsheet|excel|opendocument\.spreadsheet|ms-excel/u.test(mimeType);
+}
+
+export function inspectSpreadsheetSafety(source: string, binary = false): SpreadsheetSafetyReport {
+  const formulaCells = binary
+    ? [...source.matchAll(/<f(?:\s|>)/gi)].length
+    : source.split(/\r?\n/u).flatMap((row) => row.split(/\t|,/u)).filter((cell) => /^\s*(?:=|\+|@|-(?=[A-Za-z(]))/u.test(cell)).length;
+  const externalResourceCells = [...source.matchAll(/(?:https?:\/\/|file:\/\/|\\\\|externalLink)/giu)].length;
+  const markupCells = [...source.matchAll(/<\s*(?:script|iframe|object|embed|svg|form|html|a)\b|\bon\w+\s*=/giu)].length;
+  const activeContent = /(?:vbaProject\.bin|\bmacro\b|\bjavascript:|\bDDE\b|\bWEBSERVICE\b|\bPowerQuery\b)/iu.test(source);
+  return {
+    formulaCells,
+    externalResourceCells,
+    markupCells,
+    activeContent,
+    transformations: [],
+    lossless: true
+  };
+}
+
+function spreadsheetMetadata(report: SpreadsheetSafetyReport): Record<string, string | number | boolean> {
+  return {
+    spreadsheetFormulaCells: report.formulaCells,
+    spreadsheetExternalResourceCells: report.externalResourceCells,
+    spreadsheetMarkupCells: report.markupCells,
+    spreadsheetActiveContentRejected: report.activeContent,
+    spreadsheetRoundTripLossless: report.lossless,
+    spreadsheetTransformations: report.transformations.length === 0 ? "none; original artifact retained" : report.transformations.join("; ")
+  };
+}
+
+function appendSpreadsheetWarnings(report: SpreadsheetSafetyReport, warnings: string[]): void {
+  if (report.formulaCells > 0) warnings.push("Spreadsheet formula/control prefixes were retained as inert source text; no formula was evaluated.");
+  if (report.activeContent) warnings.push("Spreadsheet active content was detected and was not executed.");
+  if (report.externalResourceCells > 0) warnings.push("Spreadsheet external links/resources were retained as inert source text; no network fetch was attempted.");
+  if (report.markupCells > 0) warnings.push("Spreadsheet markup was retained as inert source text; no script or markup was executed.");
 }
 
 function inspectPdf(bytes: Uint8Array, warnings: string[]): Record<string, string | number | boolean> {

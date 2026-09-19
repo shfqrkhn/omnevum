@@ -59,6 +59,24 @@ describe("Acquire/Ingest", () => {
     store.close();
   });
 
+  it("stages a hostile macro spreadsheet as one inert source-preserving Artifact", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-acquire-spreadsheet`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const source = new Blob(["PK\u0003\u0004 xl/vbaProject.bin externalLink https://evil.example"]);
+    const preview = await stageBlob(source, "statement.xlsm", "application/vnd.ms-excel.sheet.macroEnabled.12");
+    expect(preview.source.format).toBe("SPREADSHEET");
+    expect(preview.candidates[0]).toMatchObject({ recordType: "artifact", owner: "platform.artifact", data: { artifactAdapter: "SPREADSHEET", adapterStatus: "BOUNDED" } });
+    expect(preview.warnings).toEqual(expect.arrayContaining([
+      "Spreadsheet active content was detected and was not executed.",
+      "Spreadsheet external links/resources were retained as inert source text; no network fetch was attempted."
+    ]));
+    expect(await acceptCandidates(commands, preview.candidates)).toMatchObject({ accepted: 1, skipped: 0 });
+    const record = (await store.list())[0];
+    expect((await store.getArtifact(record?.id ?? ""))?.size).toBe(source.size);
+    store.close();
+  });
+
   it("accepts candidates through the command owner and makes repetition idempotent", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-acquire`);
     await store.open();

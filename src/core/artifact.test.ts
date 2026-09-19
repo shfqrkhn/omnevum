@@ -26,6 +26,37 @@ describe("source-preserving Artifact transformations", () => {
     expect(html.warnings).toContain("Active HTML content was stripped; extracted text is inert and was never executed.");
   });
 
+  it("keeps hostile spreadsheet formulas, markup, links, and macros inert while preserving the source", async () => {
+    const csv = await inspectArtifact(new Blob([
+      "merchant,amount,note\n=HYPERLINK(\"https://evil.example\"),=1+1,<svg onload=alert(1)>"
+    ]), "hostile.csv", "text/csv");
+    expect(csv).toMatchObject({
+      adapter: "CSV",
+      metadata: {
+        spreadsheetFormulaCells: 2,
+        spreadsheetExternalResourceCells: 1,
+        spreadsheetMarkupCells: 2,
+        spreadsheetActiveContentRejected: false,
+        spreadsheetRoundTripLossless: true,
+        spreadsheetTransformations: "none; original artifact retained"
+      }
+    });
+    expect(csv.derivedText?.text).toContain("=HYPERLINK");
+    expect(csv.warnings).toEqual(expect.arrayContaining([
+      "Spreadsheet formula/control prefixes were retained as inert source text; no formula was evaluated.",
+      "Spreadsheet external links/resources were retained as inert source text; no network fetch was attempted.",
+      "Spreadsheet markup was retained as inert source text; no script or markup was executed."
+    ]));
+
+    const macro = await inspectArtifact(new Blob(["PK\u0003\u0004 xl/vbaProject.bin externalLink https://evil.example"]), "hostile.xlsm", "application/vnd.ms-excel.sheet.macroEnabled.12");
+    expect(macro).toMatchObject({ adapter: "SPREADSHEET", adapterStatus: "BOUNDED", metadata: { spreadsheetActiveContentRejected: true, spreadsheetExternalResourceCells: 2 } });
+    expect(macro.derivedText).toBeUndefined();
+    expect(macro.warnings).toEqual(expect.arrayContaining([
+      "Spreadsheet active content was detected and was not executed.",
+      "Spreadsheet external links/resources were retained as inert source text; no network fetch was attempted."
+    ]));
+  });
+
   it("honors cancellation before inspection work begins", async () => {
     const controller = new AbortController();
     controller.abort();
