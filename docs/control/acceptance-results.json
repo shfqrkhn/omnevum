@@ -1737,9 +1737,10 @@
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-canonical-lens-projection-and-detail-receipt",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-degraded-index-detail-and-explicit-repair-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-strict-detail-geometry-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-strict-detail-geometry-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-degraded-index-edit-receipt"
       ],
-      "notes": "Current Chromium receipts prove a shared detail surface with continuous Overview, Relationships, Evidence, and History segments, provenance/owner/ID metadata, navigable relationship references, revision history, deliberate derived-index degradation, explicit repair without canonical mutation, and the exercised 320px/200% detail geometry with aria-selected segment state. Edit-path breadth while degraded, sticky in-view announcements beyond the exercised controls, independent-target separation, other engines, assistive technology, deployment, and human acceptance remain open."
+      "notes": "Current Chromium receipts prove a shared detail surface with continuous Overview, Relationships, Evidence, and History segments, provenance/owner/ID metadata, navigable relationship references, revision history, deliberate derived-index degradation, explicit repair without canonical mutation, the exercised 320px/200% detail geometry with aria-selected segment state, and a canonical text edit from revision 1 to revision 2 through CommandBus while the index remains degraded. The new editor preserves owner fields, rejects relationship/artifact text edits, fences stale revisions, and announces the degraded Search state. Broader edit paths, independent-target separation, other engines, assistive technology, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-113",
