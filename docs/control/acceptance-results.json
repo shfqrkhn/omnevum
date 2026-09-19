@@ -1812,8 +1812,14 @@
         "line": 4162
       },
       "text": "Telemetry is verified in its quiet healthy form on every primary surface and then driven across each escalation threshold - stale backup, failed Effect/Outbox delivery, degraded capability, unresolved conflict, storage pressure. Each escalates into a first-class Home item with full evidence and disposition controls, thresholds are inspectable and adjustable, and a healthy system produces no manufactured escalation.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "src/core/telemetry.ts",
+        "src/core/telemetry.test.ts",
+        "src/ui/app.ts",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-telemetry-escalation-and-home-receipt"
+      ],
+      "notes": "Source 58eb5ef adds bounded local telemetry thresholds, attention-only Home projection, evidence text, and persisted dismiss/restore dispositions without background notification or engagement metrics; targeted telemetry/i18n/storage tests passed 43 tests, and artifact ab4d33218fcf7b6189893fc306bffe95eea85ef23d51407c9f006a281a73e96e with worker omnevum-shell-80df96c347044563 visibly exposes a capability-degraded Home item, dismiss/restore, and adjustable threshold controls in Edge on a clean localhost origin. Durable backup/conflict/replication facts, all injected fault transitions, other targets/assistive technology/touch, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-119",

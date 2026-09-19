@@ -1376,3 +1376,13 @@ The shared telemetry projection distinguishes replication (`DISABLED`), backup (
 The current Edge localhost artifact at `http://localhost:4337/` visibly rendered `Telemetry: replication disabled, backup unknown, outbox clear, capability degraded, conflicts unknown, storage normal.` on a clean distinct local origin with zero canonical records and no external data transmitted. This proves shell visibility and truthful fact rendering for the current Chromium/Edge target.
 
 This advances `OMN-ACC-107` to `PARTIAL` only. It does not qualify durable backup freshness/conflict persistence, browser-injected all-fault transitions, other engines/mobile/assistive technology, physical touch, deployment, or human acceptance; `OMN-ACC-118` remains unqualified.
+
+## Current v0.17.4 Chromium telemetry escalation and Home receipt
+
+On 2026-09-19, source `58eb5ef` passed `npm run typecheck`, targeted `npx vitest run src/core/telemetry.test.ts src/core/i18n.test.ts src/core/storage.test.ts` (`43` tests passed), and `npm run build`. The exact artifact is bound in `docs/control/release-evidence.json` to digest `ab4d33218fcf7b6189893fc306bffe95eea85ef23d51407c9f006a281a73e96e` and service-worker cache `omnevum-shell-80df96c347044563`.
+
+The telemetry owner now applies bounded local thresholds for backup age, pending effects, and unresolved conflicts; projects only `ATTENTION` facts into Home; exposes each fact's status/evidence; and persists an explicit `DISMISSED` or restored disposition keyed to the fact state. Threshold settings are local, inspectable, adjustable, and explicitly state that no background notification is created. Unit tests cover threshold suppression, malformed-threshold fail-closed defaults, healthy no-escalation behavior, and disposition projection.
+
+The current Edge localhost artifact at `http://localhost:4337/` on a clean distinct origin visibly rendered `Runtime telemetry: capability Telemetry capability: DEGRADED. Evidence: core.search` with `Dismiss item`. After dismissal and reload, the same evidence remained visible with `Restore item`; expanding `Telemetry thresholds` exposed the local backup/outbox/conflict controls and the no-background-notification boundary. No external data or credential was used.
+
+This advances `OMN-ACC-118` to `PARTIAL` only. It does not qualify durable backup/conflict/replication facts, browser-injected transitions for every threshold, other engines/mobile/assistive technology, physical touch, deployment, or human acceptance; the clean-origin capability degradation is target-local evidence rather than full fault-injection coverage.
