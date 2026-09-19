@@ -32,6 +32,7 @@
   --danger: #ff9aa7;
   --shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
 }
+:root[data-theme="dark"] button:not(.secondary):not(.danger-button):not(.icon-button):not(.complete-button) { color: #08101c; }
 
 :root[data-typeface="serif"] { font-family: Georgia, "Times New Roman", serif; }
 :root[data-typeface="mono"] { font-family: "Cascadia Mono", "SFMono-Regular", Consolas, monospace; }
