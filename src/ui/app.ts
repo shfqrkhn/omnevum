@@ -49,6 +49,7 @@ import type { PackageAutomationProposal } from "../core/package-automation-regis
 import { shouldAutoShowOnboarding } from "../core/onboarding";
 import { REVIEW_SESSION_SETTING, REVIEW_TEMPLATES, advanceReviewSession, getReviewTemplate, isReviewSession, makeReviewSession, type ReviewSession } from "../core/review";
 import { makeTelemetryPreviewInput, parseTelemetryPreviewMode, projectTelemetry, projectTelemetryConsiderations, parseTelemetryDispositions, parseTelemetryThresholds, TELEMETRY_DISPOSITIONS_SETTING, TELEMETRY_THRESHOLDS_SETTING, type TelemetryDispositions, type TelemetryThresholds } from "../core/telemetry";
+import { appendShellUpdateObservation, parseShellUpdateLedger, UPDATE_LEDGER_SETTING } from "../core/update-ledger";
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -65,7 +66,12 @@ function parseExternalEffectPayload(value: string): Record<string, unknown> | st
   throw new Error("The external effect payload must be a JSON object or string reference");
 }
 
-export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>, packageAutomationRuntime?: PackageAutomationRuntime): Promise<void> {
+export interface MountAppOptions {
+  serviceWorkerRegistration?: ServiceWorkerRegistration | undefined;
+  serviceWorkerRegistrationError?: boolean;
+}
+
+export async function mountApp(root: HTMLElement, store: CanonicalStore, commands: CommandBus, capabilityRuntime?: CapabilityRuntime<unknown>, packageAutomationRuntime?: PackageAutomationRuntime, options: MountAppOptions = {}): Promise<void> {
   const rawPresentation = await store.getSetting<unknown>("presentation");
   let savedContextProfile: ContextExportProfile | undefined;
   const savedContextProfileRaw = await store.getSetting<unknown>("context-export.profile");
@@ -80,6 +86,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   let homeFocusMode = await store.getSetting<boolean>("home.focusMode") === true;
   let telemetryThresholds: TelemetryThresholds = parseTelemetryThresholds(await store.getSetting<unknown>(TELEMETRY_THRESHOLDS_SETTING));
   let telemetryDispositions: TelemetryDispositions = parseTelemetryDispositions(await store.getSetting<unknown>(TELEMETRY_DISPOSITIONS_SETTING));
+  let shellUpdateLedger = parseShellUpdateLedger(await store.getSetting<unknown>(UPDATE_LEDGER_SETTING));
+  let updateActivationRequested = false;
   const initialRecordCount = (await store.list()).length;
   const onboardingAutoShown = shouldAutoShowOnboarding(initialRecordCount, onboardingDismissed);
   const safePresentationMode = readSafePresentationMode();
@@ -912,6 +920,16 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       <details id="recovery" class="panel compact-panel" aria-labelledby="recovery-heading" data-section-disclosure>
         <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h2 id="recovery-heading">${copy.keepPortable}</h2></span></summary>
         <p class="hint">${copy.recoveryHint}</p>
+        <details id="update-ledger" class="relationship-form compact-panel">
+          <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h3>${copy.updateLedgerHeading}</h3></span><span id="update-ledger-pill" class="status-pill">${copy.updateUnavailable}</span></summary>
+          <p id="update-ledger-hint" class="hint">${copy.updateLedgerHint}</p>
+          <div class="form-row">
+            <button id="update-check" class="secondary" type="button">${copy.updateCheck}</button>
+            <button id="update-activate" class="secondary" type="button" hidden>${copy.updateActivate}</button>
+          </div>
+          <p id="update-ledger-status" class="hint" role="status"></p>
+          <ul id="update-ledger-list" class="record-list"></ul>
+        </details>
         <div class="form-row recovery-row">
           <button id="export-vault" class="secondary" type="button">${copy.exportVault}</button>
           <button id="export-encrypted" class="secondary" type="button">${recoveryCopy.exportEncrypted}</button>
@@ -1281,6 +1299,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const archiveList = root.querySelector<HTMLUListElement>("#archive-list");
   const archiveEmpty = root.querySelector<HTMLParagraphElement>("#archive-empty");
   const recoveryStatus = root.querySelector<HTMLElement>("#recovery-status");
+  const updateLedgerPill = root.querySelector<HTMLElement>("#update-ledger-pill");
+  const updateCheck = root.querySelector<HTMLButtonElement>("#update-check");
+  const updateActivate = root.querySelector<HTMLButtonElement>("#update-activate");
+  const updateLedgerStatus = root.querySelector<HTMLElement>("#update-ledger-status");
+  const updateLedgerList = root.querySelector<HTMLUListElement>("#update-ledger-list");
   const effectList = root.querySelector<HTMLUListElement>("#effect-list")!;
   const healthStatus = root.querySelector<HTMLElement>("#health-status");
   const capabilityStatus = root.querySelector<HTMLElement>("#capability-status");
@@ -1358,6 +1381,95 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!reviewTemplates || !reviewTemplateButtons || !reviewStepper || !reviewStepperHeading || !reviewStepperProgress || !reviewStepperPrompt || !reviewStepperMotivation || !reviewStepperRecords || !reviewStepperSkip || !reviewStepperAbandon || !reviewStepperNext || !reviewStepperStatus) {
     throw new Error("Omnevum Review template controls are missing");
   }
+  if (!updateLedgerPill || !updateCheck || !updateActivate || !updateLedgerStatus || !updateLedgerList) {
+    throw new Error("Omnevum update ledger controls are missing");
+  }
+
+  const updateRollbackPath = "Retain the previous service-worker cache generation; export a Vault before any canonical migration.";
+  const persistShellUpdateObservation = async (observation: Parameters<typeof appendShellUpdateObservation>[1]): Promise<void> => {
+    const next = appendShellUpdateObservation(shellUpdateLedger, observation);
+    if (JSON.stringify(next) === JSON.stringify(shellUpdateLedger)) return;
+    shellUpdateLedger = next;
+    await store.setSetting(UPDATE_LEDGER_SETTING, shellUpdateLedger);
+  };
+  const resolveServiceWorkerRegistration = async (): Promise<ServiceWorkerRegistration | undefined> => {
+    if (options.serviceWorkerRegistration) return options.serviceWorkerRegistration;
+    if (!("serviceWorker" in navigator)) return undefined;
+    try {
+      return await navigator.serviceWorker.getRegistration("./");
+    } catch {
+      return undefined;
+    }
+  };
+  const renderShellUpdateLedger = async (): Promise<void> => {
+    const registration = await resolveServiceWorkerRegistration();
+    updateActivate.hidden = !registration?.waiting;
+    updateCheck.disabled = !registration;
+    updateLedgerList.replaceChildren();
+    for (const entry of shellUpdateLedger) {
+      const item = document.createElement("li");
+      item.textContent = `${entry.decision} - ${entry.cacheName} - ${entry.observedAt} - ${entry.rollbackPath}`;
+      updateLedgerList.append(item);
+    }
+    if (!registration) {
+      updateLedgerPill.textContent = copy.updateUnavailable;
+      updateLedgerStatus.textContent = options.serviceWorkerRegistrationError ? copy.updateUnavailable : copy.updateNoWaiting;
+      return;
+    }
+    const status = await queryServiceWorkerStatus(registration);
+    if (status?.cacheName) {
+      const decision = registration.waiting ? "WAITING" : "ACTIVATED";
+      await persistShellUpdateObservation({ releaseId: status.cacheName, shellVersion: status.cacheName, cacheName: status.cacheName, observedAt: new Date().toISOString(), decision, rollbackPath: updateRollbackPath });
+    }
+    updateLedgerPill.textContent = registration.waiting ? copy.updateWaiting : status?.cacheName ? copy.updateActive(status.cacheName) : copy.updateNoWaiting;
+    updateLedgerStatus.textContent = registration.waiting ? copy.updateWaiting : status?.cacheName ? copy.updateActive(status.cacheName) : copy.updateNoWaiting;
+    updateLedgerList.replaceChildren();
+    for (const entry of shellUpdateLedger) {
+      const item = document.createElement("li");
+      item.textContent = `${entry.decision} - ${entry.cacheName} - ${entry.observedAt} - ${entry.rollbackPath}`;
+      updateLedgerList.append(item);
+    }
+  };
+  const serviceWorkerRegistration = await resolveServiceWorkerRegistration();
+  if (serviceWorkerRegistration) {
+    serviceWorkerRegistration.addEventListener("updatefound", () => {
+      serviceWorkerRegistration.installing?.addEventListener("statechange", () => {
+        if (serviceWorkerRegistration.installing?.state === "installed") void renderShellUpdateLedger();
+      });
+    });
+  }
+  updateCheck.addEventListener("click", async () => {
+    const registration = await resolveServiceWorkerRegistration();
+    if (!registration) {
+      updateLedgerStatus.textContent = copy.updateUnavailable;
+      return;
+    }
+    try {
+      await registration.update();
+      await renderShellUpdateLedger();
+      if (!registration.waiting) updateLedgerStatus.textContent = copy.updateNoWaiting;
+    } catch (error) {
+      updateLedgerStatus.textContent = describeError(error, copy.updateUnavailable);
+    }
+  });
+  updateActivate.addEventListener("click", async () => {
+    const registration = await resolveServiceWorkerRegistration();
+    if (!registration?.waiting) {
+      updateLedgerStatus.textContent = copy.updateNoWaiting;
+      return;
+    }
+    try {
+      updateActivationRequested = true;
+      registration.waiting.postMessage({ type: "OMNEVUM_SW_ACTIVATE" });
+      updateLedgerStatus.textContent = copy.updateObserved("WAITING", registration.waiting.scriptURL);
+    } catch (error) {
+      updateLedgerStatus.textContent = describeError(error, copy.updateUnavailable);
+    }
+  });
+  if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (updateActivationRequested) window.location.reload();
+  });
+  void renderShellUpdateLedger();
 
   const sharedParameters = new URLSearchParams(window.location.search);
   const sharedInput = [sharedParameters.get("title"), sharedParameters.get("text"), sharedParameters.get("url")].filter((value): value is string => Boolean(value?.trim())).join("\n").trim();
@@ -4811,7 +4923,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       await store.setSetting("presentation", nextPresentation);
       presentation = nextPresentation;
       if (localeChanged) {
-        await mountApp(root, store, commands, capabilityRuntime, packageAutomationRuntime);
+        await mountApp(root, store, commands, capabilityRuntime, packageAutomationRuntime, options);
         return;
       }
       applyPresentationProfile();
@@ -4853,7 +4965,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       await store.setSetting("presentation", imported);
       presentation = imported;
       if (localeChanged) {
-        await mountApp(root, store, commands, capabilityRuntime, packageAutomationRuntime);
+        await mountApp(root, store, commands, capabilityRuntime, packageAutomationRuntime, options);
         return;
       }
       applyPresentationProfile();
@@ -5048,6 +5160,41 @@ async function readServiceWorkerDiagnostics(): Promise<NonNullable<NonNullable<P
   } catch {
     return { status: "AVAILABLE", controlled: Boolean(navigator.serviceWorker.controller), updateWaiting: false };
   }
+}
+
+interface ServiceWorkerStatusMessage {
+  type: "OMNEVUM_SW_STATUS";
+  cacheName: string;
+  updateKind: "SHELL_ONLY" | "CANONICAL_SCHEMA";
+  scope: string;
+}
+
+async function queryServiceWorkerStatus(registration: ServiceWorkerRegistration): Promise<ServiceWorkerStatusMessage | undefined> {
+  const worker = registration.active ?? navigator.serviceWorker.controller;
+  if (!worker || typeof MessageChannel !== "function") return undefined;
+  return new Promise((resolve) => {
+    const channel = new MessageChannel();
+    let settled = false;
+    const finish = (value: ServiceWorkerStatusMessage | undefined): void => {
+      if (settled) return;
+      settled = true;
+      channel.port1.close();
+      resolve(value);
+    };
+    channel.port1.onmessage = (event: MessageEvent<unknown>) => {
+      const value = event.data;
+      if (!value || typeof value !== "object" || Array.isArray(value)) return finish(undefined);
+      const candidate = value as Partial<ServiceWorkerStatusMessage>;
+      if (candidate.type !== "OMNEVUM_SW_STATUS" || typeof candidate.cacheName !== "string" || !/^omnevum-shell-[a-z0-9._-]{1,120}$/u.test(candidate.cacheName) || (candidate.updateKind !== "SHELL_ONLY" && candidate.updateKind !== "CANONICAL_SCHEMA") || typeof candidate.scope !== "string") return finish(undefined);
+      finish(candidate as ServiceWorkerStatusMessage);
+    };
+    try {
+      worker.postMessage({ type: "OMNEVUM_SW_STATUS_REQUEST" }, [channel.port2]);
+      window.setTimeout(() => finish(undefined), 1000);
+    } catch {
+      finish(undefined);
+    }
+  });
 }
 
 function downloadJson(fileName: string, value: unknown): void {

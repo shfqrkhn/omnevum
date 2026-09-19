@@ -32,14 +32,16 @@ try {
     { id: "core.recovery", critical: true, start: async () => { await store.exportDiagnostics(); } }
   ]);
   await capabilityRuntime.start(undefined);
-  await mountApp(root, store, commands, capabilityRuntime, packageAutomationRuntime);
-
+  let serviceWorkerRegistration: ServiceWorkerRegistration | undefined;
+  let serviceWorkerRegistrationError = false;
   if ("serviceWorker" in navigator) {
-    void navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(() => {
-      const health = root.querySelector<HTMLElement>("#health-status");
-      if (health) health.textContent = `${health.textContent ?? ""} Offline shell registration is unavailable on this target.`;
-    });
+    try {
+      serviceWorkerRegistration = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+    } catch {
+      serviceWorkerRegistrationError = true;
+    }
   }
+  await mountApp(root, store, commands, capabilityRuntime, packageAutomationRuntime, { serviceWorkerRegistration, serviceWorkerRegistrationError });
 } catch (error) {
   root.innerHTML = `
     <main class="failure-shell" aria-labelledby="failure-heading">

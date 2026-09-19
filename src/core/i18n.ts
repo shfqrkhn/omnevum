@@ -31,7 +31,7 @@ export interface UiCopy {
   confirmationHeading: string; confirm: string;
   automationHeading: string; automationHint: string; automationPackage: string; automationRecord: string; automationDocument: string; automationInstall: string; automationPreview: string; automationRules: string; automationNoRules: string; automationDisable: string; automationEnable: string; automationRemove: string; automationProposals: string; automationNoProposals: string; automationApply: string; automationInstalled: (ruleId: string) => string; automationApplied: string;
   factoryPreview: string; factoryAppHeading: string; factoryAppHint: string; factoryAppSave: string; factoryAppComplete: string; factoryAppSaved: (title: string) => string; factoryAppEmpty: string; factoryGameHeading: string; factoryGameHint: string; factoryGameMove: string; factoryGameCollect: string; factoryGamePause: string; factoryGameResume: string; factoryGameSave: string; factoryGameLoad: string; factoryGameStatus: (position: number, energy: number, stars: number, tick: number) => string; factoryGameSaved: string; factoryGameLoaded: string;
-  recoveryHint: string; exportVault: string; exportDiagnostics: string; repairSearch: string; importVault: string;
+  recoveryHint: string; exportVault: string; exportDiagnostics: string; repairSearch: string; importVault: string; updateLedgerHeading: string; updateLedgerHint: string; updateCheck: string; updateActivate: string; updateNoWaiting: string; updateWaiting: string; updateUnavailable: string; updateActive: (cacheName: string) => string; updateObserved: (decision: string, cacheName: string) => string;
   attachArtifact: string; documentFinishHeading: string; documentFinishSource: string; documentFinishTerms: string; documentFinishReplacement: string; documentFinishSubmit: string; documentFinishHint: string; documentFinishSaved: (name: string, count: number) => string; footerPhase0: string; footerOptional: string; themeLight: string; themeDark: string;
   capturePicture: string; atLeastTwo: string; linkCreated: string; showingAll: string; exportMessage: (count: number) => string;
   diagnosticsMessage: string; searchRepairMessage: string; savedName: (name: string) => string;
@@ -433,6 +433,15 @@ const typedRelationshipFrench: Pick<UiCopy, "typedRelationshipKind" | "typedRefe
 };
 
 const english: UiCopy = {
+  updateLedgerHeading: "Shell update ledger",
+  updateLedgerHint: "Low-frequency release checks stay here. Shell updates never migrate canonical data silently; schema changes require approval and a current backup.",
+  updateCheck: "Check for updates",
+  updateActivate: "Activate waiting shell",
+  updateNoWaiting: "No waiting shell update is available.",
+  updateWaiting: "A shell update is waiting for explicit activation.",
+  updateUnavailable: "Service-worker update control is unavailable on this target.",
+  updateActive: (cacheName) => `Active shell cache: ${cacheName}.`,
+  updateObserved: (decision, cacheName) => `${decision} shell ${cacheName}.`,
   ...typedRelationshipEnglish,
   ...searchEnglish,
   ...financeEnglish,
@@ -477,6 +486,15 @@ const english: UiCopy = {
 const french: UiCopy = {
   ...typedRelationshipFrench,
   ...english,
+  updateLedgerHeading: "Journal des mises a jour de l interface",
+  updateLedgerHint: "Les controles de mise a jour peu frequents restent ici. Une mise a jour de l interface ne migre jamais silencieusement les donnees; un changement de schema exige une approbation et une sauvegarde actuelle.",
+  updateCheck: "Verifier les mises a jour",
+  updateActivate: "Activer l interface en attente",
+  updateNoWaiting: "Aucune mise a jour de l interface n est en attente.",
+  updateWaiting: "Une mise a jour de l interface attend une activation explicite.",
+  updateUnavailable: "Le controle des mises a jour est indisponible sur cette cible.",
+  updateActive: (cacheName) => `Cache actif: ${cacheName}.`,
+  updateObserved: (decision, cacheName) => `Interface ${cacheName}: ${decision}.`,
   telemetryMessage: (replication, backup, outbox, capability, conflict, storage) => { const label = (status: TelemetryStatus) => ({ READY: "pret", DISABLED: "desactive", CURRENT: "actuelle", STALE: "perimee", CLEAR: "vide", BACKLOGGED: "en attente", DEGRADED: "degradee", UNRESOLVED: "non resolu", NORMAL: "normale", ELEVATED: "elevee", UNKNOWN: "inconnue" }[status] ?? "inconnue"); return `Telemetrie: replication ${label(replication)}, sauvegarde ${label(backup)}, effets ${label(outbox)}, capacite ${label(capability)}, conflits ${label(conflict)}, stockage ${label(storage)}.`; },
   ...searchFrench,
   ...financeFrench,
