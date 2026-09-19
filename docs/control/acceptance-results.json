@@ -1870,9 +1870,10 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-in-place-presentation-control-receipt",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-default-navigation-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-default-navigation-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-compact-primary-surface-grid-receipt"
       ],
-      "notes": "The current built Chromium artifact exposes presentation-only density from a persistent sticky topbar, section visibility/order controls from System > Presentation, and an accessible bounded label editor from Home/Capture/Records; each round-trips to the presentation profile, survives reload, and leaves canonical count/revision state unchanged. The current fresh-origin profile keeps the daily navigation spine visible while preserving the complete ordered section set and optional pinning. Compatible profile upgrade, broader target/accessibility/human acceptance, and complete in-place parity for every preference remain open."
+      "notes": "The current built Chromium artifact exposes presentation-only density from a persistent sticky topbar, section visibility/order controls from System > Presentation, and an accessible bounded label editor from Home/Capture/Records; each round-trips to the presentation profile, survives reload, and leaves canonical count/revision state unchanged. The current fresh-origin compact profile keeps Capture directly available, moves empty/low-frequency Search, Review, Records, and active-lens content behind native disclosures, auto-opens actionable Review/Records, and uses a two-column desktop workspace without shrinking targets. Compatible profile upgrade, broader target/accessibility/human acceptance, and complete in-place parity for every preference remain open."
     },
     {
       "id": "OMN-ACC-122",
