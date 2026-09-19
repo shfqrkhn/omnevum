@@ -6,6 +6,8 @@
   "baseline": {
     "omni": "docs/Omni_3.32.0.md",
     "mpes": "docs/Omnevum-MPES-v0_17_4.md",
+    "mpesSha256": "ab323b33db49286420f15164d7ded7950b22d6c3bd4ef07f3f480b4b4b5cb8a6",
+    "controlCounts": {"requirements": 541, "acceptanceScenarios": 172},
     "phaseGate": "PLATFORM_READY_FOR_CORE"
   },
   "verified": [

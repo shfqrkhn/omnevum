@@ -3,6 +3,13 @@
   "kind": "completion-ledger",
   "status": "IN_PROGRESS",
   "authority": "MPES Sections 25-31 and owner completion directive",
+  "baseline": {
+    "omni": "docs/Omni_3.32.0.md",
+    "mpes": "docs/Omnevum-MPES-v0_17_4.md",
+    "mpesSha256": "ab323b33db49286420f15164d7ded7950b22d6c3bd4ef07f3f480b4b4b5cb8a6",
+    "requirements": 541,
+    "acceptanceScenarios": 172
+  },
   "completionClaim": "100_PERCENT_COMPLETE is prohibited until every mandatory requirement and applicable acceptance scenario has evidence-backed PASS or justified NOT_APPLICABLE and no material UNKNOWN/stale/open blocker remains.",
   "gates": [
     {"id": "PLATFORM_READY_FOR_CORE", "phase": 0, "status": "IN_PROGRESS", "blockers": ["production static-host/browser/support/accessibility/offline qualification", "security/recovery/fault evidence", "selected search target performance/permission qualification and optional-substrate isolation"]},
@@ -15,5 +22,5 @@
     {"id": "COMPOSABLE_WORKFLOWS_READY", "phase": 7, "status": "NOT_STARTED", "blockers": ["automation editor, UI confirmation/permission integration, broader command coverage, registry-to-store runtime wiring, target qualification, and human acceptance"]},
     {"id": "EXTENSIBLE_ECOSYSTEM_READY", "phase": 8, "status": "NOT_STARTED", "blockers": ["real isolation qualification"]}
   ],
-  "next": "Close Phase 0 by qualifying the remaining current-source seams: credentialed connector integration, duplicate-outcome reconciliation, native/browser accessibility and offline/support matrices, storage/quota/corruption/migration faults, Vault cross-origin restore, deployment smoke/rollback, FOSS/legal/provenance review, and required human acceptance. Keep the bounded cleanup receipt/history and package-automation security/lifecycle increments current. Then freeze the Phase 0 gate and execute the Phase 1 daily vertical slice (Capture/Triage -> canonical records -> Search/Review/Visualize plus Artifact/Time/Relate/Space, Vault, Recovery, i18n, and two real domains) with current-artifact receipts before advancing to sync, optional AI, capability-superset, app/game factory, automation UI/storage/normal-command integration, and extension profiles."
+  "next": "Close Phase 0 against the v0.17.4 register by qualifying credentialed connector integration, duplicate-outcome reconciliation, native/browser accessibility and offline/support matrices, storage/quota/corruption/migration faults, Vault cross-origin restore, deployment smoke/rollback, FOSS/legal/provenance review, and human acceptance. Keep package-automation persistence/runtime evidence current while the UI editor, confirmation/permission integration, broader command coverage, and target qualification remain open. Then freeze Phase 0 and execute the Phase 1 daily vertical slice before advancing to sync, optional AI/context export, statement-driven Finance/Resources and OMN-ACC-159..172, app/game factories, bounded workflows, and extensions."
 }
