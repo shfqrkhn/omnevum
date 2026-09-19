@@ -17,6 +17,7 @@ import { captureExpense, captureHealthMeasurement } from "../core/workflows";
 import { acceptFinanceTransactions, createFinanceSourceId, deduplicateFinanceTransactions, parseFinanceCsv, reconcileFinanceStatement, type FinanceStatementSource } from "../core/finance";
 import { formatMoney, parseMoney } from "../core/money";
 import { summarizeFinanceTransactions } from "../core/finance-model";
+import { projectFinanceState } from "../core/finance-projection";
 import { projectDataset } from "../core/data";
 import { countRecords, groupCounts } from "../core/analysis";
 import type { CapabilityRuntime } from "../core/capability-runtime";
@@ -1370,6 +1371,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   let reviewSessionOpen = false;
   let activeRecordDetail: { recordId: string; revision: number; lensId: PresentationLensId } | undefined;
   let packageAutomationProposalsState: PackageAutomationProposal[] = [];
+  let financeChangedIds: string[] = [];
   const ARCHIVE_UNDO_WINDOW_MS = 10_000;
   let archiveUndoState: { recordId: string; expiresAt: number } | undefined;
   let archiveUndoTicker: number | undefined;
@@ -2595,6 +2597,32 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       valueElement.textContent = formatNumber(presentation.locale, value);
       card.append(labelElement, valueElement);
       insightsGrid.append(card);
+    }
+    const finance = projectFinanceState(records, { changedIds: financeChangedIds });
+    const appendFinanceInsight = (label: string, value: string): void => {
+      const card = document.createElement("div");
+      card.className = "summary-item";
+      const labelElement = document.createElement("span");
+      labelElement.textContent = label;
+      const valueElement = document.createElement("strong");
+      valueElement.textContent = value;
+      card.append(labelElement, valueElement);
+      insightsGrid.append(card);
+    };
+    if (finance.summary) {
+      appendFinanceInsight(`${copy.financeDashboard} · ${finance.summary.currency} · ${copy.financeIncome}`, formatMoney(finance.summary.postedIncome, presentation.locale));
+      appendFinanceInsight(copy.financeSpending, formatMoney(finance.summary.postedSpending, presentation.locale));
+      appendFinanceInsight(copy.financeNet, formatMoney(finance.summary.netCashFlow, presentation.locale));
+      appendFinanceInsight(copy.financePending, formatMoney(finance.summary.pendingNet, presentation.locale));
+      const financeStatus = document.createElement("p");
+      financeStatus.className = "hint";
+      financeStatus.textContent = `${copy.financeQuality(finance.quality.status, finance.quality.limitations.length)} ${copy.financeReviewCases(finance.reviewCases.length)} ${copy.financeGraphStatus(finance.financeGraph.nodes.length, finance.financeGraph.edges.length, finance.invalidatedFinanceIds.length)}`;
+      insightsGrid.append(financeStatus);
+    } else if (finance.transactionCount === 0) {
+      const financeStatus = document.createElement("p");
+      financeStatus.className = "hint";
+      financeStatus.textContent = copy.financeNoData;
+      insightsGrid.append(financeStatus);
     }
     const considerations = projectDueReminderConsiderations(records);
     attentionPanel.replaceChildren();
@@ -4053,7 +4081,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     event.preventDefault();
     try {
       const space = (expenseSpace.value === "household" || expenseSpace.value === "work" ? expenseSpace.value : "personal") satisfies SpaceId;
-      await captureExpense(commands, { merchant: expenseMerchant.value, amount: expenseAmount.value, currency: expenseCurrency.value, space });
+      const created = await captureExpense(commands, { merchant: expenseMerchant.value, amount: expenseAmount.value, currency: expenseCurrency.value, space });
+      financeChangedIds = [created.id];
       expenseForm.reset();
       expenseStatus.textContent = copy.expenseSaved;
       await renderRecords(searchQuery.value);
@@ -4083,6 +4112,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const existingArtifact = (await commands.findBySourceId(sourceId)).find((record) => record.recordType === "artifact" && !record.deleted);
       const artifact = existingArtifact ?? await commands.createArtifact({ fileName: file.name, mimeType: file.type || "text/csv", blob: file, sourceId, adapter: inspection.adapter, metadata: inspection.metadata, ...(inspection.derivedText ? { derivedText: inspection.derivedText } : {}) });
       const result = await acceptFinanceTransactions(commands, { ...source, sourceArtifactId: artifact.id }, transactions);
+      financeChangedIds = result.records.map((record) => record.id);
       financeImportForm.reset();
       financeImportStatus.textContent = `${copy.financeImportResult(result.created, result.existing, result.duplicates, result.conflicts.length, reconciliation.status)} ${copy.financeAnalysisResult(formatMoney(summary.postedIncome, presentation.locale), formatMoney(summary.postedSpending, presentation.locale), formatMoney(summary.netCashFlow, presentation.locale), formatMoney(summary.pendingNet, presentation.locale), formatMoney(summary.feeSpending, presentation.locale))}`;
       await renderRecords(searchQuery.value);
