@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "2822bef43ad69f8da32cd2371df21c04ed06d01b5c0bdb13d3e5cb33113e8b00",
-        "bytes": 40088
+        "sha256": "a9d13ec8a46333079be4727fc4b567eaef3df427468c50de4b90bbc37ff86259",
+        "bytes": 40089
       },
       {
         "path": "docs/control/foss-compliance.json",
