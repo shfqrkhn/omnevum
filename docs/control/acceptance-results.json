@@ -1413,7 +1413,7 @@
         "line": 4080
       },
       "text": "The engineering factory completes the same representative stateful work item under two materially different qualified agent hosts, with at least one current FOSS/open host when practical and at least one current subscription-backed official agent when the owner has that entitlement. The durable controller/evidence lets work resume after switching hosts without replaying owner decisions from chat.",
-      "status": "UNKNOWN",
+      "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-package-state-vault-recovery-and-factory-interruption-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-agent-reconstruction-and-interruption-follow-up",
@@ -1422,9 +1422,14 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-agent-reconstruction-at-release-guard-revision-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-agent-reconstruction-at-exact-duplicate-archive-revision-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-agent-reconstruction-at-package-automation-revision-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-agent-reconstruction-at-confirmed-proposal-revision-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-clean-agent-reconstruction-at-confirmed-proposal-revision-follow-up",
+        "scripts/fresh-agent-resume-benchmark.mjs",
+        "scripts/factory-interruption-benchmark.mjs",
+        "docs/control/completion-ledger.json",
+        "docs/control/recovery-bundle.json",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-fresh-agent-resume-receipt"
       ],
-      "notes": "The latest 4f46898 clean-checkout benchmark proves durable controller/evidence reconstruction and interruption/resume without original conversation state on one qualified host. A materially different second agent host, including the owner-entitled subscription-backed route where applicable, remains unqualified."
+      "notes": "The exact current 3733f0c5aabb0ed48515f315990e09d8f7e3f9a7 clean detached worktree passed npm ci, Recovery audit, full CI, and factory interruption/resume without conversation state, then was removed cleanly; this strengthens the earlier one-host reconstruction evidence. A second materially different qualified agent host, cross-host state transfer, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-078",

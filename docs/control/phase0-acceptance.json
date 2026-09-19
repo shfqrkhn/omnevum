@@ -82,7 +82,8 @@
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-analytical-projection-contract-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-health-export-intake-contract-receipt",
     "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-geo-analysis-contract-receipt",
-    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-ai-route-policy-receipt"
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-ai-route-policy-receipt",
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-fresh-agent-resume-receipt"
   ],
   "focus": [
     "static-host shell and base-path routing",
