@@ -1635,7 +1635,7 @@
       "text": "An item is staged in Capture and the sheet is dismissed, scrolled, and left idle past any suggestion timeout. No routing suggestion self-commits; raw provenance remains displayed ahead of interpretation; suggestion origin (deterministic or AI) and confidence remain visible; and commit, defer-to-Triage, and discard each route through their distinct admitted commands. Disabling a Device/Input modality degrades only that modality's control, explicitly.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-capture-triage-idle-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-capture-to-triage-idle-receipt"
       ],
       "notes": "Current Chromium receipt stages a raw Capture item into Triage, leaves it proposal-only through idle and reload, reports no canonical state change, and exposes distinct named review/defer/clarify/reference/link/route/split/delete/archive commands. Suggestion timeout/origin/confidence rendering, dismissal/scroll variants, and Device/Input degradation breadth remain open."
     },
