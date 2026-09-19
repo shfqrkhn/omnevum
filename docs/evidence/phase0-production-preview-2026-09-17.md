@@ -1369,7 +1369,7 @@ The command-level regression snapshots four revision-fenced items, advances one 
 
 ## Current v0.17.4 Chromium telemetry projection and health-line receipt
 
-On 2026-09-19, source `d9366c7` passed `npm run typecheck`, targeted `npx vitest run src/core/telemetry.test.ts src/core/i18n.test.ts src/core/storage.test.ts` (`41` tests passed), and `npm run build`. The exact artifact is bound in `docs/control/release-evidence.json` to digest `7388b8a228b04be7b0430987439e6d962aa74b49367f7861c5176f24eed41514` and service-worker cache `omnevum-shell-bf0f45c3fd008ef8`.
+On 2026-09-19, source `d9366c7` passed `npm run typecheck`, targeted `npx vitest run src/core/telemetry.test.ts src/core/i18n.test.ts src/core/storage.test.ts` (`41` tests passed), and `npm run build`. The exact artifact is bound in `docs/control/release-evidence.json` to digest `bb1979932bfbf4a5e0c83b04312618fd2702b2a37672dff5fc9e1f02eab90c8c` and service-worker cache `omnevum-shell-bf0f45c3fd008ef8`.
 
 The shared telemetry projection distinguishes replication (`DISABLED`), backup (`CURRENT`/`STALE`/`UNKNOWN`), outbox (`CLEAR`/`BACKLOGGED`), capability (`READY`/`DEGRADED`), conflict (`CLEAR`/`UNRESOLVED`/`UNKNOWN`), and storage (`NORMAL`/`ELEVATED`/`UNKNOWN`) without scores, streaks, or engagement metrics. Unit tests cover the quiet healthy matrix, injected fault states, and unavailable or malformed facts fail-closed to `UNKNOWN`.
 
