@@ -36,7 +36,7 @@ import { projectForAuthorizedShare } from "../core/share";
 import { canUseShareGrant, createShareGrant, revokeShareGrant } from "../core/sharing";
 import { createContextDelta, exportAuthorizedContext, makeContextExportProfile, parseContextExportProfile, type ContextExportFormat, type ContextExportProfile, type ContextExportSnapshot } from "../core/context-export";
 import { transitionEffect } from "../core/effect";
-import { createExternalEffect } from "../core/effect-service";
+import { createExternalEffect, withdrawDeferredEffect } from "../core/effect-service";
 import { createEffectRevalidationGuard } from "../core/effect-guard";
 import { EffectRunner } from "../core/effect-runner";
 import { CredentialKeyBroker } from "../core/credential";
@@ -3669,21 +3669,20 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const scope = operation.authorization?.space ? `; Space ${spaceLabel(operation.authorization.space)}` : "";
       meta.textContent = `attempts ${operation.retryCount}/${operation.retryPolicy.maxAttempts}${scope}${retryAt}`;
       content.append(title, destination, meta);
-      const canCancel = ["PENDING", "FAILED_RETRYABLE", "OUTCOME_UNKNOWN", "RECONCILE"].includes(operation.status);
-      if (canCancel) {
+      const canWithdraw = operation.status === "PENDING";
+      if (canWithdraw) {
         const cancel = document.createElement("button");
         cancel.type = "button";
         cancel.className = "icon-button";
-        cancel.textContent = copy.effectCancel;
+        cancel.textContent = copy.effectWithdraw;
         cancel.addEventListener("click", async () => {
-          if (!await requestConfirmation(`${copy.effectCancel}?`, copy.effectOutboxHeading)) return;
+          if (!await requestConfirmation(`${copy.effectWithdrawConfirmation}?`, copy.effectOutboxHeading)) return;
           try {
-            const cancelled = transitionEffect(operation, "CANCELLED", { evidence: [...operation.evidence, "cancelled-from-recovery-ledger"] });
-            await store.updateEffect(cancelled, operation.status);
-            recoveryStatus.textContent = copy.effectCancelled;
+            await withdrawDeferredEffect(store, operation.operationId);
+            recoveryStatus.textContent = copy.effectWithdrawn;
             await renderEffects();
           } catch (error) {
-            recoveryStatus.textContent = describeError(error, "Effect cancellation failed; its persisted state was not changed.");
+            recoveryStatus.textContent = describeError(error, "The effect was not withdrawn; its persisted state was not changed.");
           }
         });
         item.append(cancel);

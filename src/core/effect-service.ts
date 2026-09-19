@@ -1,6 +1,7 @@
-import { assertEffectOperation, type EffectAuthorization, type EffectOperation } from "./effect";
+import { assertEffectOperation, transitionEffect, type EffectAuthorization, type EffectOperation } from "./effect";
 import { createOpaqueId } from "./id";
 import { parseRemoteEndpoint } from "./remote";
+import type { CanonicalStore } from "./storage";
 
 export const DEFAULT_EXTERNAL_EFFECT_RETRY_POLICY = { maxAttempts: 3, backoffSeconds: 60 } as const;
 
@@ -32,4 +33,18 @@ export function createExternalEffect(input: ExternalEffectRequest, now = new Dat
   };
   assertEffectOperation(operation);
   return operation;
+}
+
+/**
+ * Withdraw an effect only while it is still staged and no transport has been
+ * allowed to observe it. Once execution starts, the result must be reconciled
+ * rather than presented as an undoable local action.
+ */
+export async function withdrawDeferredEffect(store: CanonicalStore, operationId: string): Promise<EffectOperation> {
+  const operation = await store.getEffect(operationId);
+  if (!operation) throw new Error("The external effect is no longer available");
+  if (operation.status !== "PENDING") throw new Error("The external effect is no longer undoable; reconcile its persisted outcome instead");
+  const withdrawn = transitionEffect(operation, "CANCELLED", { evidence: [...operation.evidence, "withdrawn-before-delivery"] });
+  await store.updateEffect(withdrawn, "PENDING");
+  return withdrawn;
 }
