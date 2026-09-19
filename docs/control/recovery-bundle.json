@@ -134,8 +134,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "897f533c33b15aa3c75df663ab582d6a047a761ff093a6a6b5d481b12767030a",
-        "bytes": 169685
+        "sha256": "12bd14f78d884c6ee860d699821ff54e039d28bd91985b1f09aff60d09113099",
+        "bytes": 170235
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -159,8 +159,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "a86abe48ec839c38cac49487fabaa6394c56ed148dba6314dc3abcc14be514af",
-        "bytes": 3332
+        "sha256": "dde48cdf8e2a8f5f61b17ece48f78267be518f1fa23bc89f28639e108d4da3ef",
+        "bytes": 3359
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "ac2f55eadd7ac8090d85e1fa31acd0204021fbf2507496ab9e692e4f3d468846",
-        "bytes": 46873
+        "sha256": "086b03144cbd39357bef8a97777f28f77ca5b83f84524dda8d0fd8516de343bf",
+        "bytes": 47387
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -224,12 +224,12 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "8c65840161a9793f102841fed6e5ceb7c07b5a9134e3783690d1dc75c802553d",
-        "bytes": 2728
+        "sha256": "d99c5cf15a98b8dfec90d59a7c9f8be40e2920591ea1ee5d72e5302d10459a4a",
+        "bytes": 2839
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "8c572a73988d3b0587aa9c789926f9b00650c44fbc50eb6448abe62b086ac3a7",
+        "sha256": "041a3b5868f04daa53ee9d7f737d735b9a3037bfcd9f54252529f9a4f2865202",
         "bytes": 2399
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "ef0a8566fe4cff2201a3be5767f004c2da76fae57f76c78e2409d50dc108dab1",
-        "bytes": 234891
+        "sha256": "8e3af3db45417cc23dff130bf34257a2ef5f8e5b97e012b502f8a5b46e91a602",
+        "bytes": 236213
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -669,13 +669,13 @@
       },
       {
         "path": "src/core/i18n.test.ts",
-        "sha256": "b2c35f1558eed805739350d6cdf33425e6a8458309a02233b40fc7407617c7cd",
-        "bytes": 2112
+        "sha256": "f864b273082ebe86ef04ac73e3a3e0ac2e08cee7e6a447e2b7f32ff43057b9a0",
+        "bytes": 2246
       },
       {
         "path": "src/core/i18n.ts",
-        "sha256": "fe205ea5cd3b03b1da16db9037370c460df767048ff2c696d0e0e72d3eaa6d52",
-        "bytes": 60357
+        "sha256": "a23417cdffaf80be3b4dad5eca4e3181050bc97b74332c51838721fde19a4dd2",
+        "bytes": 60519
       },
       {
         "path": "src/core/id.ts",
@@ -706,6 +706,16 @@
         "path": "src/core/money.ts",
         "sha256": "672231aabd0b88f05b794cc30c75f854cbf78b7606632fc16f25d81ce9920af6",
         "bytes": 2582
+      },
+      {
+        "path": "src/core/onboarding.test.ts",
+        "sha256": "6922e7bd4645a0e94abfc39b6f1d1b44cab9e8c56a65d8a45ff7d6f336d49093",
+        "bytes": 885
+      },
+      {
+        "path": "src/core/onboarding.ts",
+        "sha256": "74d39dbbcedd35e5d5de08e39b70a31efa334e466bbae507618278d22d8371c5",
+        "bytes": 262
       },
       {
         "path": "src/core/package-automation-registry.test.ts",
@@ -949,8 +959,8 @@
       },
       {
         "path": "src/styles.css",
-        "sha256": "8ffb6f6eed09b82a08effc880893a95c2c6da2683a3db7f1a46c9051db1505ae",
-        "bytes": 16418
+        "sha256": "445494bde4863a161f1e05ca875c15b7c5cb52e2df511e9a95c0f6e311dd27c7",
+        "bytes": 16532
       },
       {
         "path": "src/test/setup.ts",
@@ -959,8 +969,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "d2a1f8855016a96e049b497003e2979903ae1cee6dccaf04fcd2a5dd4082e12a",
-        "bytes": 199447
+        "sha256": "dff843b989b96a86e328d528847a0ed8b172da04ab7cb276b917daa3885d4353",
+        "bytes": 200158
       },
       {
         "path": "tsconfig.json",
