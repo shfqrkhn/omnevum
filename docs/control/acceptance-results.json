@@ -1980,10 +1980,15 @@
         "src/core/effect-service.ts#withdrawDeferredEffect",
         "src/core/effect-service.test.ts#withdraws-only-a-still-pending-operation-before-delivery",
         "src/core/effect-service.test.ts#does-not-present-started-or-ambiguous-effects-as-undoable",
+        "src/core/effect-runner.ts#EffectRunOptions",
+        "src/core/effect-runner.test.ts#fails-closed-for-an-immediate-transport-until-pre-delivery-approval-is-supplied",
+        "src/core/remote.ts#requiresPreDeliveryApproval",
+        "src/ui/app.ts#effect-run-form",
         "src/ui/app.ts#renderEffects",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-effectoutbox-withdrawal-boundary-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-effectoutbox-withdrawal-boundary-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-effectoutbox-pre-delivery-approval-receipt"
       ],
-      "notes": "Only a PENDING operation can be withdrawn through the platform owner, and the current Chromium UI labels that affordance Withdraw before delivery; IN_FLIGHT, OUTCOME_UNKNOWN, RECONCILE, and SUCCEEDED operations expose no undo/withdraw affordance. The focused effect/runner/remote suite and a current Chromium static preview prove local staging and withdrawal without contacting the endpoint. A qualified transport that cannot defer and its explicit pre-confirmation path, real external delivery/compensation, other targets, deployment, and human acceptance remain open."
+      "notes": "Only a PENDING operation can be withdrawn through the platform owner, and the current Chromium UI labels that affordance Withdraw before delivery; IN_FLIGHT, OUTCOME_UNKNOWN, RECONCILE, and SUCCEEDED operations expose no undo/withdraw affordance. An executor requiring pre-delivery approval now fails closed in the core runner: missing or denied approval leaves PENDING and does not call the transport, while the UI's explicit confirmation supplies the approval callback. The exact Chromium loopback qualification proves local staging without a request, a visible confirmation step, and confirmed delivery through the guarded runner; reconciliation remains separate. Real provider/ACL/OAuth delivery and compensation, other targets, deployment, accessibility/input breadth, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-128",

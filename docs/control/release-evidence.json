@@ -3,17 +3,17 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "a336164d5cd0821cf6ebdfbde1d2218656e3325bd43df98356ac60afc9500490", "sourceRevision": "03062c9", "serviceWorkerCache": "omnevum-shell-2ae4353cc7a0cd56"},
+  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "dbc5f6bd6d5361282c84795dbfcafcfae3a4cf3ef51029ee38c0522d41456622", "sourceRevision": "524fc1e", "serviceWorkerCache": "omnevum-shell-c2ca3f8d82737ed9"},
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF; captured after the full npm run build on 2026-09-19.",
   "artifactFiles": [
     {"path": "dist/assets/index-5Bomwce_.css", "sha256": "1c11d276ca2f5c25d1e54f84910a73a0b7c2f87d9983897d4972e1848d041446", "bytes": 24102},
-    {"path": "dist/assets/index-KeC3SGaG.js", "sha256": "c6864da121d8f1a91ef82ee34b2bb86a5b30734b05c4f2e0f2163b73dfade349", "bytes": 510572},
-    {"path": "dist/assets/index-KeC3SGaG.js.map", "sha256": "e34f39d2edc530ac0326bf9fe757874aeca96426f22b0fd5921a130ff6fb4370", "bytes": 1475358},
+    {"path": "dist/assets/index-CwD73mag.js", "sha256": "c7c2020f149a4bc6a782155f2f3579d1778ac90f5ca97e2137bd70536cd59312", "bytes": 510833},
+    {"path": "dist/assets/index-CwD73mag.js.map", "sha256": "3e311ecd3126e22a93a226bd67b496c1f45fb4467ac873bfa796770c6d48cdc5", "bytes": 1476360},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "2625db5c9c38925db66ff8bc3bd526ca2018efadf8f42ce117567b396fdf6c2f", "bytes": 933},
+    {"path": "dist/index.html", "sha256": "8e9f1d27ed20476b9a311fcc5f112dbf224f4dfa7118cea51329433c935341e2", "bytes": 933},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
     {"path": "dist/recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
-    {"path": "dist/sw.js", "sha256": "4a9700c3547b0a2e01ab672f3268e3321b75777da68503716f42f1e5cdf55356", "bytes": 3501}
+    {"path": "dist/sw.js", "sha256": "23ee3b7c24606de80e0f9f00cce6d669ac587a52cfc1765dfa46baebb2be1771", "bytes": 3501}
   ],
   "requiredEvidence": [
     "control-generation-and-drift",
@@ -29,5 +29,5 @@
     "human-acceptance-where-required"
   ],
   "evidencePolicy": "Generated status text cannot create PASS. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains NOT_RUN/UNKNOWN.",
-  "currentDecision": "Continue Phase 0; the current artifact groups Recovery backup/restore, repair/platform, and local-retirement controls behind labelled native disclosures while preserving existing IDs and owner paths. It also retains the strict pre-delivery Effect/Outbox withdrawal owner and removes undo affordances after execution starts or becomes ambiguous, alongside the independent dependency-free last-resort recovery console at ./recovery.html, deterministic human-readable and artifact-originals exports, and a storage-owned retirement gate requiring a current full Vault readback or separately recorded explicit destroy intent. Compact Recovery keeps low-frequency data-exit and Effect/Outbox controls collapsed by default and leaves hard clear disabled until authorized. The current compact grouping is browser-qualified but does not close the remaining deployment, target/accessibility, native fault, or human-acceptance gaps. OMN-ACC-094 remains bounded NOT_APPLICABLE and no completion or production-release claim is made."
+  "currentDecision": "Continue Phase 0; the current artifact groups Recovery backup/restore, repair/platform, and local-retirement controls behind labelled native disclosures while preserving existing IDs and owner paths. It retains the strict pre-delivery Effect/Outbox withdrawal owner and now fails closed in the core runner when an immediate transport lacks explicit approval: missing or denied approval leaves the operation PENDING, while the UI confirmation supplies approval before delivery; reconciliation remains separate. The artifact also retains the independent dependency-free last-resort recovery console at ./recovery.html, deterministic human-readable and artifact-originals exports, and a storage-owned retirement gate requiring a current full Vault readback or separately recorded explicit destroy intent. Compact Recovery keeps low-frequency data-exit and Effect/Outbox controls collapsed by default and leaves hard clear disabled until authorized. The current compact grouping and local loopback approval path are browser-qualified but do not close real-provider, deployment, target/accessibility, native fault, or human-acceptance gaps. OMN-ACC-094 remains bounded NOT_APPLICABLE and no completion or production-release claim is made."
 }
