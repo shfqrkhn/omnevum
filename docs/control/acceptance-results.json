@@ -2205,8 +2205,11 @@
         "line": 4225
       },
       "text": "After a material finance import, the Resources/Finance surface automatically generates an evidence-linked brief covering the applicable current position, material changes, budget/cash-flow outlook, goals, anomalies/review items, recurring/fee/refund/leakage changes, forecast, and data-quality limitations. A second update with no material change produces a quiet result rather than manufactured alerts or busywork.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-update-brief-receipt"
+      ],
+      "notes": "Current Finance projection and Home status evidence produce a bounded DERIVED brief with source IDs and sections for current position, material changes, cash-flow outlook, goals, review items, recurring patterns, forecast vintages, and data-quality limitations. The changed-ID signal is material and an unchanged refresh is quiet without fabricated alerts; automatic import orchestration, full evidence-linked detail UI, broader fixtures/targets, accessibility, deployment, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-149",
