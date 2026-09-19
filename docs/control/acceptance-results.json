@@ -1979,9 +1979,10 @@
       "text": "The same finance source batch is imported twice, including one overlapping statement period under a renamed file. Source fingerprints/overlap and transaction identity prevent duplicate canonical records, preserve legitimate repeated real-world transactions, and report any ambiguous near-duplicate rather than silently deleting it.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-credential-free-finance-statement-core-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-credential-free-finance-statement-core-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-import-ui-surface-and-upload-host-limitation-receipt"
       ],
-      "notes": "The current Finance core test suite parses exact minor-unit rows, deduplicates an overlapping period from a renamed source by account/date/amount/merchant identity, preserves legitimate source-ID conflicts for review, and admits the first normalized row once through the domain.finance CommandBus owner. Full mixed-source overlap semantics, near-duplicate policy, UI receipts, dependent projections, Vault/browser breadth, and human acceptance remain open."
+      "notes": "The current Finance core suite parses exact minor-unit rows, scopes source identity to account/currency, deduplicates renamed or reformatted overlap against persisted natural identity, preserves source-ID conflicts for review, and admits rows once through the domain.finance CommandBus owner. The current artifact exposes the Finance UI, but the host file-chooser limitation prevented a successful upload/confirmation receipt; mixed source classes, near-duplicate policy, dependent projections, Vault/browser breadth, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-135",
@@ -2102,9 +2103,10 @@
       "text": "Finance is exercised end-to-end with all live financial connectors disabled and with no financial-institution credentials stored anywhere. User-supplied statements/exports alone support reconciliation, reporting, budgeting, goals, forecasts, anomaly review, and a full portable Vault backup/restore on a materially different supported browser profile.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-credential-free-finance-statement-core-receipt"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-credential-free-finance-statement-core-receipt",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-finance-import-ui-surface-and-upload-host-limitation-receipt"
       ],
-      "notes": "The current local Finance statement core proves a credential-free, connector-free normalization/reconciliation path with no financial backend dependency and explicit source lineage. End-to-end reporting, budgets, goals, forecasts, anomaly review, UI, portable Vault restore on a materially different browser profile, and human acceptance remain open."
+      "notes": "The current local Finance core and current-artifact UI surface prove a credential-free, connector-free normalization/reconciliation path with explicit source lineage and local-only import affordances. The host prevented a successful file upload, and reporting, budgets, goals, forecasts, anomaly review, portable Vault restore on a materially different browser profile, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-147",
