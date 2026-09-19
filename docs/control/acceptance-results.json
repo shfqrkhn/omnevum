@@ -128,9 +128,10 @@
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-narrowoffline-artifact-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-local-origin-capture-search-reload-and-keyboard-follow-up",
         "docs/evidence/phase0-production-preview-2026-09-17.md#current-chromium-accessibility-tree-and-keyboard-follow-up",
-        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capturesearchreload-and-accessibility-tree-follow-up"
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-capturesearchreload-and-accessibility-tree-follow-up",
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-built-artifact-palette-contrast-receipt"
       ],
-      "notes": "Theme switching was observed in development smoke; current built-artifact evidence records labelled presentation, cleanup, Recovery, and Capture/Search controls. The current browser tree is not WCAG conformance or screen-reader certification, and mobile-family, contrast, target-matrix, and human qualification remain open."
+      "notes": "Current receipt-bound Chromium evidence covers the exercised Light and AMOLED Dark palette text contrast with zero DOM text pairs below 4.5:1, plus labelled presentation, cleanup, Recovery, and Capture/Search controls. The six-family/mode matrix, painted boundaries/focus/state graphics, deliberate failing-pair gate, browser/accessibility breadth, and human qualification remain open."
     },
     {
       "id": "OMN-ACC-005",
@@ -1567,8 +1568,11 @@
         "line": 4128
       },
       "text": "All six bound built-in family/mode palettes are evaluated programmatically against every painted text/plane pair and every interactive-boundary/focus/state-bearing-graphic pair actually admitted on the primary surfaces. Body and metadata text meets at least 4.5:1, large text at least 3:1, and every interactive boundary, focus indicator, and state-bearing graphic at least 3:1 against every adjacent built-in plane on which it is used. A deliberately introduced failing pair fails the release gate rather than being waived.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-built-artifact-palette-contrast-receipt"
+      ],
+      "notes": "The exact receipt-bound Chromium artifact reported zero rendered text pairs below 4.5:1 in the exercised Light and AMOLED Dark themes after correcting dark primary-button foreground contrast. The all-six family/mode palette matrix, large-text and graphic/boundary coverage, focus contrast, deliberate failing-pair gate, other engines, assistive technology, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-102",

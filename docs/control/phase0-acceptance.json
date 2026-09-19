@@ -20,7 +20,8 @@
     "docs/evidence/phase0-production-preview-2026-09-17.md",
     "docs/evidence/phase0-dependency-check-2026-09-17.md",
     "docs/evidence/phase0-bakeoff-2026-09-17.md",
-    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-responsive-target-geometry-receipt"
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-responsive-target-geometry-receipt",
+    "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-chromium-built-artifact-palette-contrast-receipt"
   ],
   "focus": [
     "static-host shell and base-path routing",
