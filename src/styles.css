@@ -228,6 +228,11 @@ select[multiple] { min-height: 9rem; }
 .triage-split textarea { min-height: 3rem; padding: 0.45rem 0.6rem; }
 .triage-actions input[type="datetime-local"] { min-height: 44px; min-width: 12rem; padding: 0.45rem 0.6rem; }
 .triage-proposal { flex: 1 1 100%; margin: 0; }
+.review-templates { display: grid; gap: 0.7rem; margin: 0.8rem 0; }
+.review-templates h3 { margin: 0; }
+.review-template-buttons { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.review-stepper { display: grid; gap: 0.7rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-muted); padding: 0.8rem; }
+.review-stepper[hidden] { display: none; }
 .record-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; border: 1px solid var(--line); border-radius: 12px; padding: 0.9rem; }
 .record-item p { margin: 0.35rem 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .undo-banner { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; margin: 0.7rem 0; border: 1px solid var(--accent-strong); border-radius: 12px; background: color-mix(in srgb, var(--accent) 10%, var(--surface)); padding: 0.7rem 0.8rem; }

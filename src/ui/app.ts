@@ -43,6 +43,7 @@ import { isCleanupHistoryRecord, previewCleanup, reconstructCleanupHistory, type
 import { CORE_AUTOMATION_PACKAGE, type PackageAutomationRuntime } from "../core/package-automation-runtime";
 import type { PackageAutomationProposal } from "../core/package-automation-registry";
 import { shouldAutoShowOnboarding } from "../core/onboarding";
+import { REVIEW_SESSION_SETTING, REVIEW_TEMPLATES, advanceReviewSession, getReviewTemplate, isReviewSession, makeReviewSession, type ReviewSession } from "../core/review";
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -633,6 +634,26 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <button id="triage-batch-review" class="secondary" type="button" disabled>${copy.triageBatchReview}</button>
           <button id="triage-batch-defer" class="secondary" type="button" disabled>${copy.triageBatchDefer}</button>
         </div>
+        <div id="review-templates" class="review-templates">
+          <h3>${copy.reviewTemplates}</h3>
+          <p class="hint">${copy.reviewHint}</p>
+          <div id="review-template-buttons" class="review-template-buttons"></div>
+          <div id="review-stepper" class="review-stepper" hidden>
+            <div class="section-heading">
+              <h3 id="review-stepper-heading"></h3>
+              <span id="review-stepper-progress" class="count"></span>
+            </div>
+            <p id="review-stepper-prompt"></p>
+            <p id="review-stepper-motivation" class="hint"></p>
+            <ul id="review-stepper-records" class="record-list"></ul>
+            <div class="form-row">
+              <button id="review-stepper-skip" class="secondary" type="button">${copy.reviewSkip}</button>
+              <button id="review-stepper-abandon" class="secondary" type="button">${copy.reviewAbandon}</button>
+              <button id="review-stepper-next" type="button">${copy.reviewNext}</button>
+            </div>
+            <p id="review-stepper-status" class="hint" role="status"></p>
+          </div>
+        </div>
         <ul id="review-list" class="record-list"></ul>
         <p id="triage-status" class="hint" role="status"></p>
         <p id="review-empty" class="empty-state">${copy.inboxClear}</p>
@@ -1004,6 +1025,17 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const triageBatchDeferUntil = root.querySelector<HTMLInputElement>("#triage-batch-defer-until");
   const triageBatchReview = root.querySelector<HTMLButtonElement>("#triage-batch-review");
   const triageBatchDefer = root.querySelector<HTMLButtonElement>("#triage-batch-defer");
+  const reviewTemplateButtons = root.querySelector<HTMLElement>("#review-template-buttons");
+  const reviewStepper = root.querySelector<HTMLElement>("#review-stepper");
+  const reviewStepperHeading = root.querySelector<HTMLElement>("#review-stepper-heading");
+  const reviewStepperProgress = root.querySelector<HTMLElement>("#review-stepper-progress");
+  const reviewStepperPrompt = root.querySelector<HTMLElement>("#review-stepper-prompt");
+  const reviewStepperMotivation = root.querySelector<HTMLElement>("#review-stepper-motivation");
+  const reviewStepperRecords = root.querySelector<HTMLUListElement>("#review-stepper-records");
+  const reviewStepperSkip = root.querySelector<HTMLButtonElement>("#review-stepper-skip");
+  const reviewStepperAbandon = root.querySelector<HTMLButtonElement>("#review-stepper-abandon");
+  const reviewStepperNext = root.querySelector<HTMLButtonElement>("#review-stepper-next");
+  const reviewStepperStatus = root.querySelector<HTMLElement>("#review-stepper-status");
   const relateForm = root.querySelector<HTMLFormElement>("#relate-form");
   const relateSource = root.querySelector<HTMLSelectElement>("#relate-source");
   const relateTarget = root.querySelector<HTMLSelectElement>("#relate-target");
@@ -1189,6 +1221,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!packageAutomationForm || !packageAutomationRecord || !packageAutomationDocument || !packageAutomationPreviewButton || !packageAutomationStatus || !packageAutomationList || !packageAutomationProposals) {
     throw new Error("Omnevum package-automation controls are missing");
   }
+  if (!reviewTemplateButtons || !reviewStepper || !reviewStepperHeading || !reviewStepperProgress || !reviewStepperPrompt || !reviewStepperMotivation || !reviewStepperRecords || !reviewStepperSkip || !reviewStepperAbandon || !reviewStepperNext || !reviewStepperStatus) {
+    throw new Error("Omnevum Review template controls are missing");
+  }
 
   const sharedParameters = new URLSearchParams(window.location.search);
   const sharedInput = [sharedParameters.get("title"), sharedParameters.get("text"), sharedParameters.get("url")].filter((value): value is string => Boolean(value?.trim())).join("\n").trim();
@@ -1261,6 +1296,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   let recordsRenderRevision = 0;
   const selectedTriageIds = new Set<string>();
   let visibleTriageRecords = new Map<string, CanonicalRecord>();
+  let reviewSession: ReviewSession | undefined;
+  let reviewSessionOpen = false;
   let packageAutomationProposalsState: PackageAutomationProposal[] = [];
   const ARCHIVE_UNDO_WINDOW_MS = 10_000;
   let archiveUndoState: { recordId: string; expiresAt: number } | undefined;
@@ -2458,6 +2495,139 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     if (!triageBatchDeferUntil.value) triageBatchDeferUntil.value = new Date(Date.now() + 24 * 60 * 60 * 1000 - new Date().getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 16);
   };
 
+  const renderReviewTemplates = async (): Promise<void> => {
+    const stored = await store.getSetting<unknown>(REVIEW_SESSION_SETTING);
+    reviewSession = isReviewSession(stored) ? stored : undefined;
+    reviewTemplateButtons.replaceChildren();
+    for (const template of REVIEW_TEMPLATES) {
+      const start = document.createElement("button");
+      start.type = "button";
+      start.className = "secondary";
+      start.textContent = `${copy.reviewStart}: ${copy.reviewTemplateName(template.id)}`;
+      start.addEventListener("click", async () => {
+        reviewSession = makeReviewSession(template.id);
+        reviewSessionOpen = true;
+        await store.setSetting(REVIEW_SESSION_SETTING, reviewSession);
+        await renderReviewTemplates();
+      });
+      reviewTemplateButtons.append(start);
+    }
+    if (reviewSession && reviewSession.stepIndex < getReviewTemplate(reviewSession.templateId).stepCount) {
+      const resume = document.createElement("button");
+      resume.type = "button";
+      resume.className = "secondary";
+      resume.textContent = `${copy.reviewResume}: ${copy.reviewTemplateName(reviewSession.templateId)}`;
+      resume.addEventListener("click", async () => {
+        reviewSessionOpen = true;
+        await renderReviewTemplates();
+      });
+      reviewTemplateButtons.append(resume);
+    }
+    reviewStepper.hidden = !reviewSessionOpen || !reviewSession;
+    if (!reviewSessionOpen || !reviewSession) return;
+    const session = reviewSession;
+    const template = getReviewTemplate(session.templateId);
+    const complete = session.stepIndex >= template.stepCount;
+    reviewStepperHeading.textContent = copy.reviewTemplateName(template.id);
+    reviewStepperProgress.textContent = copy.reviewStep(Math.min(session.stepIndex + 1, template.stepCount), template.stepCount);
+    reviewStepperMotivation.textContent = copy.reviewMotivation;
+    reviewStepperRecords.replaceChildren();
+    reviewStepperSkip.hidden = complete;
+    reviewStepperNext.disabled = complete;
+    reviewStepperNext.textContent = session.stepIndex === template.stepCount - 1 ? copy.reviewFinish : copy.reviewNext;
+    if (complete) {
+      reviewStepperPrompt.textContent = copy.reviewCompleted;
+      reviewStepperStatus.textContent = copy.reviewCompleted;
+      return;
+    }
+    reviewStepperPrompt.textContent = copy.reviewPrompt(template.promptKeys[session.stepIndex] ?? "next");
+    reviewStepperStatus.textContent = copy.reviewPartial;
+    const motivating = (await scopedRecords()).filter((record) => !record.deleted && record.recordType !== "relationship").slice(0, 3);
+    if (motivating.length === 0) {
+      const empty = document.createElement("li");
+      empty.className = "empty-state";
+      empty.textContent = copy.reviewNoRecords;
+      reviewStepperRecords.append(empty);
+      return;
+    }
+    for (const record of motivating) {
+      const item = document.createElement("li");
+      item.className = "record-item";
+      const content = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = typeLabel(record.recordType);
+      const text = document.createElement("p");
+      text.textContent = recordText(record);
+      const meta = document.createElement("small");
+      meta.textContent = `${record.owner} - revision ${record.revision}`;
+      content.append(title, text, meta);
+      const actions = document.createElement("div");
+      actions.className = "triage-actions";
+      const open = document.createElement("button");
+      open.type = "button";
+      open.className = "secondary";
+      open.textContent = copy.reviewOpenRecord;
+      open.addEventListener("click", () => { void openRecordDetail(record.id); });
+      actions.append(open);
+      if (recordTriageStatus(record) !== "REVIEWED") {
+        const review = document.createElement("button");
+        review.type = "button";
+        review.className = "icon-button";
+        review.textContent = copy.reviewMarkReviewed;
+        review.addEventListener("click", async () => {
+          try {
+            const current = await commands.get(record.id);
+            if (!current || current.deleted) throw new Error("The motivating record is no longer available");
+            const { triageDisposition: _previousDisposition, triageDeferredUntil: _previousDeferredUntil, ...dataWithoutTriage } = current.data;
+            await commands.update(current.id, { ...dataWithoutTriage, triageStatus: "REVIEWED" }, current.revision);
+            await renderRecords(searchQuery.value);
+          } catch (error) {
+            reviewStepperStatus.textContent = describeError(error, "Review update failed; canonical data was not changed.");
+          }
+        });
+        actions.append(review);
+      }
+      if (record.recordType === "task" && !isCompletedTask(record)) {
+        const completeTask = document.createElement("button");
+        completeTask.type = "button";
+        completeTask.className = "icon-button complete-button";
+        completeTask.textContent = copy.reviewCompleteTask;
+        completeTask.addEventListener("click", async () => {
+          try {
+            const current = await commands.get(record.id);
+            if (!current || current.deleted || current.recordType !== "task") throw new Error("The motivating task is no longer available");
+            await commands.update(current.id, { ...current.data, status: "DONE" }, current.revision);
+            await renderRecords(searchQuery.value);
+          } catch (error) {
+            reviewStepperStatus.textContent = describeError(error, "Task completion failed; canonical data was not changed.");
+          }
+        });
+        actions.append(completeTask);
+      }
+      item.append(content, actions);
+      reviewStepperRecords.append(item);
+    }
+  };
+
+  reviewStepperNext.addEventListener("click", async () => {
+    const session = reviewSession;
+    if (!session) return;
+    reviewSession = advanceReviewSession(session);
+    await store.setSetting(REVIEW_SESSION_SETTING, reviewSession);
+    await renderReviewTemplates();
+  });
+  reviewStepperSkip.addEventListener("click", async () => {
+    const session = reviewSession;
+    if (!session) return;
+    reviewSession = advanceReviewSession(session, true);
+    await store.setSetting(REVIEW_SESSION_SETTING, reviewSession);
+    await renderReviewTemplates();
+  });
+  reviewStepperAbandon.addEventListener("click", async () => {
+    reviewSessionOpen = false;
+    await renderReviewTemplates();
+  });
+
   const renderReview = async (): Promise<void> => {
     const scoped = await scopedRecords();
     const now = Date.now();
@@ -3375,6 +3545,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     await renderDocumentFinishChoices();
     await renderSummary();
     await renderReview();
+    await renderReviewTemplates();
     await renderComposeView();
     await renderRelationshipChoices();
     await renderKnowledgeChoices();
