@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "e29bdde05ac82983a88c94528cf2852a98a3b90f3f96923f665cc917393ce81b",
-        "bytes": 3421
+        "sha256": "ab69829f32224836d6ed41246584d84de4e9dc6bf9abfc5b2fd59eb6a80122ba",
+        "bytes": 3422
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -264,13 +264,13 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "57daa84207b2410388f82fd0549a6f1bdeec6f0494c402907e1bcd9fbea85936",
-        "bytes": 3690
+        "sha256": "560ee6f3369b27ab91dd0f200f95d3e578195bb6d0af48e063923ee2f4f30bb5",
+        "bytes": 3764
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "e9c35cdfdeeabb8b368fa5420d9b1a8a3b283d771d47be42d71c1cfa911a5b87",
-        "bytes": 9501
+        "sha256": "824b49b862669aadfd53db7ed1ff0614aa7b45e960d0fbc5960570fc67bc20e4",
+        "bytes": 10120
       },
       {
         "path": "docs/control/requirements.json",
@@ -406,6 +406,11 @@
         "path": "docs/evidence/phase0-pages-deployment-automation-2026-09-19.md",
         "sha256": "76cdb150d3ca52affe64a1d9ecba8b44bd43710f2ed04d465bbcdf6aba12695d",
         "bytes": 1259
+      },
+      {
+        "path": "docs/evidence/phase0-pages-deployment-compact-benchmarks-2026-09-20.md",
+        "sha256": "9872570eea18fb8641d2fe5cc82628c61910382d5731eba2cb67620d30fe3a11",
+        "bytes": 1440
       },
       {
         "path": "docs/evidence/phase0-pages-deployment-launchpad-2026-09-19.md",
