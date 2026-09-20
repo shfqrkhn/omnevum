@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "e6a9b5a129b005e3bd2137965b8be09c773e4b966032d0ce945bfa76ef487577",
-        "bytes": 8269
+        "sha256": "7a2459d8b99a6836feb82d87619f4ebe50f55af41a55cb1712eade9a01637ed5",
+        "bytes": 8685
       },
       {
         "path": "docs/control/requirements.json",
