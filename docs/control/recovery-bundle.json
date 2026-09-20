@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "6ba0535514971a6958ac7849559f75ea152340a8ff0ac0d680a7326d168e69d9",
-        "bytes": 108552
+        "sha256": "350a5010c1468bb7b5e22a00d925ed36ba9b4e6322b8a571b067a1a188ecad46",
+        "bytes": 109757
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "bcc506d3543f42f54d8a8a5f5e94859f321fa8a7a285fb6c3d43bf3036d27110",
-        "bytes": 5009
+        "sha256": "20a76f7eb32481008bdb57a76a712a0415f81a91129815011bb7cb51fc41f6e4",
+        "bytes": 2866
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "6de64ccd5bb75515cda9deb937aa4194d8a74f1f111bb8ef0264695d987dc07e",
-        "bytes": 8072
+        "sha256": "7c885fb13a351db002e27fc1123ca11601b0421877873024f736d9a13523e58b",
+        "bytes": 8524
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -249,8 +249,8 @@
       },
       {
         "path": "docs/control/mvp-acceptance.json",
-        "sha256": "f554c6c506efda2f9e475bb8d2c922a84611a690a254849929db6079ba126672",
-        "bytes": 1289
+        "sha256": "2235ff504f1e95e2ef6cbfa7d887a1ed771d95457753f871332b2872f43ce859",
+        "bytes": 1363
       },
       {
         "path": "docs/control/owner-registry.json",
@@ -264,13 +264,13 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "b9c3040336c4da544bca3892d46c0b4436a88f19d58d405079884a52092e39b1",
-        "bytes": 3228
+        "sha256": "1dc1f36571fbad16b132dca1bcfe9df9281aa00716af5e0953544a73d1a4ac00",
+        "bytes": 3423
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "a33bafea5f2bfdd970756d79fe345a34c4b45da1252e86e4592a76d43ed046fd",
-        "bytes": 7430
+        "sha256": "17b542f48fb97bf726bbe8dfa5b6f9ba4cbbb8f2d575cb2bb93c67cfe2612bbb",
+        "bytes": 7406
       },
       {
         "path": "docs/control/requirements.json",
@@ -331,6 +331,11 @@
         "path": "docs/evidence/phase0-factory-preview-2026-09-19.md",
         "sha256": "1d65cbb3455617606f3bac5796043946879d6d87a80eec227d35c611d54d45f8",
         "bytes": 2572
+      },
+      {
+        "path": "docs/evidence/phase0-finance-classification-touch-target-2026-09-20.md",
+        "sha256": "209862b0b58afedaadf9ccf04f6438f3fcaa05287b40db5b770440c536b7f8cb",
+        "bytes": 4012
       },
       {
         "path": "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md",
@@ -859,13 +864,13 @@
       },
       {
         "path": "src/core/finance-model.test.ts",
-        "sha256": "5ee8a6014cad8115c7d1700cedca9b5ad24c925fc67c85c3b08256c3b96455ca",
-        "bytes": 14529
+        "sha256": "7c4dea2334be2359258c339bdde9cd1e076dad8295e4f6c032f1ee58cc600796",
+        "bytes": 14672
       },
       {
         "path": "src/core/finance-model.ts",
-        "sha256": "b36c88f5c4fb75578308abda3eadfa73dcfb9f89ce2dda7e1eb9a124b0ae7344",
-        "bytes": 53634
+        "sha256": "e3516901851c53eade9489c31d05ef98d8d926d692c2db87b4bcc39deee4e6aa",
+        "bytes": 53695
       },
       {
         "path": "src/core/finance-projection.test.ts",
@@ -1339,8 +1344,13 @@
       },
       {
         "path": "src/styles.css",
-        "sha256": "491bb779d1e86e043b6e35d222b0e6f8a3e3ff1d877de1e8f0793718ef085ce0",
-        "bytes": 30649
+        "sha256": "42d826e9fe13163ad48ab7132edaf3f997f3adb7033eddf379fcc1306aa40518",
+        "bytes": 32293
+      },
+      {
+        "path": "src/styles.test.ts",
+        "sha256": "c1b4906d2f9c010c2d30620adf66ec8616c2325abd34520ccd2c4981a4eacd1c",
+        "bytes": 1135
       },
       {
         "path": "src/test/setup.ts",

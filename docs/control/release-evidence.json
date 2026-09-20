@@ -5,20 +5,20 @@
   "authority": "MPES Sections 21 and 22",
   "releaseIdentity": {
     "version": "v0.18.0-overhaul-candidate",
-    "artifactDigest": "462875502ec63ffccedd707fb558745805252ab84eda294213a2542e4665d699",
-    "sourceRevision": "0d54f57dd21341104ef1dea0b76a8ec6639a5496",
-    "serviceWorkerCache": "omnevum-shell-5738511387984ad7"
+    "artifactDigest": "0dc1337fb513c435568582dd5a46b314daea5ab9c7cf85d64da360f7a1cd1b00",
+    "sourceRevision": "4257272",
+    "serviceWorkerCache": "omnevum-shell-a8cc71ee3603b276"
   },
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF.",
   "artifactFiles": [
-    {"path": "dist/assets/index-SPeReUdF.css", "sha256": "8a52b308d24deb30b36d88b2004fb6d02f67dba7b6545b603ba2fe648ad50826", "bytes": 26719},
-    {"path": "dist/assets/index-bhbiEgeE.js", "sha256": "ceed08da78544303528928430482a544d811716bd3073d315a9d32978f4c8940", "bytes": 545025},
-    {"path": "dist/assets/index-bhbiEgeE.js.map", "sha256": "e037e9f98df98f6b44c18d8ab2001b9eb0d0b1a935e0a15d6f38468aacd9ba72", "bytes": 1562325},
+    {"path": "dist/assets/index-Bzh0zw-4.css", "sha256": "9795defcf51ae78c19860be612eb856805a729b321222a0264b6c613a49c2b35", "bytes": 28185},
+    {"path": "dist/assets/index-MC0mZHLG.js", "sha256": "baa10d5f11e04ee315873ea4d23d74624dea8b9c682a77bfd86b675de1f7d387", "bytes": 545069},
+    {"path": "dist/assets/index-MC0mZHLG.js.map", "sha256": "a66a3466fdd631fa265561588a4777f78c4ffc4d859e15302aae2c615f1e0bc4", "bytes": 1562447},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "3d954126dc2500eef6fd25ca5571a1e0da1e87ab9384f872ff7179a8392b9207", "bytes": 933},
+    {"path": "dist/index.html", "sha256": "28e68fea0633265dea613623f06c10f401d061c885ba010891c2ed2e9891fbb0", "bytes": 933},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
     {"path": "dist/recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
-    {"path": "dist/sw.js", "sha256": "a404fd718604caf9cf586d44dfbda3e2e393824488731f95ad32bc658b8df342", "bytes": 3594}
+    {"path": "dist/sw.js", "sha256": "bfbaa56b263199a8e471251403311d0e16c995a2388a875790caf0a858f5feff", "bytes": 3594}
   ],
   "deploymentObservations": [
     {"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35481320651", "sourceRevision": "542b665b361d579ee6d8e3ab2f331ce3afca5cd6", "artifactByteMatch": "8/8 local dist files matched the served Pages files after switching Pages from legacy master:/ to the Actions artifact source; published-entry smoke guard passed", "date": "2026-09-19"},
@@ -34,5 +34,5 @@
   ],
   "requiredEvidence": ["control-generation-and-drift", "structure-reference-architecture-audit", "type-static-and-unit-tests", "browser-e2e-responsive-accessibility-input-i18n", "offline-static-host-and-service-worker", "storage-quota-corruption-migration-and-recovery", "Vault-cross-origin-restore", "security-egress-untrusted-content-and-credential-boundaries", "dependency-license-SBOM-vulnerability-provenance", "deploy-smoke-rollback", "human-acceptance-where-required"],
   "evidencePolicy": "The clean v0.18 baseline inherits no release artifact or acceptance claim. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains UNKNOWN.",
-  "currentDecision": "The current compact-default candidate at source revision 0d54f57 is deployed and byte-verified on GitHub Pages through run 35487695353, with connector-free Finance import/correction evidence recorded as bounded PARTIAL. Production rollback, offline/update, storage fault, materially different browser-family Vault restore, security, human acceptance, and all mandatory acceptance gates remain open, so release readiness is not claimed."
+  "currentDecision": "The compact-default candidate at source revision 4257272 has a fresh local artifact identity after the Finance classifier and 44 CSS pixel touch-target fixes; Pages deployment and byte verification are pending for this artifact. Production rollback, offline/update, storage fault, materially different browser-family Vault restore, security, human acceptance, and all mandatory acceptance gates remain open, so release readiness is not claimed."
 }

@@ -1078,9 +1078,10 @@
       "text": "A 320 CSS pixel equivalent viewport is exercised against Home, Capture, an active lens, Assistant, and System/Recovery at 100% and 200% text scaling. Each surface reflows to a single column with no horizontal scrolling of first-party chrome or content, no clipped or overlapped control, and no unreachable target. Any intrinsically two-dimensional region scrolls within its own explicit bounds without propagating horizontal scroll to the page.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-accessibility-responsive-2026-09-19.md"
+        "docs/evidence/phase0-accessibility-responsive-2026-09-19.md",
+        "docs/evidence/phase0-finance-classification-touch-target-2026-09-20.md#observed-flow"
       ],
-      "notes": "A current Chromium production-preview row at 320 CSS pixels and 200% text scale retained zero horizontal overflow across Home/Capture, an active lens, Search, Assistant, and Recovery. Native touch, assistive technology, all density/family/state variants, and human acceptance remain open."
+      "notes": "Current Chromium QA at 320 CSS pixels and 200% text scale retained zero horizontal overflow and measured consequential checkbox/radio hit boxes at 44x44 CSS pixels. Native touch, assistive technology, all density/family/state variants, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-100",
@@ -1425,8 +1426,11 @@
         "line": 4208
       },
       "text": "Finance receives a mixed batch containing at least a transaction-account statement, credit-card statement, investment statement/export, debt statement, and income/pay record in materially different supported formats. It classifies each source, preserves/fingerprints the originals, extracts candidate records with provenance, and accepts all mechanically validated records while routing only material unresolved exceptions to Triage/Clarify.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-classification-touch-target-2026-09-20.md#observed-flow"
+      ],
+      "notes": "Edge QA classified and accepted credit-card, investment, and insurance facts-only sources with preserved artifacts and explicit reconciliation exceptions. Transaction-account, debt, income, mechanically validated mixed transaction rows, and full routine exception resolution remain open."
     },
     {
       "id": "OMN-ACC-134",
@@ -1435,8 +1439,11 @@
         "line": 4210
       },
       "text": "The same finance source batch is imported twice, including one overlapping statement period under a renamed file. Source fingerprints/overlap and transaction identity prevent duplicate canonical records, preserve legitimate repeated real-world transactions, and report any ambiguous near-duplicate rather than silently deleting it.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-classification-touch-target-2026-09-20.md#observed-flow"
+      ],
+      "notes": "The same transaction bytes under checking.csv and renamed-checking.csv produced 1 new then 0 new/1 existing canonical result. Legitimate repeated transactions and ambiguous near-duplicate review remain open."
     },
     {
       "id": "OMN-ACC-135",
@@ -1812,8 +1819,11 @@
         "line": 4280
       },
       "text": "Finance ingests a revolving-credit statement, an investment statement with external cash flows, and an insurance statement. It preserves statement balance/due/minimum/grace-relevant terms where supplied; computes investment performance only with a named appropriate money- or time-weighted method and period assumptions; and records insurance premium/renewal/limits/deductible without claiming coverage adequacy or suitability.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-classification-touch-target-2026-09-20.md#observed-flow"
+      ],
+      "notes": "Edge QA accepted credit-card, investment, and insurance fact-only inputs; the Finance suite separately proves named time-/money-weighted performance and fact parsing. Full UI inspection of all terms, external cash-flow variants, and downstream qualification remains open."
     },
     {
       "id": "OMN-ACC-170",
