@@ -37,3 +37,9 @@ This receipt supports only partial offline/deployment/responsive evidence. It is
 - At `390x844`, `768x1024`, and `1440x900`, `scrollWidth === clientWidth` (`390`, `753`, and `1425` observed client widths); navigation, Review, and Records were closed by default, and the compact navigation summary was visible.
 - At the `1440x900` row, the live main and navigation containers were `1180px`; no horizontal overflow was observed. The local interaction proof (open navigation grid, select Search, menu closes and Search opens) remains bounded to the same candidate source and asset behavior.
 - This proves only the compact-layout/deployment slice. Safari/WebKit, Firefox, assistive technology, touch hardware, quota/corruption/migration, cross-origin Vault, rollback, security/egress, and human acceptance remain open.
+
+## Current docs-follow-up deployment
+
+- Source revision: `8e64340f8f3513578c5175eca7c1a5cd4f513a53`.
+- Pages repository CI run [35484061520](https://github.com/shfqrkhn/omnevum/actions/runs/35484061520) and Pages run [35484061561](https://github.com/shfqrkhn/omnevum/actions/runs/35484061561) completed successfully after the documentation/control follow-up; the deployed artifact identity remained `f046f093dea26e87a7d4e367126dc7fef87945b343dcb4622876d8c707d61849` with the same 8/8 byte match.
+- The live smoke guard remained green. This follow-up changes no product artifact and does not close any remaining target, security, Recovery, or human-acceptance rows.

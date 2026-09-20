@@ -1824,7 +1824,8 @@
       "text": "The provisional NeumanOS launchpad is exercised through six representative flows: Note/Knowledge, Task/Project, Calendar/Time, Habit/Routine, Document/Artifact, and Automation. Each retained user flow continues to work while canonical mutable meaning is read/written only through the corresponding Omnevum-owned semantic command/owner boundary, stable identities survive the transition, and backup/export/Recovery can reconstruct the accepted state. A UI that works only by retaining a second writable NeumanOS authority is not a PASS.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-launchpad-workload-2026-09-19.md"
+        "docs/evidence/phase0-launchpad-workload-2026-09-19.md",
+        "docs/evidence/phase0-donor-characterization-2026-09-19.md"
       ]
     },
     {
@@ -1836,7 +1837,8 @@
       "text": "During the transplant proof, a retained feature attempts to write directly to a legacy module database/store after its canonical owner has moved behind the Omnevum boundary. The write is blocked, redirected through the admitted command path, or isolated in an explicitly temporary migration seam whose reconciliation/removal criteria are tested. The final accepted configuration contains no unsynchronized writable copy and no hidden module-specific authority for the same semantic fact.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-launchpad-workload-2026-09-19.md"
+        "docs/evidence/phase0-launchpad-workload-2026-09-19.md",
+        "docs/evidence/phase0-donor-characterization-2026-09-19.md"
       ]
     },
     {
@@ -1858,8 +1860,12 @@
         "line": 4294
       },
       "text": "The whole-app route is re-evaluated after either (a) the canonical-core transplantability proof fails a material acceptance gate or produces lifecycle/migration cost that defeats the retained-value rationale, or (b) a current entrant demonstrably offers materially stronger qualified retained value under the same hard gates. The engineering record compares retain/adapt/harvest/greenfield alternatives without sunk-cost preference; unchanged evidence does not trigger churn.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-donor-characterization-2026-09-19.md",
+        "docs/evidence/phase0-launchpad-workload-2026-09-19.md"
+      ],
+      "notes": "The exact donor runtime exercise reproduced a material Notes failure and exposed duplicate module-store authorities, triggering a retain/adapt/harvest/greenfield route review. No whole-app route is promoted while owner-bound transplant and Recovery remain unqualified."
     }
   ]
 }

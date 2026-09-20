@@ -30,7 +30,7 @@
       "id": "V018-DELTA-003",
       "candidate": "OneBench",
       "source": "https://github.com/diyiwuyan/onebench",
-      "sourceIdentity": "7676115b72cce425d435d91a942dd0cf1f50fd04",
+      "sourceIdentity": "b616bc43e05292bb9e6b4d85cc09f230928d52dc",
       "license": "MIT",
       "route": "ROLE_SPECIFIC_HARVEST",
       "delta": "Characterize static-PWA/workbench/package patterns without importing local/module-owned canonical writes or deployment assumptions.",
