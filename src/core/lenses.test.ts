@@ -22,8 +22,12 @@ describe("presentation lens projections", () => {
   it("reuses one canonical record in multiple deterministic projections", () => {
     const shared = record("shared", { recordType: "task", data: { text: "Ship the work task", kind: "task", space: "work" } });
     expect(lensIdsForRecord(shared)).toEqual(["direction", "work", "change"]);
-    expect(projectLensRecords([shared], "direction").map((item) => item.id)).toEqual(["shared"]);
-    expect(projectLensRecords([shared], "work").map((item) => item.id)).toEqual(["shared"]);
+    const directionProjection = projectLensRecords([shared], "direction");
+    const workProjection = projectLensRecords([shared], "work");
+    expect(directionProjection.map((item) => item.id)).toEqual(["shared"]);
+    expect(workProjection.map((item) => item.id)).toEqual(["shared"]);
+    expect(directionProjection[0]).toBe(shared);
+    expect(workProjection[0]).toBe(shared);
   });
 
   it("keeps archived and cleanup-history records out of projections", () => {
