@@ -7,6 +7,7 @@ import { fingerprintVault, withVaultIntegrity, verifyVaultIntegrity } from "./va
 import { assertCanonicalRecord, assertVaultDocument, assertVaultPackageState, isCanonicalRecord, isHistoryEntry, isVaultPackageAutomation, isVaultPackageState, MAX_VAULT_AUTOMATION_RULES, MAX_VAULT_PACKAGE_STATES } from "./validation";
 import { isViewDefinition, VIEW_SETTING } from "./compose";
 import { enumerateRetirementCopies, parseRetirementCopyObservations, type RetirementCopyInventory, type RetirementCopyObservation } from "./retirement";
+import type { VerifiedBackup } from "./migration";
 
 const RECORD_STORE = "records";
 const SEARCH_STORE = "searchDocuments";
@@ -17,6 +18,7 @@ const ARTIFACT_STORE = "artifactBlobs";
 const EFFECT_STORE = "effects";
 const PACKAGE_STATE_PREFIX = "packageState:";
 const AUTOMATION_RULES_SETTING_ID = "automation.rules";
+const VERIFIED_BACKUP_SETTING_ID = "updates.verifiedBackup";
 const RETIREMENT_AUTHORIZATION_SETTING_ID = "recovery.retirementAuthorization";
 const RETIREMENT_COPY_INVENTORY_SETTING_ID = "recovery.retirementCopyInventory";
 
@@ -317,6 +319,33 @@ export class CanonicalStore {
     };
     await this.setSetting(RETIREMENT_AUTHORIZATION_SETTING_ID, authorization);
     return authorization;
+  }
+
+  public async recordVerifiedBackup(input: unknown, sizeBytes: number): Promise<VerifiedBackup> {
+    const vault = await this.validateVaultInput(input);
+    if (!vault.integrity) throw new Error("Verified backup must carry a Vault integrity receipt");
+    if (!Number.isSafeInteger(sizeBytes) || sizeBytes <= 0) throw new Error("Verified backup size is invalid");
+    const backup: VerifiedBackup = {
+      verifiedAt: new Date().toISOString(),
+      digest: await fingerprintVault(vault),
+      recordCount: vault.records.length,
+      artifactCount: vault.artifacts?.length ?? 0
+    };
+    await this.setSetting(VERIFIED_BACKUP_SETTING_ID, { ...backup, sizeBytes });
+    return backup;
+  }
+
+  public async getVerifiedBackup(): Promise<VerifiedBackup | undefined> {
+    const value = await this.getSetting<unknown>(VERIFIED_BACKUP_SETTING_ID);
+    if (!isVerifiedBackup(value)) return undefined;
+    try {
+      const current = await this.exportVault();
+      if (await fingerprintVault(current) !== value.digest) return undefined;
+    } catch {
+      return undefined;
+    }
+    const { sizeBytes: _sizeBytes, ...backup } = value;
+    return structuredClone(backup);
   }
 
   public async recordExplicitDestroyIntent(): Promise<ExplicitDestroyRetirementAuthorization> {
@@ -1030,6 +1059,27 @@ function isRetirementAuthorization(value: unknown): value is RetirementAuthoriza
   const recordCount = candidate.recordCount;
   const sizeBytes = candidate.sizeBytes;
   return typeof candidate.vaultFingerprint === "string" && candidate.vaultFingerprint.length === 64 && typeof recordCount === "number" && Number.isSafeInteger(recordCount) && recordCount >= 0 && typeof sizeBytes === "number" && Number.isSafeInteger(sizeBytes) && sizeBytes > 0;
+}
+
+function isVerifiedBackup(value: unknown): value is VerifiedBackup & { sizeBytes: number } {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const candidate = value as Partial<VerifiedBackup> & { sizeBytes?: unknown };
+  const recordCount = candidate.recordCount;
+  const artifactCount = candidate.artifactCount;
+  const sizeBytes = candidate.sizeBytes;
+  return typeof candidate.verifiedAt === "string"
+    && Number.isFinite(Date.parse(candidate.verifiedAt))
+    && typeof candidate.digest === "string"
+    && /^[a-f0-9]{64}$/iu.test(candidate.digest)
+    && typeof recordCount === "number"
+    && Number.isSafeInteger(recordCount)
+    && recordCount >= 0
+    && typeof artifactCount === "number"
+    && Number.isSafeInteger(artifactCount)
+    && artifactCount >= 0
+    && typeof sizeBytes === "number"
+    && Number.isSafeInteger(sizeBytes)
+    && sizeBytes > 0;
 }
 
 function rawArtifactMimeType(candidate: { data?: unknown }, blob: Blob): string {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { evaluateShellActivation, evaluateUpdate, interruptedMigration, makeUpdateLedgerEntry, migrateRecord, migrateVault, type UpdateCandidate, type VerifiedBackup } from "./migration";
+import { evaluateShellActivation, evaluateUpdate, interruptedMigration, makeUpdateLedgerEntry, migrateRecord, migrateVault, parseUpdateCandidate, type UpdateCandidate, type VerifiedBackup } from "./migration";
 import type { CanonicalRecord } from "./model";
 
 function record(): CanonicalRecord {
@@ -79,5 +79,25 @@ describe("versioned migration seam", () => {
     const stale: VerifiedBackup = { verifiedAt: "2026-09-17T12:00:00.000Z", digest: "not-a-digest", recordCount: 1, artifactCount: 0 };
     expect(evaluateUpdate(candidate, "2026-09-19T12:00:00.000Z", stale, true)).toMatchObject({ decision: "REQUIRE_APPROVAL", backupState: "STALE", backupRequired: true });
     expect(evaluateShellActivation(candidate, false)).toMatchObject({ decision: "READ_COMPATIBLE", usable: true });
+  });
+
+  it("parses only structurally valid update candidates from an untrusted runtime message", () => {
+    const candidate: UpdateCandidate = {
+      releaseId: "schema-2",
+      shellVersion: "0.3.0",
+      sourceRevision: "schema-revision",
+      artifactDigest: "e".repeat(64),
+      kind: "CANONICAL_SCHEMA",
+      currentSchemaVersion: 1,
+      targetSchemaVersion: 2,
+      migrations: [{ id: "records-v2", description: "Add typed record metadata", affectedRecordClasses: ["note"], fromSchemaVersion: 1, toSchemaVersion: 2 }],
+      rollbackPath: "restore-vault-before-records-v2",
+      readCompatible: false
+    };
+    const parsed = parseUpdateCandidate(candidate);
+    expect(parsed).toEqual(candidate);
+    expect(parsed).not.toBe(candidate);
+    expect(parseUpdateCandidate({ ...candidate, artifactDigest: "not-a-digest" })).toBeUndefined();
+    expect(parseUpdateCandidate({ kind: "CANONICAL_SCHEMA" })).toBeUndefined();
   });
 });

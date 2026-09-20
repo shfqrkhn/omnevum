@@ -120,6 +120,16 @@ export function makeUpdateLedgerEntry(candidate: UpdateCandidate, recordedAt: st
   return { releaseId: candidate.releaseId, shellVersion: candidate.shellVersion, sourceRevision: candidate.sourceRevision, artifactDigest: candidate.artifactDigest, kind: candidate.kind, recordedAt, decision: evaluation.decision, rollbackPath: candidate.rollbackPath };
 }
 
+export function parseUpdateCandidate(value: unknown): UpdateCandidate | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  try {
+    assertUpdateCandidate(value as UpdateCandidate);
+    return structuredClone(value as UpdateCandidate);
+  } catch {
+    return undefined;
+  }
+}
+
 function classifyBackup(backup: VerifiedBackup | undefined, now: string, maxAgeMs: number): BackupState {
   if (!backup) return "MISSING";
   const verifiedAt = Date.parse(backup.verifiedAt);

@@ -489,6 +489,19 @@ describe("CanonicalStore", () => {
     destination.close();
   });
 
+  it("records a verified migration backup and invalidates it after canonical change", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-verified-backup`);
+    await store.open();
+    await store.put(record("record-backup-before"));
+    const vault = await store.exportVault();
+    const backup = await store.recordVerifiedBackup(vault, JSON.stringify(vault).length);
+    expect(backup).toMatchObject({ recordCount: 1, artifactCount: 0, digest: expect.stringMatching(/^[a-f0-9]{64}$/u) });
+    expect(await store.getVerifiedBackup()).toEqual(backup);
+    await store.put(record("record-backup-after"));
+    expect(await store.getVerifiedBackup()).toBeUndefined();
+    store.close();
+  });
+
   it("reports canonical and derived health without hiding an invalid index", async () => {
     const store = new CanonicalStore(`omnevum-test-${Date.now()}-health`);
     await store.open();

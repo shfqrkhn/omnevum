@@ -52,6 +52,7 @@ import { REVIEW_SESSION_SETTING, REVIEW_TEMPLATES, advanceReviewSession, getRevi
 import { makeTelemetryPreviewInput, parseTelemetryPreviewMode, projectTelemetry, projectTelemetryConsiderations, parseTelemetryDispositions, parseTelemetryThresholds, TELEMETRY_DISPOSITIONS_SETTING, TELEMETRY_THRESHOLDS_SETTING, type TelemetryDispositions, type TelemetryThresholds } from "../core/telemetry";
 import { appendShellUpdateObservation, parseShellUpdateLedger, UPDATE_LEDGER_SETTING } from "../core/update-ledger";
 import { enumerateRetirementCopies, type RetirementCopyObservation, type RetirementCopyState } from "../core/retirement";
+import { evaluateUpdate, parseUpdateCandidate, type UpdateCandidate, type UpdateEvaluation } from "../core/migration";
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -94,6 +95,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const savedRetirementCopyInventory = await store.getRetirementCopyInventory();
   let retirementCopyInventory: ReturnType<typeof enumerateRetirementCopies>;
   let updateActivationRequested = false;
+  let pendingMigrationCandidate: UpdateCandidate | undefined;
+  let pendingMigrationEvaluation: UpdateEvaluation | undefined;
   const initialRecordCount = (await store.list()).length;
   const onboardingAutoShown = shouldAutoShowOnboarding(initialRecordCount, onboardingDismissed);
   const safePresentationMode = readSafePresentationMode();
@@ -970,6 +973,19 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <button id="update-check" class="secondary" type="button">${copy.updateCheck}</button>
             <button id="update-activate" class="secondary" type="button" hidden>${copy.updateActivate}</button>
           </div>
+          <details id="migration-gate" class="relationship-form compact-panel" hidden>
+            <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.recovery}</p><h4>${copy.migrationGateHeading}</h4></span><span id="migration-gate-pill" class="status-pill"></span></summary>
+            <p class="hint">${copy.migrationGateHint}</p>
+            <p id="migration-gate-status" class="hint" role="status"></p>
+            <h5>${copy.migrationPlan}</h5>
+            <ul id="migration-plan-list" class="record-list"></ul>
+            <p id="migration-affected" class="hint"></p>
+            <div class="form-row">
+              <button id="migration-create-backup" class="secondary" type="button">${copy.migrationCreateBackup}</button>
+              <button id="migration-approve" type="button" disabled>${copy.migrationApprove}</button>
+              <button id="migration-decline" class="secondary" type="button">${copy.migrationDecline}</button>
+            </div>
+          </details>
           <p id="update-ledger-status" class="hint" role="status"></p>
           <ul id="update-ledger-list" class="record-list"></ul>
         </details>
@@ -1435,6 +1451,14 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const updateActivate = root.querySelector<HTMLButtonElement>("#update-activate");
   const updateLedgerStatus = root.querySelector<HTMLElement>("#update-ledger-status");
   const updateLedgerList = root.querySelector<HTMLUListElement>("#update-ledger-list");
+  const migrationGate = root.querySelector<HTMLDetailsElement>("#migration-gate");
+  const migrationGatePill = root.querySelector<HTMLElement>("#migration-gate-pill");
+  const migrationGateStatus = root.querySelector<HTMLElement>("#migration-gate-status");
+  const migrationPlanList = root.querySelector<HTMLUListElement>("#migration-plan-list");
+  const migrationAffected = root.querySelector<HTMLElement>("#migration-affected");
+  const migrationCreateBackup = root.querySelector<HTMLButtonElement>("#migration-create-backup");
+  const migrationApprove = root.querySelector<HTMLButtonElement>("#migration-approve");
+  const migrationDecline = root.querySelector<HTMLButtonElement>("#migration-decline");
   const effectList = root.querySelector<HTMLUListElement>("#effect-list")!;
   const healthStatus = root.querySelector<HTMLElement>("#health-status");
   const capabilityStatus = root.querySelector<HTMLElement>("#capability-status");
@@ -1576,6 +1600,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   if (!updateLedgerPill || !updateCheck || !updateActivate || !updateLedgerStatus || !updateLedgerList) {
     throw new Error("Omnevum update ledger controls are missing");
   }
+  if (!migrationGate || !migrationGatePill || !migrationGateStatus || !migrationPlanList || !migrationAffected || !migrationCreateBackup || !migrationApprove || !migrationDecline) {
+    throw new Error("Omnevum migration gate controls are missing");
+  }
 
   const updateRollbackPath = "Retain the previous service-worker cache generation; export a Vault before any canonical migration.";
   const persistShellUpdateObservation = async (observation: Parameters<typeof appendShellUpdateObservation>[1]): Promise<void> => {
@@ -1593,9 +1620,36 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       return undefined;
     }
   };
+  const renderMigrationGate = async (registration: ServiceWorkerRegistration | undefined, status: ServiceWorkerStatusMessage | undefined): Promise<void> => {
+    const waitingCanonical = Boolean(registration?.waiting && status?.updateKind === "CANONICAL_SCHEMA");
+    pendingMigrationCandidate = waitingCanonical ? parseUpdateCandidate(status?.candidate) : undefined;
+    pendingMigrationEvaluation = undefined;
+    migrationGate.hidden = !waitingCanonical;
+    migrationCreateBackup.disabled = !waitingCanonical;
+    migrationApprove.disabled = true;
+    migrationDecline.disabled = !waitingCanonical;
+    migrationPlanList.replaceChildren();
+    migrationAffected.textContent = "";
+    if (!waitingCanonical) return;
+    if (!pendingMigrationCandidate) {
+      migrationGatePill.textContent = "INVALID";
+      migrationGateStatus.textContent = copy.migrationInvalid;
+      return;
+    }
+    for (const migration of pendingMigrationCandidate.migrations) {
+      const item = document.createElement("li");
+      item.textContent = `${migration.id}: ${migration.description} (${migration.fromSchemaVersion} -> ${migration.toSchemaVersion})`;
+      migrationPlanList.append(item);
+    }
+    migrationAffected.textContent = `${copy.migrationAffected(pendingMigrationCandidate.migrations.flatMap((migration) => migration.affectedRecordClasses).filter((value, index, values) => values.indexOf(value) === index).sort().join(", "))} Rollback: ${pendingMigrationCandidate.rollbackPath}`;
+    const backup = await store.getVerifiedBackup();
+    pendingMigrationEvaluation = evaluateUpdate(pendingMigrationCandidate, new Date().toISOString(), backup, false);
+    migrationGatePill.textContent = backup ? "BACKUP CURRENT" : pendingMigrationEvaluation.backupState;
+    migrationGateStatus.textContent = backup ? `${copy.migrationBackup} ${copy.migrationApprovalRequired}` : pendingMigrationEvaluation.reason;
+    migrationApprove.disabled = !backup;
+  };
   const renderShellUpdateLedger = async (): Promise<void> => {
     const registration = await resolveServiceWorkerRegistration();
-    updateActivate.hidden = !registration?.waiting;
     updateCheck.disabled = !registration;
     updateLedgerList.replaceChildren();
     for (const entry of shellUpdateLedger) {
@@ -1606,6 +1660,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     if (!registration) {
       updateLedgerPill.textContent = copy.updateUnavailable;
       updateLedgerStatus.textContent = options.serviceWorkerRegistrationError ? copy.updateUnavailable : copy.updateNoWaiting;
+      await renderMigrationGate(undefined, undefined);
       return;
     }
     const status = await queryServiceWorkerStatus(registration);
@@ -1614,9 +1669,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       await persistShellUpdateObservation({ releaseId: status.cacheName, shellVersion: status.cacheName, cacheName: status.cacheName, observedAt: new Date().toISOString(), decision, rollbackPath: updateRollbackPath });
     }
     const waiting = Boolean(registration.waiting);
-    updateActivate.hidden = !waiting;
+    await renderMigrationGate(registration, status);
+    const canonicalWaiting = waiting && status?.updateKind === "CANONICAL_SCHEMA";
+    updateActivate.hidden = !waiting || canonicalWaiting;
     updateLedgerPill.textContent = waiting ? copy.updateWaiting : status?.cacheName ? copy.updateActive(status.cacheName) : copy.updateNoWaiting;
-    updateLedgerStatus.textContent = waiting ? copy.updateWaiting : status?.cacheName ? copy.updateActive(status.cacheName) : copy.updateNoWaiting;
+    updateLedgerStatus.textContent = canonicalWaiting ? (pendingMigrationCandidate ? copy.updateWaiting : copy.migrationInvalid) : waiting ? copy.updateWaiting : status?.cacheName ? copy.updateActive(status.cacheName) : copy.updateNoWaiting;
     updateLedgerList.replaceChildren();
     for (const entry of shellUpdateLedger) {
       const item = document.createElement("li");
@@ -1659,6 +1716,50 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     } catch (error) {
       updateLedgerStatus.textContent = describeError(error, copy.updateUnavailable);
     }
+  });
+  migrationCreateBackup.addEventListener("click", async () => {
+    if (!pendingMigrationCandidate) return;
+    try {
+      const vault = await store.exportVault();
+      const serialized = JSON.stringify(vault, null, 2);
+      await store.recordVerifiedBackup(vault, new TextEncoder().encode(serialized).byteLength);
+      downloadText("omnevum-migration-backup.json", serialized, "application/json");
+      await renderShellUpdateLedger();
+      migrationGateStatus.textContent = copy.migrationBackupCreated;
+    } catch (error) {
+      migrationGateStatus.textContent = describeError(error, "Verified migration backup failed; canonical data was not changed.");
+    }
+  });
+  migrationApprove.addEventListener("click", async () => {
+    const registration = await resolveServiceWorkerRegistration();
+    if (!registration?.waiting || !pendingMigrationCandidate) {
+      migrationGateStatus.textContent = copy.updateNoWaiting;
+      return;
+    }
+    try {
+      const backup = await store.getVerifiedBackup();
+      const evaluation = evaluateUpdate(pendingMigrationCandidate, new Date().toISOString(), backup, true);
+      pendingMigrationEvaluation = evaluation;
+      if (evaluation.decision !== "APPLY_AFTER_APPROVAL") {
+        migrationGateStatus.textContent = evaluation.reason;
+        migrationApprove.disabled = true;
+        return;
+      }
+      const confirmed = await requestConfirmation(`${evaluation.reason}\n\n${copy.migrationAffected(evaluation.affectedRecordClasses.join(", "))}`, copy.migrationGateHeading, copy.migrationApprove);
+      if (!confirmed) return;
+      updateActivationRequested = true;
+      registration.waiting.postMessage({ type: "OMNEVUM_SW_ACTIVATE" });
+      migrationGateStatus.textContent = copy.migrationReady;
+      updateLedgerStatus.textContent = copy.updateObserved("APPROVED", registration.waiting.scriptURL);
+    } catch (error) {
+      migrationGateStatus.textContent = describeError(error, copy.migrationInvalid);
+    }
+  });
+  migrationDecline.addEventListener("click", () => {
+    migrationApprove.disabled = true;
+    migrationGatePill.textContent = "DECLINED";
+    migrationGateStatus.textContent = copy.migrationDeclined;
+    updateLedgerStatus.textContent = copy.migrationDeclined;
   });
   if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (updateActivationRequested) window.location.reload();
@@ -5257,6 +5358,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     try {
       const vault = await store.exportVault();
       const serialized = JSON.stringify(vault, null, 2);
+      await store.recordVerifiedBackup(vault, new TextEncoder().encode(serialized).byteLength);
       downloadText("omnevum-vault.json", serialized, "application/json");
       recoveryStatus.textContent = recoveryCopy.fullVaultMessage(vault.records.length, new TextEncoder().encode(serialized).byteLength, vault.artifacts?.length ?? 0);
     } catch (error) {
@@ -5511,10 +5613,11 @@ interface ServiceWorkerStatusMessage {
   cacheName: string;
   updateKind: "SHELL_ONLY" | "CANONICAL_SCHEMA";
   scope: string;
+  candidate?: unknown;
 }
 
 async function queryServiceWorkerStatus(registration: ServiceWorkerRegistration): Promise<ServiceWorkerStatusMessage | undefined> {
-  const worker = registration.active ?? navigator.serviceWorker.controller;
+  const worker = registration.waiting ?? registration.active ?? navigator.serviceWorker.controller;
   if (!worker || typeof MessageChannel !== "function") return undefined;
   return new Promise((resolve) => {
     const channel = new MessageChannel();

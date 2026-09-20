@@ -1,6 +1,7 @@
 const CACHE_PREFIX = "omnevum-shell-";
 const CACHE_NAME = "omnevum-shell-v1";
 const UPDATE_KIND = "SHELL_ONLY";
+const UPDATE_CANDIDATE = null;
 const PRECACHE_URLS = ["./"];
 const CACHE_HISTORY_NAME = "omnevum-history";
 const CACHE_HISTORY_URL = "./__omnevum-cache-history__";
@@ -48,7 +49,7 @@ self.addEventListener("message", (event) => {
   if (!message || typeof message.type !== "string") return;
   if (message.type === "OMNEVUM_SW_STATUS_REQUEST") {
     const port = event.ports?.[0];
-    port?.postMessage({ type: "OMNEVUM_SW_STATUS", cacheName: CACHE_NAME, updateKind: UPDATE_KIND, scope: self.registration.scope });
+    port?.postMessage({ type: "OMNEVUM_SW_STATUS", cacheName: CACHE_NAME, updateKind: UPDATE_KIND, scope: self.registration.scope, ...(UPDATE_CANDIDATE ? { candidate: UPDATE_CANDIDATE } : {}) });
     return;
   }
   if (message.type === "OMNEVUM_SW_ACTIVATE") void self.skipWaiting();

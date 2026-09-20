@@ -33,7 +33,7 @@ export interface UiCopy {
   confirmationHeading: string; confirm: string;
   automationHeading: string; automationHint: string; automationPackage: string; automationRecord: string; automationDocument: string; automationInstall: string; automationPreview: string; automationRules: string; automationNoRules: string; automationDisable: string; automationEnable: string; automationRemove: string; automationProposals: string; automationNoProposals: string; automationApply: string; automationInstalled: (ruleId: string) => string; automationApplied: string;
   factoryPreview: string; factoryAppHeading: string; factoryAppHint: string; factoryAppSave: string; factoryAppComplete: string; factoryAppSaved: (title: string) => string; factoryAppEmpty: string; factoryGameHeading: string; factoryGameHint: string; factoryGameMove: string; factoryGameCollect: string; factoryGamePause: string; factoryGameResume: string; factoryGameSave: string; factoryGameLoad: string; factoryGameStatus: (position: number, energy: number, stars: number, tick: number) => string; factoryGameSaved: string; factoryGameLoaded: string;
-  recoveryHint: string; exportVault: string; exportDiagnostics: string; repairSearch: string; importVault: string; updateLedgerHeading: string; updateLedgerHint: string; updateCheck: string; updateActivate: string; updateNoWaiting: string; updateWaiting: string; updateUnavailable: string; updateActive: (cacheName: string) => string; updateObserved: (decision: string, cacheName: string) => string;
+  recoveryHint: string; exportVault: string; exportDiagnostics: string; repairSearch: string; importVault: string; updateLedgerHeading: string; updateLedgerHint: string; updateCheck: string; updateActivate: string; updateNoWaiting: string; updateWaiting: string; updateUnavailable: string; updateActive: (cacheName: string) => string; updateObserved: (decision: string, cacheName: string) => string; migrationGateHeading: string; migrationGateHint: string; migrationPlan: string; migrationAffected: (classes: string) => string; migrationBackup: string; migrationCreateBackup: string; migrationBackupCreated: string; migrationApprove: string; migrationDecline: string; migrationDeclined: string; migrationApprovalRequired: string; migrationReady: string; migrationInvalid: string;
   attachArtifact: string; documentFinishHeading: string; documentFinishSource: string; documentFinishTerms: string; documentFinishReplacement: string; documentFinishSubmit: string; documentFinishHint: string; documentFinishSaved: (name: string, count: number) => string; footerPhase0: string; footerOptional: string; themeLight: string; themeDark: string;
   capturePicture: string; atLeastTwo: string; linkCreated: string; showingAll: string; exportMessage: (count: number) => string;
   diagnosticsMessage: string; searchRepairMessage: string; savedName: (name: string) => string;
@@ -444,6 +444,19 @@ const english: UiCopy = {
   updateUnavailable: "Service-worker update control is unavailable on this target.",
   updateActive: (cacheName) => `Active shell cache: ${cacheName}.`,
   updateObserved: (decision, cacheName) => `${decision} shell ${cacheName}.`,
+  migrationGateHeading: "Canonical schema migration",
+  migrationGateHint: "This waiting shell declares a canonical schema change. Review the affected records and rollback path; nothing migrates until you approve it.",
+  migrationPlan: "Migration plan",
+  migrationAffected: (classes) => `Affected record classes: ${classes || "none declared"}.`,
+  migrationBackup: "A current verified Vault backup is available.",
+  migrationCreateBackup: "Create verified backup",
+  migrationBackupCreated: "Verified backup created locally; retain the downloaded Vault before approving the migration.",
+  migrationApprove: "Approve and activate",
+  migrationDecline: "Decline; keep current shell",
+  migrationDeclined: "Migration declined; the current shell remains in control and canonical data was not changed.",
+  migrationApprovalRequired: "Explicit approval and a current verified backup are required before activation.",
+  migrationReady: "Approved migration may activate after confirmation.",
+  migrationInvalid: "The waiting shell did not provide a valid migration manifest; activation is blocked.",
   ...typedRelationshipEnglish,
   ...searchEnglish,
   ...financeEnglish,
@@ -498,6 +511,19 @@ const french: UiCopy = {
   updateUnavailable: "Le controle des mises a jour est indisponible sur cette cible.",
   updateActive: (cacheName) => `Cache actif: ${cacheName}.`,
   updateObserved: (decision, cacheName) => `Interface ${cacheName}: ${decision}.`,
+  migrationGateHeading: "Migration du schema canonique",
+  migrationGateHint: "Cette interface en attente declare un changement du schema canonique. Verifiez les donnees touchees et le retour arriere; rien ne migre sans votre approbation.",
+  migrationPlan: "Plan de migration",
+  migrationAffected: (classes) => `Classes de dossiers touchees: ${classes || "aucune declaree"}.`,
+  migrationBackup: "Une sauvegarde Vault actuelle et verifiee est disponible.",
+  migrationCreateBackup: "Creer une sauvegarde verifiee",
+  migrationBackupCreated: "Sauvegarde verifiee creee localement; conservez le Vault telecharge avant d approuver la migration.",
+  migrationApprove: "Approuver et activer",
+  migrationDecline: "Refuser; garder l interface actuelle",
+  migrationDeclined: "Migration refusee; l interface actuelle garde le controle et les donnees canoniques n ont pas change.",
+  migrationApprovalRequired: "Une approbation explicite et une sauvegarde Vault actuelle sont necessaires avant l activation.",
+  migrationReady: "La migration approuvee peut etre activee apres confirmation.",
+  migrationInvalid: "L interface en attente n a pas fourni un manifeste de migration valide; activation bloquee.",
   telemetryMessage: (replication, backup, outbox, capability, conflict, storage) => { const label = (status: TelemetryStatus) => ({ READY: "pret", DISABLED: "desactive", CURRENT: "actuelle", STALE: "perimee", CLEAR: "vide", BACKLOGGED: "en attente", DEGRADED: "degradee", UNRESOLVED: "non resolu", NORMAL: "normale", ELEVATED: "elevee", UNKNOWN: "inconnue" }[status] ?? "inconnue"); return `Telemetrie: replication ${label(replication)}, sauvegarde ${label(backup)}, effets ${label(outbox)}, capacite ${label(capability)}, conflits ${label(conflict)}, stockage ${label(storage)}.`; },
   ...searchFrench,
   ...financeFrench,
