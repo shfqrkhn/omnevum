@@ -81,6 +81,17 @@ This fixes the observed repeated-reclaim state-machine defect and strengthens `O
 
 This is bounded real-browser evidence for the user-facing approval/backup/decline branch of `OMN-ACC-123` and the refuse-control branch of `OMN-ACC-128`, both still `PARTIAL`; it does not prove a real schema transform, interrupted transform rollback/repair, or production candidate deployment.
 
+## Source-contract recovery supersession
+
+- Date: 2026-09-20 (America/Toronto)
+- Source revision: `8aafa0ade0281c74e54623c2eaced5114554860c`
+- Benchmark: `npm run benchmark:platform-recovery` -> `PLATFORM_RECOVERY_BENCHMARK_PASS`, 25 checks, aggregate source SHA-256 `5b0f96fc11b7d355d29fc690cc477d76326a29c38f172ca5177d10efce4b16bd`.
+- Focused regression: migration/update-ledger suites included in `npm test`; full result `80` files with `1` skipped, `387` tests with `1` skipped; `npm run typecheck` passed.
+
+The current source contract now rejects unbound boolean schema-migration approval, binds approval to release/source/artifact/schema/migration IDs, verified Vault fingerprint, and client epoch, and records a bounded `PREPARED -> RUNNING -> INTERRUPTED/REPAIR_REQUIRED -> COMPLETED/ROLLED_BACK` journal with ordered steps and stale-client fencing. The platform benchmark proves the synthetic journal prepare/start/interruption/rollback path, migration ledger persistence, and `RELOAD_REQUIRED` for a stale lease followed by `ALLOW_WRITE` for a refreshed lease. The UI constructs and sends the bound approval receipt only after a current verified backup and explicit confirmation.
+
+This is source-contract and fake-IndexedDB evidence, not a claim that a real browser/process executed a schema transform or that a deployed service worker consumed and enforced the approval receipt. Real tab/process interruption, transform repair, production rollback, browser-family coverage, assistive technology, human acceptance, quota/eviction, and cross-origin target qualification remain open.
+
 ## Source hashes
 
 - `src/core/storage.ts`: `67c7cbaa9f88ca18038fa85c838478dcc127d33bc45921ab8d5fd4c5c47216bc`
