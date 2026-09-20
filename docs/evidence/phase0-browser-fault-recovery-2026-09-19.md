@@ -48,6 +48,14 @@ This is real browser, cross-origin manual portability evidence and strengthens `
 
 This is bounded browser evidence for the shell-only waiting/activation portion of `OMN-ACC-123` and supports `PARTIAL`; canonical schema-migration approval, interruption, and repair remain open.
 
+## Disposable browser migration-abort proof
+
+- On the disposable origin `http://127.0.0.1:4357/` at source revision `cb6e59658f8fdbd014423e0bc87f3666f981c7e7`, the visible Capture flow created `Migration abort retention probe`; the app reported one active canonical record and one revision snapshot.
+- A CDP `Runtime.evaluate` fixture opened `omnevum-canonical-v1` from version 6 toward version 7, entered `onupgradeneeded`, and deliberately aborted the upgrade transaction. The request ended with `AbortError` after `upgraded=true`; a fresh open reported version 6 and the original stores (`artifactBlobs`, `effects`, `history`, `records`, `searchDocuments`, `searchMeta`, `settings`).
+- Reloading the app reported `record-count=1`, `summary-total=1`, and retained `Migration abort retention probe`. Cleanup then unregistered 1 disposable service worker, deleted 2 disposable caches, deleted the disposable database, and stopped the server.
+
+This is real browser crash/interruption evidence for `OMN-ACC-017` and the migration-interruption portion of `OMN-ACC-123`, both still `PARTIAL`; the user-facing migration approval, verified-backup prompt, and repair/retry path remain unqualified.
+
 ## Source hashes
 
 - `src/core/storage.ts`: `b1aec9639873716b2566576862c93592f0a33f29b87b457cda933d4c6815c189`

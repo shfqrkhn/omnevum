@@ -222,7 +222,8 @@
       "text": "An update/migration is intentionally interrupted. Omnevum does not silently reset data and offers a tested recovery/repair path.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+        "docs/evidence/phase0-storage-recovery-2026-09-19.md",
+        "docs/evidence/phase0-browser-fault-recovery-2026-09-19.md"
       ]
     },
     {
