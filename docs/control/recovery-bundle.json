@@ -5,8 +5,8 @@
   "authority": "MPES Sections 20.5, 20.9, and 20.10; integrity manifest is a generated projection",
   "source": {
     "mpes": {
-      "path": "docs/Omnevum-MPES-v0_17_4.md",
-      "sha256": "ab323b33db49286420f15164d7ded7950b22d6c3bd4ef07f3f480b4b4b5cb8a6"
+      "path": "docs/Omnevum-MPES-v0_18_0.md",
+      "sha256": "103d84308887da9f2eb73caf7eccabb0f68fd14e7c00f876911c9700c15096c8"
     },
     "omni": {
       "path": "docs/Omni_3.32.0.md",
@@ -28,7 +28,7 @@
     "secretsIncluded": false
   },
   "restoreProcedure": [
-    "Read docs/Omni_3.32.0.md and docs/Omnevum-MPES-v0_17_4.md before changing scope.",
+    "Read docs/Omni_3.32.0.md and docs/Omnevum-MPES-v0_18_0.md before changing scope.",
     "Inspect docs/control/completion-ledger.json, engineering-controller.json, release-evidence.json, acceptance-results.json, support-matrix.json, and risk-threat-register.json.",
     "Run npm ci, npm run audit:recovery, and npm run ci from a clean checkout before resuming implementation.",
     "Use docs/evidence/ as dated receipts and update the canonical control register in the same verified increment.",
@@ -37,7 +37,7 @@
   "canonicalReferences": {
     "authority": [
       "docs/Omni_3.32.0.md",
-      "docs/Omnevum-MPES-v0_17_4.md"
+      "docs/Omnevum-MPES-v0_18_0.md"
     ],
     "controls": [
       "docs/control/control-manifest.json",
@@ -109,18 +109,18 @@
       },
       {
         "path": "AGENTS.md",
-        "sha256": "e3d6f6a62b309c0ba82f1e60a39284b880ff3a9ebd568b17e02449f77f903926",
-        "bytes": 1335
+        "sha256": "a9a06277c8e36f1a6fb37bc79d6b0d0462c240e4d634c2759db745607e58ad82",
+        "bytes": 1337
       },
       {
         "path": "README.md",
-        "sha256": "299cbed22e3b8e6d3e2e708184faf8dc4a4792713330db67d8688ba6e5f22518",
-        "bytes": 2556
+        "sha256": "ced4748dda076627722258fc88f7e8875e072279ef85af9fd5724e5115eb2025",
+        "bytes": 2687
       },
       {
-        "path": "docs/Omnevum-MPES-v0_17_4.md",
-        "sha256": "ab323b33db49286420f15164d7ded7950b22d6c3bd4ef07f3f480b4b4b5cb8a6",
-        "bytes": 438294
+        "path": "docs/Omnevum-MPES-v0_18_0.md",
+        "sha256": "103d84308887da9f2eb73caf7eccabb0f68fd14e7c00f876911c9700c15096c8",
+        "bytes": 448292
       },
       {
         "path": "docs/Omni_3.32.0.md",
@@ -129,18 +129,18 @@
       },
       {
         "path": "docs/README.md",
-        "sha256": "aa90dbaf9315156493a30f52d23b08e2469a1eeb667159e7a42e5b2b4d99f65a",
-        "bytes": 1149
+        "sha256": "be06b7247cc412f1ffaf3030bffad038b4a6603cdcd08c64ea2ca52f985b0d9e",
+        "bytes": 1161
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "71a9ca0ce73b8d2d00cca48404f87358f96c446ec7659836f376c94fdb5df2ee",
-        "bytes": 241926
+        "sha256": "94e67900c17a8dc15ae9fcdfbfd513565adb1c840002995d0a73355799d80d9b",
+        "bytes": 245477
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
-        "sha256": "43cc2fbad057f3d13a0530b3609ee8a4663b96caaf775795db92016e5e5aab16",
-        "bytes": 89980
+        "sha256": "be88cf93c78b207666c0e509b9508bb65fa4039ce069b1a704023c635f90a1f3",
+        "bytes": 92597
       },
       {
         "path": "docs/control/capability-catalogue.json",
@@ -149,8 +149,8 @@
       },
       {
         "path": "docs/control/capability-coverage.json",
-        "sha256": "6a53ea1934757f4dca653f4ffbcde2ff3a2244d45f8c390a117135a08dd83c38",
-        "bytes": 6418
+        "sha256": "1b67e017a2467c2a3cc890fd299b8ed90420850573491dd040b10b8f1a98cf96",
+        "bytes": 7518
       },
       {
         "path": "docs/control/compatibility-matrix.json",
@@ -159,8 +159,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "0bcdd4cc674cd0adb63676d0e86cea3dbe88d456e64b427d31666932c7af7fd1",
-        "bytes": 8032
+        "sha256": "956a20ccc6102243802333fb1d1fa15cf594fafcbac3cba158e13545b86ca762",
+        "bytes": 3733
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -179,7 +179,7 @@
       },
       {
         "path": "docs/control/dependency-sbom.json",
-        "sha256": "9ad90606dfeb815a3100b53f49a3fa45937218096cdf4e08d8b947efe268b3a1",
+        "sha256": "80d9451360ec1777e845498f4b881b6f28f26b26827f3cae219485e1555b1ce4",
         "bytes": 35272
       },
       {
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "f41dc7eaa382ddd65fccded2cb467a8122be8aa8e3e8ac0f384fd0f2fbffacc8",
-        "bytes": 97664
+        "sha256": "d731ae39d0edeab8ddae55042b9b09645bd1b48fb60845079ab73b47daf8ae5f",
+        "bytes": 99011
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -219,13 +219,13 @@
       },
       {
         "path": "docs/control/patch-fork-delta.json",
-        "sha256": "abc26739fbd077373a0a295df24a1770f1bd6f2b06bde50e0654f60e7f6d61da",
-        "bytes": 3567
+        "sha256": "75817374a101dfaf17e0e6854838dd37eda140012b08ab2432af87ddb714adc3",
+        "bytes": 5202
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "5e5be223a382f100a20a6614361b31080c0b12b3977bcedaf477d9290f4a2597",
-        "bytes": 9041
+        "sha256": "a1f5a9f9a01c8bfe6394e34e4666f2d36d85a2c4fdaeb1e163b2148f7ea96ad4",
+        "bytes": 9255
       },
       {
         "path": "docs/control/release-evidence.json",
@@ -234,8 +234,8 @@
       },
       {
         "path": "docs/control/requirements.json",
-        "sha256": "f04f4f80d5a88c0cb9d227f4763764384f143a63db7983a263b768e5551d667f",
-        "bytes": 372954
+        "sha256": "05563829db10c71b3d33996b019720b80f17a4f894404a0b18c3eddab0b1d8b2",
+        "bytes": 376120
       },
       {
         "path": "docs/control/risk-threat-register.json",
@@ -249,8 +249,8 @@
       },
       {
         "path": "docs/control/upstream.json",
-        "sha256": "6b15173da93517ccd7261b6b94d6b74e463e221ac131e12818bc316b1ae52640",
-        "bytes": 4429
+        "sha256": "5faf92b01a038d14114b7c1394b3bee92ed3ba4da2da91c2d2eb29cd90922779",
+        "bytes": 5442
       },
       {
         "path": "docs/evidence/phase0-bakeoff-2026-09-17.md",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "701c6a1cf4498bf7ed96402378c5bf9b2aded0e1578dfbcc45b19b4b3524038d",
-        "bytes": 390943
+        "sha256": "4426970f174b8cfb0dec072feda046db9f92bebfb61154c176c6f2e86a4b5ce1",
+        "bytes": 391911
       },
       {
         "path": "docs/evidence/phase0-research-2026-09-17.md",
@@ -279,8 +279,8 @@
       },
       {
         "path": "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
-        "sha256": "6fa82f4df10f38dbd4495cc72324dcc898c987440ad638dcac5a2e9de7ca44d3",
-        "bytes": 6618
+        "sha256": "fc020e8bfe6aa3b847770f9f0657208b98d16662c9f8b356d1ed47c2982d45ea",
+        "bytes": 8136
       },
       {
         "path": "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md",
@@ -364,8 +364,8 @@
       },
       {
         "path": "scripts/generate-control.mjs",
-        "sha256": "c2e2311214d41e6c9db3ce4b3a6733692b1bc51a6bfc5375a273ebef6777905d",
-        "bytes": 15104
+        "sha256": "3cada8c88c6cbb6138346676d9ad9101e9f4be81e09fa22924b49b6919b7cd85",
+        "bytes": 15634
       },
       {
         "path": "scripts/license-audit.mjs",
@@ -409,7 +409,7 @@
       },
       {
         "path": "scripts/structure-audit.mjs",
-        "sha256": "ac77265c3b783acb01cda63e7f6ce10d607e8ff20c0f939eebba6eb497b50686",
+        "sha256": "333cf899c846491d87a81ad4388effa324cc2ea8fe8fa28e0e25ce1b9f4ffeba",
         "bytes": 7114
       },
       {
@@ -646,6 +646,16 @@
         "path": "src/core/domain.ts",
         "sha256": "3fa3f164efb6414202b0b1c46bb10f58424ef0076a9e702c44d89e085232402c",
         "bytes": 3574
+      },
+      {
+        "path": "src/core/editor-boundary.test.ts",
+        "sha256": "1b45ce22e6ecbe32d22d343d3b5a4f4fe730c9d53012c945df69bebaecb87eca",
+        "bytes": 2239
+      },
+      {
+        "path": "src/core/editor-boundary.ts",
+        "sha256": "b1ef7397468f616fad1a33ed309b3364d8b23869aa1166421c39eeef993b0912",
+        "bytes": 6031
       },
       {
         "path": "src/core/effect-guard.test.ts",

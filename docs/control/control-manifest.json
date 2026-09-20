@@ -5,8 +5,8 @@
   "authority": "derived control projections",
   "source": {
     "mpes": {
-      "path": "docs/Omnevum-MPES-v0_17_4.md",
-      "sha256": "ab323b33db49286420f15164d7ded7950b22d6c3bd4ef07f3f480b4b4b5cb8a6"
+      "path": "docs/Omnevum-MPES-v0_18_0.md",
+      "sha256": "103d84308887da9f2eb73caf7eccabb0f68fd14e7c00f876911c9700c15096c8"
     },
     "omni": {
       "path": "docs/Omni_3.32.0.md",
@@ -58,7 +58,7 @@
     },
     {
       "id": "mpes",
-      "path": "docs/Omnevum-MPES-v0_17_4.md"
+      "path": "docs/Omnevum-MPES-v0_18_0.md"
     },
     {
       "id": "package-manifest",
@@ -71,25 +71,37 @@
   ],
   "historicalSources": [
     {
+      "path": "docs/Omnevum-MPES-v0_17_4.md",
+      "sha256": "ab323b33db49286420f15164d7ded7950b22d6c3bd4ef07f3f480b4b4b5cb8a6",
+      "replacement": "docs/Omnevum-MPES-v0_18_0.md",
+      "preservation": "git-history-and-relocation-receipt"
+    },
+    {
       "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
       "sha256": "585e2f178e47ca344c576eec16367585d1f347c2776a3c0c93a7cd4f9be4b6f3",
-      "replacement": "docs/Omnevum-MPES-v0_17_4.md",
+      "replacement": "docs/Omnevum-MPES-v0_18_0.md",
       "preservation": "git-history-and-relocation-receipt"
     }
   ],
   "relocations": [
     {
+      "from": "docs/Omnevum-MPES-v0_17_4.md",
+      "to": "docs/Omnevum-MPES-v0_18_0.md",
+      "reason": "v0.18.0-converged supersedes the v0.17.4 controlling baseline; prior source remains immutable in Git history."
+    },
+    {
       "from": "docs/Omnevum-MPES-v0.12.0-converged.md",
-      "to": "docs/Omnevum-MPES-v0_17_4.md",
-      "reason": "v0.17.4-converged supersedes the v0.12 controlling baseline; prior source remains immutable in Git history."
+      "to": "docs/Omnevum-MPES-v0_18_0.md",
+      "reason": "v0.18.0-converged supersedes the v0.12 controlling baseline through the v0.17.4 predecessor; prior source remains immutable in Git history."
     }
   ],
   "retiredPaths": [
+    "docs/Omnevum-MPES-v0_17_4.md",
     "docs/Omnevum-MPES-v0.12.0-converged.md"
   ],
   "counts": {
-    "requirements": 541,
-    "acceptanceScenarios": 172,
+    "requirements": 544,
+    "acceptanceScenarios": 176,
     "lockedPackages": 87
   }
 }

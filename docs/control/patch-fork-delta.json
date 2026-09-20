@@ -63,6 +63,28 @@
       "delta": "Use only as a derived SearchDocument adapter; canonical ownership, permission filtering, invalidation, and rebuild remain Omnevum-owned.",
       "tests": "src/core/search.test.ts; local 2,000-document bake-off",
       "exitCondition": "Reopen or remove if representative mobile memory/latency, multilingual behavior, or currentness/security evidence fails."
+    },
+    {
+      "id": "OMN-DELTA-006",
+      "candidate": "OneBench",
+      "source": "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
+      "sourceIdentity": "7676115b72cce425d435d91a942dd0cf1f50fd04",
+      "license": "MIT",
+      "route": "HARVEST_REFERENCE",
+      "delta": "No product fork; characterize packaging, single-file/PWA deployment, user-owned handoff, and compact workbench patterns behind Omnevum package, Vault, canonical-owner, and Recovery contracts.",
+      "tests": "Source-head/license refresh recorded; transplant workload not run.",
+      "exitCondition": "Reject or isolate any pattern that introduces localStorage/module-owned canonical writes, remote-code execution, hidden sync, or unbounded deployment assumptions."
+    },
+    {
+      "id": "OMN-DELTA-007",
+      "candidate": "Utopia",
+      "source": "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
+      "sourceIdentity": "69d02995af94e785be1c850e77056f7b121917ce",
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "route": "HARVEST_REFERENCE_LICENSE_LIMITED",
+      "delta": "Architecture-only donor reference for validated packages, generic rendering, operation kernel, permission preview, and package evolution; no source adoption while runtime and commercial-use rights remain unqualified.",
+      "tests": "Source-head and public-license refresh recorded; Omnevum runtime compatibility and license obligations not qualified.",
+      "exitCondition": "Keep architecture-only, obtain a compliant license/isolated adapter, or reject before any copied source, dependency, asset, or runtime enters the product."
     }
   ]
 }

@@ -5,12 +5,13 @@
   "scope": "Omnevum finite accepted product completion",
   "baseline": {
     "omni": "docs/Omni_3.32.0.md",
-    "mpes": "docs/Omnevum-MPES-v0_17_4.md",
-    "mpesSha256": "ab323b33db49286420f15164d7ded7950b22d6c3bd4ef07f3f480b4b4b5cb8a6",
-    "controlCounts": {"requirements": 541, "acceptanceScenarios": 172},
+    "mpes": "docs/Omnevum-MPES-v0_18_0.md",
+    "mpesSha256": "103d84308887da9f2eb73caf7eccabb0f68fd14e7c00f876911c9700c15096c8",
+    "controlCounts": {"requirements": 544, "acceptanceScenarios": 176},
     "phaseGate": "PLATFORM_READY_FOR_CORE"
   },
   "verified": [
+    "v0.18.0 MPES baseline reconciled; v0.17.4 and v0.12 retained through immutable Git-history relocation receipts",
     "workspace baseline reconciled",
     "structure audit now rejects forbidden root/docs entries, unindexed evidence, missing generated controls, duplicate canonical dataset declarations, broken relocations, and live retired paths",
     "initial static PWA shell implemented",
@@ -269,7 +270,9 @@
     "current v0.17.4 Geo analysis contract receipt on source 351dde8: the focused three-test derived seam qualifies WGS84 distance and bounded LineString simplification with explicit sources, coordinate assumptions, no canonical owner, and replaceable engine identity; OMN-ACC-097 is PARTIAL and modular engine/intersection/target evidence remains open",
     "current v0.17.4 AI route policy receipt on source 284e538: the focused three-test policy owner bounds official subscription/companion admission, quota stop/explicit-choice behavior, terms-blocked piggyback rejection, and read-only/write reverse integration authority; OMN-ACC-073/074/075/076 are PARTIAL and no provider route was executed",
     "current v0.17.4 fresh-agent resume receipt on exact source 3733f0c5aabb0ed48515f315990e09d8f7e3f9a7: the clean detached worktree passed npm ci, Recovery audit, full CI, and factory interruption/resume without conversation state, then was removed cleanly; OMN-ACC-077 is PARTIAL because no second materially different agent host was exercised",
-    "current v0.17.4 release attestation contract receipt on source 00746f8: the focused three-test Web Crypto verifier binds retained ECDSA P-256 material to exact artifact digest/source/key identity, rejects mismatch/tampering, and reports no safety assurance; OMN-ACC-096 is PARTIAL and no signed production bundle was verified"
+    "current v0.17.4 release attestation contract receipt on source 00746f8: the focused three-test Web Crypto verifier binds retained ECDSA P-256 material to exact artifact digest/source/key identity, rejects mismatch/tampering, and reports no safety assurance; OMN-ACC-096 is PARTIAL and no signed production bundle was verified",
+    "v0.18.0 launchpad baseline is now controlling with NeumanOS provisional and OMN-FOSS-014/OMN-ACC-173..176 requiring the six-flow canonical-core transplantability proof before deeper coupling; OneBench, Kurumi, and Utopia remain role-specific donor candidates subject to exact currentness, license, runtime, and boundary evidence",
+    "current v0.18.0 reusable-editor boundary receipt on the worktree contract: three focused tests, typecheck, and diff-check pass; OMN-ACC-080 is PARTIAL because the host boundary, lazy-asset state, authority denial, source retention, and explicit round-trip loss reporting are qualified without admitting a real editor engine"
   ],
   "unverified": [
     "NeumanOS/Kurumi launchpad benchmark and final target/support qualification beyond the recorded harvest-reference decision",
@@ -293,5 +296,6 @@
     "current v0.17.4 retirement copy-inventory increment is bound above; continue provider-native remote deletion/reachability, cross-origin/other-target Recovery, deployment, native faults, and human acceptance without treating the local inventory receipt as complete"
   ],
   "nextAction": "No Git remote is configured in this workspace, so Pages deployment proof is blocked until the intended remote is supplied/configured; continue all independent work. Package automation, narrow geometry, all six family/mode text palettes, same-browser distinct-origin Vault restore, presentation export/import/reset lifecycle, named accessibility profiles/scaled layout, Chromium non-color state carriers, delayed/on-demand onboarding, Home consideration/focus receipts, Capture-to-Triage idle behavior, in-place density/navigation/label controls, compact lens overflow, canonical lens/detail projection, bounded archive Undo/hard-clear impact preview, degraded-index detail/explicit repair, and strict detail geometry are receipt-bound with partial OMN-ACC-010/049/099/100/101/103/104/105/106/109/110/111/112/116/120/121/122/131/132 evidence. Close Phase 0 on the v0.17.4 register: qualify deployment/support/accessibility/human assistive technology, graphic/boundary/focus contrast, monochrome/CVD carriers, physical touch and other engines, full lens/domain mapping, degraded-index edit paths and in-view announcements, all-primary-surface 320px target separation/lower-half placement, compatible presentation upgrade/malformed-import recovery, materially different browser-family Vault restore, MiniSearch target memory/latency and permission invalidation, credential process-restart/key restoration, full graph blast-radius and irreversible-operation recovery, remaining security/projection/recovery evidence, and human acceptance. Do not treat workflow configuration or local preview as deployment proof.",
+  "nextAction": "Run the v0.18.0 Phase 0 execution baseline: complete the six-flow NeumanOS canonical-core transplantability proof; characterize OneBench, Kurumi, Utopia, and the selected launchpad against one real Omnevum workload with exact identities/licenses; block duplicate writable stores; then close deployment/support/accessibility/offline/fault/security/recovery/FOSS/human-acceptance evidence before Phase 1. Preserve compact-by-default UI and all prior partial receipts, and never treat local preview or workflow configuration as deployment proof.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }

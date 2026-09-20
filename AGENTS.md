@@ -3,7 +3,7 @@
 ## Authority and scope
 
 - `docs/Omni_3.32.0.md` is the governing doctrine.
-- `docs/Omnevum-MPES-v0_17_4.md` is the controlling product and engineering baseline; the superseded v0.12 source is historical and may only be referenced through an explicit relocation/compatibility receipt.
+- `docs/Omnevum-MPES-v0_18_0.md` is the controlling product and engineering baseline; v0.17.4 and v0.12 are immutable historical predecessors referenced only through generated relocation/compatibility receipts.
 - `docs/control/` contains generated projections and maintained registers; `docs/evidence/` contains dated receipts.
 - A design, test, or generated status is not implementation, security, release, or human-acceptance evidence until its receipt says what ran, where, when, and with which artifact.
 

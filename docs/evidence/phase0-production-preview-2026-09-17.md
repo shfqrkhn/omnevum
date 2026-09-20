@@ -1946,3 +1946,9 @@ This advances `OMN-ACC-077` from `UNKNOWN` to `PARTIAL`. The run proves one-host
 On 2026-09-19, source revision `00746f8` added the Omnevum-owned Web Crypto release-attestation verifier. The focused `src/core/release-attestation.test.ts` suite passed `3` tests, followed by `npm run typecheck` and `git diff --check`. A generated ECDSA P-256 fixture verifies a retained public JWK and signature over the exact artifact digest, source revision, and key identity; a mismatched digest and tampered signature are rejected before acceptance. The result explicitly separates identity/integrity verification from safety assurance (`safetyAssurance: false`).
 
 This advances `OMN-ACC-096` from `UNKNOWN` to `PARTIAL`. No signed production release bundle, Sigstore/cosign or in-toto transparency identity, consumer verification package, deployment, or human acceptance was performed; those remain open.
+
+## Current v0.18.0 reusable editor boundary receipt
+
+On 2026-09-19, source revision `589614fe789073501c0b18162abc78008d350837` added the Omnevum-owned reusable-editor boundary contract and `src/core/editor-boundary.test.ts` passed `3` focused tests, followed by `npm run typecheck` and `git diff --check`. The contract keeps Artifact as the source/canonical owner, denies editor-owned storage, permission, AI, sync, network, and canonical-write authority, makes heavy editor assets explicitly lazy, defers unqualified adapters, and requires explicit import/export round-trip loss reasons while retaining the original source and marking the export as derived.
+
+This advances `OMN-ACC-080` from `UNKNOWN` to `PARTIAL`. It is a host/adapter contract and source/unit evidence only: no qualified reusable office/editor engine, real rich-document/spreadsheet/canvas round trip, browser lazy-load workload, target/deployment, license notice, or human acceptance is claimed.
