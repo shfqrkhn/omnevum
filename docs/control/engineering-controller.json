@@ -14,6 +14,7 @@
     "v0.18.0 and Omni are the sole active specifications.",
     "Generated control projections are bound to the exact v0.18.0 MPES hash.",
     "Deprecated implementation-era acceptance statuses and qualification receipts were removed from the active baseline; all scenarios begin UNKNOWN.",
+    "A dated local-browser smoke receipt proves only current responsive layout and bounded capture/triage/search/Vault behavior; it does not close a release gate.",
     "The repository structure/reference/architecture/license/security/typecheck/test/build/static/recovery/drift gates are required before handoff."
   ],
   "unverified": [

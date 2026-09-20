@@ -11,7 +11,7 @@
     "acceptanceScenarios": 176
   },
   "completionClaim": "100_PERCENT_COMPLETE is prohibited until every mandatory requirement and applicable acceptance scenario has evidence-backed PASS or justified NOT_APPLICABLE and no material UNKNOWN/stale/open blocker remains.",
-  "lastVerifiedIncrement": "Clean v0.18.0 rebaseline: deprecated implementation-era status overlays and qualification receipts are not inherited. All 176 acceptance scenarios are seeded UNKNOWN; the existing source is an unqualified candidate for v0.18 requalification.",
+  "lastVerifiedIncrement": "Clean v0.18.0 rebaseline plus bounded local-browser smoke: compact-default responsive rows and capture/triage/search/Vault flows were observed at current source revision, without promoting any acceptance or release claim. All 176 acceptance scenarios remain UNKNOWN.",
   "gates": [
     {"id": "PLATFORM_READY_FOR_CORE", "phase": 0, "status": "IN_PROGRESS", "blockers": ["OMN-FOSS-014 six-flow canonical-core transplantability proof", "production deployment/browser/accessibility/offline/fault/security/recovery qualification", "all current implementation and human-acceptance evidence"]},
     {"id": "MVP_RELEASE_READY", "phase": 1, "status": "NOT_STARTED", "blockers": ["Phase 0 gate"]},
