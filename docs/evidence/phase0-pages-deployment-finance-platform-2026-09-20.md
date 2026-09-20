@@ -44,3 +44,16 @@ assistive-technology, human-acceptance, or 100% gates.
 An independent Node/.NET HTTPS probe fetched the ten control-bound public paths. Every response was HTTP 200 and every served byte length and SHA-256 matched the local receipt-bound candidate exactly (`10/10`); the served aggregate digest was exactly `359ece9af38fb8ef214f5a9e0e9c0dbb574bd2bbdfe8021974f1addd465705d7`.
 
 This exact deployment identity does not prove rollback, response-header control, WebKit/Firefox behavior, real quota/process faults, cross-origin Vault restore, security/egress, assistive technology, human acceptance, or `100_PERCENT_COMPLETE`; those gates remain open.
+
+## Current compact-layout deployment supersession
+
+- Source candidate: `dab22db0be786ad2ec703080167ef185273065ca` (`dab22db`), published by trigger commit `e72d42b3eb34124b046951cd13b10530a1ab2c49` (`e72d42b`).
+- CI workflow: [35493877687](https://github.com/shfqrkhn/omnevum/actions/runs/35493877687), success.
+- Pages workflow: [35493877707](https://github.com/shfqrkhn/omnevum/actions/runs/35493877707), success.
+- Target: `https://shfqrkhn.github.io/omnevum/`.
+- Artifact digest: `bd91504e93748b2ebbb7f79284c05cefba6f98d3df775f2716316d1640a0d3a2`.
+- Service-worker cache: `omnevum-shell-afe1549926e7d002`.
+
+An independent HTTPS probe fetched the ten control-bound public paths. Every response was HTTP 200 and every served byte length and SHA-256 matched the local receipt-bound candidate exactly (`10/10`); the served aggregate digest was exactly `bd91504e93748b2ebbb7f79284c05cefba6f98d3df775f2716316d1640a0d3a2`.
+
+The candidate tightens the compact-default mobile layout: low-frequency empty Considerations content is a progressive disclosure that remains closed until material attention exists or the user opens it, and Capture type/space selectors share a two-column choice grid while retaining their semantic labels and control identities. Source/style tests and the full local CI gate passed. This is implementation, artifact, and deployment identity evidence only; it does not prove rollback, response-header control, WebKit/Firefox behavior, real quota/process faults, cross-origin Vault restore, security/egress, assistive technology, human acceptance, or `100_PERCENT_COMPLETE`.
