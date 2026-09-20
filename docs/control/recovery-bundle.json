@@ -94,13 +94,13 @@
       },
       {
         "path": ".github/workflows/ci.yml",
-        "sha256": "b8a0e8ca52b7c07f312e7c0d2ad79e04707f89163fa422a8cba47536259c918c",
-        "bytes": 458
+        "sha256": "652b55e7edd48a2d791f805a2a04dbeabd1d039d4251205717fe38f580f0a96e",
+        "bytes": 497
       },
       {
         "path": ".github/workflows/pages.yml",
-        "sha256": "d020db65bc44ea3c6bbad6d1894b17e80b8a5654733bec99f9dbda292ac45604",
-        "bytes": 1066
+        "sha256": "6ba60580275dbc6f378e7b8897fa3d71a862833ff81c646d7dd8de6b031110fc",
+        "bytes": 1105
       },
       {
         "path": ".gitignore",
