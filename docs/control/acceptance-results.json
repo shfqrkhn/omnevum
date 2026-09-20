@@ -1555,8 +1555,11 @@
         "line": 4234
       },
       "text": "Finance is exercised end-to-end with all live financial connectors disabled and with no financial-institution credentials stored anywhere. User-supplied statements/exports alone support reconciliation, reporting, budgeting, goals, forecasts, anomaly review, and a full portable Vault backup/restore on a materially different supported browser profile.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md#finance-user-flow-check"
+      ],
+      "notes": "Local connector-free statement import, reconciliation review, canonical Finance projections, and Artifact preservation were observed. Materially different browser Vault restore and the full domain outcome set remain open."
     },
     {
       "id": "OMN-ACC-147",
@@ -1575,8 +1578,11 @@
         "line": 4238
       },
       "text": "After a material finance import, the Resources/Finance surface automatically generates an evidence-linked brief covering the applicable current position, material changes, budget/cash-flow outlook, goals, anomalies/review items, recurring/fee/refund/leakage changes, forecast, and data-quality limitations. A second update with no material change produces a quiet result rather than manufactured alerts or busywork.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md#finance-user-flow-check"
+      ],
+      "notes": "A material import produced a Finance position/update brief with review and data-quality limitations. A no-material-change quiet second update and the complete budget/goal/forecast surface remain open."
     },
     {
       "id": "OMN-ACC-149",
@@ -1595,8 +1601,11 @@
         "line": 4242
       },
       "text": "A representative workflow receives a source containing information already needed by three or more modules/views. The user supplies the information once. Omnevum extracts or records it once with provenance, reuses it across every authorized consumer, and requires no duplicate typing or copy/paste merely because the same fact appears in multiple workflows.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md#finance-user-flow-check"
+      ],
+      "notes": "One supplied statement was preserved as an Artifact and reused by canonical Finance and Home projections without duplicate transaction entry. The broader three-plus-consumer benchmark remains open."
     },
     {
       "id": "OMN-ACC-151",
@@ -1605,8 +1614,11 @@
         "line": 4244
       },
       "text": "A user corrects one material imported value or classification. The correction is committed once through the canonical owner; every materially dependent projection is automatically recomputed or explicitly invalidated, and no second module asks the user to repeat the same correction to restore consistency.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md#finance-user-flow-check"
+      ],
+      "notes": "One imported value was corrected once through the Finance owner; revision 2, summary, change-impact, and update-brief projections refreshed and persisted after reload. Full cross-domain dependent projection coverage remains open."
     },
     {
       "id": "OMN-ACC-152",
@@ -1625,8 +1637,11 @@
         "line": 4248
       },
       "text": "Finance receives a routine monthly batch whose fields are already present in supported statements/exports. Account metadata, transactions, balances, recurring flows, classifications covered by confirmed rules, reconciliations, budgets/actuals, forecasts, goals, and the update brief refresh without manual transcription. The only user-visible work is a bounded set of materially unresolved exceptions, which may be empty.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md#finance-user-flow-check"
+      ],
+      "notes": "A three-row statement batch refreshed account-scoped transactions, balances/reconciliation output, Finance summaries, and the update brief with one bounded exception. Recurring rules, budgets, forecasts, goals, and the routine monthly benchmark remain open."
     },
     {
       "id": "OMN-ACC-154",

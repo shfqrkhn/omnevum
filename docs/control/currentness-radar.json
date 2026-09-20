@@ -3,7 +3,7 @@
   "kind": "ecosystem-currentness-radar",
   "status": "V018_ROUTE_RESOLVED_SELECTIVE_HARVEST",
   "authority": "MPES Sections 13, 22, and 30",
-  "snapshotDate": "2026-09-19",
+  "snapshotDate": "2026-09-20",
   "items": [
     {"id": "V018-RADAR-001", "candidate": "NeumanOS", "role": "whole-app launchpad/harvest", "status": "RETAINED_UI_REJECTED_SELECTIVE_HARVEST_QUALIFIED_REFERENCE", "next": "do not import donor authority; any isolated harvest still needs owner-bound, license, security, migration, rollback, and Recovery qualification"},
     {"id": "V018-RADAR-002", "candidate": "Kurumi", "role": "capture/knowledge donor", "status": "ROLE_CHARACTERIZED_QUALIFIED_REFERENCE", "next": "remain reference-only; any Capture/Search/Sync harvest still enters through Omnevum contracts and target/Recovery gates"},

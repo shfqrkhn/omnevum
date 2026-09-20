@@ -11,7 +11,7 @@
     {"source": "Kurumi", "capability": "capture/knowledge/local-first donor", "disposition": "HARVEST_REFERENCE", "coverage": "V018_ROLE_QUALIFIED_REFERENCE"},
     {"source": "OneBench", "capability": "static-PWA/workbench/package donor", "disposition": "HARVEST_REFERENCE", "coverage": "V018_ROLE_QUALIFIED_REFERENCE"},
     {"source": "Utopia", "capability": "package-runtime/app-factory architecture donor", "disposition": "ARCHITECTURE_ONLY_LICENSE_LIMITED", "coverage": "V018_LICENSE_RUNTIME_LIMITED_REFERENCE"},
-    {"source": "Finance/Resources", "capability": "statement-driven shared-domain specialization", "disposition": "PHASE4_AFTER_MVP", "coverage": "V018_UNQUALIFIED"},
+    {"source": "Finance/Resources", "capability": "statement-driven shared-domain specialization", "disposition": "PHASE4_AFTER_MVP_PARTIAL_UI_QUALIFIED", "coverage": "V018_PARTIAL_UI_AND_MODEL_QUALIFICATION", "evidence": "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md"},
     {"source": "AI/sync/connectors/extensions", "capability": "optional capabilities", "disposition": "TRUTHFUL_DEGRADED_UNTIL_GATED", "coverage": "V018_UNQUALIFIED"}
   ],
   "rule": "No candidate or existing implementation becomes active authority; admission requires a current v0.18 contract, exact provenance, isolated tests, target evidence, and Recovery/rollback."

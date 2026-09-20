@@ -22,6 +22,6 @@
     "qualify two materially different real domain workflows without duplicate owners"
   ],
   "scenarioRange": "OMN-ACC-001..OMN-ACC-176",
-  "evidence": [],
+  "evidence": ["docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md"],
   "statusValues": ["NOT_STARTED", "IN_PROGRESS", "PASS", "PARTIAL", "FAIL", "NOT_APPLICABLE", "UNKNOWN"]
 }
