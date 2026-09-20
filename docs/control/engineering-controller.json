@@ -13,7 +13,7 @@
   "verified": [
     "v0.18.0 and Omni are the sole active specifications.",
     "Generated control projections are bound to the exact v0.18.0 MPES hash.",
-    "Deprecated implementation-era acceptance statuses and qualification receipts were removed from the active baseline; current evidence promotes one exact Chromium PASS, bounded PARTIAL rows, and keeps UNKNOWN release-visible.",
+    "Deprecated implementation-era acceptance statuses and qualification receipts were removed from the active baseline; current evidence promotes exact evidence-backed rows, bounded PARTIAL rows, and keeps UNKNOWN release-visible.",
     "The current hosted browser receipt proves compact responsive layout, built relative assets, cached offline Search, and bounded capture/triage/search/Vault behavior; it does not close a release gate.",
     "Candidate 048494990cce4ba98f38ce0d8bb744f2b0e37178 locally verifies the compact-default layout repair: navigation is a closed disclosure, Review and Records remain closed until requested, desktop content expands to the available width, and 390x844, 768x1024, and 1440x900 retain zero horizontal overflow; the hosted artifact is now byte-verified.",
     "GitHub Pages deployment run 35483558201 is green for source d2741d19e805940ed344e967a4055d8582e756b1 and an HTTP byte comparison matched all 8 published artifact files; its published-entry smoke guard passed and the guard prevents regression to the legacy source deployment.",
@@ -22,15 +22,15 @@
     "The repository structure/reference/architecture/license/security/typecheck/test/build/static/recovery/drift gates are required before handoff.",
     "The clean-clone fresh-agent benchmark at dfea7897b05dd64cec84a588ce48eb6c10769fa0 passed npm ci, recovery audit, full CI, and deliberate factory interruption/resume without the original conversation; OMN-ACC-021 is now PASS."
     ,"Commit 93650343b0e46ef2db3c5a36f01bb74f471c79c4 binds the live Capture routes for Note/Knowledge, Task/Project, Calendar/Time, and Habit/Routine to one typed CommandBus launchpad seam; the local production-preview browser receipt records exact owner results and no console errors."
-    ,"Commit 4fa52945d42ad2017815c5aeeda86fcbe5048344 adds a real CanonicalStore launchpad Automation integration proof: package-scoped rule lifecycle persistence, explicit proposal confirmation, normal CommandBus mutation, Vault export/import, and fresh-runtime restore of the stable rule. The current browser receipt records Automation install/preview/confirm/apply and retained Artifact persistence while explicitly leaving fresh file-picker proof open."
+    ,"Commit 4fa52945d42ad2017815c5aeeda86fcbe5048344 adds a real CanonicalStore launchpad Automation integration proof: package-scoped rule lifecycle persistence, explicit proposal confirmation, normal CommandBus mutation, Vault export/import, and fresh-runtime restore of the stable rule. The current browser receipt records Automation install/preview/confirm/apply plus fresh file-picker Artifact intake, persistence, and reload."
     ,"Pages deployment run 35486356941 for source cf5ceaf1a92d2a4a048c0e6ac42ca9b3058999fb passed build/deploy/published-entry smoke; a fresh HTTPS fetch matched all 8 current dist files by status, byte length, and SHA-256."
   ],
   "unverified": [
-    "OMN-FOSS-014 retained-donor UI workload and OMN-ACC-173..175 complete six-flow transplantability, duplicate-authority, and donor-boundary proof; retained NeumanOS UI is rejected, four replacement Capture owner routes are qualified, and Document/Artifact plus Automation browser/Recovery proof remains open",
+    "OMN-FOSS-014 retained-donor UI workload and OMN-ACC-175 complete donor characterization remain open; retained NeumanOS UI is rejected, all six replacement launchpad flows now have current command/Vault/browser evidence for OMN-ACC-173/174, and donor-derived code remains unadmitted",
     "All existing source modules and UI behavior under current v0.18.0 contracts",
     "Real schema-transform interruption/repair, production rollback, browser/support/accessibility/human acceptance, offline/update qualification, storage quota/fault qualification, materially different browser-family Vault restore, security, FOSS, and Recovery qualification",
     "142 acceptance scenarios remain UNKNOWN; Phase 1 MVP daily slice and all later phase gates remain open"
   ],
-  "nextAction": "Complete fresh current browser and Recovery qualification for Document/Artifact, add the explicit direct-store rejection receipt, and close the remaining six-flow evidence gap on the selected shell. Then run schema-transform interruption/repair, quota/eviction, rollback, security/egress, accessibility, and remaining browser-target proofs. Promote only exact evidence-backed rows and advance Phase 0; synthetic tests, pressure fixtures, historical receipts, and workflow configuration are not product PASS evidence.",
+  "nextAction": "Close OMN-ACC-175 and OMN-FOSS-014 donor qualification where justified, then run schema-transform interruption/repair, quota/eviction, rollback, security/egress, accessibility, other-browser, and human-acceptance proofs. Promote only exact evidence-backed rows and advance Phase 0; synthetic tests, pressure fixtures, historical receipts, and workflow configuration are not product PASS evidence.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }

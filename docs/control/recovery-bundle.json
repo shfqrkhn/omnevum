@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "e6f35a6d0d72d2a671604ec42baddaffc5ba756e5f4512e34df97fc4e5322551",
-        "bytes": 105068
+        "sha256": "e4f9a13aedd5ae7548bc8437fb60bd51e1d018fcb36661d0de60cbc469c0604a",
+        "bytes": 105062
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "18d9024f49d86e247730b4f8d16aa48b67cff990d16fd86bba5cc1a3e44df09f",
-        "bytes": 4256
+        "sha256": "f8a3ebec9cabb2afcd4197aa88cb789e30a3ba3cb68b3daedaee9a9ade2df34b",
+        "bytes": 4217
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "cbadddd029ebcc2ea2dda13c2bfbc85647cbe9331e9e51b7bc52f8bbef8d4251",
-        "bytes": 5546
+        "sha256": "6da516dc447e2c94c24fd5f5aeda192cac4bdc5918d2346f1f31090ca0baff6a",
+        "bytes": 5381
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -324,8 +324,8 @@
       },
       {
         "path": "docs/evidence/phase0-launchpad-automation-artifact-2026-09-19.md",
-        "sha256": "d8ed136f1be3fa0acc7366007787d6818e74274cad30edbc930a8da3c0c5f05c",
-        "bytes": 3127
+        "sha256": "c59dad4436076854632a2612eb39de73b9bec52a28aa03f54be327dbe3658717",
+        "bytes": 3690
       },
       {
         "path": "docs/evidence/phase0-launchpad-owner-boundary-2026-09-19.md",

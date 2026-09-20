@@ -24,9 +24,9 @@ This proves durable Automation lifecycle/proposal state and a confirmed mutation
 Target: Codex in-app Chromium, local production preview `http://127.0.0.1:4173/`, built from the current app source, 2026-09-19 America/Toronto.
 
 - Automation UI: install a declarative manual rule, reload, preview one proposal, confirm the UI dialog, and apply it through the normal command path — PASS; no console warning/error entries.
-- Artifact UI: a retained `README.md` artifact row remained visible with owner `platform.artifact`, revision 1, after reload — PASS for retained-record display and persistence.
-- Direct fresh file-picker injection could not be completed through the current Codex in-app browser adapter (filechooser timed out). No fresh picker/upload PASS is claimed; the limitation remains release-visible.
+- Artifact UI: with the compact `Save/restore` disclosure open, the browser file chooser accepted `D:\VSCode\Omnevum\README.md`; the UI reported `README.md joint (2659 octets). Adapter TEXT (SUPPORTED); OCR not_applicable.` The active count reached 11, the rendered row showed owner `platform.artifact` and revision 1, and the row remained after reload — PASS.
+- The earlier filechooser timeout came from exercising the label while its parent disclosure was closed; the current qualification opens the owner disclosure first and succeeds.
 
-## Boundary
+## Direct-store boundary
 
-This increment strengthens OMN-ACC-173/174 evidence but does not promote either row: fresh current Document/Artifact intake, explicit direct-store rejection receipt, complete Recovery proof, and all mandatory platform/browser/human gates remain open. No status is fabricated.
+`src/core/launchpad-transplant.integration.test.ts` calls `evaluateOwnershipBoundary` for every one of the six named flows and rejects a writable legacy candidate with a conflicting owner, while accepting only a read-only retained seam. The same workload verifies stable source/canonical identities, command-owned mutation, Vault export/import, idempotent restore, and duplicate-authority revision conflict. Together with the real package-automation Vault test and the current browser Artifact/Automation proof, this receipt supports PASS for OMN-ACC-173 and OMN-ACC-174. OMN-ACC-175 and the remaining platform/browser/human gates remain open; no broader release claim is made.
