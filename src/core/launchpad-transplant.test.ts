@@ -5,6 +5,8 @@ import {
   assertSixFlowCoverage,
   canonicalOwnerForFlow,
   evaluateOwnershipBoundary,
+  launchpadFlowForCaptureKind,
+  makeLaunchpadRecordInput,
   validateCanonicalFlowInput
 } from "./launchpad-transplant";
 
@@ -51,6 +53,35 @@ describe("v0.18 launchpad transplant boundary", () => {
       accepted: true,
       owner: "platform.automation",
       reasons: []
+    });
+  });
+
+  it("maps real Capture kinds to one canonical owner and preserves the flow contract", () => {
+    expect(launchpadFlowForCaptureKind("note")).toBe("Note/Knowledge");
+    expect(launchpadFlowForCaptureKind("task")).toBe("Task/Project");
+    expect(launchpadFlowForCaptureKind("event")).toBe("Calendar/Time");
+    expect(launchpadFlowForCaptureKind("habit")).toBe("Habit/Routine");
+    expect(launchpadFlowForCaptureKind("observation")).toBeUndefined();
+
+    expect(makeLaunchpadRecordInput({
+      flow: "Habit/Routine",
+      text: "Walk after lunch",
+      sourceId: "user:capture:habit-1",
+      recordId: "omnevum:habit:1",
+      space: "personal",
+      data: { cadence: "daily" }
+    })).toEqual({
+      id: "omnevum:habit:1",
+      recordType: "observation",
+      owner: "core.progress",
+      provenance: { source: "IMPORT", sourceId: "user:capture:habit-1" },
+      data: {
+        text: "Walk after lunch",
+        launchpadFlow: "Habit/Routine",
+        stableSourceId: "user:capture:habit-1",
+        space: "personal",
+        cadence: "daily"
+      }
     });
   });
 });

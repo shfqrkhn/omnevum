@@ -1,3 +1,7 @@
+import type { SpaceId } from "./domain";
+import type { CreateRecordInput } from "./commands";
+import type { CaptureKind, RecordType } from "./model";
+
 export const V018_LAUNCHPAD_FLOWS = [
   "Note/Knowledge",
   "Task/Project",
@@ -8,6 +12,8 @@ export const V018_LAUNCHPAD_FLOWS = [
 ] as const;
 
 export type V018LaunchpadFlow = (typeof V018_LAUNCHPAD_FLOWS)[number];
+
+export type CanonicalRecordLaunchpadFlow = Exclude<V018LaunchpadFlow, "Document/Artifact" | "Automation">;
 
 export const CANONICAL_OWNER_BY_FLOW: Record<V018LaunchpadFlow, string> = {
   "Note/Knowledge": "core.knowledge",
@@ -43,6 +49,15 @@ export interface CanonicalFlowMutation {
   data: Record<string, unknown>;
 }
 
+export interface LaunchpadRecordAdmission {
+  flow: CanonicalRecordLaunchpadFlow;
+  text: string;
+  sourceId?: string;
+  recordId?: string;
+  space?: SpaceId;
+  data?: Record<string, unknown>;
+}
+
 export interface OwnershipBoundaryResult {
   accepted: boolean;
   owner: string;
@@ -51,6 +66,36 @@ export interface OwnershipBoundaryResult {
 
 export function canonicalOwnerForFlow(flow: V018LaunchpadFlow): string {
   return CANONICAL_OWNER_BY_FLOW[flow];
+}
+
+export function launchpadFlowForCaptureKind(kind: CaptureKind): CanonicalRecordLaunchpadFlow | undefined {
+  if (kind === "note" || kind === "url" || kind === "voice" || kind === "person" || kind === "goal" || kind === "decision" || kind === "source") return "Note/Knowledge";
+  if (kind === "task") return "Task/Project";
+  if (kind === "event") return "Calendar/Time";
+  if (kind === "habit") return "Habit/Routine";
+  return undefined;
+}
+
+export function makeLaunchpadRecordInput(input: LaunchpadRecordAdmission): CreateRecordInput {
+  const text = input.text.trim();
+  if (!text) throw new Error("A launchpad record requires non-empty text");
+  if (text.length > 5000) throw new Error("A launchpad record is limited to 5000 characters");
+  const sourceId = input.sourceId?.trim();
+  const recordType: RecordType = input.flow === "Note/Knowledge" ? "note" : input.flow === "Task/Project" ? "task" : "observation";
+  return {
+    ...(input.recordId?.trim() ? { id: input.recordId.trim() } : {}),
+    recordType,
+    owner: canonicalOwnerForFlow(input.flow),
+    ...(sourceId ? { provenance: { source: "IMPORT" as const, sourceId } } : {}),
+    data: {
+      text,
+      launchpadFlow: input.flow,
+      ...(sourceId ? { stableSourceId: sourceId } : {}),
+      ...(input.space ? { space: input.space } : {}),
+      ...(recordType === "task" ? { status: "OPEN" } : {}),
+      ...structuredClone(input.data ?? {})
+    }
+  };
 }
 
 export function validateCanonicalFlowInput(input: CanonicalFlowInput): CanonicalFlowMutation {

@@ -19,6 +19,7 @@ export const CAPTURE_KINDS = [
   "file",
   "image",
   "source"
+  ,"habit"
 ] as const;
 export type CaptureKind = (typeof CAPTURE_KINDS)[number];
 

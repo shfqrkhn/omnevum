@@ -54,14 +54,32 @@ describe("v0.18 OMN-FOSS-014 canonical-core workload", () => {
             adapter: "TEXT",
             metadata: mutation.data
           })
-          : await commands.create({
-            id: mutation.recordId,
-            recordType: item.recordType,
-            owner: mutation.owner,
-            truthClass: "IMPORTED_RECORD",
-            provenance: { source: "IMPORT", sourceId: mutation.sourceId },
-            data: mutation.data
-          });
+          : item.flow === "Automation"
+            ? await commands.create({
+              id: mutation.recordId,
+              recordType: item.recordType,
+              owner: mutation.owner,
+              truthClass: "IMPORTED_RECORD",
+              provenance: { source: "IMPORT", sourceId: mutation.sourceId },
+              data: mutation.data
+            })
+            : item.flow === "Document/Artifact"
+              ? await commands.createArtifact({
+                id: mutation.recordId,
+                fileName: "launchpad-receipt.txt",
+                mimeType: "text/plain",
+                blob: new Blob([item.text], { type: "text/plain" }),
+                sourceId: mutation.sourceId,
+                adapter: "TEXT",
+                metadata: mutation.data
+              })
+            : await commands.createLaunchpad({
+              flow: item.flow,
+              text: item.text,
+              sourceId: mutation.sourceId,
+              recordId: mutation.recordId,
+              data: mutation.data
+            });
         const updated = await commands.update(created.id, { ...created.data, canonicalOwnerMutation: "record.update" }, created.revision);
         expect(updated.id).toBe(item.recordId);
         expect(updated.owner).toBe(mutation.owner);

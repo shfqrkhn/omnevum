@@ -680,8 +680,8 @@ export function formatDateTime(locale: PresentationLocale, value: string): strin
 }
 
 const captureKindLabels: Record<"en-CA" | "fr-CA", Record<CaptureKind, string>> = {
-  "en-CA": { note: "Note", task: "Task", observation: "Observation", expense: "Expense", measurement: "Measurement", workout: "Workout", event: "Event", person: "Person", goal: "Goal", decision: "Decision", url: "URL", voice: "Voice transcript", file: "File reference", image: "Image reference", source: "Source" },
-  "fr-CA": { note: "Note", task: "Tache", observation: "Observation", expense: "Depense", measurement: "Mesure", workout: "Entrainement", event: "Evenement", person: "Personne", goal: "Objectif", decision: "Decision", url: "URL", voice: "Transcription vocale", file: "Reference de fichier", image: "Reference d'image", source: "Source" }
+  "en-CA": { note: "Note", task: "Task", observation: "Observation", expense: "Expense", measurement: "Measurement", workout: "Workout", event: "Event", person: "Person", goal: "Goal", decision: "Decision", url: "URL", voice: "Voice transcript", file: "File reference", image: "Image reference", source: "Source", habit: "Habit / routine" },
+  "fr-CA": { note: "Note", task: "Tache", observation: "Observation", expense: "Depense", measurement: "Mesure", workout: "Entrainement", event: "Evenement", person: "Personne", goal: "Objectif", decision: "Decision", url: "URL", voice: "Transcription vocale", file: "Reference de fichier", image: "Reference d'image", source: "Source", habit: "Habitude / routine" }
 };
 
 export function captureKindLabel(locale: PresentationLocale, kind: CaptureKind): string {

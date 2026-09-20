@@ -6,6 +6,7 @@ import { CanonicalStore } from "./storage";
 import { scrubSensitiveValue } from "./safety";
 import { MAX_CANONICAL_ID_LENGTH } from "./validation";
 import { applyCleanupDecisions, CLEANUP_HISTORY_KIND, CLEANUP_HISTORY_OWNER, makeCleanupHistoryChunks, type CleanupDecision, type CleanupPreview } from "./cleanup";
+import { makeLaunchpadRecordInput, type LaunchpadRecordAdmission } from "./launchpad-transplant";
 
 export interface CreateRecordInput {
   /** Optional stable identity supplied by an admitted import/launchpad adapter. */
@@ -101,6 +102,10 @@ export class CommandBus {
     const record = this.makeRecord(input);
     await this.store.put(record);
     return record;
+  }
+
+  public async createLaunchpad(input: LaunchpadRecordAdmission): Promise<CanonicalRecord> {
+    return this.create(makeLaunchpadRecordInput(input));
   }
 
   public async applyCleanup(preview: CleanupPreview, decisions: CleanupDecision[]): Promise<CanonicalRecord[]> {

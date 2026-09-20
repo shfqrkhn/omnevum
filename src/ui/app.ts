@@ -46,6 +46,7 @@ import { createRecordAppDefinition } from "../core/factory";
 import { FACTORY_PREVIEW_APP_TITLE, FACTORY_PREVIEW_FIELDS, FACTORY_PREVIEW_GAME, FACTORY_PREVIEW_MANIFEST, factoryPreviewGameAdapter, type FactoryPreviewGamePayload } from "../core/factory-preview";
 import { isCleanupHistoryRecord, previewCleanup, reconstructCleanupHistory, type CleanupDecision, type CleanupPreview, type CleanupRecipe } from "../core/cleanup";
 import { CORE_AUTOMATION_PACKAGE, type PackageAutomationRuntime } from "../core/package-automation-runtime";
+import { launchpadFlowForCaptureKind } from "../core/launchpad-transplant";
 import type { PackageAutomationProposal } from "../core/package-automation-registry";
 import { shouldAutoShowOnboarding } from "../core/onboarding";
 import { REVIEW_SESSION_SETTING, REVIEW_TEMPLATES, advanceReviewSession, getReviewTemplate, isReviewSession, makeReviewSession, type ReviewSession } from "../core/review";
@@ -4564,7 +4565,10 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const selectedKind = CAPTURE_KINDS.includes(captureType.value as CaptureKind) ? captureType.value as CaptureKind : "note";
       const recordType = recordTypeForCaptureKind(selectedKind);
       const space = (captureSpace.value === "household" || captureSpace.value === "work" ? captureSpace.value : "personal") satisfies SpaceId;
-      const created = await commands.create({ recordType, owner: selectedKind === "event" ? "platform.time" : "core.capture", data: { text, kind: selectedKind, space, triageStatus: captureSafeRoute.checked ? "REVIEWED" : "INBOX", ...(recordType === "task" ? { status: "OPEN" } : {}) } });
+      const launchpadFlow = launchpadFlowForCaptureKind(selectedKind);
+      const created = launchpadFlow
+        ? await commands.createLaunchpad({ flow: launchpadFlow, text, space, data: { kind: selectedKind, triageStatus: captureSafeRoute.checked ? "REVIEWED" : "INBOX" } })
+        : await commands.create({ recordType, owner: selectedKind === "event" ? "platform.time" : "core.capture", data: { text, kind: selectedKind, space, triageStatus: captureSafeRoute.checked ? "REVIEWED" : "INBOX", ...(recordType === "task" ? { status: "OPEN" } : {}) } });
       captureForm.reset();
       await renderRecords(searchQuery.value);
       if (packageAutomationRuntime) {
@@ -5684,7 +5688,7 @@ function isContextExportSnapshot(value: unknown): value is ContextExportSnapshot
 
 function recordTypeForCaptureKind(kind: CaptureKind): "note" | "task" | "observation" {
   if (kind === "task") return "task";
-  if (kind === "observation" || kind === "expense" || kind === "measurement" || kind === "workout") return "observation";
+  if (kind === "observation" || kind === "expense" || kind === "measurement" || kind === "workout" || kind === "habit") return "observation";
   return "note";
 }
 
