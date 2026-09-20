@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   CANONICAL_OWNER_BY_FLOW,
   V018_LAUNCHPAD_FLOWS,
+  admitLaunchpadMutation,
   assertSixFlowCoverage,
   canonicalOwnerForFlow,
   evaluateOwnershipBoundary,
@@ -44,6 +45,19 @@ describe("v0.18 launchpad transplant boundary", () => {
       "candidate exposes a writable store for a meaning owned by Omnevum",
       "candidate store declares a conflicting semantic owner"
     ]);
+  });
+
+  it("retains the command mutation while rejecting a direct legacy write", () => {
+    const admission = admitLaunchpadMutation({
+      flow: "Task/Project",
+      sourceId: "neumanos:task:17",
+      recordId: "omnevum:task:17",
+      revision: 1,
+      data: { text: "route through the canonical owner" }
+    }, [{ storeId: "legacy-tasks", flow: "Task/Project", writable: true, owner: "legacy.tasks" }]);
+    expect(admission.decision).toBe("REJECT_DIRECT_STORE");
+    expect(admission.owner).toBe("core.task");
+    expect(admission.mutation).toMatchObject({ command: "record.create", recordId: "omnevum:task:17", owner: "core.task" });
   });
 
   it("allows a read-only retained candidate seam with the Omnevum owner", () => {

@@ -64,6 +64,13 @@ export interface OwnershipBoundaryResult {
   reasons: string[];
 }
 
+export interface LaunchpadMutationAdmission {
+  decision: "COMMAND_ONLY" | "REJECT_DIRECT_STORE";
+  mutation: CanonicalFlowMutation;
+  owner: string;
+  reasons: string[];
+}
+
 export function canonicalOwnerForFlow(flow: V018LaunchpadFlow): string {
   return CANONICAL_OWNER_BY_FLOW[flow];
 }
@@ -110,6 +117,22 @@ export function validateCanonicalFlowInput(input: CanonicalFlowInput): Canonical
     recordId: input.recordId.trim(),
     expectedRevision: input.revision,
     data: structuredClone(input.data)
+  };
+}
+
+/**
+ * Decide how a candidate-derived mutation may enter Omnevum. A candidate store
+ * is never a writable authority: a rejected direct-write attempt is retained
+ * as evidence while the validated mutation remains available for CommandBus.
+ */
+export function admitLaunchpadMutation(input: CanonicalFlowInput, candidateStores: readonly CandidateStoreDeclaration[] = []): LaunchpadMutationAdmission {
+  const mutation = validateCanonicalFlowInput(input);
+  const boundary = evaluateOwnershipBoundary(candidateStores, input.flow);
+  return {
+    decision: boundary.accepted ? "COMMAND_ONLY" : "REJECT_DIRECT_STORE",
+    mutation,
+    owner: boundary.owner,
+    reasons: boundary.reasons
   };
 }
 
