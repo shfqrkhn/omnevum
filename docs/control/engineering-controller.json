@@ -13,17 +13,18 @@
   "verified": [
     "v0.18.0 and Omni are the sole active specifications.",
     "Generated control projections are bound to the exact v0.18.0 MPES hash.",
-    "Deprecated implementation-era acceptance statuses and qualification receipts were removed from the active baseline; all scenarios begin UNKNOWN.",
-    "A dated local-browser smoke receipt proves only current responsive layout and bounded capture/triage/search/Vault behavior; it does not close a release gate.",
-    "GitHub Pages deployment run d3dc92b is green and its eight served dist files byte-match the local candidate artifact; rollback and remaining target gates are still open.",
+    "Deprecated implementation-era acceptance statuses and qualification receipts were removed from the active baseline; current evidence promotes only bounded PARTIAL rows and keeps UNKNOWN release-visible.",
+    "The current hosted browser receipt proves compact responsive layout, built relative assets, cached offline Search, and bounded capture/triage/search/Vault behavior; it does not close a release gate.",
+    "GitHub Pages deployment run 35481320651 is green for source 542b665 and its eight served dist files byte-match the local candidate artifact; the published-entry smoke guard prevents regression to the legacy source deployment.",
+    "Storage/Vault/migration/Recovery and security/effect/context-boundary contracts have focused executable characterization; target/browser/fault and human proofs remain open.",
     "The repository structure/reference/architecture/license/security/typecheck/test/build/static/recovery/drift gates are required before handoff."
   ],
   "unverified": [
-    "OMN-FOSS-014 and OMN-ACC-173..176 six-flow transplantability, duplicate-authority, donor-boundary, and route-reopen proof",
+    "OMN-FOSS-014 retained-donor UI workload and OMN-ACC-173..176 complete six-flow transplantability, duplicate-authority, donor-boundary, and route-reopen proof",
     "All existing source modules and UI behavior under current v0.18.0 contracts",
     "Production deployment/rollback, browser/support/accessibility/human acceptance, offline/update, storage fault, cross-origin Vault, security, FOSS, and Recovery qualification",
-    "Phase 1 MVP daily slice and all later phase gates"
+    "148 acceptance scenarios remain UNKNOWN; Phase 1 MVP daily slice and all later phase gates remain open"
   ],
-  "nextAction": "Run the v0.18.0 first execution cycle: characterize NeumanOS, Kurumi, OneBench, and Utopia against one real Omnevum workload; prove the six canonical-core flows through Omnevum owners and commands; reject duplicate writable authorities; then close Phase 0 with exact current-target evidence. Local preview, old receipts, and workflow configuration are not deployment or product evidence.",
+  "nextAction": "Run real-browser update/interruption, quota/corruption, cross-origin Vault, security/egress, rollback, and accessibility target proofs; exercise retained launchpad UI behind Omnevum owners; then promote only exact evidence-backed rows and advance Phase 0. Synthetic tests, historical receipts, and workflow configuration are not product PASS evidence.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }
