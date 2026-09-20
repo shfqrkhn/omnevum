@@ -1358,8 +1358,10 @@
         "line": 4195
       },
       "text": "A new application shell is activated by the runtime while a schema migration remains unapproved. The new shell either refuses control or starts read-compatible against the unmigrated data, performs no part of the migration, and leaves the system fully usable after the user declines. Exactly one shell version holds control throughout, and a shell that cannot operate against the unmigrated data reports that condition instead of migrating to resolve it.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-browser-fault-recovery-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-129",

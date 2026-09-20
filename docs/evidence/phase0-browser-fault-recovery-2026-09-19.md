@@ -68,6 +68,19 @@ This is real browser crash/interruption evidence for `OMN-ACC-017` and the migra
 
 This fixes the observed repeated-reclaim state-machine defect and strengthens `OMN-ACC-009` only to `PARTIAL`; the mandatory real quota/eviction, platform fault-injection, and user guidance qualification remain open.
 
+## Disposable user-facing schema-migration gate proof
+
+- Date: 2026-09-19 (America/Toronto)
+- Source revision: `31b9f504eb1f03b09cf898e27fc307284d6d487b`
+- Source hashes: `src/ui/app.ts` `15d9d176b2376917933e3d167d319dec4d114d54cb40986c763ad60c012302db`, `src/core/storage.ts` `60427e3ead9ff6298d77e20629e513f593879a2d80058bb9dcda6f86983600d2`, and committed `public/sw.js` `d72e4c78f9dddb9e4d0ff122d4981d034472e0b4dd8d9a62e95869a510f556ec`.
+- Target: disposable Vite origin `http://127.0.0.1:4357/` in the Chromium in-app browser; the database, caches, service worker, and server were removed after the run.
+- A QA-only, stopped-server service-worker candidate declared `CANONICAL_SCHEMA`, release `schema-qa-2`, schema `1 -> 2`, migration `records-v2` affecting `note` and `task`, `readCompatible=false`, and an explicit Vault rollback path. The committed shell-only service worker was restored before cleanup.
+- With one canonical record present, the waiting candidate exposed the migration plan, affected classes, rollback path, and a `MISSING` backup state. The generic `Activate waiting shell` control stayed hidden and approval remained disabled. Declining reported that the current shell retained control; the active worker still reported `SHELL_ONLY`, the candidate remained waiting, and the canonical record count remained `1`.
+- `Create verified backup` generated a Vault with an integrity receipt, recorded a current fingerprint-bound backup, enabled approval, and reported that the downloaded Vault should be retained. Explicit confirmation then activated the candidate; the waiting worker cleared and the record remained present after reload.
+- Automated migration/storage coverage passed during this implementation increment: migration plus storage focused tests passed (`43` tests total across the two files).
+
+This is bounded real-browser evidence for the user-facing approval/backup/decline branch of `OMN-ACC-123` and the refuse-control branch of `OMN-ACC-128`, both still `PARTIAL`; it does not prove a real schema transform, interrupted transform rollback/repair, or production candidate deployment.
+
 ## Source hashes
 
 - `src/core/storage.ts`: `67c7cbaa9f88ca18038fa85c838478dcc127d33bc45921ab8d5fd4c5c47216bc`

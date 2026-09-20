@@ -5,20 +5,20 @@
   "authority": "MPES Sections 21 and 22",
   "releaseIdentity": {
     "version": "v0.18.0-overhaul-candidate",
-    "artifactDigest": "d8434a2ebdd33853c629b417b9cad2320cdc7febbb3c1415df0df2132afe959e",
-    "sourceRevision": "e4e497a7d05b955698749290beda4fc66baba80a",
-    "serviceWorkerCache": "omnevum-shell-820bc6b534e3c6ea"
+    "artifactDigest": "ba20418eff8713bab4b70618753ec3738b69760b47ae9d92eedcc944c120c1ba",
+    "sourceRevision": "31b9f504eb1f03b09cf898e27fc307284d6d487b",
+    "serviceWorkerCache": "omnevum-shell-9141a005de18279e"
   },
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF.",
   "artifactFiles": [
     {"path": "dist/assets/index-1nEyWL5r.css", "sha256": "285345490b9c35c9369a7b9de482909a59f6bca805b2413a1acc090202167226", "bytes": 25384},
-    {"path": "dist/assets/index-e5mlONgw.js", "sha256": "19f5cafcc1ff4b7bdf6275b0cffb603a9f7aba133748970494fc713af87661b6", "bytes": 533801},
-    {"path": "dist/assets/index-e5mlONgw.js.map", "sha256": "a3e82008421cfb12f321cb32bd5db230ce1d1adfd679028a2f9771d94829a518", "bytes": 1526480},
+    {"path": "dist/assets/index-k10gpYz6.js", "sha256": "58d158741a824e865d52c5af93e7bb601c1ef8eb0464eb8d62119a80f6d91cde", "bytes": 543294},
+    {"path": "dist/assets/index-k10gpYz6.js.map", "sha256": "bceb48a00d792976eea2d78eb109b66e60fdf0b2e09bc5f0c5d5043a50e89214", "bytes": 1554355},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "38d0c41dac12dfa3c84641655fb99d57a9fdc9b93d5bce2f25998bf92d2e6e59", "bytes": 933},
+    {"path": "dist/index.html", "sha256": "c553e02d808dedaa6aec193a985868ddd20ecaf4dafa19ce28465ccbd4c87666", "bytes": 933},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
     {"path": "dist/recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
-    {"path": "dist/sw.js", "sha256": "0c18ef9b36d87208d7ca3c7f58881cd2df06d9a4200f8bd45cf3410525bca6df", "bytes": 3501}
+    {"path": "dist/sw.js", "sha256": "95eec3adad6c7910a6fd066631e45ea6f11067f3c6a2c7c7663a8c5984a0697e", "bytes": 3594}
   ],
   "deploymentObservations": [
     {"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35481320651", "sourceRevision": "542b665b361d579ee6d8e3ab2f331ce3afca5cd6", "artifactByteMatch": "8/8 local dist files matched the served Pages files after switching Pages from legacy master:/ to the Actions artifact source; published-entry smoke guard passed", "date": "2026-09-19"},
@@ -27,5 +27,5 @@
   ],
   "requiredEvidence": ["control-generation-and-drift", "structure-reference-architecture-audit", "type-static-and-unit-tests", "browser-e2e-responsive-accessibility-input-i18n", "offline-static-host-and-service-worker", "storage-quota-corruption-migration-and-recovery", "Vault-cross-origin-restore", "security-egress-untrusted-content-and-credential-boundaries", "dependency-license-SBOM-vulnerability-provenance", "deploy-smoke-rollback", "human-acceptance-where-required"],
   "evidencePolicy": "The clean v0.18 baseline inherits no release artifact or acceptance claim. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains UNKNOWN.",
-  "currentDecision": "The e5cd4dc candidate is deployed and byte-verified on GitHub Pages; it remains not release-ready until launchpad, rollback, offline/update, storage fault, materially different browser-family Vault restore, security, human acceptance, and all mandatory acceptance gates are independently closed."
+  "currentDecision": "The 31b9f50 candidate is locally byte-verified and awaiting its Pages deployment observation; it remains not release-ready until the published artifact is byte-verified and launchpad, rollback, offline/update, storage fault, materially different browser-family Vault restore, security, human acceptance, and all mandatory acceptance gates are independently closed."
 }
