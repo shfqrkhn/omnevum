@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "canonical-owner-registry",
-  "status": "PROVISIONAL_PHASE1_CONTRACT_SPIKE",
+  "status": "PROVISIONAL_PHASE1_OWNER_BOUNDARIES",
   "authority": "MPES Sections 4, 5, and 28",
   "mutationAdmission": "All canonical mutation enters through the platform command/state-transition path and is validated before persistence.",
   "owners": [
@@ -18,9 +18,9 @@
     {"ownerId": "platform.device-input", "meaning": "capability detection and explicit device/file/share input", "writes": ["staged-input"], "status": "IMPLEMENTED_FILE_CLIPBOARD_BOUNDED"},
     {"ownerId": "platform.track", "meaning": "generic quantitative and qualitative observations", "writes": ["observation-record"], "status": "IMPLEMENTED_INITIAL"},
     {"ownerId": "platform.time", "meaning": "explicit focus/time observations and due-state semantics", "writes": ["time-observation"], "status": "IMPLEMENTED_INITIAL"},
-    {"ownerId": "core.knowledge", "meaning": "canonical Note/Knowledge meaning admitted from launchpad and capture adapters", "writes": ["knowledge-record"], "status": "CONTRACT_SPIKE"},
-    {"ownerId": "core.task", "meaning": "canonical Task/Project meaning admitted from launchpad and planning adapters", "writes": ["task-record"], "status": "CONTRACT_SPIKE"},
-    {"ownerId": "core.progress", "meaning": "canonical Habit/Routine progress meaning admitted from launchpad and tracking adapters", "writes": ["progress-record"], "status": "CONTRACT_SPIKE"},
+    {"ownerId": "core.knowledge", "meaning": "canonical Note/Knowledge meaning admitted from launchpad and capture adapters", "writes": ["knowledge-record"], "status": "IMPLEMENTED_INITIAL_COMMAND_BOUND"},
+    {"ownerId": "core.task", "meaning": "canonical Task/Project meaning admitted from launchpad and planning adapters", "writes": ["task-record"], "status": "IMPLEMENTED_INITIAL_COMMAND_BOUND"},
+    {"ownerId": "core.progress", "meaning": "canonical Habit/Routine progress meaning admitted from launchpad and tracking adapters", "writes": ["progress-record"], "status": "IMPLEMENTED_INITIAL_COMMAND_BOUND"},
     {"ownerId": "platform.relate", "meaning": "cross-record reference relationships", "writes": ["relationship-record"], "status": "IMPLEMENTED_INITIAL"},
     {"ownerId": "platform.space", "meaning": "personal, household, and work context overlay", "writes": ["space-reference"], "status": "IMPLEMENTED_UI_FILTER_OVERLAY"},
     {"ownerId": "platform.data", "meaning": "bounded derived dataset projections", "writes": ["derived-dataset"], "status": "IMPLEMENTED_INITIAL"},
