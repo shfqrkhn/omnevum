@@ -37,6 +37,8 @@ export interface SpreadsheetSafetyReport {
 }
 
 export interface ArtifactInput {
+  /** Optional stable identity supplied by an admitted import/launchpad adapter. */
+  id?: string;
   fileName: string;
   mimeType: string;
   blob: Blob;

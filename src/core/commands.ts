@@ -4,9 +4,12 @@ import type { CanonicalRecord, RecordType } from "./model";
 import { CURRENT_SCHEMA_VERSION } from "./model";
 import { CanonicalStore } from "./storage";
 import { scrubSensitiveValue } from "./safety";
+import { MAX_CANONICAL_ID_LENGTH } from "./validation";
 import { applyCleanupDecisions, CLEANUP_HISTORY_KIND, CLEANUP_HISTORY_OWNER, makeCleanupHistoryChunks, type CleanupDecision, type CleanupPreview } from "./cleanup";
 
 export interface CreateRecordInput {
+  /** Optional stable identity supplied by an admitted import/launchpad adapter. */
+  id?: string;
   recordType: RecordType;
   owner: string;
   data: Record<string, unknown>;
@@ -62,7 +65,7 @@ export class CommandBus {
     if (!input.owner.trim()) throw new Error("A canonical owner is required");
     const now = new Date().toISOString();
     return {
-      id: createOpaqueId(),
+      id: resolveCanonicalId(input.id),
       recordType: input.recordType,
       owner: input.owner,
       schemaVersion: CURRENT_SCHEMA_VERSION,
@@ -138,7 +141,7 @@ export class CommandBus {
     if (!input.fileName.trim()) throw new Error("An artifact file name is required");
     if (input.blob.size > MAX_PORTABLE_ARTIFACT_BYTES) throw new Error("Artifact exceeds the bounded 10 MiB intake limit");
     const now = new Date().toISOString();
-    const id = createOpaqueId("artifact");
+    const id = resolveCanonicalId(input.id, "artifact");
     const record: CanonicalRecord = {
       id,
       recordType: "artifact",
@@ -390,6 +393,15 @@ export class CommandBus {
     await this.store.put(restored, undefined, current.revision);
     return restored;
   }
+}
+
+function resolveCanonicalId(value: string | undefined, prefix = "record"): string {
+  if (value === undefined) return createOpaqueId(prefix);
+  const normalized = value.trim();
+  if (!normalized || normalized.length > MAX_CANONICAL_ID_LENGTH || !/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(normalized)) {
+    throw new Error("Stable canonical identity is invalid");
+  }
+  return normalized;
 }
 
 export async function runTriageBatch(commands: CommandBus, items: readonly TriageBatchItem[], action: TriageBatchAction, deferredUntil?: string): Promise<TriageBatchOutcome[]> {

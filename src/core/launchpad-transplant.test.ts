@@ -12,7 +12,7 @@ describe("v0.18 launchpad transplant boundary", () => {
   it("defines one Omnevum owner for every required flow", () => {
     assertSixFlowCoverage(V018_LAUNCHPAD_FLOWS);
     expect(new Set(Object.values(CANONICAL_OWNER_BY_FLOW)).size).toBe(V018_LAUNCHPAD_FLOWS.length);
-    expect(canonicalOwnerForFlow("Document/Artifact")).toBe("core.artifact");
+    expect(canonicalOwnerForFlow("Document/Artifact")).toBe("platform.artifact");
   });
 
   it("routes candidate meaning through a stable command mutation", () => {
@@ -46,10 +46,10 @@ describe("v0.18 launchpad transplant boundary", () => {
 
   it("allows a read-only retained candidate seam with the Omnevum owner", () => {
     expect(evaluateOwnershipBoundary([
-      { storeId: "candidate-automation", flow: "Automation", writable: false, owner: "core.automation" }
+      { storeId: "candidate-automation", flow: "Automation", writable: false, owner: "platform.automation" }
     ], "Automation")).toEqual({
       accepted: true,
-      owner: "core.automation",
+      owner: "platform.automation",
       reasons: []
     });
   });

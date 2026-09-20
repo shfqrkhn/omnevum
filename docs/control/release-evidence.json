@@ -5,20 +5,20 @@
   "authority": "MPES Sections 21 and 22",
   "releaseIdentity": {
     "version": "v0.18.0-overhaul-candidate",
-    "artifactDigest": "e019fb357b34bfcccdd975f11907c2d2682b74620f1379fe59e8044ee74c6cc2",
-    "sourceRevision": "d3dc92b",
-    "serviceWorkerCache": "omnevum-shell-0185ac748cc5a004"
+    "artifactDigest": "03a6eb2e8c3bbfdac6cc29c0abfa1210e7cfddd76062195874f543881ddf47aa",
+    "sourceRevision": "cdcb0a8",
+    "serviceWorkerCache": "omnevum-shell-4b0fcf7bba597af9"
   },
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF.",
   "artifactFiles": [
     {"path": "dist/assets/index-1nEyWL5r.css", "sha256": "285345490b9c35c9369a7b9de482909a59f6bca805b2413a1acc090202167226", "bytes": 25384},
-    {"path": "dist/assets/index-2dS7YBYR.js", "sha256": "f363d00c4908fbd112cace6adc8654f7a0c952da28fbf753d0df8e67a61a2ecc", "bytes": 533197},
-    {"path": "dist/assets/index-2dS7YBYR.js.map", "sha256": "106d8a0ed401c0f1fee1e0ebe9753249ca0bbbb145e2a713bced3a76c0f3199e", "bytes": 1524509},
+    {"path": "dist/assets/index-Cte7gjJ7.js", "sha256": "bef37bebc4767abdb9edbfef52e746b2299e1bd2d8bb728d4bf42bde00f1dc64", "bytes": 533400},
+    {"path": "dist/assets/index-Cte7gjJ7.js.map", "sha256": "278b284b49d1066945b66f80458eb9f2d00c07f10a0e02cb590a2734bef998d8", "bytes": 1525416},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "aee060067977ab37fda3ad081200bf9e214bc990eed7437faa494ccb0aff41ff", "bytes": 933},
+    {"path": "dist/index.html", "sha256": "2af3ac0c9d79f03de186d7e38f31753d19cbe07882ec648b707e839aa1ddb570", "bytes": 933},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
     {"path": "dist/recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
-    {"path": "dist/sw.js", "sha256": "60d96143a10e3a5e9537c22e5e3c0b2e1590c522559ffb5391696c78829be533", "bytes": 3501}
+    {"path": "dist/sw.js", "sha256": "398279c9d70dcaeb6e13d15dde332ad6448dd62cdc03f7b7c818e362f210f0eb", "bytes": 3501}
   ],
   "deploymentObservations": [
     {"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35479571937", "sourceRevision": "d3dc92bf312da491293ea7e00198b465e1e22b6c", "artifactByteMatch": "8/8 local dist files matched the served Pages files", "date": "2026-09-19"}

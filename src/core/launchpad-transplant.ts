@@ -12,10 +12,10 @@ export type V018LaunchpadFlow = (typeof V018_LAUNCHPAD_FLOWS)[number];
 export const CANONICAL_OWNER_BY_FLOW: Record<V018LaunchpadFlow, string> = {
   "Note/Knowledge": "core.knowledge",
   "Task/Project": "core.task",
-  "Calendar/Time": "core.time",
+  "Calendar/Time": "platform.time",
   "Habit/Routine": "core.progress",
-  "Document/Artifact": "core.artifact",
-  Automation: "core.automation"
+  "Document/Artifact": "platform.artifact",
+  Automation: "platform.automation"
 };
 
 export interface CandidateStoreDeclaration {

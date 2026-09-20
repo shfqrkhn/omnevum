@@ -1761,8 +1761,10 @@
         "line": 4288
       },
       "text": "The provisional NeumanOS launchpad is exercised through six representative flows: Note/Knowledge, Task/Project, Calendar/Time, Habit/Routine, Document/Artifact, and Automation. Each retained user flow continues to work while canonical mutable meaning is read/written only through the corresponding Omnevum-owned semantic command/owner boundary, stable identities survive the transition, and backup/export/Recovery can reconstruct the accepted state. A UI that works only by retaining a second writable NeumanOS authority is not a PASS.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-launchpad-workload-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-174",
@@ -1771,8 +1773,10 @@
         "line": 4290
       },
       "text": "During the transplant proof, a retained feature attempts to write directly to a legacy module database/store after its canonical owner has moved behind the Omnevum boundary. The write is blocked, redirected through the admitted command path, or isolated in an explicitly temporary migration seam whose reconciliation/removal criteria are tested. The final accepted configuration contains no unsynchronized writable copy and no hidden module-specific authority for the same semantic fact.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-launchpad-workload-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-175",

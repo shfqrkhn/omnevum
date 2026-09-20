@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "8d5918f4b9ccb6efcef89940bf3b408d8839b18ef548150b7ff4a3ef18988876",
-        "bytes": 101545
+        "sha256": "6b042f2bb20c2b8170bb0b6f21823c82c597ebc8a4157c752bf60d77dd7c0f00",
+        "bytes": 101687
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "410e2e6a5c3e74e78f2fdfd6b8454f13edde6f7c58ce95e08521252764b5948b",
-        "bytes": 2598
+        "sha256": "3c15cb5cf9ecb4d99c5e0d9df10bb1eb5a712ee4d65a12639941e52486150b66",
+        "bytes": 2483
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -254,8 +254,8 @@
       },
       {
         "path": "docs/control/owner-registry.json",
-        "sha256": "955593d7339363ce61f7f4d5fa12915f4b6b0cf9e3e595c8b25d5131bb58d00d",
-        "bytes": 4847
+        "sha256": "336dbaae0e037645a38063fc3f009f4ffa76bdd5d59755a50db5806eb00db4ed",
+        "bytes": 5404
       },
       {
         "path": "docs/control/patch-fork-delta.json",
@@ -264,12 +264,12 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "3dae8fbf544c496fbc2a2bd689c69cc9d29fa21bfecd6af4edb4f0d327263b55",
-        "bytes": 1672
+        "sha256": "31ec0e1ebd0dea156402e409e7a49e018a2ab251f8989b784dff991d7b63bd80",
+        "bytes": 1729
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "51e57d603a9da8edb6fbef16b3ef9b39ed47018a88eadc7a6d05ca458ea9dbfb",
+        "sha256": "86ba80de0b8e8bdc12066653bff8242fd571a460eb3b6f22b7d4a76821fb5b7e",
         "bytes": 3036
       },
       {
@@ -289,13 +289,18 @@
       },
       {
         "path": "docs/control/upstream.json",
-        "sha256": "5faf92b01a038d14114b7c1394b3bee92ed3ba4da2da91c2d2eb29cd90922779",
+        "sha256": "e8b04b3b8618c12f745af7ce547b218f18983224e59963c325d55b629ed93f7d",
         "bytes": 5442
       },
       {
         "path": "docs/evidence/phase0-browser-qa-2026-09-19.md",
         "sha256": "d591f1c4763f6189304449d32b8fd59ae2ff3db38291f459216e37c7df7f286a",
         "bytes": 2581
+      },
+      {
+        "path": "docs/evidence/phase0-launchpad-workload-2026-09-19.md",
+        "sha256": "208b86f0ef278bacec1180a6b8af4e201ab395e0df0d2b04a1dfa444c5cc8269",
+        "bytes": 2962
       },
       {
         "path": "docs/evidence/phase0-pages-deployment-2026-09-19.md",
@@ -499,8 +504,8 @@
       },
       {
         "path": "src/core/artifact.ts",
-        "sha256": "81db5801c30ceafaed2150536a18e79de8bb5316796a695418fb3910a5ab25d0",
-        "bytes": 14002
+        "sha256": "09bb337ce17f9d4dfa5081b28e7ede0e358a23288a1a367e552cd8f4e69dc901",
+        "bytes": 14101
       },
       {
         "path": "src/core/automation.test.ts",
@@ -549,8 +554,8 @@
       },
       {
         "path": "src/core/commands.ts",
-        "sha256": "494692407770a8b8d80cf92814a11501477a976e89529f845fd7f1eeb176a819",
-        "bytes": 21427
+        "sha256": "209795cc9a6eb968101f3264f9924e3bb7aca14d9f94af59f352b69f029a8d04",
+        "bytes": 21995
       },
       {
         "path": "src/core/compose.test.ts",
@@ -848,14 +853,19 @@
         "bytes": 11372
       },
       {
+        "path": "src/core/launchpad-transplant.integration.test.ts",
+        "sha256": "2af441c504e03f7cd7552a4602b004a8d87ddc7dad4d813bb16b2a1b9906f7fe",
+        "bytes": 5660
+      },
+      {
         "path": "src/core/launchpad-transplant.test.ts",
-        "sha256": "a7d0b78460b48289a3de629a1b504afa14f6710c17f5dd9045c8cd72eca3b414",
-        "bytes": 1971
+        "sha256": "643506ba7385bf071895a7cc970f5a7b796b2e0a246cd841988dc1253c43189f",
+        "bytes": 1983
       },
       {
         "path": "src/core/launchpad-transplant.ts",
-        "sha256": "9fe9a73c630a85c9d58e7f400f72bfed98762a30711cc01ffa7e698cb6f37aac",
-        "bytes": 3045
+        "sha256": "e817d4ab7230ee2880749dfcb8f0520e93e42b9027209e06fe3bde32100424ca",
+        "bytes": 3057
       },
       {
         "path": "src/core/lenses.test.ts",
