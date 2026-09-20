@@ -279,13 +279,13 @@
       },
       {
         "path": "docs/control/risk-threat-register.json",
-        "sha256": "63c8524dfc3c1b04645dd5ab0c4e4b0e189b7a0c053f24249fb175108a07278e",
-        "bytes": 1735
+        "sha256": "f85014dccc4e87906578f02971b71383cf1bcb1da857fd4c27ed386ab7707b76",
+        "bytes": 2196
       },
       {
         "path": "docs/control/support-matrix.json",
-        "sha256": "f524ca10662b4bcabed4a7b251f8c27e428d5ca57eccd5b0f986d8a5bddfc7b2",
-        "bytes": 1655
+        "sha256": "2919f72a238ad2533cd591f8a89946dd6ad06b13e5574ee16018a6b770b99778",
+        "bytes": 1916
       },
       {
         "path": "docs/control/upstream.json",
