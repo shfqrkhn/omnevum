@@ -43,3 +43,12 @@ This receipt supports only partial offline/deployment/responsive evidence. It is
 - Source revision: `8e64340f8f3513578c5175eca7c1a5cd4f513a53`.
 - Pages repository CI run [35484061520](https://github.com/shfqrkhn/omnevum/actions/runs/35484061520) and Pages run [35484061561](https://github.com/shfqrkhn/omnevum/actions/runs/35484061561) completed successfully after the documentation/control follow-up; the deployed artifact identity remained `f046f093dea26e87a7d4e367126dc7fef87945b343dcb4622876d8c707d61849` with the same 8/8 byte match.
 - The live smoke guard remained green. This follow-up changes no product artifact and does not close any remaining target, security, Recovery, or human-acceptance rows.
+
+## Compact mobile first-screen qualification
+
+- Source revision: `eaa1a4444dae69e4b3592ac223e5b9d7dce37d4a`; local candidate `http://127.0.0.1:4370/`; Codex in-app Chromium tab 48.
+- The status card retains the visible action-status channel while verbose health telemetry is behind an accessible `System` disclosure. Compact mode keeps that disclosure closed; the disclosure opened and closed through its real summary control and showed the current health snapshot.
+- At `390x844`, the compact header was `171.20px`, lens navigation `61.58px` with its list/help text collapsed but its `All lenses` dialog action retained, status card `284.77px`, and Capture began at `589.54px`. At `320x844`, Capture began at `562.88px`. The primary navigation was closed at both widths.
+- `scrollWidth === clientWidth` at both phone rows (`390` and `320`). A real Capture submission created one Review item and updated the hidden health snapshot; no horizontal overflow occurred.
+- At `1440x900`, compact layout retained a `1180px` main/navigation width and `scrollWidth === clientWidth` (`1425` observed client width). Desktop ordering was unchanged.
+- This qualifies the compact first-screen presentation and primary Capture interaction only. It is not Safari/WebKit, Firefox, assistive-technology, touch-hardware, quota/corruption/migration, cross-origin Vault, rollback, security/egress, or human-acceptance proof.

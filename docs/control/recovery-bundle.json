@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "abe5309e0b1c3b58309cf003f398f1848b11f8e660c8d1a70365629f5424835e",
-        "bytes": 5497
+        "sha256": "7a2dae68d925ff2931a4634c9a222af440996a479ecf768690ff5a73795dd690",
+        "bytes": 5539
       },
       {
         "path": "docs/control/requirements.json",
@@ -304,8 +304,8 @@
       },
       {
         "path": "docs/evidence/phase0-browser-qa-current-2026-09-19.md",
-        "sha256": "83394f7d16e4f895d00120c59da38675b2d77198341542023b796407662afe84",
-        "bytes": 4826
+        "sha256": "90d3052c3107a5bb55ec07b68d10f3cfe069a72dc5a785e115fac681e13923b0",
+        "bytes": 6231
       },
       {
         "path": "docs/evidence/phase0-donor-characterization-2026-09-19.md",
@@ -1264,8 +1264,8 @@
       },
       {
         "path": "src/styles.css",
-        "sha256": "eb928e480d9a27a397d617b183a4b950c18c14b7d2dbf48ad9f592a66d4a68bd",
-        "bytes": 29984
+        "sha256": "491bb779d1e86e043b6e35d222b0e6f8a3e3ff1d877de1e8f0793718ef085ce0",
+        "bytes": 30649
       },
       {
         "path": "src/test/setup.ts",
@@ -1274,8 +1274,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "01289211289a8391b3846d4d375785f087679bb157b2d0aca6f6f03627e1d974",
-        "bytes": 347856
+        "sha256": "1390d5d32f5e0b406515d76548334ed512432168c43f56678304d855b2692aab",
+        "bytes": 348493
       },
       {
         "path": "tsconfig.json",
