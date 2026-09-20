@@ -752,8 +752,11 @@
         "line": 4069
       },
       "text": "The user captures an ambiguous mixed item into the universal inbox. Triage/Clarify preserves the raw source and provenance, proposes possible owner/type/actions without silently committing them, lets the user split/link/route/defer/reference/delete through admitted commands, and closes the staging item without leaving duplicate writable copies. A separate unambiguous capture can bypass the inbox through an explicit safe route.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-current-finance-platform-browser-2026-09-20.md"
+      ],
+      "notes": "Codex Chromium tab 54 staged an ambiguous import, exposed raw source/provenance and proposal-only owner/type/actions, explicitly kept it as a reference, returned the inbox to zero, and verified one canonical IMPORTED_RECORD with no duplicate writable copy. Full split/link/route/defer/delete matrix, safe-route pairing, broader targets, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-066",

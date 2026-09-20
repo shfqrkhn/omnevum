@@ -87,3 +87,14 @@ Repository candidate `2f6ea95326e1dcf4acf7dafbd121bc71f643e6de`; target `http://
 - `src/core/compose.ts` validates bounded safe field paths, persists only the view definition in `ViewRegistry`, and projects records without taking canonical ownership; the test suite covers validation, unsafe-field rejection, persistence, Vault round-trip of view state, and canonical-store non-ownership.
 
 This is bounded `PARTIAL` evidence for OMN-ACC-048: declarative multi-widget composition, canonical non-ownership, reload persistence, and compact-width behavior are proven in Chromium. Full touch/keyboard/accessibility/theme/localization qualification, update migration, other browser families, and human acceptance remain open.
+
+## Capture → Acquire → Triage browser qualification
+
+Source candidate: commit `3b3bfb6df6f1c96e74fb144893da9a2a06f0edde` (`3b3bfb6`); target `http://127.0.0.1:4180/`, production `dist` served by the running Vite preview; Codex in-app Chromium tab `54`, isolated local-origin storage, compact density, 2026-09-20. Focused Acquire/CommandBus tests passed 2 files and 21 tests.
+
+- An ambiguous mixed plain-text source, `Maybe reconcile this mixed item with a household task and expense: History QA triage 2026-09-20`, was staged through Acquire before canonical creation. The UI reported one staged candidate and rendered its proposed Note result; Accept staged then imported exactly one record and raised the inbox count to one.
+- The visible Triage route showed the item as `in inbox`, preserved `Source IMPORT`, the capture timestamp, owner `core.acquire`, revision 1, and the source fingerprint. Its proposal explicitly listed possible owners (`core.acquire`, `core.capture`), possible types (`Note`, `Task`), and admitted actions while stating that no canonical state had changed.
+- The item was resolved through the explicit `Keep as reference` command. The inbox returned to zero, the canonical count became four, and the record remained a single `IMPORTED_RECORD` with canonical ID `record_56a30a3e-1f9f-48ff-b790-38b02f4fd662`, owner `core.acquire`, truth class `IMPORTED_RECORD`, sensitivity `PRIVATE`, and provenance `IMPORT / source:b7ef2e63952481b05387bc2db60d20160bcc6b4e2fa343898e4a44f1ce9c8543:1`.
+- Canonical Records showed revision 2 with only the triage disposition/status mutation; no lens-local writable copy or duplicate result appeared. The compact route stayed closed until explicitly navigated, and no console error was observed during this flow.
+
+This is bounded `PARTIAL` evidence for OMN-ACC-065: raw/provenance preservation, proposal-only routing, explicit inbox resolution, canonical ownership, and no-duplicate behavior are proven in Chromium. Full split/link/route/defer/delete matrix coverage, safe-route capture in the same receipt, other browser families, assistive technology, fault/reload breadth, and human acceptance remain open; no release or `100_PERCENT_COMPLETE` claim is made.
