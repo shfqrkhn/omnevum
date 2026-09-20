@@ -25,6 +25,7 @@
     ,"Commit 4fa52945d42ad2017815c5aeeda86fcbe5048344 adds a real CanonicalStore launchpad Automation integration proof: package-scoped rule lifecycle persistence, explicit proposal confirmation, normal CommandBus mutation, Vault export/import, and fresh-runtime restore of the stable rule. The current browser receipt records Automation install/preview/confirm/apply plus fresh file-picker Artifact intake, persistence, and reload."
     ,"Pages deployment run 35486356941 for source cf5ceaf1a92d2a4a048c0e6ac42ca9b3058999fb passed build/deploy/published-entry smoke; a fresh HTTPS fetch matched all 8 current dist files by status, byte length, and SHA-256."
     ,"Current automation security receipt at 167f1309b4a3866b500c98c4d689f95f0e4cb9cb passes 5 focused files / 14 tests for declarative-only parsing, lifecycle disablement, explicit confirmation/scope, safe fields, CommandBus routing, and real Vault restoration; OMN-ACC-049 is PASS."
+    ,"Current storage fallback receipt at eef4c643f831fa1a3c8cbdc0efdac62843f7a133 passes 5 focused files / 51 tests and proves canonical IndexedDB operation when optional storage-estimate/persistence APIs are unavailable; OMN-ACC-026 is PASS while real quota and browser rows remain open."
   ],
   "unverified": [
     "OMN-FOSS-014 retained-donor UI workload and OMN-ACC-175 complete donor characterization remain open; retained NeumanOS UI is rejected, all six replacement launchpad flows now have current command/Vault/browser evidence for OMN-ACC-173/174, and donor-derived code remains unadmitted",

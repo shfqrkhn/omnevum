@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "b1bd58531540e3fe92a1e18561859194e4632dcd44c7649ca111072c6d62284c",
-        "bytes": 105133
+        "sha256": "faa4f2f1f69bff21992a54b6b26e16ff500e2cc76297f2925f508819de08841d",
+        "bytes": 105201
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "ef5f7e8306ef03d6fa6a20f5642c2d072941f84c4a4fc974632f9232fee492c2",
-        "bytes": 4321
+        "sha256": "4bfd12e27de31333661994cbda25a13bfb802d6cc22d666dbf3e24040c46be8a",
+        "bytes": 4412
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "3deeb95b02b9b9c8f6f3e3d4d4c5508c41449cd40df782a3ddce5809dcefca8c",
-        "bytes": 5666
+        "sha256": "0fe43f863ded6bcf9774e511d549be002a231c08799fdf7b3c72a6da39116f9c",
+        "bytes": 5957
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -264,8 +264,8 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "e24207595e08c157d8c4348f9ce8a0648db94472f3a26db4be84c92f520277eb",
-        "bytes": 2544
+        "sha256": "e1357db3c0a3393a0740ea00ecec0d5df211b8e75159e515e3a813bd878a0615",
+        "bytes": 2607
       },
       {
         "path": "docs/control/release-evidence.json",
@@ -371,6 +371,11 @@
         "path": "docs/evidence/phase0-security-effects-2026-09-19.md",
         "sha256": "7ff251b1b762f4098528fc5e6f4e9affa998bf53b080e792d7cd95d2c8dda463",
         "bytes": 3788
+      },
+      {
+        "path": "docs/evidence/phase0-storage-fallback-current-2026-09-19.md",
+        "sha256": "4f95123728767cdc9d08e33e19ab457e4a55df175eb88d13f590a5e34be0e12b",
+        "bytes": 1219
       },
       {
         "path": "docs/evidence/phase0-storage-recovery-2026-09-19.md",

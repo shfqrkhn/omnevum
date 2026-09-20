@@ -318,9 +318,10 @@
         "line": 3991
       },
       "text": "On a supported browser row where OPFS is unavailable or deliberately disabled, ordinary canonical structured records remain usable through the qualified fallback; only features that genuinely require unavailable large-file semantics degrade explicitly.",
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+        "docs/evidence/phase0-storage-recovery-2026-09-19.md",
+        "docs/evidence/phase0-storage-fallback-current-2026-09-19.md"
       ]
     },
     {
