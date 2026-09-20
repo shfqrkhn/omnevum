@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "94123458ef6814b44af4e70e10fa028a41382039d018697a7e25b8e9ea5138c4",
-        "bytes": 3150
+        "sha256": "c9c04e942d7e05467404f498ec7c53838a08b56bb94d99a7dfce0e23b054c8fa",
+        "bytes": 3200
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -264,13 +264,13 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "e478e4770028a64acf585fae275dd6bb4c14019ec481a58f5491c213ce77cf2b",
-        "bytes": 3549
+        "sha256": "f2509d3417e9827f235f39c382cd0756dee780a7f53a8382588177b8b6f1d495",
+        "bytes": 3623
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "a4276966ae1c18a47ebdf178e73ecdf38677f3371f3eb6f341b0547876f4de67",
-        "bytes": 8787
+        "sha256": "be94f856479e4bc9c8f782df2928ee318a9de2ede4b08d2fa94138bf6371a320",
+        "bytes": 9279
       },
       {
         "path": "docs/control/requirements.json",
@@ -406,6 +406,11 @@
         "path": "docs/evidence/phase0-pages-deployment-launchpad-2026-09-19.md",
         "sha256": "8998764969c19a3bff7071fe93fec7d4a7d0e468b1a9397e6cbe1bb4729a22e6",
         "bytes": 1710
+      },
+      {
+        "path": "docs/evidence/phase0-pages-deployment-sync-serviceworker-2026-09-20.md",
+        "sha256": "554139aecd03362711c2f26b73b0174e0667a47267a0f713c59e912d75dd5d3d",
+        "bytes": 1423
       },
       {
         "path": "docs/evidence/phase0-security-effects-2026-09-19.md",
