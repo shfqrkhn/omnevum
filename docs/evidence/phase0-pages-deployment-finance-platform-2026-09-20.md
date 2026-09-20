@@ -57,3 +57,16 @@ This exact deployment identity does not prove rollback, response-header control,
 An independent HTTPS probe fetched the ten control-bound public paths. Every response was HTTP 200 and every served byte length and SHA-256 matched the local receipt-bound candidate exactly (`10/10`); the served aggregate digest was exactly `bd91504e93748b2ebbb7f79284c05cefba6f98d3df775f2716316d1640a0d3a2`.
 
 The candidate tightens the compact-default mobile layout: low-frequency empty Considerations content is a progressive disclosure that remains closed until material attention exists or the user opens it, and Capture type/space selectors share a two-column choice grid while retaining their semantic labels and control identities. Source/style tests and the full local CI gate passed. This is implementation, artifact, and deployment identity evidence only; it does not prove rollback, response-header control, WebKit/Firefox behavior, real quota/process faults, cross-origin Vault restore, security/egress, assistive technology, human acceptance, or `100_PERCENT_COMPLETE`.
+
+## Current durable parser/migration and compact-layout deployment supersession
+
+- Source candidate: `76071c8bbe6ca9bf80e250200149d0f591e3f4ac` (`76071c8`); CI workflow [35494990688](https://github.com/shfqrkhn/omnevum/actions/runs/35494990688), success; Pages workflow [35494990690](https://github.com/shfqrkhn/omnevum/actions/runs/35494990690), success.
+- Target: `https://shfqrkhn.github.io/omnevum/`.
+- Artifact digest: `2470b25ef82625c14a560a4d98d9def00537aa80360e92256dacd07c9a29b7be`.
+- Service-worker cache: `omnevum-shell-295d2a37beaec3e0`.
+
+An independent Node HTTPS probe fetched all ten control-bound public paths. Every response was HTTP 200 and matched the receipt-bound local artifact by exact SHA-256 and byte length (`10/10`); the served aggregate digest was exactly `2470b25ef82625c14a560a4d98d9def00537aa80360e92256dacd07c9a29b7be`.
+
+Live Chromium verification at the deployed target confirmed compact density, closed low-frequency sections by default, and zero console errors. The observed Domains discrepancy was a pending presentation form edit, not a rendering defect: after saving the visible Domains option, the `#domains` section became visible as a collapsed disclosure and the `#domains` navigation link appeared. This preserves compact-by-default behavior while making the selected section reachable. The durable parser-profile and fingerprint-bound migration/recovery runtime, source tests, full local CI, and deployment identity are current at this candidate.
+
+This receipt remains `PASS_WITH_LIMITATIONS`; it does not prove production rollback, real offline/update/fault qualification, WebKit/Firefox, assistive technology, cross-origin Vault restore, security/egress, human acceptance, or `100_PERCENT_COMPLETE`.

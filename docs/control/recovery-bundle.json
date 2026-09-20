@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "155f554faec167efc859529f8cde641a9741cddd89842dba135f4f3fcdb62f7f",
-        "bytes": 12719
+        "sha256": "8d7bfdd10c33b6c76e116aa98978b63363e77a8f3ccba98643239ab5df6f2a59",
+        "bytes": 13720
       },
       {
         "path": "docs/control/requirements.json",
@@ -429,8 +429,8 @@
       },
       {
         "path": "docs/evidence/phase0-pages-deployment-finance-platform-2026-09-20.md",
-        "sha256": "db3ec2c90bca2b5876a256c499668930cdad971f95b1cfa736de97e566f041bc",
-        "bytes": 5760
+        "sha256": "04ccd3faace962ec9f3503c0a62ada5300be23dc4c439024530fac04d0e48cb4",
+        "bytes": 7506
       },
       {
         "path": "docs/evidence/phase0-pages-deployment-launchpad-2026-09-19.md",
