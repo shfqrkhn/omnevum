@@ -11,7 +11,7 @@
     "acceptanceScenarios": 176
   },
   "completionClaim": "100_PERCENT_COMPLETE is prohibited until every mandatory requirement and applicable acceptance scenario has evidence-backed PASS or justified NOT_APPLICABLE and no material UNKNOWN/stale/open blocker remains.",
-  "lastVerifiedIncrement": "Clean v0.18.0 rebaseline, repaired Actions-backed Pages source, current hosted artifact byte match, compact responsive rows, cached offline Search proof, current donor identity refresh, executable six-flow command/Vault workload, and role-specific donor comparison. OMN-ACC-002 and OMN-ACC-173..175 are PARTIAL only; 172 scenarios remain UNKNOWN and no release claim is promoted.",
+  "lastVerifiedIncrement": "Clean v0.18.0 rebaseline, repaired Actions-backed Pages source, current hosted artifact byte match, compact responsive rows, cached offline Search proof, storage/Vault/migration/Recovery characterization, current donor identity refresh, executable six-flow command/Vault workload, and role-specific donor comparison. OMN-ACC-002, 008-010, 012, 017-018, 026, 030, and 173-175 are PARTIAL only; 164 scenarios remain UNKNOWN and no release claim is promoted.",
   "gates": [
     {"id": "PLATFORM_READY_FOR_CORE", "phase": 0, "status": "IN_PROGRESS", "blockers": ["complete OMN-FOSS-014 retained-donor/UI workload and Recovery proof", "production deployment/browser/accessibility/offline/fault/security qualification", "all current implementation and human-acceptance evidence"]},
     {"id": "MVP_RELEASE_READY", "phase": 1, "status": "NOT_STARTED", "blockers": ["Phase 0 gate"]},
@@ -23,5 +23,5 @@
     {"id": "COMPOSABLE_WORKFLOWS_READY", "phase": 7, "status": "NOT_STARTED", "blockers": ["bounded automation security, target qualification, and human acceptance"]},
     {"id": "EXTENSIBLE_ECOSYSTEM_READY", "phase": 8, "status": "NOT_STARTED", "blockers": ["real isolation qualification"]}
   ],
-  "next": "Exercise the retained launchpad/UI and corruption Recovery paths, then qualify the remaining independent Phase 0 rows without promoting synthetic harness evidence to PASS."
+  "next": "Exercise retained launchpad/UI, real-browser fault/update, and cross-origin Recovery paths, then qualify the remaining independent Phase 0 rows without promoting synthetic harness evidence to PASS."
 }

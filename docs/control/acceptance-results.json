@@ -113,8 +113,10 @@
         "line": 3955
       },
       "text": "Search index corruption is injected; Omnevum reports degradation, rebuilds the derived index, and canonical data remains intact.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-009",
@@ -123,8 +125,10 @@
         "line": 3957
       },
       "text": "Storage quota pressure is injected; replaceable state is reclaimed before canonical data and the user receives explicit storage/backup guidance.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-010",
@@ -133,8 +137,10 @@
         "line": 3959
       },
       "text": "A coherent Vault backup is exported on one major browser/platform family and restored on a materially different supported family with semantic IDs/revisions/provenance preserved.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-011",
@@ -153,8 +159,10 @@
         "line": 3963
       },
       "text": "A stale/offline replica reappears after deletion; tombstone/rejoin semantics prevent silent resurrection.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-013",
@@ -203,8 +211,10 @@
         "line": 3973
       },
       "text": "An update/migration is intentionally interrupted. Omnevum does not silently reset data and offers a tested recovery/repair path.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-018",
@@ -213,8 +223,10 @@
         "line": 3975
       },
       "text": "A user moves the static distribution from one HTTPS origin to another using Vault backup/sync rather than depending on browser-private origin storage migration.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-019",
@@ -293,8 +305,10 @@
         "line": 3991
       },
       "text": "On a supported browser row where OPFS is unavailable or deliberately disabled, ordinary canonical structured records remain usable through the qualified fallback; only features that genuinely require unavailable large-file semantics degrade explicitly.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-027",
@@ -333,8 +347,10 @@
         "line": 3999
       },
       "text": "The same large provider/export archive is imported twice. Acquire/Ingest recognizes source identity/content overlap, previews the reconciliation, avoids duplicate canonical records, preserves provenance, and reports any ambiguous conflicts instead of silently duplicating or overwriting user meaning.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-031",
