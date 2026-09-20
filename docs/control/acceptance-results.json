@@ -552,9 +552,10 @@
         "line": 4037
       },
       "text": "A package uses a declarative automation predicate/rule. Malicious or malformed rule input cannot execute arbitrary JavaScript, access credentials/network/storage directly, or bypass confirmation/permission; a true rule only proposes an already-admitted semantic action.",
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/phase0-security-effects-2026-09-19.md"
+        "docs/evidence/phase0-security-effects-2026-09-19.md",
+        "docs/evidence/phase0-automation-security-current-2026-09-19.md"
       ]
     },
     {

@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "e4f9a13aedd5ae7548bc8437fb60bd51e1d018fcb36661d0de60cbc469c0604a",
-        "bytes": 105062
+        "sha256": "b1bd58531540e3fe92a1e18561859194e4632dcd44c7649ca111072c6d62284c",
+        "bytes": 105133
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "f8a3ebec9cabb2afcd4197aa88cb789e30a3ba3cb68b3daedaee9a9ade2df34b",
-        "bytes": 4217
+        "sha256": "ef5f7e8306ef03d6fa6a20f5642c2d072941f84c4a4fc974632f9232fee492c2",
+        "bytes": 4321
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "6da516dc447e2c94c24fd5f5aeda192cac4bdc5918d2346f1f31090ca0baff6a",
-        "bytes": 5381
+        "sha256": "3deeb95b02b9b9c8f6f3e3d4d4c5508c41449cd40df782a3ddce5809dcefca8c",
+        "bytes": 5666
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -264,8 +264,8 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "888cd2696a9f2ea509b40aa3cbe770c4d5697ae0aaa894bbee3d4c2a3883b654",
-        "bytes": 2478
+        "sha256": "e24207595e08c157d8c4348f9ce8a0648db94472f3a26db4be84c92f520277eb",
+        "bytes": 2544
       },
       {
         "path": "docs/control/release-evidence.json",
@@ -291,6 +291,11 @@
         "path": "docs/control/upstream.json",
         "sha256": "d112316a90f82f89a8043437a1ffd8f40d5d9391d77ed8fe5b880ff51e792c10",
         "bytes": 5908
+      },
+      {
+        "path": "docs/evidence/phase0-automation-security-current-2026-09-19.md",
+        "sha256": "f3c5b5d83e56ef622d588aeaf8ea9e33dad0c4207be23c2a86c311888b26ae00",
+        "bytes": 1603
       },
       {
         "path": "docs/evidence/phase0-browser-fault-recovery-2026-09-19.md",
