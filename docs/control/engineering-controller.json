@@ -27,13 +27,14 @@
     ,"Current automation security receipt at 167f1309b4a3866b500c98c4d689f95f0e4cb9cb passes 5 focused files / 14 tests for declarative-only parsing, lifecycle disablement, explicit confirmation/scope, safe fields, CommandBus routing, and real Vault restoration; OMN-ACC-049 is PASS."
     ,"Current storage fallback receipt at eef4c643f831fa1a3c8cbdc0efdac62843f7a133 passes 5 focused files / 51 tests and proves canonical IndexedDB operation when optional storage-estimate/persistence APIs are unavailable; OMN-ACC-026 is PASS while real quota and browser rows remain open."
     ,"Current optional-capability receipt at 75df8db865dfe69ba0f52bcff9638778033f9953 passes 5 focused files / 12 tests for terms-blocked consumer-web/OAuth routes, declarative-only extensions, opaque credential metadata, effect revalidation, and malicious tool-schema rejection; OMN-ACC-075 and OMN-ACC-082 are PASS."
+    ,"Current donor workload receipt at a6817e56f634af95e1c3b51cec6f86a8b6832545 qualifies NeumanOS, Kurumi, OneBench, and Utopia against one executable six-flow Omnevum workload, records exact heads/licenses and a RETAIN/ADAPT/GENERALIZE/REPLACE/EXTERNALIZE/DROP map, and keeps all donor authority outside the product; OMN-FOSS-014 and OMN-ACC-175 are PASS for the selected Omnevum-shell-plus-selective-harvest route."
   ],
   "unverified": [
-    "OMN-FOSS-014 retained-donor UI workload and OMN-ACC-175 complete donor characterization remain open; retained NeumanOS UI is rejected, all six replacement launchpad flows now have current command/Vault/browser evidence for OMN-ACC-173/174, and donor-derived code remains unadmitted",
+    "The rejected NeumanOS UI and all donor-derived writable authority remain outside the product; later donor code still requires an owner-bound adapter, rights, target, security, migration, rollback, and Recovery qualification",
     "All existing source modules and UI behavior under current v0.18.0 contracts",
     "Real schema-transform interruption/repair, production rollback, browser/support/accessibility/human acceptance, offline/update qualification, storage quota/fault qualification, materially different browser-family Vault restore, security, FOSS, and Recovery qualification",
     "142 acceptance scenarios remain UNKNOWN; Phase 1 MVP daily slice and all later phase gates remain open"
   ],
-  "nextAction": "Close OMN-ACC-175 and OMN-FOSS-014 donor qualification where justified, then run schema-transform interruption/repair, quota/eviction, rollback, security/egress, accessibility, other-browser, and human-acceptance proofs. Promote only exact evidence-backed rows and advance Phase 0; synthetic tests, pressure fixtures, historical receipts, and workflow configuration are not product PASS evidence.",
+  "nextAction": "Run schema-transform interruption/repair, quota/eviction, rollback, security/egress, accessibility, other-browser, and human-acceptance proofs. Promote only exact evidence-backed rows and advance Phase 0; synthetic tests, pressure fixtures, historical receipts, and workflow configuration are not product PASS evidence.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }

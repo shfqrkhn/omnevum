@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "6787c18dfddacc2e1cdcc1d26d925a63a45fdf8859ac359f8d24b67b0bd31781",
-        "bytes": 105365
+        "sha256": "c1db537f7221c5bbb51f31c3455917ba2e4e55d17af98bd8523e131454710f73",
+        "bytes": 105754
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/capability-coverage.json",
-        "sha256": "8912cfc100cb6c26574a14a58d9c4103b4c1f4ed9b5e4347238b0265e20274d6",
-        "bytes": 1953
+        "sha256": "01ca05671f4eca4d3e26582a9436e688e25bc9099a30f5561b5bbf3ffa81b701",
+        "bytes": 2016
       },
       {
         "path": "docs/control/compatibility-matrix.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "9abe3ee361719b351bfb4bd1e1d9f32b048cf15ba17f02214e58e08170dde4de",
-        "bytes": 4526
+        "sha256": "951c5c453d11792cebc9aa5b0ab2a5bd53d4587f8b8398aebdfa7ecc35eaaf9f",
+        "bytes": 4399
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -209,8 +209,8 @@
       },
       {
         "path": "docs/control/currentness-radar.json",
-        "sha256": "f241b3f4f37c24894324eb0f7ffb2641cf4712421737c3f400ddef16de8a0fd9",
-        "bytes": 1878
+        "sha256": "5fe4065f882727ef719aba971345ef6d42241c788bbdaeb9849400a0de57fe8d",
+        "bytes": 1964
       },
       {
         "path": "docs/control/decision-log.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "b351ea015e37041e5482f24f7adecd50cbdaa7f0443229afcfe2edc5e7d9d7d1",
-        "bytes": 6276
+        "sha256": "f43fe0002a714e5877a6cb513289f32a89e1b836b42441b4e541fd5ec97c52b4",
+        "bytes": 6561
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -264,8 +264,8 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "fe8a4a8973a7d59fe54369bb32b07f94cbde7808882d35f05b70d4d7c77d5540",
-        "bytes": 2684
+        "sha256": "9fff260c98a5241866996e7a7c0ab7921480f1c4d03a528070a7ed730a2ed951",
+        "bytes": 2796
       },
       {
         "path": "docs/control/release-evidence.json",
@@ -316,6 +316,11 @@
         "path": "docs/evidence/phase0-donor-characterization-2026-09-19.md",
         "sha256": "437bce838c4ad3f704903228d6f0b75c6c583748db21351f102cd5e306bf5a1b",
         "bytes": 5173
+      },
+      {
+        "path": "docs/evidence/phase0-donor-workload-qualification-2026-09-19.md",
+        "sha256": "9be5ef65a8f3c85963ffc38bf736c19d0746a4bebe076bf99869791e9d78d652",
+        "bytes": 4934
       },
       {
         "path": "docs/evidence/phase0-fresh-agent-resumption-2026-09-19.md",

@@ -5,9 +5,9 @@
   "authority": "MPES Sections 13, 22, and 30",
   "snapshotDate": "2026-09-19",
   "items": [
-    {"id": "V018-RADAR-001", "candidate": "NeumanOS", "role": "whole-app launchpad/harvest", "status": "RETAINED_UI_REJECTED_SELECTIVE_HARVEST", "next": "do not import donor authority; harvest only isolated UI/mechanics after owner-bound, license, security, migration, and Recovery qualification"},
-    {"id": "V018-RADAR-002", "candidate": "Kurumi", "role": "capture/knowledge donor", "status": "ROLE_CHARACTERIZED_PARTIAL", "next": "qualify retained Capture/Search/Sync patterns behind Omnevum contracts with hostile-input and Recovery fixtures"},
-    {"id": "V018-RADAR-003", "candidate": "OneBench", "role": "static-PWA/workbench donor", "status": "ROLE_CHARACTERIZED_PARTIAL", "next": "qualify packaging/workbench value without importing authority or deployment assumptions"},
+    {"id": "V018-RADAR-001", "candidate": "NeumanOS", "role": "whole-app launchpad/harvest", "status": "RETAINED_UI_REJECTED_SELECTIVE_HARVEST_QUALIFIED_REFERENCE", "next": "do not import donor authority; any isolated harvest still needs owner-bound, license, security, migration, rollback, and Recovery qualification"},
+    {"id": "V018-RADAR-002", "candidate": "Kurumi", "role": "capture/knowledge donor", "status": "ROLE_CHARACTERIZED_QUALIFIED_REFERENCE", "next": "remain reference-only; any Capture/Search/Sync harvest still enters through Omnevum contracts and target/Recovery gates"},
+    {"id": "V018-RADAR-003", "candidate": "OneBench", "role": "static-PWA/workbench donor", "status": "ROLE_CHARACTERIZED_QUALIFIED_REFERENCE", "next": "remain reference-only; any packaging/workbench harvest still requires ownership, deployment, and Recovery qualification"},
     {"id": "V018-RADAR-004", "candidate": "Utopia", "role": "package-runtime/app-factory architecture donor", "status": "ARCHITECTURE_CHARACTERIZED_LICENSE_RUNTIME_LIMITED", "next": "remain architecture-only unless rights and static-PWA runtime are separately qualified"},
     {"id": "V018-RADAR-005", "candidate": "browser-native Vault/sync substrates", "role": "Phase 2 backup/sync", "status": "NOT_ADMITTED", "next": "qualify current source/license/security/merge/recovery before bespoke machinery"},
     {"id": "V018-RADAR-006", "candidate": "browser/PWA/accessibility standards", "role": "Phase 0 target profile", "status": "TARGET_FREEZE_REQUIRED", "next": "refresh exact browser and assistive rows before claims"}
