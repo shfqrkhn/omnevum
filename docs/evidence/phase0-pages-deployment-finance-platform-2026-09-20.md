@@ -31,3 +31,16 @@ candidate exactly (`10/10`); the served aggregate digest was
 The deployment remains subject to the limitations above; this observation does
 not close rollback, response-header, browser-family, fault, security/egress,
 assistive-technology, human-acceptance, or 100% gates.
+
+## Current Finance transaction-boundary deployment supersession
+
+- Source candidate: `2e675def894e2cfd2c2eb5df5804a252e585d7a9` (`2e675de`), published by trigger commit `5e30b25452b56d5652d5f10fd5e59cd8f2cda3e0` (`5e30b25`).
+- CI workflow: [35493389987](https://github.com/shfqrkhn/omnevum/actions/runs/35493389987), success.
+- Pages workflow: [35493389977](https://github.com/shfqrkhn/omnevum/actions/runs/35493389977), success.
+- Target: `https://shfqrkhn.github.io/omnevum/`.
+- Artifact digest: `359ece9af38fb8ef214f5a9e0e9c0dbb574bd2bbdfe8021974f1addd465705d7`.
+- Service-worker cache: `omnevum-shell-99a4e4d7c73d5c05`.
+
+An independent Node/.NET HTTPS probe fetched the ten control-bound public paths. Every response was HTTP 200 and every served byte length and SHA-256 matched the local receipt-bound candidate exactly (`10/10`); the served aggregate digest was exactly `359ece9af38fb8ef214f5a9e0e9c0dbb574bd2bbdfe8021974f1addd465705d7`.
+
+This exact deployment identity does not prove rollback, response-header control, WebKit/Firefox behavior, real quota/process faults, cross-origin Vault restore, security/egress, assistive technology, human acceptance, or `100_PERCENT_COMPLETE`; those gates remain open.
