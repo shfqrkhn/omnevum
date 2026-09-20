@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "17b542f48fb97bf726bbe8dfa5b6f9ba4cbbb8f2d575cb2bb93c67cfe2612bbb",
-        "bytes": 7406
+        "sha256": "20e945210d2998ac2a7dee77315f88735e9dc645f4a7cfceda490d0b88ff1051",
+        "bytes": 8206
       },
       {
         "path": "docs/control/requirements.json",
@@ -529,8 +529,8 @@
       },
       {
         "path": "scripts/static-audit.mjs",
-        "sha256": "f010de2a1047c048994eb0f0521da619c46a4bafabfc2ecb675a1e85bd42c6d4",
-        "bytes": 7669
+        "sha256": "7ddbc2076d3c81c2b87781b110fad05b6391fff95e3c28d92d12490870b4b821",
+        "bytes": 7852
       },
       {
         "path": "scripts/structure-audit.mjs",
