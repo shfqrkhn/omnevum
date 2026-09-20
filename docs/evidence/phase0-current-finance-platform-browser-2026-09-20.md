@@ -61,3 +61,7 @@ Test commit `9268cb3e84ac4f1ecc88a369fee72c6550b71ca4` strengthens the first-par
 - Runtime fixture: `core.search` fails during an operation and becomes `DEGRADED`; `core.home` and `core.recovery` continue to execute successfully. Credential-shaped failure text is redacted, and a repaired capability can be retried to `READY`.
 
 This is bounded implementation/runtime evidence for OMN-ACC-016, promoted to `PARTIAL`: the independent capability boundary is executable and fail-closed, while injection of a production module fault, browser-family behavior, assistive technology, and human acceptance remain open.
+
+## Pages verification for the capability fault-boundary increment
+
+Commit `764c8cd98f71429111297929479f2c1953772625` passed CI workflow `35496653956` and Pages workflow `35496653998`. An independent HTTPS probe fetched all 10 published paths from `https://shfqrkhn.github.io/omnevum/` with HTTP 200 and matched every local byte sequence; the aggregate artifact digest remained `f9c5bb9c3cf91721d0abbb16c09c48c1d94f5f03c4ff2f4bde7762f709e295d2`, with service-worker cache `omnevum-shell-e5a581ec34b80448`. The capability test is test-only and does not change the production bundle. This refreshes deployment identity only; production rollback, browser-family, security/egress, assistive technology, and human acceptance remain open.
