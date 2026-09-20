@@ -264,13 +264,13 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "77ef52ea84836d1a2fdaa1040d48c812b0c882a1136949f87dc1c09bebf750e3",
-        "bytes": 2279
+        "sha256": "377b84e2779e47dc79fbfe434a85224e832c37067d909e235297b4cbcbf3952d",
+        "bytes": 2344
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "7a017d22a1834092da701f4a98a02c571af30f227b975718845316ef2b8518c9",
-        "bytes": 5949
+        "sha256": "aef5255794c0ec362f1a298001a0e4f2c4078808a7b29cd7d393309508ccc978",
+        "bytes": 6411
       },
       {
         "path": "docs/control/requirements.json",
@@ -284,8 +284,8 @@
       },
       {
         "path": "docs/control/support-matrix.json",
-        "sha256": "c28d1789650ec51eb5367447f5266c42ab12bb2567674374e5f813667775f3fa",
-        "bytes": 1977
+        "sha256": "55e7b4ffcfba35f82c734421b1e4f8eb09dd72b9f2380d87c4e308d8955f3c1c",
+        "bytes": 2042
       },
       {
         "path": "docs/control/upstream.json",
@@ -346,6 +346,11 @@
         "path": "docs/evidence/phase0-pages-deployment-2026-09-19.md",
         "sha256": "f721f426114830ca0448b8b8718f23c3f019fd41ba8c467f5e906eb18986661e",
         "bytes": 2199
+      },
+      {
+        "path": "docs/evidence/phase0-pages-deployment-launchpad-2026-09-19.md",
+        "sha256": "8998764969c19a3bff7071fe93fec7d4a7d0e468b1a9397e6cbe1bb4729a22e6",
+        "bytes": 1710
       },
       {
         "path": "docs/evidence/phase0-security-effects-2026-09-19.md",
