@@ -44,8 +44,13 @@ if (failures.length === 0) {
       try { new Script(inlineScript); } catch { failures.push("last-resort recovery controller is not valid JavaScript"); }
     }
   }
+  const robotsPath = join(dist, "robots.txt");
+  if (!existsSync(robotsPath) || !/^User-agent:\s*\*\s*$/mu.test(readFileSync(robotsPath, "utf8")) || !/^Allow:\s*\/\s*$/mu.test(readFileSync(robotsPath, "utf8"))) failures.push("robots.txt is missing a valid public default rule");
+  const llmsPath = join(dist, "llms.txt");
+  if (!existsSync(llmsPath) || !/^#\s+\S/mu.test(readFileSync(llmsPath, "utf8")) || !/^>\s+\S/mu.test(readFileSync(llmsPath, "utf8")) || !/^##\s+\S/mu.test(readFileSync(llmsPath, "utf8"))) failures.push("llms.txt is missing the required title, summary, or section structure");
   const manifest = readFileSync(join(dist, "manifest.webmanifest"), "utf8");
   const serviceWorker = readFileSync(join(dist, "sw.js"), "utf8");
+  if (/frame-ancestors\s/iu.test(index)) failures.push("index CSP must not declare frame-ancestors through an unsupported meta delivery");
   if (!index.includes("./assets/") || !index.includes("./manifest.webmanifest")) failures.push("index is not relative-base deployable");
   if (index.includes("/src/") || /<(?:script|link)[^>]+(?:src|href)=['\"]https?:/i.test(index)) failures.push("index contains development or remote runtime asset");
   if (!/connect-src 'self' https: http:\/\/localhost:\* http:\/\/127\.0\.0\.1:\*;/.test(index)) failures.push("index CSP does not admit explicit HTTPS and loopback connector endpoints");

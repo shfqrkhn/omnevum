@@ -1,0 +1,16 @@
+# Omnevum
+
+> Omnevum is a private, local-first progressive web app for capturing, reviewing, and understanding life in context.
+
+## Product
+
+- [Live application](./): the deployable PWA shell.
+- [Recovery route](./recovery.html): an independent local snapshot recovery path.
+
+## Source
+
+- [Repository](https://github.com/shfqrkhn/omnevum): source, documentation, tests, and release evidence.
+
+## Boundaries
+
+The application keeps canonical records local by default. AI, synchronization, connectors, and executable extensions are optional and must remain bounded and truthful when unavailable.
