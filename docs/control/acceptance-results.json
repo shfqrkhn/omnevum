@@ -115,9 +115,9 @@
         "line": 3955
       },
       "text": "Search index corruption is injected; Omnevum reports degradation, rebuilds the derived index, and canonical data remains intact.",
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+        "docs/evidence/phase0-browser-fault-recovery-2026-09-19.md"
       ]
     },
     {
@@ -1321,8 +1321,10 @@
         "line": 4189
       },
       "text": "The application shell is deliberately broken in two ways. In the first, the degraded normal Recovery path renders from baseline tokens, states what failed and what is intact with verified Vault state, and offers repair, baseline-theme, and restore. In the second, where that path itself cannot render, the visually distinct last-resort console is reached through its documented stable route with no theme, language pack, font, module, index, or network available, reports record integrity and Vault state, and completes an immediate export. Neither path deletes the presentation profile, language pack, or canonical data.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-browser-fault-recovery-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-126",
