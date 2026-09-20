@@ -5,6 +5,7 @@
 - Target: [https://shfqrkhn.github.io/omnevum/](https://shfqrkhn.github.io/omnevum/)
 - Artifact digest: `03a6eb2e8c3bbfdac6cc29c0abfa1210e7cfddd76062195874f543881ddf47aa`; service-worker cache `omnevum-shell-4b0fcf7bba597af9`
 - Browser: isolated Microsoft Edge QA tab `1690081704`; desktop viewport `2552x1274`, `clientWidth=2537`, `scrollWidth=2537`
+- The later direct-route check used the same isolated Edge profile against deployment run `35481859772` at source revision `69eeb5957cb0db007a029c47c33a29d1b04c0eef`.
 
 ## Search-index fault proof
 
@@ -22,6 +23,14 @@ This is exact current-target evidence for `OMN-ACC-008` and supports `PASS` for 
 - Reload returned to the normal app with `summary-total=1`; the malformed fixture was absent and compact layout remained intact.
 
 This supports only partial normal Recovery evidence. It does not prove the independent last-resort console, shell-update interruption, quota exhaustion, cross-origin restore, Safari/WebKit, Firefox, assistive technology, or human acceptance.
+
+## Independent last-resort console proof
+
+- Navigating directly to `https://shfqrkhn.github.io/omnevum/recovery.html` rendered the independent `OMNEVUM_LAST_RESORT_RECOVERY` console with no application-shell dependency. The console read the same origin's canonical store as `Readable; version 6; 1 raw record(s)`, reported `STRUCTURALLY_VALID; 1 valid, 0 invalid`, and reported `FULL_CANONICAL_READ` with two history rows.
+- The console's `Scan local state` completed and enabled `Export retained snapshot`; activating it reported `Exported 2,846 bytes. Canonical state was not changed.`
+- Current source hash for the stable route is `public/recovery.html` `9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8`. The repository static audit separately verifies the route has no remote or module dependency.
+
+This independently proves the read/export route and upgrades `OMN-ACC-125` only to `PARTIAL`; the required two deliberate shell failures, including update interruption and all target variants, remain open.
 
 ## Source hashes
 
