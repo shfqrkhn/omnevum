@@ -60,7 +60,7 @@ The candidate tightens the compact-default mobile layout: low-frequency empty Co
 
 ## Current durable parser/migration and compact-layout deployment supersession
 
-- Source candidate: `76071c8bbe6ca9bf80e250200149d0f591e3f4ac` (`76071c8`); CI workflow [35494990688](https://github.com/shfqrkhn/omnevum/actions/runs/35494990688), success; Pages workflow [35494990690](https://github.com/shfqrkhn/omnevum/actions/runs/35494990690), success.
+- Source candidate: `76071c8bbe6ca9bf80e250200149d0f591e3f4ac` (`76071c8`), published by the documentation receipt trigger commit `744d95de0c9de45299838dac14e56c5e3bfabaee`; CI workflow [35495278619](https://github.com/shfqrkhn/omnevum/actions/runs/35495278619), success; Pages workflow [35495278594](https://github.com/shfqrkhn/omnevum/actions/runs/35495278594), success.
 - Target: `https://shfqrkhn.github.io/omnevum/`.
 - Artifact digest: `2470b25ef82625c14a560a4d98d9def00537aa80360e92256dacd07c9a29b7be`.
 - Service-worker cache: `omnevum-shell-295d2a37beaec3e0`.
