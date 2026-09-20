@@ -344,8 +344,8 @@
       },
       {
         "path": "scripts/architecture-audit.mjs",
-        "sha256": "f38742ef036eeb1e721006a5480dfebb02b8b0cc1b257f7a97192094afe8516b",
-        "bytes": 2446
+        "sha256": "92eb638611c65a254eb22c3ad040119603abc45e2a040e8a16e7d42c56b4b337",
+        "bytes": 2634
       },
       {
         "path": "scripts/effect-loopback-core.d.mts",
