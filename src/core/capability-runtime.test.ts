@@ -22,11 +22,16 @@ describe("capability runtime", () => {
   });
 
   it("contains runtime failures to the capability that owns the operation", async () => {
-    const runtime = new CapabilityRuntime([{ id: "core.search", start: () => undefined }, { id: "core.recovery", start: () => undefined }]);
+    const runtime = new CapabilityRuntime([
+      { id: "core.home", critical: true, start: () => undefined },
+      { id: "core.search", start: () => undefined },
+      { id: "core.recovery", critical: true, start: () => undefined }
+    ]);
     await runtime.start(undefined);
 
     await expect(runtime.run("core.search", async () => { throw new Error("index corrupt"); })).rejects.toThrow("index corrupt");
     expect(runtime.snapshot().find((status) => status.id === "core.search")?.state).toBe("DEGRADED");
+    await expect(runtime.run("core.home", () => "home remains available")).resolves.toBe("home remains available");
     expect(await runtime.run("core.recovery", () => "recovery remains available")).toBe("recovery remains available");
   });
 
