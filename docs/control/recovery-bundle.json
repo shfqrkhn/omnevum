@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "e3e37db549b5a745ee8b4be776462665866b72fb528ddbfa5bde11bb4ac817fc",
-        "bytes": 103489
+        "sha256": "76dc47e20eac0845b427fc5156774aaeb61cebb7d5eb71e7555454621f48f933",
+        "bytes": 103557
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "cf9c169f139f06e735228ba1cfcbbba2f65ec40982313d1d89f7f2a22bc277ad",
-        "bytes": 2642
+        "sha256": "40d469ff839d7e85e86bc669a139fce0beeb26894e8c052de1eba57d606adff6",
+        "bytes": 2694
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -264,8 +264,8 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "72f9aadacf99b0ee986d8e42df948e76cf936ba05e027dcf3ca5933eed725d06",
-        "bytes": 1885
+        "sha256": "fd73d9f7f6aef2d27b1e3a88aaa4b17c63313ea9cafa52744eea63dc0902a41a",
+        "bytes": 1939
       },
       {
         "path": "docs/control/release-evidence.json",
@@ -306,6 +306,11 @@
         "path": "docs/evidence/phase0-donor-characterization-2026-09-19.md",
         "sha256": "38426d766e5515e1cae0e3e8b29ca6ac1b2318eec51426aed7ce56821380ae55",
         "bytes": 3411
+      },
+      {
+        "path": "docs/evidence/phase0-fresh-edge-flow-2026-09-19.md",
+        "sha256": "8955efc8c814c736f400c05d2d0424a2568dbf998b5b19eeada206146a5997dc",
+        "bytes": 1399
       },
       {
         "path": "docs/evidence/phase0-launchpad-workload-2026-09-19.md",

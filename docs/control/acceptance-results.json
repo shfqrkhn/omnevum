@@ -41,8 +41,10 @@
         "line": 3941
       },
       "text": "A new user opens Omnevum from a GitHub Pages deployment on a supported mobile browser, completes minimal/skippable onboarding, creates canonical records, closes/reopens, and retains data without a mandatory account or backend.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-fresh-edge-flow-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-002",
