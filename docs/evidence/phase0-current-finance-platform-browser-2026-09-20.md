@@ -76,3 +76,14 @@ Target: `http://127.0.0.1:4180/`, production `dist` served by the running Vite p
 - Reverting produced revision 3 with the original text; the visible history retained revisions 1, 2, and 3, and the record remained one canonical result with no lens-local writable copy. The detail breadcrumb remained `Lenses / Self / core.knowledge`.
 
 This is bounded `PARTIAL` evidence for OMN-ACC-047: meaningful edit history, diff visibility, canonical-owner revert, and derived-index honesty are proven in Chromium. Deletion-specific retention/resurrection policy, other browser families, assistive technology, and human acceptance remain open.
+
+## Compose/View browser qualification
+
+Repository candidate `2f6ea95326e1dcf4acf7dafbd121bc71f643e6de`; target `http://127.0.0.1:4180/`, production `dist` served by the running Vite preview; Codex in-app Chromium tab `54`, isolated local-origin storage, 2026-09-20. The focused `src/core/compose.test.ts` suite passed 1 file and 5 tests.
+
+- Personalization enabled the optional Compose / View route; the default compact navigation stayed closed until explicitly expanded, keeping this low-frequency surface out of the default scroll path.
+- A user dashboard titled `Compact QA dashboard`, scoped to Personal, rendered the declarative Capture, Records list, Table, and descriptive Chart widgets over 3 existing canonical records. The UI reported `Saved a reusable view; canonical records were not changed.`
+- After reload, the saved view and optional route remained present and the same projection rendered. At emulated 390x844 CSS pixels with DPR 2, the Compose surface retained `scrollWidth === clientWidth === 390`; the rendered table did not introduce horizontal overflow.
+- `src/core/compose.ts` validates bounded safe field paths, persists only the view definition in `ViewRegistry`, and projects records without taking canonical ownership; the test suite covers validation, unsafe-field rejection, persistence, Vault round-trip of view state, and canonical-store non-ownership.
+
+This is bounded `PARTIAL` evidence for OMN-ACC-048: declarative multi-widget composition, canonical non-ownership, reload persistence, and compact-width behavior are proven in Chromium. Full touch/keyboard/accessibility/theme/localization qualification, update migration, other browser families, and human acceptance remain open.

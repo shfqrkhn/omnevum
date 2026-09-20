@@ -567,8 +567,10 @@
         "line": 4035
       },
       "text": "A user or qualified AI creates a declarative Compose/View definition containing a form, table/list, chart, and configurable dashboard arrangement over authorized canonical data. The view works on compact touch and expanded layouts, inherits theme/localization/accessibility, survives an Omnevum update, and every mutation still passes the owning semantic command/validation/permission path.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-current-finance-platform-browser-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-049",
