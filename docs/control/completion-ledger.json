@@ -23,5 +23,5 @@
     {"id": "COMPOSABLE_WORKFLOWS_READY", "phase": 7, "status": "NOT_STARTED", "blockers": ["bounded automation security, target qualification, and human acceptance"]},
     {"id": "EXTENSIBLE_ECOSYSTEM_READY", "phase": 8, "status": "NOT_STARTED", "blockers": ["real isolation qualification"]}
   ],
-  "next": "Exercise retained launchpad/UI, real-browser fault/update, and cross-origin Recovery paths, then qualify the remaining independent Phase 0 rows without promoting synthetic harness evidence to PASS."
+  "next": "Qualify retained launchpad UI and donor boundary, schema-migration interruption/repair, quota/eviction, rollback, security/egress, accessibility, and available-browser rows; then advance Phase 0 only on exact evidence-backed status."
 }

@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "eee994606ba5cc62410d5f7e441b3bfd6507f1b20b577d754a00d24348801c25",
-        "bytes": 3012
+        "sha256": "888ed6d48036af37fe9a4792cd999bc1febde39be342f66b6dacdc72026f6c3f",
+        "bytes": 3047
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -264,13 +264,13 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "15d57c7221c16187a4e9921da7f2b031f063c88583814894299a431c4b7b04ef",
-        "bytes": 2000
+        "sha256": "4abcefca7a5a70703b640d5e9f30fa0eec234ab7874d969c07d1bf29632bdc28",
+        "bytes": 2023
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "fab7dd59a25a4eca1155bfcec8d9bb008331fc58bda48d7734ac3ba839566c33",
-        "bytes": 3179
+        "sha256": "66778eab04e12fe1536e3819c9e42098ba1a5b40520f359a00b8cf3d5787dad7",
+        "bytes": 3727
       },
       {
         "path": "docs/control/requirements.json",
@@ -284,8 +284,8 @@
       },
       {
         "path": "docs/control/support-matrix.json",
-        "sha256": "2919f72a238ad2533cd591f8a89946dd6ad06b13e5574ee16018a6b770b99778",
-        "bytes": 1916
+        "sha256": "c28d1789650ec51eb5367447f5266c42ab12bb2567674374e5f813667775f3fa",
+        "bytes": 1977
       },
       {
         "path": "docs/control/upstream.json",

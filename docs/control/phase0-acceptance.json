@@ -19,7 +19,7 @@
     "OMN-ACC-173..176 launchpad, duplicate-authority, donor-boundary, and route-reopen proof",
     "deployment smoke/rollback and frozen browser/support/accessibility/human profile",
     "offline/service-worker/update and storage/quota/corruption/migration/fault recovery",
-    "cross-origin Vault restore, Search target performance/permission invalidation, and security/egress/effect boundaries",
+    "materially different browser-family Vault restore, Search target performance/permission invalidation, and security/egress/effect boundaries",
     "FOSS/license/currentness/provenance/SBOM and Recovery/Safe Mode",
     "all remaining UNKNOWN scenarios require independent requalification; current partial rows are not PASS"
   ],
