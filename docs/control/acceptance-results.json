@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "ef939bb1a8594d53659021cdaab76e365e2131dc5a62d12e162c6cef68745b53"
+      "sha256": "e721bb91f87355568cd5969acf52e96612da4e74d9c7f978988534f588d9f3e4"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -1452,9 +1452,10 @@
       "text": "Finance receives a mixed batch containing at least a transaction-account statement, credit-card statement, investment statement/export, debt statement, and income/pay record in materially different supported formats. It classifies each source, preserves/fingerprints the originals, extracts candidate records with provenance, and accepts all mechanically validated records while routing only material unresolved exceptions to Triage/Clarify.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-finance-classification-touch-target-2026-09-20.md#observed-flow"
+        "docs/evidence/phase0-finance-classification-touch-target-2026-09-20.md#observed-flow",
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
       ],
-      "notes": "Edge QA classified and accepted credit-card, investment, and insurance facts-only sources with preserved artifacts and explicit reconciliation exceptions. Transaction-account, debt, income, mechanically validated mixed transaction rows, and full routine exception resolution remain open."
+      "notes": "The fresh-process Finance boundary benchmark classified six credential-free sources, parsed materially different comma/TSV/facts formats, preserved lineage, accepted 11 transactions plus two facts records, and retained explicit limitations. Durable account-specific routine resolution, live sources, UI, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-134",
@@ -1465,9 +1466,10 @@
       "text": "The same finance source batch is imported twice, including one overlapping statement period under a renamed file. Source fingerprints/overlap and transaction identity prevent duplicate canonical records, preserve legitimate repeated real-world transactions, and report any ambiguous near-duplicate rather than silently deleting it.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-finance-classification-touch-target-2026-09-20.md#observed-flow"
+        "docs/evidence/phase0-finance-classification-touch-target-2026-09-20.md#observed-flow",
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
       ],
-      "notes": "The same transaction bytes under checking.csv and renamed-checking.csv produced 1 new then 0 new/1 existing canonical result. Legitimate repeated transactions and ambiguous near-duplicate review remain open."
+      "notes": "The benchmark proves same-batch idempotence, renamed overlap, legitimate repeated-transaction retention, and explicit AMBIGUOUS_NEAR_DUPLICATE review state. Live source overlap and human review remain open."
     },
     {
       "id": "OMN-ACC-135",
@@ -1478,9 +1480,10 @@
       "text": "A validated account-specific parser profile automatically processes several subsequent statements with no routine user review. A later statement deliberately changes its table structure/sign convention; structural invariants detect drift, prevent silent stale-profile parsing, preserve the source, and route only the affected source/fields for re-detection or review.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-hostile-import-parser-drift-2026-09-20.md"
+        "docs/evidence/phase0-hostile-import-parser-drift-2026-09-20.md",
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
       ],
-      "notes": "A Finance row with non-empty fields beyond the declared header now fails closed with its source row; account-specific profile lifecycle, sign-convention drift, re-detection, and routine no-review processing remain open."
+      "notes": "The benchmark proves stable parser-profile detection and fail-closed header/sign drift; durable account-specific profile learning, re-detection, and routine no-review processing remain open."
     },
     {
       "id": "OMN-ACC-136",
@@ -1489,8 +1492,11 @@
         "line": 4214
       },
       "text": "Chequing shows a credit-card payment and an internal savings/investment transfer while the receiving accounts show corresponding inflows. Finance links the pairs, reconciles the affected statements, excludes the card payment/internal transfers from income/spending totals, preserves the underlying account movements, and leaves an injected unmatched transfer explicitly unresolved.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
+      ],
+      "notes": "A fresh-process canonical benchmark matched card payment and internal savings transfers, reconciled their source statements, excluded matched movements from aggregate totals, and retained an unmatched transfer as unresolved. UI, live data, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-137",
@@ -1499,8 +1505,11 @@
         "line": 4216
       },
       "text": "A representative monthly finance update imports several hundred transactions. Previously learned merchant/category/transfer rules and reconciliation invariants resolve the routine majority automatically; the user is shown only a small exception set whose ambiguity or consequence is material. Resolving one repeated exception creates a scoped reversible rule that removes the same routine burden on the next equivalent import.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
+      ],
+      "notes": "A bounded 240-row canonical import and exception-only model path passed; durable learned merchant/category/transfer rules and repeat-resolution UX remain open."
     },
     {
       "id": "OMN-ACC-138",
@@ -1509,8 +1518,11 @@
         "line": 4218
       },
       "text": "The user creates a dynamic emergency-reserve goal defined as six months of rolling essential spending plus fixed-amount/date goals for a home purchase and travel. New statements change essential spending and free cash flow; the emergency target, each goal's funded amount, required pace, forecast completion, and trajectory update automatically without the user re-entering balances or monthly progress.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
+      ],
+      "notes": "The benchmark recomputed rolling essential-spending reserve targets, fixed goals, pace, and shared allocations from supplied records without re-entry; live update UX, forecast completion surface, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-139",
@@ -1519,8 +1531,11 @@
         "line": 4220
       },
       "text": "Two goals draw on one savings account. Explicit virtual allocations prevent the same dollar from fully funding both goals, show unallocated cash separately, and survive import/update/backup/restore. Requested aggregate contributions are then forced above sustainable forecast free cash flow; Finance reports the funding deficit and models at least two transparent alternatives without silently reprioritizing the user's goals.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
+      ],
+      "notes": "The benchmark proves non-double-counted virtual allocations, unallocated cash, funding deficit detection, and two review-only alternatives; persistence through live update/Vault/browser profiles remains open."
     },
     {
       "id": "OMN-ACC-140",
@@ -1529,8 +1544,11 @@
         "line": 4222
       },
       "text": "With no manually entered budget, Finance derives an observed spending/income baseline from sufficient history, recurrence, and seasonality and produces actual-versus-baseline analysis. The user then adopts a target plan; Finance keeps observed baseline, target, actual, and forecast distinct, and after repeated structural variance flags the target assumption as stale rather than repeatedly presenting the same variance as a new behavioral failure.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
+      ],
+      "notes": "The current projection preserves separate observed/modelled/forecast values and data-quality limitations; target-staleness learning and sufficient live history/seasonality qualification remain open."
     },
     {
       "id": "OMN-ACC-141",
@@ -1539,8 +1557,11 @@
         "line": 4224
       },
       "text": "Finance creates a base/downside/upside 12-month cash-flow forecast and stores the forecast vintage. Subsequent statement imports replace elapsed periods with actuals without deleting the original forecast, calculate forecast error/bias where meaningful, and update future forecasts while preserving the historical comparison.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
+      ],
+      "notes": "The benchmark creates retained base/downside/upside 12-point forecast vintages and actualizes elapsed points while preserving the originals; live statement refresh and release UI remain open."
     },
     {
       "id": "OMN-ACC-142",
@@ -1549,8 +1570,11 @@
         "line": 4226
       },
       "text": "Finance infers recurring salary, monthly subscriptions, an annual insurance bill, and a periodic reimbursement pattern. A simulated missing payroll, subscription price increase, duplicate recurring charge, and late refund are detected with source evidence, while a holiday-shifted normal payroll and known annual renewal do not produce false urgent alerts.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
+      ],
+      "notes": "The benchmark detects missing payroll, subscription price change, duplicate recurring charge, refund, and late/missing patterns with source evidence; annual/holiday false-positive qualification and live UX remain open."
     },
     {
       "id": "OMN-ACC-143",
@@ -1559,8 +1583,11 @@
         "line": 4228
       },
       "text": "A new transaction is flagged because it is a first-time merchant, materially above the account's robust historical range, and part of a rapid sequence. The review case shows each signal, source/provenance, baseline comparison, plausible benign explanation, and priority without declaring fraud. Marking the merchant/purchase legitimate updates only the appropriate scoped baseline/rule; a later materially different anomaly at the same merchant can still surface.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
+      ],
+      "notes": "The benchmark retains first-time/high-impact/rapid-sequence review signals, baseline evidence, contextual benign explanation, and priority without declaring fraud; scoped durable resolution and live acceptance remain open."
     },
     {
       "id": "OMN-ACC-144",
@@ -1569,8 +1596,11 @@
         "line": 4230
       },
       "text": "Suspicious-transaction analysis is exercised on an account with weak history and on another with strong seasonal history. The weak-history case reports lower confidence/insufficient baseline rather than fabricated normality; the seasonal case avoids false alerts for a known annual pattern while still detecting an injected duplicate/error pattern. No opaque risk score is the sole explanation.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
+      ],
+      "notes": "The benchmark distinguishes weak from strong history, keeps confidence and explanations explicit, and preserves duplicate/error review; seasonal live-data and false-positive qualification remain open."
     },
     {
       "id": "OMN-ACC-145",
@@ -1579,8 +1609,11 @@
         "line": 4232
       },
       "text": "One monthly credit-card statement and one investment valuation are deliberately omitted. Finance infers the missing period/staleness, qualifies cash-flow/net-worth/goal conclusions that depend on them, and does not coerce the missing values to zero. Importing the missing/current sources automatically clears only the affected data-quality conditions and recomputes dependent projections.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
+      ],
+      "notes": "The benchmark reports missing source IDs/classes as UNKNOWN and leaves dependent projections qualified rather than coercing absent values to zero; live omission/re-import and browser restore remain open."
     },
     {
       "id": "OMN-ACC-146",
@@ -1591,7 +1624,8 @@
       "text": "Finance is exercised end-to-end with all live financial connectors disabled and with no financial-institution credentials stored anywhere. User-supplied statements/exports alone support reconciliation, reporting, budgeting, goals, forecasts, anomaly review, and a full portable Vault backup/restore on a materially different supported browser profile.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md#finance-user-flow-check"
+        "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md#finance-user-flow-check",
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
       ],
       "notes": "Local connector-free statement import, reconciliation review, canonical Finance projections, and Artifact preservation were observed. Materially different browser Vault restore and the full domain outcome set remain open."
     },
@@ -1604,7 +1638,8 @@
       "text": "Hostile spreadsheet/PDF fixtures contain formula-injection strings, macros/active content, remote links/resources, and extracted markup. Import/extraction preserves the original source but does not execute formulas/macros/scripts/remote fetches or grant the content canonical-write/network/effect authority. Spreadsheet export/import tests report any formula/value/type/date loss relevant to the finance claim.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-hostile-import-parser-drift-2026-09-20.md"
+        "docs/evidence/phase0-hostile-import-parser-drift-2026-09-20.md",
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
       ],
       "notes": "Unit proof covers hostile HTML/CSV formula-like content and unclosed active containers as inert source-preserving inputs; real XLSX/PDF macro/formula/value/type/date round-trip qualification remains open."
     },
@@ -1617,9 +1652,10 @@
       "text": "After a material finance import, the Resources/Finance surface automatically generates an evidence-linked brief covering the applicable current position, material changes, budget/cash-flow outlook, goals, anomalies/review items, recurring/fee/refund/leakage changes, forecast, and data-quality limitations. A second update with no material change produces a quiet result rather than manufactured alerts or busywork.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md#finance-user-flow-check"
+        "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md#finance-user-flow-check",
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
       ],
-      "notes": "A material import produced a Finance position/update brief with review and data-quality limitations. A no-material-change quiet second update and the complete budget/goal/forecast surface remain open."
+      "notes": "The benchmark proves a material evidence-linked brief and quiet no-change result with current position, changes, cash-flow, goal, review, recurring, forecast, and data-quality section counts; full live surface qualification remains open."
     },
     {
       "id": "OMN-ACC-149",
@@ -1628,8 +1664,11 @@
         "line": 4240
       },
       "text": "A coupled what-if scenario changes a material assumption such as income, a major purchase, debt payment, or goal contribution. Finance propagates the change through cash/liquidity, budget, debt, savings, goals, forecast, and net-worth projections where applicable, preserves the baseline for comparison, states every material assumption, and proposes alternatives without silently mutating the user's adopted plan.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
+      ],
+      "notes": "The bounded model benchmark propagates an explicit income what-if with alternatives and preserves the adopted baseline; coupled live debt/net-worth UI and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-150",
@@ -1640,7 +1679,8 @@
       "text": "A representative workflow receives a source containing information already needed by three or more modules/views. The user supplies the information once. Omnevum extracts or records it once with provenance, reuses it across every authorized consumer, and requires no duplicate typing or copy/paste merely because the same fact appears in multiple workflows.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md#finance-user-flow-check"
+        "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md#finance-user-flow-check",
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
       ],
       "notes": "One supplied statement was preserved as an Artifact and reused by canonical Finance and Home projections without duplicate transaction entry. The broader three-plus-consumer benchmark remains open."
     },
@@ -1653,7 +1693,8 @@
       "text": "A user corrects one material imported value or classification. The correction is committed once through the canonical owner; every materially dependent projection is automatically recomputed or explicitly invalidated, and no second module asks the user to repeat the same correction to restore consistency.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md#finance-user-flow-check"
+        "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md#finance-user-flow-check",
+        "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md"
       ],
       "notes": "One imported value was corrected once through the Finance owner; revision 2, summary, change-impact, and update-brief projections refreshed and persisted after reload. Full cross-domain dependent projection coverage remains open."
     },

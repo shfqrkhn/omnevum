@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "ef939bb1a8594d53659021cdaab76e365e2131dc5a62d12e162c6cef68745b53"
+      "sha256": "e721bb91f87355568cd5969acf52e96612da4e74d9c7f978988534f588d9f3e4"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -174,12 +174,12 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "21892d33f2b2614b13f47e3f98f0bff6b1ac85ae0e4ae477e85739d1fc4f25df",
-        "bytes": 113952
+        "sha256": "e88155c7ececdaa57cdc1707ccc7ff270e4e59664e1603c8a0278ae559d49add",
+        "bytes": 117994
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
-        "sha256": "09ee751480a6c0e8bebb6a56827d709e4a791b207f547de7ddc98b76b49ebff6",
+        "sha256": "df2c64929ad18431b065c55a0187f2c1a2cba9e9fe6d83a1b6cb84ed0444db7a",
         "bytes": 92597
       },
       {
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "53efe1e57852d14609bf2bff8835be3e91a534df508b088401e0a7f6ca353ad9",
-        "bytes": 3510
+        "sha256": "84813bafb738dc5e8917672d723b31e060d8fdf279d5c63d1f879fd660c11a37",
+        "bytes": 3273
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -219,7 +219,7 @@
       },
       {
         "path": "docs/control/dependency-sbom.json",
-        "sha256": "6b3fc6fe8f1cba56173c75dcb4221454d35fc6346b0a3efc6a6d4f71ed192f44",
+        "sha256": "abf9c45a2eadc3a4f85d522be0c3a729e22a37f077ff5efa7abffa9ce5e149cb",
         "bytes": 35272
       },
       {
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "f35dac43fbedf8276ec2bf1fba98a9c3fce251b201ed339df1c26470c5dc7296",
-        "bytes": 11080
+        "sha256": "8977b1524156b1e4347d1642e3349f9c256e47584ba15821fe8d3455b8174896",
+        "bytes": 11675
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -264,23 +264,23 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "c69066e0c393628e1dde3e115946f1d4d4c2adf305c9b95098a8cadb46a174c2",
-        "bytes": 3974
+        "sha256": "579fc648b98f69e7f3b8260304bd23c7139d69c59286fdaea7bb941df2f55528",
+        "bytes": 4032
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "1193938ac41d2f12ecf6c7c9d51c364d39574d31fcee3769baf18b4333dff802",
-        "bytes": 11421
+        "sha256": "3f2f5edff82551970a716b7895b66f6a1e4ab7b326f702997902602839f4d441",
+        "bytes": 11360
       },
       {
         "path": "docs/control/requirements.json",
-        "sha256": "df1175d91d8df03e63b616a245308f1063bc4c647a7c93acb33f0c56b2817e92",
+        "sha256": "2a63dfc6f38f88cc650df664d07b8f8491298939a68fc69ff95d5e1c1ac91f28",
         "bytes": 376120
       },
       {
         "path": "docs/control/risk-threat-register.json",
-        "sha256": "b41737580bf526ba367ae40130e4a83f956f0c9178fcde80ff057e1fc7a97ddc",
-        "bytes": 2324
+        "sha256": "840915965dada0aae4fddebc58788a8813f3ce9fe87ad95cebb6e0d59dbfbd5d",
+        "bytes": 2391
       },
       {
         "path": "docs/control/support-matrix.json",
@@ -356,6 +356,11 @@
         "path": "docs/evidence/phase0-finance-import-and-deployment-2026-09-20.md",
         "sha256": "cb8a1e8f50ef644a2dd497e048bd96bc3e0996a313849a8262505d7aab4c3997",
         "bytes": 3455
+      },
+      {
+        "path": "docs/evidence/phase0-finance-transaction-boundary-2026-09-20.md",
+        "sha256": "8e812ea6cac5e4933326fd235553ce1eefdd0d4ae262b4eac1f08f60686e911a",
+        "bytes": 2490
       },
       {
         "path": "docs/evidence/phase0-fresh-agent-resumption-2026-09-19.md",
@@ -469,8 +474,8 @@
       },
       {
         "path": "package.json",
-        "sha256": "ef939bb1a8594d53659021cdaab76e365e2131dc5a62d12e162c6cef68745b53",
-        "bytes": 2629
+        "sha256": "e721bb91f87355568cd5969acf52e96612da4e74d9c7f978988534f588d9f3e4",
+        "bytes": 2742
       },
       {
         "path": "public/icon.svg",
@@ -531,6 +536,11 @@
         "path": "scripts/factory-interruption-benchmark.mjs",
         "sha256": "ec4a9f20137dbb4e0fea41d82586cbcfbd163d75589fd064ef143ea311f7f7cb",
         "bytes": 1755
+      },
+      {
+        "path": "scripts/finance-phase0-benchmark.mjs",
+        "sha256": "b4a998a2f19775b75d4a3d700035c5d29d1883f50e9f26ceadf46ef30bc4274f",
+        "bytes": 28591
       },
       {
         "path": "scripts/finance-phase4-benchmark.mjs",
@@ -959,13 +969,13 @@
       },
       {
         "path": "src/core/finance.test.ts",
-        "sha256": "8d99f4d486f35327d984c687baa5c26b679d1e1e68d8ea0a736a7da4dc10881c",
-        "bytes": 13471
+        "sha256": "910ea61446f1c5d51fc06a04850d77f2f4fababb80277be095028b15de7d3a26",
+        "bytes": 15432
       },
       {
         "path": "src/core/finance.ts",
-        "sha256": "368ecfdcbc174c3f8b878054422ac2d09bd47607de093fa87a2705b0b83a21ff",
-        "bytes": 39942
+        "sha256": "f79a2f688edc9bbb22222c24b48599fd04064a891cf52a34c2d5b657516c0b32",
+        "bytes": 45074
       },
       {
         "path": "src/core/game.test.ts",
