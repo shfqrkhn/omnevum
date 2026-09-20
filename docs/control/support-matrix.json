@@ -4,13 +4,13 @@
   "status": "NOT_STARTED_V018_REQUALIFICATION",
   "authority": "MPES Sections 6, 7, 22, and 28; no row is a claim until tested",
   "profiles": [
-    {"id": "static-core", "hosting": "static HTTPS", "required": ["shell", "canonical-records", "search", "vault", "recovery", "offline-core"], "forbiddenAssumptions": ["application-backend", "mandatory-account", "backend-held-secret"], "status": "PARTIAL", "evidence": ["docs/evidence/phase0-pages-deployment-2026-09-19.md", "docs/evidence/phase0-pages-deployment-launchpad-2026-09-19.md", "docs/evidence/phase0-browser-qa-current-2026-09-19.md", "docs/evidence/phase0-browser-fault-recovery-2026-09-19.md"]},
+    {"id": "static-core", "hosting": "static HTTPS", "required": ["shell", "canonical-records", "search", "vault", "recovery", "offline-core"], "forbiddenAssumptions": ["application-backend", "mandatory-account", "backend-held-secret"], "status": "PARTIAL", "evidence": ["docs/evidence/phase0-pages-deployment-2026-09-19.md", "docs/evidence/phase0-pages-deployment-launchpad-2026-09-19.md", "docs/evidence/phase0-browser-qa-current-2026-09-19.md", "docs/evidence/phase0-browser-fault-recovery-2026-09-19.md", "docs/evidence/phase0-current-finance-platform-browser-2026-09-20.md"]},
     {"id": "enhanced-static", "hosting": "static HTTPS with optional headers", "required": ["static-core"], "status": "NOT_STARTED"},
     {"id": "self-hosted-static", "hosting": "user-controlled static HTTPS origin", "required": ["static-core", "origin-migration"], "status": "NOT_STARTED"}
   ],
   "browserRows": [
-    {"id": "chromium-mobile", "family": "Chromium mobile", "versionPolicy": "current frozen row required", "status": "PARTIAL", "evidence": ["docs/evidence/phase0-browser-qa-current-2026-09-19.md"]},
-    {"id": "chromium-desktop", "family": "Chromium desktop", "versionPolicy": "current frozen row required", "status": "PARTIAL", "evidence": ["docs/evidence/phase0-fresh-edge-flow-2026-09-19.md"]},
+    {"id": "chromium-mobile", "family": "Chromium mobile", "versionPolicy": "current frozen row required", "status": "PARTIAL", "evidence": ["docs/evidence/phase0-browser-qa-current-2026-09-19.md", "docs/evidence/phase0-current-finance-platform-browser-2026-09-20.md"]},
+    {"id": "chromium-desktop", "family": "Chromium desktop", "versionPolicy": "current frozen row required", "status": "PARTIAL", "evidence": ["docs/evidence/phase0-fresh-edge-flow-2026-09-19.md", "docs/evidence/phase0-current-finance-platform-browser-2026-09-20.md"]},
     {"id": "safari-webkit", "family": "Safari/WebKit", "versionPolicy": "current frozen row required", "status": "NOT_RUN"},
     {"id": "firefox", "family": "Firefox", "versionPolicy": "current frozen row required", "status": "NOT_RUN"}
   ],

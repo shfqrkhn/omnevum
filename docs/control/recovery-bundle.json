@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "8f3c5ac3d179e661bfa69296a280ba0d5c4e6b836f43d0ac1cf2d43fd04b17fd"
+      "sha256": "e0ae7c64495e48d9b7666db6b9bde59e810ed8d11b490d040059c13afb45ddeb"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -174,12 +174,12 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "44b9c1e6dc98d20be9c4ab5537ca25d272a75bfcb6c9188a6eb5a4bd78121aee",
-        "bytes": 111799
+        "sha256": "09658141624da8744dcabe1a2b30ea09bde74a3ccc6e817b76d184621fc5eab8",
+        "bytes": 113670
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
-        "sha256": "eddbc5f89016b2482dd53877c7112bdbd72dc837db9f7eb5296501182638d64c",
+        "sha256": "1e82197bfd310cb8da2cbbb8951ef1ffa9df9fc539cc900e357506c288f83805",
         "bytes": 92597
       },
       {
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "708772803212ce082a8b73b719b887629b10a12b45ce627623f3884eb44ff685",
-        "bytes": 3433
+        "sha256": "053e7ed964f3696c6f6a0bcda7b0679dad28adec0fd970ffc1534ac71a9d85e1",
+        "bytes": 3646
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -219,7 +219,7 @@
       },
       {
         "path": "docs/control/dependency-sbom.json",
-        "sha256": "e2ee82e7a2e156441c0e1a637aa3f8b60eae4665d276826174653870badca112",
+        "sha256": "6b77847f2d67400d3785ccce2179395edc2d2da75f2f7d9ff280111c9c599e7d",
         "bytes": 35272
       },
       {
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "f3f31352cbccd423942bd84f198e3b85a89892e7092e7726b49f6864b2d03fe7",
-        "bytes": 8980
+        "sha256": "be0824a188b8af23e244571fe78ac4b4fc08c3011b98e744d6fcced1e9099524",
+        "bytes": 9751
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -264,17 +264,17 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "560ee6f3369b27ab91dd0f200f95d3e578195bb6d0af48e063923ee2f4f30bb5",
-        "bytes": 3764
+        "sha256": "279e074edcf91b0befa1ec38df5711e023efd9752d19533bdb0f6d799ecfa967",
+        "bytes": 3835
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "824b49b862669aadfd53db7ed1ff0614aa7b45e960d0fbc5960570fc67bc20e4",
-        "bytes": 10120
+        "sha256": "34f661eb83aa72599889c65165715af18372aa405e868e54fe1b301403ea3c60",
+        "bytes": 10087
       },
       {
         "path": "docs/control/requirements.json",
-        "sha256": "e539e09a6bb9156b04d172975f6c697266fb13095c987f58a4e2055376ef5cef",
+        "sha256": "a116499edb947d4d7329ba89c1edeb1a21a60ae751c28e0e0f280d04b93d9889",
         "bytes": 376120
       },
       {
@@ -284,8 +284,8 @@
       },
       {
         "path": "docs/control/support-matrix.json",
-        "sha256": "55e7b4ffcfba35f82c734421b1e4f8eb09dd72b9f2380d87c4e308d8955f3c1c",
-        "bytes": 2042
+        "sha256": "7aa24e7d0711a30ebb981943b1f3adf6a60b5f7f93623642114d8412d6753080",
+        "bytes": 2255
       },
       {
         "path": "docs/control/upstream.json",
@@ -326,6 +326,11 @@
         "path": "docs/evidence/phase0-cross-origin-vault-qa-2026-09-20.md",
         "sha256": "7b8760cb87edd52907e0a66466e95a8b7f4ef9b25d2c1ca07ebfb99ef937fa4a",
         "bytes": 2524
+      },
+      {
+        "path": "docs/evidence/phase0-current-finance-platform-browser-2026-09-20.md",
+        "sha256": "e3398390f4b1da1931cc58cfa7a150e0b1446f5c9680df8eb4bdeb379ed7a5ac",
+        "bytes": 4459
       },
       {
         "path": "docs/evidence/phase0-donor-characterization-2026-09-19.md",
@@ -454,8 +459,8 @@
       },
       {
         "path": "package.json",
-        "sha256": "8f3c5ac3d179e661bfa69296a280ba0d5c4e6b836f43d0ac1cf2d43fd04b17fd",
-        "bytes": 2376
+        "sha256": "e0ae7c64495e48d9b7666db6b9bde59e810ed8d11b490d040059c13afb45ddeb",
+        "bytes": 2498
       },
       {
         "path": "public/icon.svg",
@@ -546,6 +551,11 @@
         "path": "scripts/ordinary-use-benchmark.mjs",
         "sha256": "70d136fa036afc122b0e427c42bb779fe1a94ea3e80f4a885d6e828f9430f536",
         "bytes": 5104
+      },
+      {
+        "path": "scripts/platform-recovery-benchmark.mjs",
+        "sha256": "53b044324b00eff6e9a9919ddd0062aa5137b1f62ea348d4c674eeac33f837c0",
+        "bytes": 20925
       },
       {
         "path": "scripts/preview-effect-fixture.mjs",
@@ -914,23 +924,23 @@
       },
       {
         "path": "src/core/finance-model.test.ts",
-        "sha256": "7c4dea2334be2359258c339bdde9cd1e076dad8295e4f6c032f1ee58cc600796",
-        "bytes": 14672
+        "sha256": "42644a572ac89f35858381621426db176cf55da28a705a8c88ae7580f649f059",
+        "bytes": 23349
       },
       {
         "path": "src/core/finance-model.ts",
-        "sha256": "e3516901851c53eade9489c31d05ef98d8d926d692c2db87b4bcc39deee4e6aa",
-        "bytes": 53695
+        "sha256": "7ae4c5fce6e08217d0aa2445407ce5f39781c0ee4ead75605b97aa40a8b9f054",
+        "bytes": 82277
       },
       {
         "path": "src/core/finance-projection.test.ts",
-        "sha256": "12701ebb8bb13a9504a3731657e9ecf858ca5e1d122f71e602f27e6510e9999f",
-        "bytes": 19738
+        "sha256": "25742c9c0c1847d861ed0c9f6edea5acfb17594b6cf1ed08d22b1812c3a9c6d0",
+        "bytes": 23085
       },
       {
         "path": "src/core/finance-projection.ts",
-        "sha256": "10c6d680467712bdaaa43963ec34bda66ebefd5674492fa0f0fd2ac559ba501a",
-        "bytes": 37293
+        "sha256": "36b42bdb3ed250b22a8c2e6f3ac30ab0fac50886a52a6405a3c3c409c4353eb5",
+        "bytes": 38660
       },
       {
         "path": "src/core/finance.test.ts",
@@ -1409,8 +1419,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "16be4a8f0870a60e9075797c4fb330be7b434a0055f0fd1d8b3673a01c363f3d",
-        "bytes": 349855
+        "sha256": "e22b3a54917cf02de44e050fa1d06a8738d30c2caa97a07848e9e209cb306e13",
+        "bytes": 350742
       },
       {
         "path": "tsconfig.json",
