@@ -5,22 +5,22 @@
   "authority": "MPES Sections 21 and 22",
   "releaseIdentity": {
     "version": "v0.18.0-overhaul-candidate",
-    "artifactDigest": "2470b25ef82625c14a560a4d98d9def00537aa80360e92256dacd07c9a29b7be",
-    "sourceRevision": "76071c8bbe6ca9bf80e250200149d0f591e3f4ac",
-    "serviceWorkerCache": "omnevum-shell-295d2a37beaec3e0"
+    "artifactDigest": "f9c5bb9c3cf91721d0abbb16c09c48c1d94f5f03c4ff2f4bde7762f709e295d2",
+    "sourceRevision": "adababe663b190b65b04d859f89c68eaf7b2bd13",
+    "serviceWorkerCache": "omnevum-shell-e5a581ec34b80448"
   },
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF.",
   "artifactFiles": [
-    {"path": "dist/assets/index-4BoHl9bu.js", "publicPath": "assets/index-4BoHl9bu.js", "sha256": "ac42af0cd557e4ae2b6a687957509d923ce377174103939785d33f862a05195b", "bytes": 577130},
-    {"path": "dist/assets/index-4BoHl9bu.js.map", "publicPath": "assets/index-4BoHl9bu.js.map", "sha256": "3859201f4a263cca445838b37bc9d99e10e3594a87f439a8a47c9caf81d7573f", "bytes": 1685911},
-    {"path": "dist/assets/index-4wCSZKgz.css", "publicPath": "assets/index-4wCSZKgz.css", "sha256": "eec8b788a68e9c9155b67480390bae9fdbfa17538ba7eb5cf485ecb32e2a811b", "bytes": 28793},
+    {"path": "dist/assets/index-DidHf6AX.css", "publicPath": "assets/index-DidHf6AX.css", "sha256": "cdd8288d07cda1432b2306467b53ae316119e752b011183322693d6af6e52af3", "bytes": 28862},
+    {"path": "dist/assets/index-DxjBhOnt.js", "publicPath": "assets/index-DxjBhOnt.js", "sha256": "4470e4c218d383fa5ab36896f2b08ff2976a2c359377a1f71b56196228475ec8", "bytes": 577309},
+    {"path": "dist/assets/index-DxjBhOnt.js.map", "publicPath": "assets/index-DxjBhOnt.js.map", "sha256": "f593bfde1f16430e6da2981393a021743af30074c7afc0ed34725974f7e1fcc3", "bytes": 1686410},
     {"path": "dist/icon.svg", "publicPath": "icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "publicPath": "index.html", "sha256": "67f41d28de5ac0faab4dc1c01332c447d38be3211b82e5c907e712d89d2136c3", "bytes": 972},
+    {"path": "dist/index.html", "publicPath": "index.html", "sha256": "7e88fa830265fab7cd6fa9b80ce0e32a835c970daaea4112cee5cca976a069af", "bytes": 972},
     {"path": "dist/llms.txt", "publicPath": "llms.txt", "sha256": "6959289274212f429a26f9bbaea60e685ab2b3b4deeda5e6757f14670703b1ff", "bytes": 593},
     {"path": "dist/manifest.webmanifest", "publicPath": "manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
     {"path": "dist/recovery.html", "publicPath": "recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
     {"path": "dist/robots.txt", "publicPath": "robots.txt", "sha256": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95", "bytes": 23},
-    {"path": "dist/sw.js", "publicPath": "sw.js", "sha256": "c4fad4e306a8ef6623f9bec2ee7c5840da2d13a76091a7304b212c3bae100d12", "bytes": 3622}
+    {"path": "dist/sw.js", "publicPath": "sw.js", "sha256": "b7074a0448c3a3536378f20ca37a0a876b260bac9e97a48210d7d4aa4f195a8b", "bytes": 3622}
   ],
   "deploymentObservations": [
     {"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35481320651", "sourceRevision": "542b665b361d579ee6d8e3ab2f331ce3afca5cd6", "artifactByteMatch": "8/8 local dist files matched the served Pages files after switching Pages from legacy master:/ to the Actions artifact source; published-entry smoke guard passed", "date": "2026-09-19"},
@@ -45,5 +45,5 @@
   ],
   "requiredEvidence": ["control-generation-and-drift", "structure-reference-architecture-audit", "type-static-and-unit-tests", "browser-e2e-responsive-accessibility-input-i18n", "offline-static-host-and-service-worker", "storage-quota-corruption-migration-and-recovery", "Vault-cross-origin-restore", "security-egress-untrusted-content-and-credential-boundaries", "dependency-license-SBOM-vulnerability-provenance", "deploy-smoke-rollback", "human-acceptance-where-required"],
   "evidencePolicy": "The clean v0.18 baseline inherits no release artifact or acceptance claim. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains UNKNOWN.",
-  "currentDecision": "The current Pages deployment is bound to source 76071c8bbe6ca9bf80e250200149d0f591e3f4ac and artifact 2470b25ef82625c14a560a4d98d9def00537aa80360e92256dacd07c9a29b7be with cache omnevum-shell-295d2a37beaec3e0. CI workflow 35495278619, Pages workflow 35495278594, and an independent HTTPS probe verified all ten public paths at HTTP 200 with exact SHA-256 and byte matches. Live Chromium compact-layout qualification confirmed the saved Domains navigation behavior and no console errors. Production rollback, real offline/update/fault qualification, materially different browser-family Vault restore, security/egress, WebKit/Firefox, assistive technology, human acceptance, and all mandatory acceptance gates remain open, so release readiness is not claimed."
+  "currentDecision": "The current local candidate is bound to source adababe663b190b65b04d859f89c68eaf7b2bd13 and artifact f9c5bb9c3cf91721d0abbb16c09c48c1d94f5f03c4ff2f4bde7762f709e295d2 with cache omnevum-shell-e5a581ec34b80448. It fixes compact navigation disclosure and filtered-search result visibility; local typecheck, unit tests, and build pass. Pages remains bound to the prior deployed receipt until this candidate is deployed and independently probed. Production rollback, real offline/update/fault qualification, materially different browser-family Vault restore, security/egress, WebKit/Firefox, assistive technology, human acceptance, and all mandatory acceptance gates remain open, so release readiness is not claimed."
 }

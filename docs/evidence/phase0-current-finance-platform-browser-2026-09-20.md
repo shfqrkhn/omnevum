@@ -25,3 +25,15 @@ Target: production build served by `npm run preview -- --host 0.0.0.0 --port 417
 ## Qualification boundary
 
 This receipt supports bounded `PARTIAL` evidence for the covered presentation, offline-core, static-host, Safe Mode, browser-layout, personalization, ordinary-use, and Finance source-contract rows. It does not claim release readiness or `PASS`: Firefox and WebKit rows, real assistive technology, real quota/eviction/corruption/process interruption, production rollback, cross-origin Vault restore on a materially different browser family, live security/egress/header behavior, full Finance UI/statement coverage, and human acceptance remain open. No `100_PERCENT_COMPLETE` claim is made.
+
+## Follow-up compact/search qualification
+
+The follow-up source candidate is commit `adababe663b190b65b04d859f89c68eaf7b2bd13` (`adababe`), built locally with `npm run build`. The candidate artifact digest is `f9c5bb9c3cf91721d0abbb16c09c48c1d94f5f03c4ff2f4bde7762f709e295d2`; service-worker cache is `omnevum-shell-e5a581ec34b80448`. This local receipt is not a hosted-deployment claim.
+
+- Target: `http://127.0.0.1:4180/`, production `dist` served by the running Vite preview; Codex in-app Chromium tab `53`, isolated local-origin storage, 2026-09-20.
+- At emulated 390x844 CSS pixels, DPR 2, compact default: `document.documentElement.scrollWidth` equaled `clientWidth` (390); the closed Navigation sections disclosure rendered zero visible navigation links; no console errors were observed. Expanding the disclosure rendered all 8 configured links in a grid and retained 390px width with no horizontal overflow.
+- Two local captures were batch-reviewed through the visible triage UI: status `Batch complete: 2 succeeded; 0 failed`, inbox count `0`, canonical record count `2`; no console errors were observed.
+- Searching `Second task` returned `1 result(s); derived index healthy`, automatically opened the Canonical records disclosure, rendered the canonical task text, and brought the records surface into view. This fixes the prior invisible-result path when compact Records was closed.
+- The existing lens interaction remained available for Direction, People, Self, and Resources; compact low-frequency sections remained collapsed by default.
+
+This follow-up supports bounded `PARTIAL` evidence for compact progressive disclosure, search-result visibility, batch triage, canonical records, and responsive-overflow behavior. It does not promote a row to release `PASS`: this is one Chromium-based emulation and local preview only; Firefox/WebKit, assistive technology, real touch hardware, cross-origin Vault restore, fault/rollback/update, live security/egress, and human acceptance remain open.
