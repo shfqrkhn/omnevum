@@ -3,7 +3,7 @@
 - Date: 2026-09-19 (America/Toronto)
 - Authority: `docs/Omnevum-MPES-v0_18_0.md` SHA-256 `103d84308887da9f2eb73caf7eccabb0f68fd14e7c00f876911c9700c15096c8`
 - Scope: executable Omnevum-owned six-flow transplant boundary and portable-state workload; candidate evidence only
-- Source revision: working-tree candidate after the clean `cdcb0a8` baseline; final commit identity is recorded by Git and regenerated control receipts
+- Source revision: `a0af8c6ed0b4fd5b55d1a9b54cd73f6d651405b7`
 
 ## Current upstream identities
 
@@ -23,6 +23,7 @@ No donor code, server, native runtime, credential, sync authority, or plugin aut
 - `src/core/launchpad-transplant.integration.test.ts` exercises all six required flows with stable source and canonical identities, command-owned create/update mutations, artifact persistence, duplicate writable-authority rejection, read-only retained seams, derived Search, Vault export/import, idempotent re-import, and retained-state reconstruction.
 - `src/core/commands.ts` admits a bounded stable canonical identity only through the command path; ordinary user-created records retain generated opaque IDs. `src/core/artifact.ts` carries the same bounded identity seam for imported Artifacts.
 - `src/core/launchpad-transplant.ts` maps Calendar/Time, Document/Artifact, and Automation to existing platform owners; Note/Knowledge, Task/Project, and Habit/Routine are explicit contract-spike owners in `docs/control/owner-registry.json`.
+- Source hashes: `src/core/launchpad-transplant.integration.test.ts` `2af441c504e03f7cd7552a4602b004a8d87ddc7dad4d813bb16b2a1b9906f7fe`; `src/core/commands.ts` `209795cc9a6eb968101f3264f9924e3bb7aca14d9f94af59f352b69f029a8d04`; `src/core/artifact.ts` `09bb337ce17f9d4dfa5081b28e7ede0e358a23288a1a367e552cd8f4e69dc901`.
 - `npx vitest run src/core/launchpad-transplant.integration.test.ts src/core/launchpad-transplant.test.ts`: **5 tests passed in 2 files**.
 - `npm run typecheck`: **PASS**.
 
