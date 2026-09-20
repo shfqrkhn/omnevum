@@ -1076,8 +1076,11 @@
         "line": 4137
       },
       "text": "A 320 CSS pixel equivalent viewport is exercised against Home, Capture, an active lens, Assistant, and System/Recovery at 100% and 200% text scaling. Each surface reflows to a single column with no horizontal scrolling of first-party chrome or content, no clipped or overlapped control, and no unreachable target. Any intrinsically two-dimensional region scrolls within its own explicit bounds without propagating horizontal scroll to the page.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-accessibility-responsive-2026-09-19.md"
+      ],
+      "notes": "A current Chromium production-preview row at 320 CSS pixels and 200% text scale retained zero horizontal overflow across Home/Capture, an active lens, Search, Assistant, and Recovery. Native touch, assistive technology, all density/family/state variants, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-100",

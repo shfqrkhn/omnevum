@@ -29,12 +29,13 @@
     ,"Current optional-capability receipt at 75df8db865dfe69ba0f52bcff9638778033f9953 passes 5 focused files / 12 tests for terms-blocked consumer-web/OAuth routes, declarative-only extensions, opaque credential metadata, effect revalidation, and malicious tool-schema rejection; OMN-ACC-075 and OMN-ACC-082 are PASS."
     ,"Current donor workload receipt at a6817e56f634af95e1c3b51cec6f86a8b6832545 qualifies NeumanOS, Kurumi, OneBench, and Utopia against one executable six-flow Omnevum workload, records exact heads/licenses and a RETAIN/ADAPT/GENERALIZE/REPLACE/EXTERNALIZE/DROP map, and keeps all donor authority outside the product; OMN-FOSS-014 and OMN-ACC-175 are PASS for the selected Omnevum-shell-plus-selective-harvest route."
     ,"Current factory receipt at 810f8f0a8ba43d1237d88375e99e4073aa8b6c32 passes the generated record-app/game preview, canonical package-state save/load after reload, focused factory tests, and deliberate interruption/resume; OMN-ACC-020 and OMN-ACC-053 are PARTIAL with touch/mobile, full accessibility/theme, independent Recovery, and human rows still open."
+    ,"Current compact responsive receipt at bba8c9ccb76a572e3c424385248516f87bcad700 proves 320 CSS pixels at 200% text scale with zero horizontal overflow across Home/Capture, an active lens, Search, Assistant, and Recovery; OMN-ACC-099 is PARTIAL because native touch, assistive technology, full variants, and human acceptance remain open."
   ],
   "unverified": [
     "The rejected NeumanOS UI and all donor-derived writable authority remain outside the product; later donor code still requires an owner-bound adapter, rights, target, security, migration, rollback, and Recovery qualification",
     "All existing source modules and UI behavior under current v0.18.0 contracts",
     "Real schema-transform interruption/repair, production rollback, browser/support/accessibility/human acceptance, offline/update qualification, storage quota/fault qualification, materially different browser-family Vault restore, security, FOSS, and Recovery qualification",
-    "140 acceptance scenarios remain UNKNOWN; OMN-ACC-020 and OMN-ACC-053 are bounded PARTIAL; Phase 1 MVP daily slice and all later phase gates remain open"
+    "139 acceptance scenarios remain UNKNOWN; OMN-ACC-020, OMN-ACC-053, and OMN-ACC-099 are bounded PARTIAL; Phase 1 MVP daily slice and all later phase gates remain open"
   ],
   "nextAction": "Run schema-transform interruption/repair, quota/eviction, rollback, security/egress, accessibility, other-browser, and human-acceptance proofs. Promote only exact evidence-backed rows and advance Phase 0; synthetic tests, pressure fixtures, historical receipts, and workflow configuration are not product PASS evidence.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."

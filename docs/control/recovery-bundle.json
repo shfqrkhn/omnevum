@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "a720a5ab147299fffcb90f972d56fbd982741e5b7b16a2b74a2870085b3f7876",
-        "bytes": 106439
+        "sha256": "4014c7a2968984657b9d864e7fad063d5a25d498a778c1730e2be0325fec542a",
+        "bytes": 106823
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "3fd131e1a74ced7e9ac8449578034d5113a56e2f7321bc4db4bc304ffe44a9d8",
-        "bytes": 4535
+        "sha256": "e0b32f096aa3612290ef6ab6c36593f6e8b76c58f572a5b7e6eb798f126f23ac",
+        "bytes": 4653
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "26a5d6c9a736fd0a4b936674c50e11fd3eff10466d95b7f69ac49f04cadf9a63",
-        "bytes": 6972
+        "sha256": "c8b5b4aa0e9eccafcc7d917b9d53ce44dbf19242cc69595674c74b097f1ff865",
+        "bytes": 7329
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -264,8 +264,8 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "947750735d0c44bcc71f0edc041c060beac032dfba0b50b5a95387c6c1fa102a",
-        "bytes": 2850
+        "sha256": "81e49a0563bcefd5dcef9e5a2c9ba956c8eab032d1268bd0a55b5de3a8110133",
+        "bytes": 2913
       },
       {
         "path": "docs/control/release-evidence.json",
@@ -291,6 +291,11 @@
         "path": "docs/control/upstream.json",
         "sha256": "d112316a90f82f89a8043437a1ffd8f40d5d9391d77ed8fe5b880ff51e792c10",
         "bytes": 5908
+      },
+      {
+        "path": "docs/evidence/phase0-accessibility-responsive-2026-09-19.md",
+        "sha256": "a380de79c3ce993a3b5ac967e014e40509e45395b1358fad17208ec5c691424d",
+        "bytes": 2102
       },
       {
         "path": "docs/evidence/phase0-automation-security-current-2026-09-19.md",
