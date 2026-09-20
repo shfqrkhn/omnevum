@@ -229,7 +229,7 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "90ddcb55353ba39ccf8243b3226c81ea2e04bd72dddc4319abad43f40d960dce",
+        "sha256": "066e3516497f0c67a237b051a33e96d238cfbd6ea2b4c61eac2e985558f2a2b2",
         "bytes": 3383
       },
       {
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "fd4e3a78fe53c2a792a128cb8350e6743cbfa493ecf842d607a224900dd45e60",
-        "bytes": 4163
+        "sha256": "913d9f8983094b6c1a8204271dcd042842a23c50425e5390b501229c5de6a5e7",
+        "bytes": 4511
       },
       {
         "path": "docs/control/requirements.json",
