@@ -129,7 +129,8 @@
       "text": "Storage quota pressure is injected; replaceable state is reclaimed before canonical data and the user receives explicit storage/backup guidance.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+        "docs/evidence/phase0-storage-recovery-2026-09-19.md",
+        "docs/evidence/phase0-browser-fault-recovery-2026-09-19.md"
       ]
     },
     {

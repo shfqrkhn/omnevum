@@ -56,8 +56,20 @@ This is bounded browser evidence for the shell-only waiting/activation portion o
 
 This is real browser crash/interruption evidence for `OMN-ACC-017` and the migration-interruption portion of `OMN-ACC-123`, both still `PARTIAL`; the user-facing migration approval, verified-backup prompt, and repair/retry path remain unqualified.
 
+## Pressure-episode repair regression proof
+
+- Date: 2026-09-19 (America/Toronto)
+- Source revision: `e4e497a7d05b955698749290beda4fc66baba80a`
+- Source hash: `src/core/storage.ts` `67c7cbaa9f88ca18038fa85c838478dcc127d33bc45921ab8d5fd4c5c47216bc`
+- Target: disposable Vite origin `http://127.0.0.1:4357/` in the Chromium in-app browser; the disposable database, service worker, caches, and server were removed after the run.
+- CDP overrode `navigator.storage.estimate()` to return `{ usage: 950, quota: 1000 }` as an application pressure-signal fixture. This is not proof of platform quota exhaustion; raw-CDP `Storage.simulateStoragePressure` was unavailable, so real quota/eviction remains open.
+- With two canonical records and a valid derived index, the elevated signal caused one automatic derived-state reclaim. The visible Recovery `Repair search index` action then reported success and remained `search index healthy` while pressure stayed elevated; CDP confirmed `records=2`, `searchDocuments=2`, and `searchMeta.valid=true`. Reopening the same database and explicitly rebuilding also remained healthy.
+- The regression is covered by the focused storage suite (`36` tests passed) and the storage/Vault/migration/update/release characterization suite (`5` files, `49` tests passed).
+
+This fixes the observed repeated-reclaim state-machine defect and strengthens `OMN-ACC-009` only to `PARTIAL`; the mandatory real quota/eviction, platform fault-injection, and user guidance qualification remain open.
+
 ## Source hashes
 
-- `src/core/storage.ts`: `b1aec9639873716b2566576862c93592f0a33f29b87b457cda933d4c6815c189`
+- `src/core/storage.ts`: `67c7cbaa9f88ca18038fa85c838478dcc127d33bc45921ab8d5fd4c5c47216bc`
 - `src/ui/app.ts`: `1e2b5ab16669183198d84570aecce5d8555d1b02d3a16bf0353753cb23ea3787`
 - `public/sw.js`: `ee209c3b183ba5b372717555dc9fec0b6e96c894bcb362701024bf73bc84fa96`

@@ -1,9 +1,9 @@
 # v0.18.0 storage, Vault, migration, and Recovery characterization receipt
 
 - Date: 2026-09-19 (America/Toronto)
-- Source revision: `3e4778658faa2d7b266a92229108148e851baf76`
+- Source revision: `e4e497a7d05b955698749290beda4fc66baba80a`
 - Command: `npx vitest run src/core/storage.test.ts src/core/migration.test.ts src/core/portable-export.test.ts src/core/update-ledger.test.ts src/core/release-attestation.test.ts`
-- Result: 5 files passed; 48 tests passed; duration 314 ms
+- Result: 5 files passed; 49 tests passed; duration 325 ms
 
 ## Covered executable contracts
 
@@ -17,8 +17,8 @@
 
 ## Source hashes
 
-- `src/core/storage.ts`: `b1aec9639873716b2566576862c93592f0a33f29b87b457cda933d4c6815c189`
-- `src/core/storage.test.ts`: `85ddc527e34d64eb8e7491d5608ecded30b49888e5c1c84935f2e53227581e1c`
+- `src/core/storage.ts`: `67c7cbaa9f88ca18038fa85c838478dcc127d33bc45921ab8d5fd4c5c47216bc`
+- `src/core/storage.test.ts`: `f537bad5da871793f60501be35269e3bf062dbc5353de20182535351ec30e799`
 - `src/core/migration.ts`: `c2b6e809c14802f1f21094e1ae501c474ad2d4183eebeea3218edb21b9afc8f4`
 - `src/core/migration.test.ts`: `be5b3b49a6a747265ca07b9ae734af5352a88a6247b51d58c0eb71750068c937`
 - `src/core/portable-export.ts`: `eacc0d51fd7610187d0ccb264ff120424623058a2732320fadd64076e145ceeb`

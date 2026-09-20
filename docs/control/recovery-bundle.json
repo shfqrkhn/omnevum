@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "e0b9d969d83f62e874906d40efd1b57c48568d5442bcd6b7b7b83a0a49b05ed2",
-        "bytes": 103848
+        "sha256": "551753561bf6e4805a66d0d74d99dcfd48cfd72d74cafebe74699fa85d4e0d31",
+        "bytes": 103917
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "e9eb893ca84ce871c2b52a4b6b81d6b24ed195587d58a356579ce20ad45e0d8b",
-        "bytes": 3089
+        "sha256": "f9d92fd6179f6d933f184ff6b9bbb490a29beb9d5a91dae8ca662576a887f04e",
+        "bytes": 3186
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "e4bfa9bebf1d8ebee94a0000edd35d26b2dcde9c7253cb2592fa39b6a29a3735",
-        "bytes": 3005
+        "sha256": "78e2a351ae2ab5691b374297a16c0ebae98a40929e3461edb3826ca081fdffca",
+        "bytes": 3146
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "66778eab04e12fe1536e3819c9e42098ba1a5b40520f359a00b8cf3d5787dad7",
-        "bytes": 3727
+        "sha256": "b30a2fec61677562eb11197875fc8d552cb7bffc0794651ccc3721f047c68520",
+        "bytes": 3746
       },
       {
         "path": "docs/control/requirements.json",
@@ -294,8 +294,8 @@
       },
       {
         "path": "docs/evidence/phase0-browser-fault-recovery-2026-09-19.md",
-        "sha256": "af9de0de4522312a4fb607d9fb77bda994fdfc8a0ff3ed73fb5bdda42bfde27a",
-        "bytes": 6905
+        "sha256": "0126a98b9378cea7fe0f37c33a6e550a43a6e393882e53cf6156b8544dae080c",
+        "bytes": 8416
       },
       {
         "path": "docs/evidence/phase0-browser-qa-2026-09-19.md",
@@ -334,7 +334,7 @@
       },
       {
         "path": "docs/evidence/phase0-storage-recovery-2026-09-19.md",
-        "sha256": "2975119bd4cb583c89842fe2a49feeb84072c29a8659a01bec826eb6608862de",
+        "sha256": "4b4c7e1a0e0f58949119ad5d51143ec2049cd496ffbcfbfa8580cf6540d2ecd2",
         "bytes": 2677
       },
       {
@@ -1154,13 +1154,13 @@
       },
       {
         "path": "src/core/storage.test.ts",
-        "sha256": "85ddc527e34d64eb8e7491d5608ecded30b49888e5c1c84935f2e53227581e1c",
-        "bytes": 32508
+        "sha256": "f537bad5da871793f60501be35269e3bf062dbc5353de20182535351ec30e799",
+        "bytes": 34024
       },
       {
         "path": "src/core/storage.ts",
-        "sha256": "b1aec9639873716b2566576862c93592f0a33f29b87b457cda933d4c6815c189",
-        "bytes": 54334
+        "sha256": "67c7cbaa9f88ca18038fa85c838478dcc127d33bc45921ab8d5fd4c5c47216bc",
+        "bytes": 55085
       },
       {
         "path": "src/core/sync-routes.test.ts",
