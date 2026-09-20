@@ -219,16 +219,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
           <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.visualize}</p><h3>${copy.signals}</h3></span></summary>
           <div id="insights-grid" class="summary-grid"></div>
         </details>
-        <div data-home-widget="attention">
-          <div class="section-heading insight-heading">
-            <div>
-              <p class="eyebrow">${timeCopy.considerations}</p>
-              <h3 id="home-attention-heading">${timeCopy.considerationsHeading}</h3>
-            </div>
-            <button id="home-focus-toggle" class="secondary" type="button" aria-pressed="${homeFocusMode}">${homeFocusMode ? timeCopy.focusModeActive : timeCopy.focusMode}</button>
-          </div>
+        <details id="home-attention" data-home-widget="attention" class="home-widget-disclosure compact-panel" aria-labelledby="home-attention-heading">
+          <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${timeCopy.considerations}</p><h3 id="home-attention-heading">${timeCopy.considerationsHeading}</h3></span></summary>
+          <div class="compact-inline-control"><button id="home-focus-toggle" class="secondary" type="button" aria-pressed="${homeFocusMode}">${homeFocusMode ? timeCopy.focusModeActive : timeCopy.focusMode}</button></div>
           <div id="attention-panel" class="attention-panel" role="region" aria-labelledby="home-attention-heading" aria-live="polite"></div>
-        </div>
+        </details>
       </section>
 
       <details id="active-lens" class="panel compact-panel" aria-labelledby="active-lens-heading">
@@ -403,16 +398,22 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         <div class="editable-term"><p id="capture-label" class="eyebrow">${copy.capture}</p><button id="edit-capture-label" class="secondary term-edit-button" type="button">${copy.editLabel}</button></div>
         <h2 id="capture-heading">${copy.getItOut}</h2>
         <form id="capture-form">
-          <label for="capture-type">${copy.kind}</label>
-          <select id="capture-type" name="recordType">
-            ${CAPTURE_KINDS.map((kind) => `<option value="${kind}">${captureKindLabel(presentation.locale, kind)}</option>`).join("")}
-          </select>
-          <label for="capture-space">${copy.space}</label>
-          <select id="capture-space" name="space">
-            <option value="personal">${copy.personal}</option>
-            <option value="household">${copy.household}</option>
-            <option value="work">${copy.work}</option>
-          </select>
+          <div class="capture-choice-grid">
+            <div class="capture-choice">
+              <label for="capture-type">${copy.kind}</label>
+              <select id="capture-type" name="recordType">
+                ${CAPTURE_KINDS.map((kind) => `<option value="${kind}">${captureKindLabel(presentation.locale, kind)}</option>`).join("")}
+              </select>
+            </div>
+            <div class="capture-choice">
+              <label for="capture-space">${copy.space}</label>
+              <select id="capture-space" name="space">
+                <option value="personal">${copy.personal}</option>
+                <option value="household">${copy.household}</option>
+                <option value="work">${copy.work}</option>
+              </select>
+            </div>
+          </div>
           <label for="capture-text">${copy.captureContent}</label>
           <textarea id="capture-text" name="text" rows="4" maxlength="5000" required placeholder="${copy.capturePlaceholder}"></textarea>
           <div class="form-row">
@@ -1290,6 +1291,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const summaryGrid = root.querySelector<HTMLElement>("#summary-grid");
   const insightsGrid = root.querySelector<HTMLElement>("#insights-grid");
   const insightsDisclosure = root.querySelector<HTMLDetailsElement>('[data-home-widget="insights"]');
+  const attentionDisclosure = root.querySelector<HTMLDetailsElement>("#home-attention");
   const attentionPanel = root.querySelector<HTMLElement>("#attention-panel");
   const homeFocusToggle = root.querySelector<HTMLButtonElement>("#home-focus-toggle");
   const reviewList = root.querySelector<HTMLUListElement>("#review-list");
@@ -1529,7 +1531,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const packageAutomationStatus = root.querySelector<HTMLElement>("#package-automation-status");
   const packageAutomationList = root.querySelector<HTMLUListElement>("#package-automation-list");
   const packageAutomationProposals = root.querySelector<HTMLUListElement>("#package-automation-proposals");
-  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchFiltersToggle || !searchFilters || !searchFacetChips || !searchFacetLens || !searchFacetType || !searchFacetSpace || !searchFacetArtifact || !searchViewName || !searchSaveView || !searchScopeStatus || !searchStatus || !assistantForm || !assistantQuestion || !assistantSubmit || !assistantClearScope || !assistantScope || !assistantStatus || !assistantSection || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !insightsDisclosure || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !triageBatch || !triageSelectAll || !triageSelected || !triageBatchDeferUntil || !triageBatchReview || !triageBatchDefer || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareExport || !sharePreviewDialog || !sharePreviewSummary || !sharePreviewPayload || !sharePreviewCancel || !sharePreviewConfirm || !contextExportFormat || !contextExportObjective || !contextExportBudget || !contextExportButton || !contextExportRerunButton || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavMenu || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !healthDetails || !healthDetailStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !recoveryBackupForm || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput || !activeLensDisclosure || !reviewDisclosure || !recordsDisclosure) {
+  if (!captureForm || !captureType || !captureSpace || !captureText || !captureSafeRoute || !acquireForm || !acquireText || !acquireFile || !acquireClipboard || !deviceCapabilities || !deviceShare || !deviceLocation || !deviceCamera || !deviceMicrophone || !deviceBarcodeInput || !deviceInputStatus || !acquireStatus || !acquirePreview || !acceptStaged || !cleanupImportedOnly || !cleanupTrim || !cleanupWhitespace || !cleanupPreviewButton || !cleanupApplyButton || !cleanupStatus || !cleanupPreviewOutput || !cleanupSummary || !cleanupSources || !cleanupProposals || !cleanupHistoryList || !cleanupHistoryEmpty || !trackForm || !trackName || !trackValue || !trackUnit || !trackSpace || !trackStatus || !expenseForm || !expenseMerchant || !expenseAmount || !expenseCurrency || !expenseSpace || !expenseStatus || !healthForm || !healthMetric || !healthValue || !healthUnit || !healthSubject || !healthNote || !healthSpace || !healthFormStatus || !searchForm || !searchQuery || !clearSearch || !searchFiltersToggle || !searchFilters || !searchFacetChips || !searchFacetLens || !searchFacetType || !searchFacetSpace || !searchFacetArtifact || !searchViewName || !searchSaveView || !searchScopeStatus || !searchStatus || !assistantForm || !assistantQuestion || !assistantSubmit || !assistantClearScope || !assistantScope || !assistantStatus || !assistantSection || !spaceCreateForm || !spaceName || !spaceCreateStatus || !spaceForm || !spaceRecord || !spaceMembership || !spaceFilter || !spaceStatus || !spaceList || !spaceMembershipList || !composeForm || !composeTitle || !composeFields || !composeSpace || !composeStatus || !composePreview || !summaryTotal || !analysisStatus || !summaryGrid || !insightsGrid || !insightsDisclosure || !attentionDisclosure || !attentionPanel || !homeFocusToggle || !reviewList || !reviewCount || !reviewEmpty || !triageBatch || !triageSelectAll || !triageSelected || !triageBatchDeferUntil || !triageBatchReview || !triageBatchDefer || !relateForm || !relateSource || !relateTarget || !relateLabel || !relateSubmit || !relateStatus || !evidenceForm || !evidenceSubject || !evidenceSource || !evidenceRelation || !evidenceClaim || !evidenceUncertainty || !evidenceSubmit || !evidenceStatus || !annotationForm || !annotationSource || !annotationQuote || !annotationNote || !annotationSubmit || !annotationStatus || !placeForm || !placeLabel || !placeLatitude || !placeLongitude || !placeGeoJson || !placeStatus || !knowledgeStatus || !shareForm || !shareRecipient || !sharePurpose || !shareExpiry || !shareSpace || !shareGrant || !shareRecords || !shareIncludePrivate || !shareExport || !sharePreviewDialog || !sharePreviewSummary || !sharePreviewPayload || !sharePreviewCancel || !sharePreviewConfirm || !contextExportFormat || !contextExportObjective || !contextExportBudget || !contextExportButton || !contextExportRerunButton || !shareStatus || !shareGrantList || !syncForm || !syncEndpoint || !syncStatus || !focusToggle || !focusStatus || !reminderForm || !reminderTitle || !reminderDue || !reminderStatus || !productLabel || !productTagline || !productName || !quickDensity || !localeInput || !taglineInput || !densityInput || !typefaceInput || !iconographyInput || !homeLabelInput || !captureLabelInput || !recordsLabelInput || !captureLabel || !editHomeLabel || !editCaptureLabel || !editRecordsLabel || !presentationLabelDialog || !presentationLabelDialogForm || !presentationLabelInput || !presentationLabelCancel || !presentationLabelDialogStatus || !navigationOptions || !homeWidgetOptions || !resetPresentation || !exportPresentationProfileButton || !presentationProfileInput || !primaryNavMenu || !primaryNavList || !homeLabel || !recordsLabel || !presentationForm || !presentationStatus || !presentationHostStatus || !recordList || !emptyState || !recordCount || !undoBanner || !undoMessage || !undoArchive || !toggleArchive || !archivePanel || !archiveList || !archiveEmpty || !recoveryStatus || !healthStatus || !healthDetails || !healthDetailStatus || !capabilityStatus || !onboardingPanel || !onboardingDismiss || !onboardingShow || !themeToggle || !exportButton || !encryptedExportButton || !recoveryBackupForm || !vaultPassword || !diagnosticsButton || !repairSearchButton || !requestPersistenceButton || !safePresentationButton || !clearCanonicalButton || !importInput || !artifactInput || !activeLensDisclosure || !reviewDisclosure || !recordsDisclosure) {
     throw new Error("Omnevum foundation controls are missing");
   }
   if (!shareGrantSubmit) throw new Error("Omnevum sharing controls are missing");
@@ -2614,6 +2616,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   insightsDisclosure.querySelector("summary")?.addEventListener("click", () => {
     insightsDisclosure.dataset.userControlled = "true";
   });
+  attentionDisclosure.querySelector("summary")?.addEventListener("click", () => {
+    attentionDisclosure.dataset.userControlled = "true";
+  });
   homeFocusToggle.addEventListener("click", async () => {
     const next = !homeFocusMode;
     try {
@@ -3349,6 +3354,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       attentionPanel.append(list);
     }
     const telemetryItems = projectTelemetryConsiderations(projectHealthTelemetry(await store.health()), telemetryDispositions);
+    if (attentionDisclosure.dataset.userControlled !== "true") {
+      attentionDisclosure.open = considerations.length > 0 || telemetryItems.length > 0 || homeFocusMode;
+    }
     if (telemetryItems.length > 0) {
       const telemetryList = document.createElement("ul");
       telemetryList.className = "attention-list telemetry-list";

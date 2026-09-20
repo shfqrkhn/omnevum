@@ -1429,13 +1429,13 @@
       },
       {
         "path": "src/styles.css",
-        "sha256": "42d826e9fe13163ad48ab7132edaf3f997f3adb7033eddf379fcc1306aa40518",
-        "bytes": 32293
+        "sha256": "48fcf3207d622834e8f4b23fdc302a33a63d433099f1a487527466cf51624fef",
+        "bytes": 32680
       },
       {
         "path": "src/styles.test.ts",
-        "sha256": "c1b4906d2f9c010c2d30620adf66ec8616c2325abd34520ccd2c4981a4eacd1c",
-        "bytes": 1135
+        "sha256": "b8003b00989e980a74f9388cd0292ec5ccf101d4a5abe55b5182a0aef47f83c3",
+        "bytes": 1525
       },
       {
         "path": "src/test/setup.ts",
@@ -1444,8 +1444,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "e22b3a54917cf02de44e050fa1d06a8738d30c2caa97a07848e9e209cb306e13",
-        "bytes": 350742
+        "sha256": "aedcc91935385e000c25fa1f72ee14af56ba81d95b8bc46bbb1c2e85d1d53978",
+        "bytes": 351508
       },
       {
         "path": "tsconfig.json",

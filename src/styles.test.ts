@@ -14,4 +14,10 @@ describe("compact accessibility target styles", () => {
     expect(styles).toMatch(/details > summary\s*\{[^}]*min-height:\s*var\(--omn-touch-target\);/su);
     expect(styles).toMatch(/\.check-row:has\(input:focus-visible\)\s*\{[^}]*outline:\s*3px solid var\(--focus\);/su);
   });
+
+  it("uses progressive disclosure and compact primary-capture grouping", () => {
+    expect(styles).toMatch(/\.home-widget-disclosure\s*\{[^}]*display:\s*grid;/su);
+    expect(styles).toMatch(/#capture-form\s*\{[^}]*display:\s*grid;[^}]*gap:\s*0\.45rem;/su);
+    expect(styles).toMatch(/\.capture-choice-grid\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);/su);
+  });
 });

@@ -195,7 +195,14 @@ select[multiple] { min-height: 9rem; }
 .editable-term .eyebrow { margin-bottom: 0; }
 .term-edit-button { min-height: 44px; padding: 0.45rem 0.65rem; font-size: 0.78rem; }
 .form-row { margin-top: 0.8rem; }
-#capture-form > .check-row { margin-top: 0.55rem; }
+#capture-form { display: grid; gap: 0.45rem; }
+#capture-form > label { margin-bottom: 0; }
+#capture-form > .form-row { margin-top: 0.2rem; }
+#capture-form > .check-row { margin-top: 0.1rem; }
+#capture-form > .hint { margin-bottom: 0; }
+.capture-choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.55rem; min-width: 0; }
+.capture-choice { min-width: 0; }
+.capture-choice > label { margin-bottom: 0.3rem; }
 .search-form { display: grid; gap: 0.55rem; }
 .relationship-form { display: grid; min-width: 0; max-width: 100%; gap: 0.55rem; }
 .search-row input { flex: 1; }
