@@ -18,6 +18,7 @@
   --omn-synergy: #0F5C42;
   --omn-focus: #0A3D8F;
   --omn-text-scale: 1;
+  --omn-touch-target: 44px;
   --bg: var(--omn-canvas);
   --surface: var(--omn-surface);
   --surface-muted: var(--omn-surface-raised);
@@ -154,7 +155,8 @@ main > * { min-width: 0; }
 .onboarding-steps { display: grid; gap: 0.45rem; margin: 0 0 1rem; padding-inline-start: 1.35rem; }
 .onboarding-start { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
 .panel, .status-card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); padding: 1.25rem; }
-.compact-panel > .compact-summary { display: flex; min-height: 44px; align-items: center; gap: 0.75rem; cursor: pointer; list-style: none; }
+details > summary { min-height: var(--omn-touch-target); cursor: pointer; }
+.compact-panel > .compact-summary { display: flex; min-height: var(--omn-touch-target); align-items: center; gap: 0.75rem; cursor: pointer; list-style: none; }
 .compact-panel > .compact-summary::-webkit-details-marker { display: none; }
 .compact-panel:not([open]) > :not(summary),
 details.relationship-form:not([open]) > :not(summary),
@@ -170,7 +172,7 @@ details.telemetry-thresholds:not([open]) > :not(summary) { display: none; }
 .status-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 0.55rem; }
 .status-card p:last-child { margin-bottom: 0; color: var(--muted); }
 .health-details { margin-top: 0.55rem; }
-.health-details > .compact-summary { min-height: 36px; }
+.health-details > .compact-summary { min-height: var(--omn-touch-target); }
 .health-details #health-detail-status { margin: 0.55rem 0 0; }
 .status-pill, .count { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: var(--surface-muted); color: var(--accent); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; padding: 0.45rem 0.65rem; white-space: nowrap; }
 .count { min-width: 2.2rem; font-size: 0.95rem; letter-spacing: 0; }
@@ -178,8 +180,16 @@ label { display: block; margin-bottom: 0.45rem; font-weight: 700; }
 textarea { width: 100%; resize: vertical; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--text); padding: 0.85rem; }
 select, input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]) { width: 100%; min-width: 0; min-height: 44px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--text); padding: 0.7rem 0.85rem; }
 select[multiple] { min-height: 9rem; }
-.check-row { display: flex; align-items: center; gap: 0.55rem; min-width: 0; min-height: 44px; overflow-wrap: anywhere; }
-.check-row input { width: 1.15rem; height: 1.15rem; accent-color: var(--accent); }
+.check-row { position: relative; display: flex; align-items: center; gap: 0.55rem; min-width: 0; min-height: var(--omn-touch-target); padding-inline-start: calc(1.15rem + 0.55rem); overflow-wrap: anywhere; }
+.check-row input[type="checkbox"], .check-row input[type="radio"] { position: absolute; inset-inline-start: 0; inset-block-start: 50%; width: var(--omn-touch-target); min-width: var(--omn-touch-target); height: var(--omn-touch-target); min-height: var(--omn-touch-target); margin: 0; transform: translateY(-50%); appearance: none; border: 0; cursor: pointer; opacity: 0; }
+.check-row::before { position: absolute; inset-inline-start: 0.05rem; inset-block-start: 50%; width: 1.15rem; height: 1.15rem; transform: translateY(-50%); border: 2px solid var(--line); border-radius: 4px; background: var(--bg); content: ""; pointer-events: none; }
+.check-row:has(input[type="checkbox"]:checked)::before { border-color: var(--accent); background: var(--accent); }
+.check-row:has(input[type="checkbox"]:checked)::after { position: absolute; inset-inline-start: 0.41rem; inset-block-start: 50%; width: 0.42rem; height: 0.68rem; transform: translateY(-65%) rotate(45deg); border: solid var(--surface); border-width: 0 0.16rem 0.16rem 0; content: ""; pointer-events: none; }
+.check-row:has(input[type="radio"])::before { border-radius: 50%; }
+.check-row:has(input[type="radio"]:checked)::before { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 0.3rem var(--bg); }
+.check-row input:focus-visible { outline: none; }
+.check-row:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+.check-row:has(input:disabled) { cursor: not-allowed; opacity: 0.65; }
 .form-row, .section-heading, .recovery-row { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; }
 .editable-term { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
 .editable-term .eyebrow { margin-bottom: 0; }
