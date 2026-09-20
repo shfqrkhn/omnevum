@@ -338,6 +338,7 @@ footer { display: flex; justify-content: space-between; gap: 1rem; border-top: 1
 [data-density="compact"] .primary-nav ol { gap: 0.35rem; }
 [data-density="compact"] .primary-nav a { padding-inline: 0.65rem; }
 [data-density="compact"] .primary-nav { overflow: visible; }
+[data-density="compact"] .primary-nav-menu:not([open]) > ol { display: none; }
 [data-density="compact"] .primary-nav-menu > summary { display: flex; min-height: 44px; align-items: center; cursor: pointer; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--accent); font-weight: 750; padding: 0.5rem 0.75rem; }
 [data-density="compact"] .primary-nav-menu[open] ol { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: 0.35rem; margin-top: 0.45rem; min-width: 0; }
 [data-density="compact"] .primary-nav ol { min-width: 0; }

@@ -21,5 +21,6 @@ describe("compact accessibility target styles", () => {
     expect(styles).toMatch(/\.capture-choice-grid\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);/su);
     expect(styles).toMatch(/\.domain-disclosure\s*\{[^}]*border:\s*1px solid var\(--line\);/su);
     expect(styles).toMatch(/\.domain-disclosure > \.domain-form\s*\{[^}]*padding:\s*0\.4rem 0 0;/su);
+    expect(styles).toMatch(/\[data-density="compact"\] \.primary-nav-menu:not\(\[open\]\) > ol\s*\{[^}]*display:\s*none;/su);
   });
 });

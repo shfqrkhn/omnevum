@@ -4465,7 +4465,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     recordCount.textContent = formatNumber(presentation.locale, records.length);
     emptyState.hidden = records.length > 0;
     emptyState.textContent = query.trim() ? copy.noMatching : copy.nothingCaptured;
-    if (recordsDisclosureChoice === undefined && records.length > 0) recordsDisclosure.open = true;
+    const hasSearchCriteria = Boolean(parsedQuery.text || parsedQuery.facets.lens || parsedQuery.facets.recordType || parsedQuery.facets.space || parsedQuery.facets.hasArtifact);
+    if (hasSearchCriteria || (recordsDisclosureChoice === undefined && records.length > 0)) recordsDisclosure.open = true;
 
     const groupedRecords = new Map<PresentationLensId, CanonicalRecord[]>();
     for (const record of records) {
@@ -5002,6 +5003,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const resultCount = await renderRecords(query);
       const health = await store.getSearchHealth();
       searchStatus.textContent = query ? copy.resultMessage(resultCount, health.valid ? copy.healthy : copy.degraded) : copy.showingAll;
+      if (query) recordsDisclosure.scrollIntoView({ behavior: presentation.accessibility.reducedMotion ? "auto" : "smooth", block: "nearest" });
     } catch (error) {
       searchStatus.textContent = describeError(error, "Search failed; canonical data was not changed.");
     }
