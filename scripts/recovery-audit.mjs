@@ -38,7 +38,7 @@ if (!existsSync(bundlePath)) {
   }
   try {
     const revision = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
-    if (bundle.repository?.revisionPolicy !== "exact-head-at-generation") failures.push("unsupported recovery revision policy");
+    if (bundle.repository?.revisionPolicy !== "generation-base-commit-retained-until-divergence") failures.push("unsupported recovery revision policy");
     if (bundle.repository?.revision !== revision) {
       try {
         execFileSync("git", ["merge-base", "--is-ancestor", bundle.repository?.revision, revision], { cwd: root, stdio: "ignore" });

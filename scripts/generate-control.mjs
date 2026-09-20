@@ -230,7 +230,21 @@ const gitHead = (() => {
     return "NO_GIT_CONTEXT";
   }
 })();
-const gitRevision = gitHead;
+const gitRevision = (() => {
+  const previousPath = join(controlRoot, "recovery-bundle.json");
+  if (gitHead !== "NO_GIT_CONTEXT" && existsSync(previousPath)) {
+    try {
+      const previous = JSON.parse(readFileSync(previousPath, "utf8")).repository?.revision;
+      if (typeof previous === "string" && previous && previous !== "NO_GIT_CONTEXT") {
+        execFileSync("git", ["merge-base", "--is-ancestor", previous, gitHead], { cwd: root, stdio: "ignore" });
+        return previous;
+      }
+    } catch {
+      // A missing or unrelated prior bundle starts a new generation base.
+    }
+  }
+  return gitHead;
+})();
 const repositoryFiles = (() => {
   try {
     return execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard"], { cwd: root, encoding: "utf8" })
@@ -252,7 +266,7 @@ writeJson("recovery-bundle.json", {
   generatedBy,
   authority: "MPES Sections 20.5, 20.9, and 20.10; integrity manifest is a generated projection",
   source,
-  repository: { revision: gitRevision, revisionPolicy: "exact-head-at-generation", pathsAreRepositoryRelative: true, secretsIncluded: false },
+  repository: { revision: gitRevision, revisionPolicy: "generation-base-commit-retained-until-divergence", pathsAreRepositoryRelative: true, secretsIncluded: false },
   restoreProcedure: [
     "Read docs/Omni_3.32.0.md and docs/Omnevum-MPES-v0_18_0.md before changing scope.",
     "Inspect docs/control/completion-ledger.json, engineering-controller.json, release-evidence.json, acceptance-results.json, support-matrix.json, and risk-threat-register.json.",
