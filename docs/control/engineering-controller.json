@@ -15,7 +15,7 @@
     "Generated control projections are bound to the exact v0.18.0 MPES hash.",
     "Deprecated implementation-era acceptance statuses and qualification receipts were removed from the active baseline; current evidence promotes one exact Chromium PASS, bounded PARTIAL rows, and keeps UNKNOWN release-visible.",
     "The current hosted browser receipt proves compact responsive layout, built relative assets, cached offline Search, and bounded capture/triage/search/Vault behavior; it does not close a release gate.",
-    "GitHub Pages deployment run 35482142333 is green for source 24ae8d602e3738aae445e1cb27e42d8a3c626970 and its published-entry smoke guard passed; the guard prevents regression to the legacy source deployment.",
+    "GitHub Pages deployment run 35482943813 is green for source e5cd4dc086405a9542904a7cfea1e95ca9af127a and an HTTP byte comparison matched all 8 published artifact files; its published-entry smoke guard passed and the guard prevents regression to the legacy source deployment.",
     "Storage/Vault/migration/Recovery and security/effect/context-boundary contracts have focused executable characterization; live Chromium search-index corruption/rebuild is PASS, the pressure-episode repair regression is fixed and browser pressure-signal proof is recorded, while cross-origin manual Vault restore, shell-update waiting/activation, browser IndexedDB migration abort/retention, normal canonical corruption repair, and the independent recovery-console read/export are PARTIAL, and target/browser/fault and human proofs remain open.",
     "The repository structure/reference/architecture/license/security/typecheck/test/build/static/recovery/drift gates are required before handoff."
   ],
