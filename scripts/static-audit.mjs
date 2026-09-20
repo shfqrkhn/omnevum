@@ -75,7 +75,7 @@ if (failures.length === 0) {
       const artifactFiles = Array.isArray(release.artifactFiles) ? release.artifactFiles : [];
       const rows = [];
       for (const artifact of artifactFiles) {
-        if (typeof artifact?.path !== "string" || !artifact.path.startsWith("dist/") || artifact.path.includes("..") || typeof artifact.sha256 !== "string" || !Number.isSafeInteger(artifact.bytes)) {
+        if (typeof artifact?.path !== "string" || !artifact.path.startsWith("dist/") || artifact.path.includes("..") || typeof artifact.publicPath !== "string" || artifact.publicPath !== artifact.path.slice("dist/".length) || artifact.publicPath.startsWith("/") || artifact.publicPath.includes("..") || typeof artifact.sha256 !== "string" || !Number.isSafeInteger(artifact.bytes)) {
           failures.push("release evidence contains an invalid artifact file entry");
           continue;
         }

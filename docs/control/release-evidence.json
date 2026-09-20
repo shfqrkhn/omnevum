@@ -11,14 +11,14 @@
   },
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF.",
   "artifactFiles": [
-    {"path": "dist/assets/index-Bzh0zw-4.css", "sha256": "9795defcf51ae78c19860be612eb856805a729b321222a0264b6c613a49c2b35", "bytes": 28185},
-    {"path": "dist/assets/index-MC0mZHLG.js", "sha256": "baa10d5f11e04ee315873ea4d23d74624dea8b9c682a77bfd86b675de1f7d387", "bytes": 545069},
-    {"path": "dist/assets/index-MC0mZHLG.js.map", "sha256": "a66a3466fdd631fa265561588a4777f78c4ffc4d859e15302aae2c615f1e0bc4", "bytes": 1562447},
-    {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "28e68fea0633265dea613623f06c10f401d061c885ba010891c2ed2e9891fbb0", "bytes": 933},
-    {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
-    {"path": "dist/recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
-    {"path": "dist/sw.js", "sha256": "bfbaa56b263199a8e471251403311d0e16c995a2388a875790caf0a858f5feff", "bytes": 3594}
+    {"path": "dist/assets/index-Bzh0zw-4.css", "publicPath": "assets/index-Bzh0zw-4.css", "sha256": "9795defcf51ae78c19860be612eb856805a729b321222a0264b6c613a49c2b35", "bytes": 28185},
+    {"path": "dist/assets/index-MC0mZHLG.js", "publicPath": "assets/index-MC0mZHLG.js", "sha256": "baa10d5f11e04ee315873ea4d23d74624dea8b9c682a77bfd86b675de1f7d387", "bytes": 545069},
+    {"path": "dist/assets/index-MC0mZHLG.js.map", "publicPath": "assets/index-MC0mZHLG.js.map", "sha256": "a66a3466fdd631fa265561588a4777f78c4ffc4d859e15302aae2c615f1e0bc4", "bytes": 1562447},
+    {"path": "dist/icon.svg", "publicPath": "icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
+    {"path": "dist/index.html", "publicPath": "index.html", "sha256": "28e68fea0633265dea613623f06c10f401d061c885ba010891c2ed2e9891fbb0", "bytes": 933},
+    {"path": "dist/manifest.webmanifest", "publicPath": "manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
+    {"path": "dist/recovery.html", "publicPath": "recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
+    {"path": "dist/sw.js", "publicPath": "sw.js", "sha256": "bfbaa56b263199a8e471251403311d0e16c995a2388a875790caf0a858f5feff", "bytes": 3594}
   ],
   "deploymentObservations": [
     {"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35481320651", "sourceRevision": "542b665b361d579ee6d8e3ab2f331ce3afca5cd6", "artifactByteMatch": "8/8 local dist files matched the served Pages files after switching Pages from legacy master:/ to the Actions artifact source; published-entry smoke guard passed", "date": "2026-09-19"},
@@ -31,8 +31,9 @@
     ,{"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35485983525", "sourceRevision": "bae641adcf51cdd7f3f80d1125c153471cca7bb3", "artifactByteMatch": "8/8 current local dist files matched the served Pages files by HTTP SHA-256 and byte length; current launchpad-owner candidate and published-entry smoke guard passed.", "date": "2026-09-19"}
     ,{"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35486356941", "sourceRevision": "cf5ceaf1a92d2a4a048c0e6ac42ca9b3058999fb", "artifactByteMatch": "8/8 current local dist files matched the served Pages files by HTTP SHA-256 and byte length; automation-recovery increment deployed and published-entry smoke guard passed.", "date": "2026-09-19"}
     ,{"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35487695353", "sourceRevision": "0d54f57dd21341104ef1dea0b76a8ec6639a5496", "artifactByteMatch": "8/8 current local dist files matched the served Pages files by HTTP SHA-256/byte length; current compact-default Finance-capable candidate and published-entry smoke guard passed.", "date": "2026-09-20"}
+    ,{"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35489207332", "sourceRevision": "f3bf405f0f62069afa66a0050cae547b13b73b66", "artifactByteMatch": "8/8 public Pages paths matched the local dist artifact by HTTP SHA-256 and byte length; CI and published-entry smoke guard passed. Local compact-layout, Finance import, and touch-target evidence is separately receipt-bound.", "date": "2026-09-20"}
   ],
   "requiredEvidence": ["control-generation-and-drift", "structure-reference-architecture-audit", "type-static-and-unit-tests", "browser-e2e-responsive-accessibility-input-i18n", "offline-static-host-and-service-worker", "storage-quota-corruption-migration-and-recovery", "Vault-cross-origin-restore", "security-egress-untrusted-content-and-credential-boundaries", "dependency-license-SBOM-vulnerability-provenance", "deploy-smoke-rollback", "human-acceptance-where-required"],
   "evidencePolicy": "The clean v0.18 baseline inherits no release artifact or acceptance claim. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains UNKNOWN.",
-  "currentDecision": "The compact-default candidate at source revision 4257272 has a fresh local artifact identity after the Finance classifier and 44 CSS pixel touch-target fixes; Pages deployment and byte verification are pending for this artifact. Production rollback, offline/update, storage fault, materially different browser-family Vault restore, security, human acceptance, and all mandatory acceptance gates remain open, so release readiness is not claimed."
+  "currentDecision": "The compact-default candidate at source revision 4257272 is deployed by Pages workflow 35489207332 from source commit f3bf405f0f62069afa66a0050cae547b13b73b66; all 8 public paths match the receipt-bound local artifact by HTTP SHA-256 and byte length. Production rollback, offline/update, storage fault, materially different browser-family Vault restore, security, human acceptance, and all mandatory acceptance gates remain open, so release readiness is not claimed."
 }
