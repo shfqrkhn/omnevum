@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "c2b4bfbad97602def863673d81b1537784c7a0c87cf61bce1207e43cbe5afc08",
-        "bytes": 4394
+        "sha256": "7cdf58432f4abb0457864ec92e0ff3838101f7d7dafbcb082c0c9cceb9f50d82",
+        "bytes": 3542
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "eeec0e0347be8eec72754506703ad4ddc9ff637142a22701bc76acb5f44a7b22",
-        "bytes": 18753
+        "sha256": "4cb5c9cc8e22c5e1e1a4fb19ec18229e7afd3b629c2ed6ebc5e2d64ab26b057e",
+        "bytes": 19716
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "7831e1398a4a83451691b858cf50f4ace3d4ace0b6d483b451163f36fa6a0b3b",
-        "bytes": 17197
+        "sha256": "d1c6cae2a745c7e0e0a3f7a69722609fe49c93a8eb97b1cf927e39f13c3ece9b",
+        "bytes": 17834
       },
       {
         "path": "docs/control/requirements.json",
@@ -329,8 +329,8 @@
       },
       {
         "path": "docs/evidence/phase0-current-finance-platform-browser-2026-09-20.md",
-        "sha256": "8966722aa8dbde952d3984da508b92c9401d18cb140f814a743ece081c9c629c",
-        "bytes": 16096
+        "sha256": "8b8ebf983e489f644179500c73da916787ace7014103ef4a45dd871140f9c196",
+        "bytes": 18438
       },
       {
         "path": "docs/evidence/phase0-donor-characterization-2026-09-19.md",
