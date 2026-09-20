@@ -199,7 +199,7 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "7b3597272f094bd198aef5afc51f99fc0c09ff869def3a7ae88bf861c334498f",
+        "sha256": "b4ca20cf4e20237858d047e2f50b423198a81c8873e0c1e9811023495c4ffc69",
         "bytes": 2862
       },
       {
@@ -269,7 +269,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "e0685ac812a6329f0ca057f935379d229ee4075010a0015ba2d1347b555d4aaf",
+        "sha256": "e6a9b5a129b005e3bd2137965b8be09c773e4b966032d0ce945bfa76ef487577",
         "bytes": 8269
       },
       {
