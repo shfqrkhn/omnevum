@@ -35,6 +35,11 @@ describe("credential-free Finance statement semantics", () => {
     expect(transaction?.lineage.rawFields).not.toHaveProperty("authorization");
   });
 
+  it("fails closed when a data row adds non-empty fields beyond the declared header", () => {
+    expect(() => parseFinanceCsv("Date,Description,Amount\n2026-01-02,Cafe,-10.00,unexpected\n", source)).toThrow("has more fields than its header");
+    expect(() => parseFinanceStatementFactsCsv("StatementBalance,DueDate\n500.00,2026-02-15,unexpected\n", source, "CREDIT_CARD")).toThrow("has more fields than its header");
+  });
+
   it("deduplicates exact reimports but preserves source-ID conflicts for review", () => {
     const [first, duplicate, conflicting] = parseFinanceCsv('Date,Description,Amount,Id\n2026-01-02,Cafe,-10.00,tx-1\n2026-01-02,Cafe,-10.00,tx-1\n2026-01-02,Other,-11.00,tx-1\n', source);
     const result = deduplicateFinanceTransactions([first!, duplicate!, conflicting!]);

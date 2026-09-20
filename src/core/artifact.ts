@@ -247,7 +247,8 @@ function makeDerivedText(text: string, truncated: boolean): DerivedArtifactText 
 function inertTextFromHtml(html: string): string {
   return html
     .replace(/<!--[\s\S]*?-->/g, " ")
-    .replace(/<\s*(script|style|iframe|object|embed|svg|form|base)\b[\s\S]*?<\/\s*\1\s*>/gi, " ")
+    .replace(/<\s*(script|style)\b[\s\S]*?(?:<\/\s*\1\s*>|$)/gi, " ")
+    .replace(/<\s*(iframe|object|embed|svg|form|base)\b[\s\S]*?<\/\s*\1\s*>/gi, " ")
     .replace(/<[^>]*>/g, " ")
     .replace(/&nbsp;/gi, " ")
     .replace(/&amp;/gi, "&")

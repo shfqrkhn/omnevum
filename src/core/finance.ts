@@ -221,11 +221,9 @@ export function parseFinanceCsv(text: string, source: FinanceStatementSource): F
   if (!headers.includes("postedAt") || !headers.includes("description") || (!headers.includes("amount") && !headers.includes("debit") && !headers.includes("credit"))) {
     throw new Error("Finance statement requires date, description, and amount/debit/credit columns");
   }
-  const rawRows = rows.slice(rows.indexOf(headerRow) + 1)
-    .filter((row) => row.values.some((value) => value.trim().length > 0))
-    .slice(0, MAX_FINANCE_ROWS)
-    .map((row) => ({ sourceRow: row.sourceRow, fields: Object.fromEntries(headers.map((header, index) => [header, row.values[index]?.trim() ?? ""])) }));
-  if (rows.slice(rows.indexOf(headerRow) + 1).filter((row) => row.values.some((value) => value.trim().length > 0)).length > MAX_FINANCE_ROWS) throw new Error(`Finance statement exceeds the bounded ${MAX_FINANCE_ROWS}-row limit`);
+  const dataRows = rows.slice(rows.indexOf(headerRow) + 1).filter((row) => row.values.some((value) => value.trim().length > 0));
+  if (dataRows.length > MAX_FINANCE_ROWS) throw new Error(`Finance statement exceeds the bounded ${MAX_FINANCE_ROWS}-row limit`);
+  const rawRows = mapDelimitedRows(dataRows, headers);
   return normalizeFinanceRows(rawRows, source, "CSV_HEADER_V1");
 }
 
@@ -238,11 +236,9 @@ export function parseFinanceStatementFactsCsv(text: string, source: FinanceState
   if (!headerRow) throw new Error("Finance statement has no header row");
   const headers = headerRow.values.map(normalizeHeader);
   if (headers.some((header) => !header) || new Set(headers).size !== headers.length) throw new Error("Finance statement headers must be non-empty and unique");
-  const rawRows = rows.slice(rows.indexOf(headerRow) + 1)
-    .filter((row) => row.values.some((value) => value.trim().length > 0))
-    .slice(0, MAX_FINANCE_ROWS)
-    .map((row) => ({ sourceRow: row.sourceRow, fields: Object.fromEntries(headers.map((header, index) => [header, row.values[index]?.trim() ?? ""])) }));
-  if (rows.slice(rows.indexOf(headerRow) + 1).filter((row) => row.values.some((value) => value.trim().length > 0)).length > MAX_FINANCE_ROWS) throw new Error(`Finance statement exceeds the bounded ${MAX_FINANCE_ROWS}-row limit`);
+  const dataRows = rows.slice(rows.indexOf(headerRow) + 1).filter((row) => row.values.some((value) => value.trim().length > 0));
+  if (dataRows.length > MAX_FINANCE_ROWS) throw new Error(`Finance statement exceeds the bounded ${MAX_FINANCE_ROWS}-row limit`);
+  const rawRows = mapDelimitedRows(dataRows, headers);
   return extractStatementFactsFromRows(rawRows, source, sourceClass);
 }
 
@@ -677,6 +673,14 @@ function stableKey(value: string): string {
 function detectDelimiter(text: string): "," | "\t" {
   const firstLine = text.split(/\r?\n/u, 1)[0] ?? "";
   return (firstLine.match(/\t/g)?.length ?? 0) > (firstLine.match(/,/g)?.length ?? 0) ? "\t" : ",";
+}
+
+function mapDelimitedRows(rows: Array<{ sourceRow: number; values: string[] }>, headers: string[]): FinanceRawRow[] {
+  return rows.map((row) => {
+    const overflow = row.values.slice(headers.length);
+    if (overflow.some((value) => value.trim().length > 0)) throw new Error(`Finance row ${row.sourceRow} has more fields than its header`);
+    return { sourceRow: row.sourceRow, fields: Object.fromEntries(headers.map((header, index) => [header, row.values[index]?.trim() ?? ""])) };
+  });
 }
 
 function parseDelimited(text: string, delimiter: "," | "\t"): Array<{ sourceRow: number; values: string[] }> {
