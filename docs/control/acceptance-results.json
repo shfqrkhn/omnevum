@@ -149,8 +149,10 @@
         "line": 3961
       },
       "text": "The user syncs to at least one consumer cloud route and one zero-required-payment/self-hosted or owner-controlled route; provider migration preserves logical identity.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-012",
@@ -171,8 +173,10 @@
         "line": 3965
       },
       "text": "All product AI routes are disabled. Core data, Home, Search, visualization/modeling, backup/restore, and Recovery remain usable.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-014",
@@ -191,8 +195,10 @@
         "line": 3969
       },
       "text": "An AI response containing malicious embedded instructions cannot expand context scope, switch provider/disclosure class, modify permissions, or execute a canonical mutation without the normal command/policy path.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-016",
@@ -539,8 +545,10 @@
         "line": 4037
       },
       "text": "A package uses a declarative automation predicate/rule. Malicious or malformed rule input cannot execute arbitrary JavaScript, access credentials/network/storage directly, or bypass confirmation/permission; a true rule only proposes an already-admitted semantic action.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-050",
@@ -559,8 +567,10 @@
         "line": 4041
       },
       "text": "The same logical Vault/replica identity can move between a vendor file transport and a qualified open personal-data/storage endpoint without changing canonical record IDs. Provider/schema-specific identifiers remain adapter metadata, and losing the remote endpoint does not prevent local core use.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-052",
@@ -639,8 +649,10 @@
         "line": 4057
       },
       "text": "Omnevum connects to a controlled browser-compatible MCP/standard tool endpoint through the AI/tool broker. An allowed tool can propose an admitted semantic action, while a malicious or changed tool schema/prompt cannot widen Vault context, obtain credentials, bypass Space/Scope or domain permissions, or directly mutate canonical state. Disconnecting or making the endpoint unavailable degrades only the optional integration and does not break the non-AI/core product.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-060",
@@ -719,8 +731,10 @@
         "line": 4073
       },
       "text": "A user creates an external connector action while offline. Effect/Outbox persists one typed operation, the app/browser is restarted, and replay occurs only after current authority/credential/Space/destination revalidation. An injected ambiguous remote response enters OUTCOME_UNKNOWN/RECONCILE and is reconciled before retry; the final external system contains no duplicate effect, or any unavoidable duplication risk is surfaced truthfully.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-068",
@@ -749,8 +763,10 @@
         "line": 4079
       },
       "text": "A connector/API credential is stored/used through the credential/key broker. Ordinary modules, declarative views/rules, diagnostics, ordinary Vault export, and model-visible AI context cannot read the raw reusable credential; revoking/locking it invalidates future broker effects and pending Effect/Outbox replay without deleting unrelated canonical data.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-071",
@@ -799,8 +815,10 @@
         "line": 4089
       },
       "text": "Provider currentness marks a consumer-web/OAuth-piggyback technique as TERMS_BLOCKED (for example current ChatGPT web automatic extraction or current Google legacy Gemini-CLI OAuth harvesting). Omnevum refuses that programmatic route without attempting stealth/browser impersonation and instead offers an official subscription agent, reverse integration, manual handoff, local model, or explicit API route where available.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-076",
@@ -869,8 +887,10 @@
         "line": 4103
       },
       "text": "If executable third-party extension support is claimed, a qualified isolation substrate passes adversarial tests for global/prototype escape, network/storage access, CPU/memory abuse, message validation, update revocation and capability leakage. If it does not, the release still supports declarative extensions but truthfully leaves executable third-party packages disabled.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-083",
@@ -1589,8 +1609,10 @@
         "line": 4250
       },
       "text": "From one fixed authorized Space/Scope containing records, relationships, source provenance, derived values, uncertainty, and at least one unresolved conflict, the user generates Markdown, plain-text, and JSON context exports without manually recreating the content. All three exports represent the same bounded logical context; each retains sufficient provenance, truth/derived status, conflict state, generation metadata, and an omission/redaction manifest where needed.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-155",
@@ -1599,8 +1621,10 @@
         "line": 4252
       },
       "text": "A homogeneous transaction or observation view is exported to CSV and JSONL. The CSV preserves row/field semantics, exact values, currency/unit metadata needed to interpret the table, and source linkage at the declared level. A deliberately hierarchical/many-to-many selection is refused as a misleading single CSV or exported as explicitly separated tables/bundle rather than silently flattened.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-156",
@@ -1609,8 +1633,10 @@
         "line": 4254
       },
       "text": "A manual handoff package is generated for an external AI from a current task plus related sources. The package separates user objective/instructions from source content, canonical facts, assumptions, derived analysis, and unresolved issues; excludes credentials, hidden permissions, unrelated records, and executable content; and can be read with Omnevum absent. No export grants the external AI Omnevum write authority.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-157",
@@ -1619,8 +1645,10 @@
         "line": 4256
       },
       "text": "A saved Context Export profile is rerun after source records change. Current authorization is re-evaluated, corrected/removed source meaning propagates, and the new export reflects the current state without manual reselection. A delta export against the prior export identifies material additions, modifications, deletions/invalidation, and unchanged references without duplicating the entire prior context.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-158",
@@ -1629,8 +1657,10 @@
         "line": 4258
       },
       "text": "A Context Export is constrained to a declared size budget. Omnevum removes irrelevant/redundant material before compressing material evidence, preserves required exact-value fields, labels every derived summary, reports omitted material in an inspectable manifest, preserves unresolved contradictions, and does not claim the compact package is lossless when information was omitted or summarized.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-159",
@@ -1729,8 +1759,10 @@
         "line": 4278
       },
       "text": "A Context Export includes hostile text beginning with spreadsheet formula/control prefixes and a value resembling an external link. Markdown/JSON preserve inert data semantics; the spreadsheet-compatible CSV/TSV profile prevents execution under its claimed consumer tests or clearly uses a separately identified raw/non-spreadsheet-safe representation. The export reports any round-trip-affecting transformation and grants no network or external-effect authority.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-security-effects-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-169",

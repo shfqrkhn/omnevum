@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "bbb4a35d67b3961175e120867625dae78ce31255f1e89a2d057f760de41d2c30",
-        "bytes": 102385
+        "sha256": "e3e37db549b5a745ee8b4be776462665866b72fb528ddbfa5bde11bb4ac817fc",
+        "bytes": 103489
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "2b3a7cfba145186df28639accf1db2ecb6cc356839838408594ababd644616a0",
-        "bytes": 2631
+        "sha256": "3e97e0af93647d248aa228ea7ab4369fd1822fc9c0d831cc409ce4bc77afd7a5",
+        "bytes": 2642
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -316,6 +316,11 @@
         "path": "docs/evidence/phase0-pages-deployment-2026-09-19.md",
         "sha256": "3d28d61a75fec1e1b64d78a21b9a938dbfe3c49f8a0f86e0d50899a0d97a5b6c",
         "bytes": 2156
+      },
+      {
+        "path": "docs/evidence/phase0-security-effects-2026-09-19.md",
+        "sha256": "7ff251b1b762f4098528fc5e6f4e9affa998bf53b080e792d7cd95d2c8dda463",
+        "bytes": 3788
       },
       {
         "path": "docs/evidence/phase0-storage-recovery-2026-09-19.md",
