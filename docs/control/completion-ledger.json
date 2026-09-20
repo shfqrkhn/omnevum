@@ -11,7 +11,7 @@
     "acceptanceScenarios": 176
   },
   "completionClaim": "100_PERCENT_COMPLETE is prohibited until every mandatory requirement and applicable acceptance scenario has evidence-backed PASS or justified NOT_APPLICABLE and no material UNKNOWN/stale/open blocker remains.",
-  "lastVerifiedIncrement": "Source 4257272 qualifies Finance separator-normalized mixed-source facts-only import, renamed-byte overlap idempotence, and compact 320 CSS pixel/200% 44 CSS pixel touch targets. The artifact identity is 0dc1337fb513c435568582dd5a46b314daea5ab9c7cf85d64da360f7a1cd1b00 with service-worker cache omnevum-shell-a8cc71ee3603b276; Pages deployment for this artifact remains pending. PASS remains limited to OMN-ACC-008, 021, 026, 049, 075, 082, 173, 174, 175, and 176; OMN-ACC-020, 053, 099, 133, 134, 146, 148, 150, 151, 153, and 169 are bounded PARTIAL; 131 scenarios remain UNKNOWN and no release claim is promoted.",
+  "lastVerifiedIncrement": "Source 333a5d8 hardens hostile Artifact HTML extraction and Finance row-level structural drift. Focused source/unit verification passed (43 tests), and the local artifact identity is 661277ee844644606ad5a575135492c29412a013f1995c290dfd358e50f534f4 with service-worker cache omnevum-shell-32eccddf2a11ae89; Pages deployment for this artifact remains pending. PASS remains limited to OMN-ACC-008, 021, 026, 049, 075, 082, 173, 174, 175, and 176; OMN-ACC-020, 050, 053, 099, 133, 134, 135, 146, 147, 148, 150, 151, 153, and 169 are bounded PARTIAL; 128 scenarios remain UNKNOWN and no release claim is promoted.",
   "gates": [
     {"id": "PLATFORM_READY_FOR_CORE", "phase": 0, "status": "IN_PROGRESS", "blockers": ["production rollback, browser/accessibility/offline/fault/security qualification", "all current implementation and human-acceptance evidence"]},
     {"id": "MVP_RELEASE_READY", "phase": 1, "status": "NOT_STARTED", "blockers": ["Phase 0 gate"]},
@@ -23,5 +23,5 @@
     {"id": "COMPOSABLE_WORKFLOWS_READY", "phase": 7, "status": "NOT_STARTED", "blockers": ["bounded automation security, target qualification, and human acceptance"]},
     {"id": "EXTENSIBLE_ECOSYSTEM_READY", "phase": 8, "status": "NOT_STARTED", "blockers": ["real isolation qualification"]}
   ],
-  "next": "Qualify the remaining Finance transaction-bearing mixed-source/parser-drift/transfer/multi-goal/forecast/anomaly/hostile-file/cross-origin rows alongside schema-transform interruption/repair, quota/eviction, rollback, security/egress, accessibility, other-browser, and human-acceptance rows; advance Phase 0 only on exact evidence-backed status."
+  "next": "Qualify the remaining Finance transaction-bearing mixed-source/parser-profile/transfer/multi-goal/forecast/anomaly/hostile-file/cross-origin rows alongside schema-transform interruption/repair, quota/eviction, rollback, security/egress, accessibility, other-browser, and human-acceptance rows; advance Phase 0 only on exact evidence-backed status."
 }

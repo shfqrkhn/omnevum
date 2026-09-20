@@ -569,8 +569,11 @@
         "line": 4039
       },
       "text": "Artifact/Acquire processes representative PDF, CSV, image metadata, and OCR-capable inputs through qualified browser-native adapters. Large/heavy work is cancellable/resource-bounded, original source identity/provenance is preserved, derived output is marked DERIVED, and hostile extracted/HTML content cannot execute active behavior.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-hostile-import-parser-drift-2026-09-20.md"
+      ],
+      "notes": "Source/unit proof covers inert hostile HTML extraction, source-preserving Artifact behavior, and bounded input handling. Qualified PDF/OCR, heavy-work cancellation, and the full browser adapter profile remain open."
     },
     {
       "id": "OMN-ACC-051",
@@ -1452,8 +1455,11 @@
         "line": 4212
       },
       "text": "A validated account-specific parser profile automatically processes several subsequent statements with no routine user review. A later statement deliberately changes its table structure/sign convention; structural invariants detect drift, prevent silent stale-profile parsing, preserve the source, and route only the affected source/fields for re-detection or review.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-hostile-import-parser-drift-2026-09-20.md"
+      ],
+      "notes": "A Finance row with non-empty fields beyond the declared header now fails closed with its source row; account-specific profile lifecycle, sign-convention drift, re-detection, and routine no-review processing remain open."
     },
     {
       "id": "OMN-ACC-136",
@@ -1575,8 +1581,11 @@
         "line": 4236
       },
       "text": "Hostile spreadsheet/PDF fixtures contain formula-injection strings, macros/active content, remote links/resources, and extracted markup. Import/extraction preserves the original source but does not execute formulas/macros/scripts/remote fetches or grant the content canonical-write/network/effect authority. Spreadsheet export/import tests report any formula/value/type/date loss relevant to the finance claim.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-hostile-import-parser-drift-2026-09-20.md"
+      ],
+      "notes": "Unit proof covers hostile HTML/CSV formula-like content and unclosed active containers as inert source-preserving inputs; real XLSX/PDF macro/formula/value/type/date round-trip qualification remains open."
     },
     {
       "id": "OMN-ACC-148",

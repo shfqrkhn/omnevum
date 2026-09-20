@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "350a5010c1468bb7b5e22a00d925ed36ba9b4e6322b8a571b067a1a188ecad46",
-        "bytes": 109757
+        "sha256": "d5f7ebc01ab12aec1ff469d5e11cb12c86b47052ea957b85e4169fbe16b15d2d",
+        "bytes": 110691
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "20a76f7eb32481008bdb57a76a712a0415f81a91129815011bb7cb51fc41f6e4",
-        "bytes": 2866
+        "sha256": "7b3597272f094bd198aef5afc51f99fc0c09ff869def3a7ae88bf861c334498f",
+        "bytes": 2862
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "7c885fb13a351db002e27fc1123ca11601b0421877873024f736d9a13523e58b",
-        "bytes": 8524
+        "sha256": "f3f31352cbccd423942bd84f198e3b85a89892e7092e7726b49f6864b2d03fe7",
+        "bytes": 8980
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -264,13 +264,13 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "1dc1f36571fbad16b132dca1bcfe9df9281aa00716af5e0953544a73d1a4ac00",
-        "bytes": 3423
+        "sha256": "89aa30869802f4df3a097d35708a6863ae7c055da626272102f24322e97b4a95",
+        "bytes": 3489
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "20e945210d2998ac2a7dee77315f88735e9dc645f4a7cfceda490d0b88ff1051",
-        "bytes": 8206
+        "sha256": "e0685ac812a6329f0ca057f935379d229ee4075010a0015ba2d1347b555d4aaf",
+        "bytes": 8269
       },
       {
         "path": "docs/control/requirements.json",
@@ -351,6 +351,11 @@
         "path": "docs/evidence/phase0-fresh-edge-flow-2026-09-19.md",
         "sha256": "fbf54d96de90a6fd1a856e7c9a8a1d61ec2d36a1f61842210e9799c6c3f3b37d",
         "bytes": 1648
+      },
+      {
+        "path": "docs/evidence/phase0-hostile-import-parser-drift-2026-09-20.md",
+        "sha256": "b5f80bd980a39658492bccc713f7fc5d5070d53fad69cf0f5f0b07e23c9eb78b",
+        "bytes": 2369
       },
       {
         "path": "docs/evidence/phase0-launchpad-automation-artifact-2026-09-19.md",
@@ -604,13 +609,13 @@
       },
       {
         "path": "src/core/artifact.test.ts",
-        "sha256": "20846ea04d26fdd5df138a4e2788dfd218f3f46a97c3db1edc9ce49505ddc663",
-        "bytes": 7201
+        "sha256": "29a33b771688ac327c97a121a837cdb6969e21a49f24eebb110e8d711b9d035f",
+        "bytes": 7873
       },
       {
         "path": "src/core/artifact.ts",
-        "sha256": "09bb337ce17f9d4dfa5081b28e7ede0e358a23288a1a367e552cd8f4e69dc901",
-        "bytes": 14101
+        "sha256": "1db20064f487d6f413d5d22e20356cfc1feccd56749b27dc956d31ddc1349cf0",
+        "bytes": 14158
       },
       {
         "path": "src/core/automation.test.ts",
@@ -884,13 +889,13 @@
       },
       {
         "path": "src/core/finance.test.ts",
-        "sha256": "e5c5f8b3315e07acd7817a85783c9cb014511e164c9f821952cca1ce5ea0045d",
-        "bytes": 13045
+        "sha256": "8d99f4d486f35327d984c687baa5c26b679d1e1e68d8ea0a736a7da4dc10881c",
+        "bytes": 13471
       },
       {
         "path": "src/core/finance.ts",
-        "sha256": "73999bc05b16a55081da81c55a1f4878f3fb37df5735e38552801500c8552fde",
-        "bytes": 39915
+        "sha256": "368ecfdcbc174c3f8b878054422ac2d09bd47607de093fa87a2705b0b83a21ff",
+        "bytes": 39942
       },
       {
         "path": "src/core/game.test.ts",
