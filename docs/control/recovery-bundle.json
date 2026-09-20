@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "d5f7ebc01ab12aec1ff469d5e11cb12c86b47052ea957b85e4169fbe16b15d2d",
-        "bytes": 110691
+        "sha256": "915bdbc456747aff0e69497deb149949381aa846ee8276907e0ba2f52373409c",
+        "bytes": 110827
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -264,8 +264,8 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "89aa30869802f4df3a097d35708a6863ae7c055da626272102f24322e97b4a95",
-        "bytes": 3489
+        "sha256": "e478e4770028a64acf585fae275dd6bb4c14019ec481a58f5491c213ce77cf2b",
+        "bytes": 3549
       },
       {
         "path": "docs/control/release-evidence.json",
@@ -316,6 +316,11 @@
         "path": "docs/evidence/phase0-browser-qa-current-2026-09-19.md",
         "sha256": "30e996a2b620ee70f92a832367265cefd0c1e39174f382b91235d20945554a31",
         "bytes": 7225
+      },
+      {
+        "path": "docs/evidence/phase0-cross-origin-vault-qa-2026-09-20.md",
+        "sha256": "7b8760cb87edd52907e0a66466e95a8b7f4ef9b25d2c1ca07ebfb99ef937fa4a",
+        "bytes": 2524
       },
       {
         "path": "docs/evidence/phase0-donor-characterization-2026-09-19.md",
@@ -529,8 +534,13 @@
       },
       {
         "path": "scripts/stamp-service-worker.mjs",
-        "sha256": "e69af23a19482b4d6fe802c2e7acbb12c307b9f406985a728fe37e77016282e7",
-        "bytes": 2281
+        "sha256": "9b72198fd7cd898436c9a5155b30f7aba08a75a26e90b0f9bc0fd6bfab462ad3",
+        "bytes": 3900
+      },
+      {
+        "path": "scripts/stamp-service-worker.test.mjs",
+        "sha256": "83f18f15ccb21f24fee9084836d81e0b7b03e87f5d29f01a1d6c17ccf07cde1e",
+        "bytes": 1610
       },
       {
         "path": "scripts/static-audit.mjs",
@@ -1259,13 +1269,13 @@
       },
       {
         "path": "src/core/sync.test.ts",
-        "sha256": "a781141af7c6a9a9ddce05d8c3278303e8abf4fa8a05fff9a355d7d9f5465139",
-        "bytes": 3684
+        "sha256": "35559874d9c1963e7bd1cce105ae25cdb991d84d4612aa05c9b7ae204a827e21",
+        "bytes": 4449
       },
       {
         "path": "src/core/sync.ts",
-        "sha256": "c6f05e4523fecf3df3d504429c10d48932684081e79f647d9b386e4a1674152e",
-        "bytes": 3700
+        "sha256": "bc04b5b63d252c421a54396872746443a7a2a33377f9f1e8fe02c48d128c1549",
+        "bytes": 4024
       },
       {
         "path": "src/core/telemetry.test.ts",

@@ -45,6 +45,7 @@ export class SyncEngine {
     let remote: CanonicalRecord[];
     try {
       remote = await this.transport.pull();
+      assertUniqueReplicaRecordIds(remote);
     } catch (error) {
       throw new SyncFailure("PULL", error);
     }
@@ -62,6 +63,14 @@ export class SyncEngine {
       throw new SyncFailure("PUSH", error, result);
     }
     return result;
+  }
+}
+
+function assertUniqueReplicaRecordIds(records: CanonicalRecord[]): void {
+  const ids = new Set<string>();
+  for (const record of records) {
+    if (ids.has(record.id)) throw new Error("Remote sync replica contains duplicate canonical record IDs");
+    ids.add(record.id);
   }
 }
 

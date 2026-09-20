@@ -18,6 +18,7 @@
     "benchmark:ordinary-use": "node scripts/ordinary-use-benchmark.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:service-worker": "node --test scripts/stamp-service-worker.test.mjs",
     "test:watch": "vitest",
     "generate:control": "node scripts/generate-control.mjs",
     "audit:structure": "node scripts/structure-audit.mjs",
@@ -29,7 +30,7 @@
     "audit:licenses": "node scripts/license-audit.mjs",
     "audit:security": "npm audit --audit-level=high",
     "audit:drift": "npm run generate:control && git diff --exit-code -- docs/control",
-    "ci": "npm run generate:control && npm run audit:structure && npm run audit:references && npm run audit:acceptance && npm run benchmark:ordinary-use && npm run audit:architecture && npm run audit:licenses && npm run audit:security && npm run typecheck && npm test && npm run build && npm run audit:static && npm run audit:recovery && npm run audit:drift && git diff --check"
+    "ci": "npm run generate:control && npm run audit:structure && npm run audit:references && npm run audit:acceptance && npm run benchmark:ordinary-use && npm run audit:architecture && npm run audit:licenses && npm run audit:security && npm run typecheck && npm test && npm run test:service-worker && npm run build && npm run audit:static && npm run audit:recovery && npm run audit:drift && git diff --check"
   },
   "devDependencies": {
     "@types/node": "26.6.1",

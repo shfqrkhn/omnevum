@@ -143,7 +143,8 @@
       "status": "PARTIAL",
       "evidence": [
         "docs/evidence/phase0-storage-recovery-2026-09-19.md",
-        "docs/evidence/phase0-browser-fault-recovery-2026-09-19.md"
+        "docs/evidence/phase0-browser-fault-recovery-2026-09-19.md",
+        "docs/evidence/phase0-cross-origin-vault-qa-2026-09-20.md"
       ]
     },
     {
@@ -236,7 +237,8 @@
       "text": "A user moves the static distribution from one HTTPS origin to another using Vault backup/sync rather than depending on browser-private origin storage migration.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+        "docs/evidence/phase0-storage-recovery-2026-09-19.md",
+        "docs/evidence/phase0-cross-origin-vault-qa-2026-09-20.md"
       ]
     },
     {

@@ -69,4 +69,20 @@ describe("provider-neutral replica merge", () => {
     expect((await store.list()).map((item) => item.id)).toEqual(["remote"]);
     store.close();
   });
+
+  it("rejects duplicate remote identities before a rejoining replica can reorder tombstones", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-sync-duplicate-remote`);
+    await store.open();
+    await store.put(record("local", 1, false, "local"));
+    const pushed: CanonicalRecord[][] = [];
+    const transport: SyncTransport = {
+      pull: async () => [record("gone", 3, false, "stale active"), record("gone", 2, true)],
+      push: async (records) => { pushed.push(records); }
+    };
+
+    await expect(new SyncEngine(store, transport).synchronize()).rejects.toMatchObject({ phase: "PULL" });
+    expect(pushed).toHaveLength(0);
+    expect((await store.list()).map((item) => item.id)).toEqual(["local"]);
+    store.close();
+  });
 });
