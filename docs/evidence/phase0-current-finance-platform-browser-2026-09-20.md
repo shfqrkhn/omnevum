@@ -48,3 +48,7 @@ The runtime candidate remains commit `750c41f19fbfbce5a4bcb2edcb50a7a9f545ef88` 
 - `src/core/lenses.ts` projects by filtering and sorting `CanonicalRecord` references. `src/core/lenses.test.ts` now asserts both deterministic lens membership and object identity (`toBe(shared)`) for Direction and Work; the focused suite passed 3/3 tests.
 
 This is exact evidence for OMN-ACC-007: the same canonical record is reused across authorized projections without an unsynchronized writable copy. Scope remains the exercised Chromium/local target; it does not claim Firefox/WebKit, assistive-technology, or human acceptance coverage for unrelated scenarios.
+
+## Pages verification for the canonical-lens increment
+
+Repository commit `54ce8e84dec3bee6792842120c55a6fd6e7ca690` passed CI workflow `35496441891` and Pages workflow `35496441789`. An independent Node HTTPS probe of `https://shfqrkhn.github.io/omnevum/` fetched all 10 published paths with HTTP 200; every local byte sequence matched its hosted counterpart, and the aggregate artifact digest was `f9c5bb9c3cf91721d0abbb16c09c48c1d94f5f03c4ff2f4bde7762f709e295d2` with service-worker cache `omnevum-shell-e5a581ec34b80448`. The test-only lens proof changes no production bundle. This proves deployment identity only; rollback, browser-family, security/egress, assistive technology, and human acceptance remain open.
