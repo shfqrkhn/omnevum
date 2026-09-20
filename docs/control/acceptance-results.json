@@ -141,7 +141,8 @@
       "text": "A coherent Vault backup is exported on one major browser/platform family and restored on a materially different supported family with semantic IDs/revisions/provenance preserved.",
       "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/phase0-storage-recovery-2026-09-19.md"
+        "docs/evidence/phase0-storage-recovery-2026-09-19.md",
+        "docs/evidence/phase0-browser-fault-recovery-2026-09-19.md"
       ]
     },
     {

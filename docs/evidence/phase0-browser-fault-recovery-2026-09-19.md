@@ -32,6 +32,14 @@ This supports only partial normal Recovery evidence. It does not prove the indep
 
 This independently proves the read/export route and upgrades `OMN-ACC-125` only to `PARTIAL`; the required two deliberate shell failures, including update interruption and all target variants, remain open.
 
+## Cross-origin Vault restore proof
+
+- The live Pages origin exported a full Vault through the normal Recovery UI: `1 record(s)`, `0 artifact payload(s)`, `2,718 bytes`; downloaded file `omnevum-vault (5).json`, SHA-256 `3903504995d89003fc9f3f094e1ee3da186867e190fa8e33ba19fe0016dad378`.
+- A clean second-origin development target `http://127.0.0.1:4357/` started with `0 active` and `0 revision snapshot(s)`. The same Vault was selected through the visible Import Vault flow, previewed as `1 record(s), 2 history entries, 0 artifact payload(s); 1 will import, 0 will skip`, and confirmed.
+- The target reported `Imported 1 record(s); skipped 0.` and `record-count=1`. After reload it still reported `1 active`, `2 revision snapshot(s)`, and the imported `Fresh Edge acceptance probe` remained visible.
+
+This is real browser, cross-origin manual portability evidence and strengthens `OMN-ACC-010` only to `PARTIAL`; it is not the materially different browser-family proof required for PASS.
+
 ## Source hashes
 
 - `src/core/storage.ts`: `b1aec9639873716b2566576862c93592f0a33f29b87b457cda933d4c6815c189`

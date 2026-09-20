@@ -16,7 +16,7 @@
     "Deprecated implementation-era acceptance statuses and qualification receipts were removed from the active baseline; current evidence promotes one exact Chromium PASS, bounded PARTIAL rows, and keeps UNKNOWN release-visible.",
     "The current hosted browser receipt proves compact responsive layout, built relative assets, cached offline Search, and bounded capture/triage/search/Vault behavior; it does not close a release gate.",
     "GitHub Pages deployment run 35481320651 is green for source 542b665 and its eight served dist files byte-match the local candidate artifact; the published-entry smoke guard prevents regression to the legacy source deployment.",
-    "Storage/Vault/migration/Recovery and security/effect/context-boundary contracts have focused executable characterization; live Chromium search-index corruption/rebuild is PASS, normal canonical corruption repair and the independent recovery-console read/export are PARTIAL, and target/browser/fault and human proofs remain open.",
+    "Storage/Vault/migration/Recovery and security/effect/context-boundary contracts have focused executable characterization; live Chromium search-index corruption/rebuild is PASS, cross-origin manual Vault restore, normal canonical corruption repair, and the independent recovery-console read/export are PARTIAL, and target/browser/fault and human proofs remain open.",
     "The repository structure/reference/architecture/license/security/typecheck/test/build/static/recovery/drift gates are required before handoff."
   ],
   "unverified": [
