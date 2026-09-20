@@ -19,3 +19,7 @@ At 2026-09-20, a fresh Node HTTPS fetch compared every release-register artifact
 - Probe result: `10/10 PASS`
 
 This proves deployment identity and transport integrity only. It does not close production rollback, offline/update, storage fault, browser-family, security, assistive-technology, or human-acceptance gates.
+
+## Hosted mobile browser qualification
+
+After deployment, Chrome DevTools reloaded the hosted route in an isolated context at `390x844`, DPR 2, touch enabled, light color scheme. Navigation Lighthouse reported Accessibility 100, Best Practices 100, SEO 100, and Agentic Browsing 100; all 52 reported audits passed. The console contained no messages. This confirms the compact default presentation and hosted browser hygiene at this target profile; other engines, assistive technology, broader responsive matrices, and human acceptance remain open.

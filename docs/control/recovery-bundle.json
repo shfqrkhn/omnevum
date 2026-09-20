@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "ab69829f32224836d6ed41246584d84de4e9dc6bf9abfc5b2fd59eb6a80122ba",
-        "bytes": 3422
+        "sha256": "708772803212ce082a8b73b719b887629b10a12b45ce627623f3884eb44ff685",
+        "bytes": 3433
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -409,8 +409,8 @@
       },
       {
         "path": "docs/evidence/phase0-pages-deployment-compact-benchmarks-2026-09-20.md",
-        "sha256": "9872570eea18fb8641d2fe5cc82628c61910382d5731eba2cb67620d30fe3a11",
-        "bytes": 1440
+        "sha256": "bce723af2f9e99520e66609761b4451113235a4c2a525ac23af1f74d909d09c1",
+        "bytes": 1989
       },
       {
         "path": "docs/evidence/phase0-pages-deployment-launchpad-2026-09-19.md",
