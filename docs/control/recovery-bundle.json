@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "c32e06eb74b2c0516ff3fb90462dba2552e5d48e056d7236a44aa317fecb5c93",
-        "bytes": 17267
+        "sha256": "7831e1398a4a83451691b858cf50f4ace3d4ace0b6d483b451163f36fa6a0b3b",
+        "bytes": 17197
       },
       {
         "path": "docs/control/requirements.json",
@@ -1179,13 +1179,13 @@
       },
       {
         "path": "src/core/presentation.test.ts",
-        "sha256": "edf8603b439f5b06456342944d4e468209b5288ebdbb57cac990308a253942a8",
-        "bytes": 9207
+        "sha256": "a55c69f780f5680c6f91145339acd2ed3d3f63e5b9153a3f7c016e727ae54728",
+        "bytes": 9547
       },
       {
         "path": "src/core/presentation.ts",
-        "sha256": "8b7b2b22fa729277e6e64346e67836f75064d3b0f7f3ff496901074d044398bd",
-        "bytes": 13293
+        "sha256": "85e56566a6ed50255380cf4aaeba0ccbeb03e02a5bcad57997d8104bc1cc8f0f",
+        "bytes": 13485
       },
       {
         "path": "src/core/proposal-router.test.ts",
@@ -1439,13 +1439,13 @@
       },
       {
         "path": "src/styles.css",
-        "sha256": "a52b12b911f61539e8b94633a1e9c75c1c5122db0b9920272871141b4c3c1a3b",
-        "bytes": 33093
+        "sha256": "9e8614148cbaac2ea723fea41811fca96bad9d81fa09dca479aaa12343c68d23",
+        "bytes": 33244
       },
       {
         "path": "src/styles.test.ts",
-        "sha256": "78ce4cf80d6ba6ac68e36cf5f93ebed7b29dd0a2610b15e09f9ba30f02a31545",
-        "bytes": 1850
+        "sha256": "e2302cea341d0cfa1ec720a94887ebeadfae8db4d0903c1a4e9f60dccd749ab9",
+        "bytes": 2022
       },
       {
         "path": "src/test/setup.ts",
@@ -1454,8 +1454,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "686191f325690de3efec9f09af166e11dc137beb865c4a7e3c94e790fd99ed4d",
-        "bytes": 357090
+        "sha256": "8ea543450eb13134747e67766b5e6463db5ceee777e80df131c4d6fd3147f2bf",
+        "bytes": 357210
       },
       {
         "path": "tsconfig.json",

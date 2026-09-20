@@ -5,22 +5,22 @@
   "authority": "MPES Sections 21 and 22",
   "releaseIdentity": {
     "version": "v0.18.0-overhaul-candidate",
-    "artifactDigest": "f9c5bb9c3cf91721d0abbb16c09c48c1d94f5f03c4ff2f4bde7762f709e295d2",
-    "sourceRevision": "adababe663b190b65b04d859f89c68eaf7b2bd13",
-    "serviceWorkerCache": "omnevum-shell-e5a581ec34b80448"
+    "artifactDigest": "523f2095f75a28de187a78abbbd4627c0b377de24e50f14a1f70728f6d5b0c0b",
+    "sourceRevision": "4449031d37c98428fe73373ca1c7866df0c72e48",
+    "serviceWorkerCache": "omnevum-shell-58d4d34fe0a37792"
   },
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF.",
   "artifactFiles": [
-    {"path": "dist/assets/index-DidHf6AX.css", "publicPath": "assets/index-DidHf6AX.css", "sha256": "cdd8288d07cda1432b2306467b53ae316119e752b011183322693d6af6e52af3", "bytes": 28862},
-    {"path": "dist/assets/index-DxjBhOnt.js", "publicPath": "assets/index-DxjBhOnt.js", "sha256": "4470e4c218d383fa5ab36896f2b08ff2976a2c359377a1f71b56196228475ec8", "bytes": 577309},
-    {"path": "dist/assets/index-DxjBhOnt.js.map", "publicPath": "assets/index-DxjBhOnt.js.map", "sha256": "f593bfde1f16430e6da2981393a021743af30074c7afc0ed34725974f7e1fcc3", "bytes": 1686410},
+    {"path": "dist/assets/index-BkEKjMP5.css", "publicPath": "assets/index-BkEKjMP5.css", "sha256": "a9ff90cb65bcf8323c2cb4d59751397c614046cffd0e4637ef201adbaba46b36", "bytes": 28971},
+    {"path": "dist/assets/index-1t0Lhdi9.js", "publicPath": "assets/index-1t0Lhdi9.js", "sha256": "17161256c9a2c06a772b36ba44ab6003c28da153fbfdadf087b1cd6d8ddd2f25", "bytes": 577386},
+    {"path": "dist/assets/index-1t0Lhdi9.js.map", "publicPath": "assets/index-1t0Lhdi9.js.map", "sha256": "57e51f4dd7df1e012f5133d73da58c12006acf6bc88ba01d3a61582a3d86d755", "bytes": 1686843},
     {"path": "dist/icon.svg", "publicPath": "icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "publicPath": "index.html", "sha256": "7e88fa830265fab7cd6fa9b80ce0e32a835c970daaea4112cee5cca976a069af", "bytes": 972},
+    {"path": "dist/index.html", "publicPath": "index.html", "sha256": "da8b0a3651b540d0d1bd5d1ec68948d1d216c3dbcd51d9acd98c31d3dbe433e0", "bytes": 972},
     {"path": "dist/llms.txt", "publicPath": "llms.txt", "sha256": "6959289274212f429a26f9bbaea60e685ab2b3b4deeda5e6757f14670703b1ff", "bytes": 593},
     {"path": "dist/manifest.webmanifest", "publicPath": "manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
     {"path": "dist/recovery.html", "publicPath": "recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
     {"path": "dist/robots.txt", "publicPath": "robots.txt", "sha256": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95", "bytes": 23},
-    {"path": "dist/sw.js", "publicPath": "sw.js", "sha256": "b7074a0448c3a3536378f20ca37a0a876b260bac9e97a48210d7d4aa4f195a8b", "bytes": 3622}
+    {"path": "dist/sw.js", "publicPath": "sw.js", "sha256": "7da65de1abfdc4544715e401dd938be83b21cc71a45788198f31435ef6706703", "bytes": 3622}
   ],
   "deploymentObservations": [
     {"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35481320651", "sourceRevision": "542b665b361d579ee6d8e3ab2f331ce3afca5cd6", "artifactByteMatch": "8/8 local dist files matched the served Pages files after switching Pages from legacy master:/ to the Actions artifact source; published-entry smoke guard passed", "date": "2026-09-19"},
@@ -50,5 +50,5 @@
   ],
   "requiredEvidence": ["control-generation-and-drift", "structure-reference-architecture-audit", "type-static-and-unit-tests", "browser-e2e-responsive-accessibility-input-i18n", "offline-static-host-and-service-worker", "storage-quota-corruption-migration-and-recovery", "Vault-cross-origin-restore", "security-egress-untrusted-content-and-credential-boundaries", "dependency-license-SBOM-vulnerability-provenance", "deploy-smoke-rollback", "human-acceptance-where-required"],
   "evidencePolicy": "The clean v0.18 baseline inherits no release artifact or acceptance claim. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains UNKNOWN.",
-  "currentDecision": "The current local and deployed artifact is bound to source adababe663b190b65b04d859f89c68eaf7b2bd13 and artifact f9c5bb9c3cf91721d0abbb16c09c48c1d94f5f03c4ff2f4bde7762f709e295d2 with cache omnevum-shell-e5a581ec34b80448. Control/evidence commit 3b3bfb6 passed CI workflow 35497018787 and Pages workflow 35497018741; an independent HTTPS probe matched all 10 public paths exactly and confirmed the artifact remained unchanged. Test-only commits 979bb2b and 9268cb3 strengthen canonical-lens identity and capability fault isolation without changing the artifact; Chromium local QA now also bounds History/Version, Compose/View, and Capture → Acquire → Triage as PARTIAL. OMN-ACC-007 is PASS; OMN-ACC-016, OMN-ACC-047, OMN-ACC-048, and OMN-ACC-065 are bounded PARTIAL. Production rollback, real offline/update/fault qualification, materially different browser-family Vault restore, security/egress, WebKit/Firefox, assistive technology, human acceptance, and all other mandatory acceptance gates remain open, so release readiness is not claimed."
+  "currentDecision": "The current local release candidate is bound to source 4449031d37c98428fe73373ca1c7866df0c72e48 and artifact 523f2095f75a28de187a78abbbd4627c0b377de24e50f14a1f70728f6d5b0c0b with cache omnevum-shell-58d4d34fe0a37792. Local static, type, test, and build gates pass; hosted deployment and independent byte identity for this candidate are pending after push. The previously deployed artifact remains the exact f9c5bb9c3cf91721d0abbb16c09c48c1d94f5f03c4ff2f4bde7762f709e295d2 candidate. Chromium local QA bounds compact Home disclosure, History/Version, Compose/View, and Capture → Acquire → Triage; OMN-ACC-007 is PASS and OMN-ACC-016, OMN-ACC-047, OMN-ACC-048, and OMN-ACC-065 are bounded PARTIAL. Production rollback, real offline/update/fault qualification, materially different browser-family Vault restore, security/egress, WebKit/Firefox, assistive technology, human acceptance, and all other mandatory acceptance gates remain open, so release readiness is not claimed."
 }
