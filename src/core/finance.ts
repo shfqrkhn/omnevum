@@ -116,7 +116,7 @@ export interface FinanceDeduplicationResult {
 export interface FinanceTransactionConflict {
   sourceTransactionId: string;
   transactionIds: string[];
-  reason: "SOURCE_ID_REUSED_WITH_DIFFERENT_MEANING";
+  reason: "SOURCE_ID_REUSED_WITH_DIFFERENT_MEANING" | "AMBIGUOUS_NEAR_DUPLICATE";
 }
 
 export interface FinanceReconciliation {
@@ -413,6 +413,7 @@ export function deduplicateFinanceTransactions(transactions: FinanceTransaction[
   const conflicts: FinanceTransactionConflict[] = [];
   const byNaturalKey = new Map<string, FinanceTransaction>();
   const bySourceId = new Map<string, FinanceTransaction>();
+  const byNearDuplicateKey = new Map<string, FinanceTransaction[]>();
   for (const transaction of transactions) {
     const sourceKey = transaction.sourceTransactionId ? `${transaction.accountId}|${transaction.sourceTransactionId}` : undefined;
     const priorSource = sourceKey ? bySourceId.get(sourceKey) : undefined;
@@ -426,11 +427,17 @@ export function deduplicateFinanceTransactions(transactions: FinanceTransaction[
       duplicates.push(transaction);
       continue;
     }
+    const nearDuplicateKey = financeNearDuplicateKey(transaction);
+    for (const priorNear of byNearDuplicateKey.get(nearDuplicateKey) ?? []) {
+      if (priorNear.naturalKey === transaction.naturalKey || (priorNear.sourceTransactionId !== undefined && transaction.sourceTransactionId !== undefined && priorNear.sourceTransactionId === transaction.sourceTransactionId)) continue;
+      conflicts.push({ sourceTransactionId: transaction.sourceTransactionId ?? "", transactionIds: [priorNear.id, transaction.id].sort(), reason: "AMBIGUOUS_NEAR_DUPLICATE" });
+    }
     unique.push(transaction);
     byNaturalKey.set(transaction.naturalKey, transaction);
     if (sourceKey) bySourceId.set(sourceKey, transaction);
+    byNearDuplicateKey.set(nearDuplicateKey, [...(byNearDuplicateKey.get(nearDuplicateKey) ?? []), transaction]);
   }
-  return { unique, duplicates, conflicts };
+  return { unique, duplicates, conflicts: deduplicateFinanceConflicts(conflicts) };
 }
 
 export async function acceptFinanceTransactions(commands: CommandBus, source: FinanceStatementSource, transactions: FinanceTransaction[]): Promise<FinanceImportResult> {
@@ -440,15 +447,31 @@ export async function acceptFinanceTransactions(commands: CommandBus, source: Fi
   let created = 0;
   let existing = 0;
   const conflicts = [...deduplicated.conflicts];
+  const reviewTransactionIds = new Set(conflicts.flatMap((conflict) => conflict.transactionIds));
   const existingFinance = (await commands.list(true)).filter((record) => record.owner === "domain.finance" && record.data.kind === "finance-transaction");
   const byNaturalKey = new Map<string, CanonicalRecord>(existingFinance.flatMap((record) => typeof record.data.naturalKey === "string" ? [[record.data.naturalKey, record] as const] : []));
   const bySourceKey = new Map<string, CanonicalRecord>(existingFinance.flatMap((record) => typeof record.data.accountId === "string" && typeof record.data.sourceTransactionId === "string" ? [[`${record.data.accountId}|${record.data.sourceTransactionId}`, record] as const] : []));
   const byProvenance = new Map<string, CanonicalRecord>(existingFinance.flatMap((record) => record.provenance.sourceId ? [[record.provenance.sourceId, record] as const] : []));
+  const byNearDuplicateKey = new Map<string, CanonicalRecord[]>(existingFinance.reduce((entries, record) => {
+    const transaction = canonicalRecordToFinanceTransaction(record);
+    if (!transaction) return entries;
+    const key = financeNearDuplicateKey(transaction);
+    entries.set(key, [...(entries.get(key) ?? []), record]);
+    return entries;
+  }, new Map<string, CanonicalRecord[]>()));
   const addConflict = (transaction: FinanceTransaction, prior: CanonicalRecord): void => {
     if (!transaction.sourceTransactionId || typeof prior.data.sourceTransactionId !== "string") return;
     const transactionIds = [String(prior.data.id ?? prior.id), transaction.id].sort();
     if (!conflicts.some((conflict) => conflict.sourceTransactionId === transaction.sourceTransactionId && conflict.transactionIds.slice().sort().join("|") === transactionIds.join("|"))) {
       conflicts.push({ sourceTransactionId: transaction.sourceTransactionId, transactionIds, reason: "SOURCE_ID_REUSED_WITH_DIFFERENT_MEANING" });
+    }
+  };
+  const addNearDuplicateConflict = (transaction: FinanceTransaction, prior: CanonicalRecord): void => {
+    const priorNaturalKey = typeof prior.data.naturalKey === "string" ? prior.data.naturalKey : undefined;
+    if (!priorNaturalKey || priorNaturalKey === transaction.naturalKey) return;
+    const transactionIds = [String(prior.data.id ?? prior.id), transaction.id].sort();
+    if (!conflicts.some((conflict) => conflict.reason === "AMBIGUOUS_NEAR_DUPLICATE" && conflict.transactionIds.slice().sort().join("|") === transactionIds.join("|"))) {
+      conflicts.push({ sourceTransactionId: transaction.sourceTransactionId ?? "", transactionIds, reason: "AMBIGUOUS_NEAR_DUPLICATE" });
     }
   };
   for (const transaction of deduplicated.unique) {
@@ -463,6 +486,7 @@ export async function acceptFinanceTransactions(commands: CommandBus, source: Fi
     const priorSource = sourceKey ? bySourceKey.get(sourceKey) : undefined;
     const priorNatural = byNaturalKey.get(transaction.naturalKey);
     if (priorSource && priorSource.data.naturalKey !== transaction.naturalKey) addConflict(transaction, priorSource);
+    for (const priorNear of byNearDuplicateKey.get(financeNearDuplicateKey(transaction)) ?? []) addNearDuplicateConflict(transaction, priorNear);
     if (priorNatural && (!priorSource || priorSource.data.naturalKey === transaction.naturalKey)) {
       records.push(priorNatural);
       existing += 1;
@@ -489,7 +513,7 @@ export async function acceptFinanceTransactions(commands: CommandBus, source: Fi
         sourceArtifactId: source.sourceArtifactId ?? source.sourceId,
         sourceTransactionId: transaction.sourceTransactionId,
         financeLineage: transaction.lineage,
-        ...(conflicts.some((conflict) => conflict.transactionIds.includes(transaction.id)) || (priorSource && priorSource.data.naturalKey !== transaction.naturalKey) ? { reviewRequired: true, reviewReason: "source transaction identifier was reused with a different meaning" } : {})
+        ...(reviewTransactionIds.has(transaction.id) || conflicts.some((conflict) => conflict.transactionIds.includes(transaction.id)) || (priorSource && priorSource.data.naturalKey !== transaction.naturalKey) ? { reviewRequired: true, reviewReason: "import identity is ambiguous and requires review" } : {})
       }
     });
     records.push(record);
@@ -497,6 +521,8 @@ export async function acceptFinanceTransactions(commands: CommandBus, source: Fi
     byNaturalKey.set(transaction.naturalKey, record);
     if (sourceKey) bySourceKey.set(sourceKey, record);
     byProvenance.set(provenanceId, record);
+    const nearDuplicateKey = financeNearDuplicateKey(transaction);
+    byNearDuplicateKey.set(nearDuplicateKey, [...(byNearDuplicateKey.get(nearDuplicateKey) ?? []), record]);
   }
   return { records, created, existing, duplicates: deduplicated.duplicates.length, conflicts };
 }
@@ -635,6 +661,51 @@ function absMinor(value: string): bigint {
 function moneyFromMinor(amountMinor: bigint, currency: string): MoneyValue {
   if (amountMinor < -(2n ** 63n) || amountMinor > 2n ** 63n - 1n) throw new Error("Money amount is outside the supported range");
   return { amountMinor: amountMinor.toString(), currency };
+}
+
+function financeNearDuplicateKey(transaction: FinanceTransaction): string {
+  return `${transaction.accountId}|${transaction.postedAt.slice(0, 10)}|${transaction.amount.currency}|${transaction.amount.amountMinor}`;
+}
+
+function canonicalRecordToFinanceTransaction(record: CanonicalRecord): FinanceTransaction | undefined {
+  const data = record.data;
+  if (record.deleted || record.owner !== "domain.finance" || data.kind !== "finance-transaction") return undefined;
+  if (typeof data.accountId !== "string" || typeof data.postedAt !== "string" || typeof data.currency !== "string" || typeof data.amountMinor !== "string" || typeof data.merchant !== "string" || typeof data.description !== "string" || typeof data.status !== "string") return undefined;
+  try {
+    parseMoney("0", data.currency);
+    if (!/^-?\d+$/.test(data.amountMinor)) return undefined;
+    const amount = { amountMinor: data.amountMinor, currency: data.currency.trim().toUpperCase() } satisfies MoneyValue;
+    const sourceId = record.provenance.sourceId ?? record.id;
+    const lineage = data.financeLineage && typeof data.financeLineage === "object" ? data.financeLineage as Partial<FinanceLineage> : undefined;
+    return {
+      id: record.id,
+      accountId: data.accountId,
+      postedAt: new Date(Date.parse(data.postedAt)).toISOString(),
+      description: data.description,
+      merchant: data.merchant,
+      amount,
+      direction: BigInt(amount.amountMinor) > 0n ? "INFLOW" : BigInt(amount.amountMinor) < 0n ? "OUTFLOW" : "NEUTRAL",
+      status: data.status as FinanceTransactionStatus,
+      ...(data.essential === true ? { essential: true } : {}),
+      ...(typeof data.sourceTransactionId === "string" ? { sourceTransactionId: data.sourceTransactionId } : {}),
+      naturalKey: typeof data.naturalKey === "string" ? data.naturalKey : `${data.accountId}|${data.postedAt.slice(0, 10)}|${data.currency}|${data.amountMinor}|${data.merchant}`,
+      lineage: lineage && typeof lineage.sourceId === "string" && typeof lineage.sourceSha256 === "string" && typeof lineage.sourceRow === "number" && typeof lineage.parserProfile === "string" && lineage.rawFields && typeof lineage.rawFields === "object"
+        ? lineage as FinanceLineage
+        : { sourceId, sourceSha256: "0".repeat(64), sourceRow: 0, parserProfile: "STRUCTURED_V1", rawFields: {} }
+    };
+  } catch {
+    return undefined;
+  }
+}
+
+function deduplicateFinanceConflicts(conflicts: FinanceTransactionConflict[]): FinanceTransactionConflict[] {
+  const seen = new Set<string>();
+  return conflicts.filter((conflict) => {
+    const key = `${conflict.reason}|${conflict.sourceTransactionId}|${conflict.transactionIds.slice().sort().join("|")}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function normalizeStatus(value: string): FinanceTransactionStatus {

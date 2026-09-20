@@ -48,6 +48,14 @@ describe("credential-free Finance statement semantics", () => {
     expect(result.conflicts).toEqual([{ sourceTransactionId: "tx-1", transactionIds: [first?.id, conflicting?.id], reason: "SOURCE_ID_REUSED_WITH_DIFFERENT_MEANING" }]);
   });
 
+  it("reports same-day same-amount near duplicates without silently merging distinct meaning", () => {
+    const [first, nearDuplicate] = parseFinanceCsv('Date,Description,Amount,Id\n2026-01-02,Cafe,-10.00,tx-1\n2026-01-02,Parking,-10.00,tx-2\n', source);
+    const result = deduplicateFinanceTransactions([first!, nearDuplicate!]);
+    expect(result.unique).toHaveLength(2);
+    expect(result.duplicates).toHaveLength(0);
+    expect(result.conflicts).toEqual([{ sourceTransactionId: "tx-2", transactionIds: [first?.id, nearDuplicate?.id].sort(), reason: "AMBIGUOUS_NEAR_DUPLICATE" }]);
+  });
+
   it("deduplicates an overlapping period when the same source is renamed", () => {
     const original = parseFinanceCsv('Date,Description,Amount,Id\n2026-01-02,Cafe,-10.00,tx-1\n', source);
     const renamed = parseFinanceCsv('Date,Description,Amount,Id\n2026-01-02,Cafe,-10.00,tx-1\n', { ...source, sourceId: "source:statement-renamed", name: "renamed.csv", sha256: "b".repeat(64) });
@@ -161,6 +169,24 @@ describe("credential-free Finance statement semantics", () => {
     const second = await acceptFinanceBatch(commands, [entry]);
     expect(second).toMatchObject({ created: 0, existing: 2, duplicates: 0, conflicts: [] });
     expect(second.sourceResults[0]?.reconciliation.status).toBe("MATCH");
+    store.close();
+  });
+
+  it("marks persisted near duplicates for review while retaining both canonical records", async () => {
+    const store = new CanonicalStore(`omnevum-test-${Date.now()}-finance-near-duplicate`);
+    await store.open();
+    const commands = new CommandBus(store);
+    const firstSource = { ...source, sourceId: "source:near-first" };
+    const secondSource = { ...source, sourceId: "source:near-second", name: "second.csv", sha256: "c".repeat(64) };
+    const first = parseFinanceCsv("Date,Description,Amount,Id\n2026-01-02,Cafe,-10.00,near-1\n", firstSource);
+    const second = parseFinanceCsv("Date,Description,Amount,Id\n2026-01-02,Parking,-10.00,near-2\n", secondSource);
+    const imported = await acceptFinanceTransactions(commands, firstSource, first);
+    const result = await acceptFinanceTransactions(commands, secondSource, second);
+    expect(imported.created).toBe(1);
+    expect(result.created).toBe(1);
+    expect(result.conflicts).toEqual([{ sourceTransactionId: "near-2", transactionIds: [imported.records[0]?.id, second[0]?.id].sort(), reason: "AMBIGUOUS_NEAR_DUPLICATE" }]);
+    expect(result.records[0]?.data).toMatchObject({ reviewRequired: true, reviewReason: "import identity is ambiguous and requires review" });
+    expect((await store.list()).filter((record) => record.owner === "domain.finance")).toHaveLength(2);
     store.close();
   });
 });
