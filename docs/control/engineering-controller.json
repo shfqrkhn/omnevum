@@ -15,6 +15,7 @@
     "Generated control projections are bound to the exact v0.18.0 MPES hash.",
     "Deprecated implementation-era acceptance statuses and qualification receipts were removed from the active baseline; all scenarios begin UNKNOWN.",
     "A dated local-browser smoke receipt proves only current responsive layout and bounded capture/triage/search/Vault behavior; it does not close a release gate.",
+    "GitHub Pages deployment run d3dc92b is green and its eight served dist files byte-match the local candidate artifact; rollback and remaining target gates are still open.",
     "The repository structure/reference/architecture/license/security/typecheck/test/build/static/recovery/drift gates are required before handoff."
   ],
   "unverified": [

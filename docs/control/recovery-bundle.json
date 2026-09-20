@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "dc162d913ef503c62a08e3daf54c67b703e2888222a9e6570eb13c3526429b71",
-        "bytes": 2548
+        "sha256": "410e2e6a5c3e74e78f2fdfd6b8454f13edde6f7c58ce95e08521252764b5948b",
+        "bytes": 2598
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "02a9dba1755d41385c8c5694a512e290fc0e4977d1b979ee6267ca32e624987d",
-        "bytes": 2119
+        "sha256": "fd43f0dbb922efa2eff44db91a8f61e3a718feed7a1446798b5898c9ac370601",
+        "bytes": 2296
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -264,13 +264,13 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "fa54631c80da2846b11f893e67fb624a6641d22ec21efe4c38f9c1a311ae6858",
-        "bytes": 1617
+        "sha256": "3dae8fbf544c496fbc2a2bd689c69cc9d29fa21bfecd6af4edb4f0d327263b55",
+        "bytes": 1672
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "b6c637c4ffe5add938968bedabd837b067d6df24716413f9d15105699817c83a",
-        "bytes": 1502
+        "sha256": "51e57d603a9da8edb6fbef16b3ef9b39ed47018a88eadc7a6d05ca458ea9dbfb",
+        "bytes": 3036
       },
       {
         "path": "docs/control/requirements.json",
@@ -296,6 +296,11 @@
         "path": "docs/evidence/phase0-browser-qa-2026-09-19.md",
         "sha256": "d591f1c4763f6189304449d32b8fd59ae2ff3db38291f459216e37c7df7f286a",
         "bytes": 2581
+      },
+      {
+        "path": "docs/evidence/phase0-pages-deployment-2026-09-19.md",
+        "sha256": "1f354379b6a7d3c1eb1a66e89f32904f62c8f8687dd3d4948400a3e3fbe226a4",
+        "bytes": 1823
       },
       {
         "path": "docs/evidence/phase0-v018-rebaseline-2026-09-19.md",
