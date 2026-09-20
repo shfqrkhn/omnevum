@@ -5,7 +5,7 @@ import { redactTextArtifact } from "../core/document";
 import { isCompletedTask, isSpaceId, proposeTriage, recordSpace, recordText, recordTriageDeferredUntil, recordTriageStatus, SPACE_LABELS, type SpaceId, type TriageProposalAction, type TriageStatus } from "../core/domain";
 import { captureKindLabel, formatDateTime, formatNumber, getConfidenceCopy, getDeviceInputCopy, getInstalledMetadataStatus, getRecoveryCopy, getStoragePersistenceNotice, getTimeCopy, getUiCopy, localeDirection } from "../core/i18n";
 import { CAPTURE_KINDS, type CanonicalRecord, type CaptureKind } from "../core/model";
-import { accessibilityPreset, DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_LENS_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, type PresentationAccessibilityProfile, type PresentationFamily, type PresentationHomeWidgetId, type PresentationLensId, type PresentationProfile, type PresentationSectionId, type PresentationTargetSize, type PresentationTextScale } from "../core/presentation";
+import { accessibilityPreset, DEFAULT_PRESENTATION, MAX_PRESENTATION_PROFILE_JSON_BYTES, PRESENTATION_HOME_WIDGET_IDS, PRESENTATION_LENS_IDS, PRESENTATION_SECTION_IDS, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, shouldAutoOpenHomeWidget, type PresentationAccessibilityProfile, type PresentationFamily, type PresentationHomeWidgetId, type PresentationLensId, type PresentationProfile, type PresentationSectionId, type PresentationTargetSize, type PresentationTextScale } from "../core/presentation";
 import { PRESENTATION_LENS_DEFINITIONS, lensIdsForRecord, projectLensRecords } from "../core/lenses";
 import { TrackService } from "../core/track";
 import { makeReminderData } from "../core/time";
@@ -3307,7 +3307,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       if (funding) appendFundingReview(funding);
     }
     if (insightsDisclosure.dataset.userControlled !== "true") {
-      insightsDisclosure.open = openTasks > 0 || finance.reviewCases.length > 0 || allocationConflicts > 0 || goalConflicts > 0 || Boolean(funding?.fundingConflict);
+      insightsDisclosure.open = shouldAutoOpenHomeWidget(presentation.density, openTasks > 0 || finance.reviewCases.length > 0 || allocationConflicts > 0 || goalConflicts > 0 || Boolean(funding?.fundingConflict));
     }
     const considerations = projectDueReminderConsiderations(records);
     attentionPanel.replaceChildren();
@@ -3372,7 +3372,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
     const telemetryItems = projectTelemetryConsiderations(projectHealthTelemetry(await store.health()), telemetryDispositions);
     if (attentionDisclosure.dataset.userControlled !== "true") {
-      attentionDisclosure.open = considerations.length > 0 || telemetryItems.length > 0 || homeFocusMode;
+      attentionDisclosure.open = shouldAutoOpenHomeWidget(presentation.density, considerations.length > 0 || telemetryItems.length > 0, homeFocusMode);
     }
     if (telemetryItems.length > 0) {
       const telemetryList = document.createElement("ul");

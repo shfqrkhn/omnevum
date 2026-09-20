@@ -96,6 +96,10 @@ export const DEFAULT_PRESENTATION: PresentationProfile = {
   homeWidgets: [...DEFAULT_HOME_WIDGETS]
 };
 
+export function shouldAutoOpenHomeWidget(density: PresentationDensity, hasContent: boolean, explicitMode = false): boolean {
+  return explicitMode || (density !== "compact" && hasContent);
+}
+
 export interface PresentationResolution {
   profile: PresentationProfile;
   safeMode: boolean;

@@ -346,6 +346,7 @@ footer { display: flex; justify-content: space-between; gap: 1rem; border-top: 1
 [data-density="compact"] .primary-nav a { width: 100%; white-space: normal; }
 [data-density="compact"] h1 { font-size: clamp(1.9rem, 5vw, 2.8rem); }
 @media (max-width: 560px) { .topbar, .status-card, .form-row, .section-heading, .recovery-row, .undo-banner, footer, .dialog-actions { flex-direction: column; align-items: stretch; } .topbar button { align-self: flex-start; } .lens-nav { position: static; } .primary-nav { overflow: visible; } .primary-nav-menu > summary { display: flex; min-height: 44px; align-items: center; cursor: pointer; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--accent); font-weight: 750; padding: 0.55rem 0.75rem; } .primary-nav-menu[open] ol { margin-top: 0.55rem; } .primary-nav ol { min-width: 0; flex-wrap: wrap; } .primary-nav-item { flex: 0 1 auto; } .primary-nav a { white-space: normal; overflow-wrap: anywhere; } .record-item { flex-direction: column; min-width: 0; } .triage-split { grid-template-columns: minmax(0, 1fr); } .triage-actions input[type="datetime-local"], .triage-actions select { width: 100%; min-width: 0; } }
+@media (max-width: 560px) { [data-density="compact"] .compact-panel > .compact-summary.section-heading { flex-direction: row; align-items: center; } }
 @media (max-width: 759px) {
   [data-density="compact"] main > #capture { order: 1 !important; }
   [data-density="compact"] main > #home-summary { order: 2 !important; }

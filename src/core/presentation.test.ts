@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { accessibilityPreset, DEFAULT_PRESENTATION, isPresentationProfile, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile } from "./presentation";
+import { accessibilityPreset, DEFAULT_PRESENTATION, isPresentationProfile, makePresentationProfileDocument, parsePresentationProfile, parsePresentationProfileDocument, resolvePresentationProfile, shouldAutoOpenHomeWidget } from "./presentation";
 import { CanonicalStore } from "./storage";
 
 describe("presentation profile", () => {
@@ -21,6 +21,12 @@ describe("presentation profile", () => {
     expect(DEFAULT_PRESENTATION.navigation.visible).toEqual(["home-summary", "capture", "search", "assistant", "review", "records", "recovery", "presentation"]);
     expect(parsePresentationProfile({ productName: "Fresh" }).navigation.visible).toEqual(DEFAULT_PRESENTATION.navigation.visible);
     expect(DEFAULT_PRESENTATION.navigation.order).toHaveLength(19);
+  });
+
+  it("keeps populated home widgets collapsed in compact mode unless explicitly focused", () => {
+    expect(shouldAutoOpenHomeWidget("compact", true)).toBe(false);
+    expect(shouldAutoOpenHomeWidget("comfortable", true)).toBe(true);
+    expect(shouldAutoOpenHomeWidget("compact", false, true)).toBe(true);
   });
 
   it("supports the three persisted built-in presentation families", () => {
