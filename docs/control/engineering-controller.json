@@ -23,6 +23,7 @@
     "The clean-clone fresh-agent benchmark at dfea7897b05dd64cec84a588ce48eb6c10769fa0 passed npm ci, recovery audit, full CI, and deliberate factory interruption/resume without the original conversation; OMN-ACC-021 is now PASS."
     ,"Commit 93650343b0e46ef2db3c5a36f01bb74f471c79c4 binds the live Capture routes for Note/Knowledge, Task/Project, Calendar/Time, and Habit/Routine to one typed CommandBus launchpad seam; the local production-preview browser receipt records exact owner results and no console errors."
     ,"Commit 4fa52945d42ad2017815c5aeeda86fcbe5048344 adds a real CanonicalStore launchpad Automation integration proof: package-scoped rule lifecycle persistence, explicit proposal confirmation, normal CommandBus mutation, Vault export/import, and fresh-runtime restore of the stable rule. The current browser receipt records Automation install/preview/confirm/apply and retained Artifact persistence while explicitly leaving fresh file-picker proof open."
+    ,"Pages deployment run 35486356941 for source cf5ceaf1a92d2a4a048c0e6ac42ca9b3058999fb passed build/deploy/published-entry smoke; a fresh HTTPS fetch matched all 8 current dist files by status, byte length, and SHA-256."
   ],
   "unverified": [
     "OMN-FOSS-014 retained-donor UI workload and OMN-ACC-173..175 complete six-flow transplantability, duplicate-authority, and donor-boundary proof; retained NeumanOS UI is rejected, four replacement Capture owner routes are qualified, and Document/Artifact plus Automation browser/Recovery proof remains open",
