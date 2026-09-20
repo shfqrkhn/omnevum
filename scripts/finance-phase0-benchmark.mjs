@@ -12,6 +12,8 @@ const databaseName = `omnevum-finance-phase0-${process.pid}`;
 const sourceFiles = [
   "src/core/commands.ts",
   "src/core/finance-model.ts",
+  "src/core/finance-profile.test.ts",
+  "src/core/finance-profile.ts",
   "src/core/finance-projection.ts",
   "src/core/finance.ts",
   "src/core/finance.test.ts",
@@ -90,19 +92,21 @@ async function loadApis() {
     vite.ssrLoadModule("/src/core/commands.ts"),
     vite.ssrLoadModule("/src/core/finance.ts"),
     vite.ssrLoadModule("/src/core/finance-model.ts"),
+    vite.ssrLoadModule("/src/core/finance-profile.ts"),
     vite.ssrLoadModule("/src/core/finance-projection.ts"),
     vite.ssrLoadModule("/src/core/storage.ts")
   ]);
-  return { vite, commands: modules[0], finance: modules[1], model: modules[2], projection: modules[3], storage: modules[4] };
+  return { vite, commands: modules[0], finance: modules[1], model: modules[2], profile: modules[3], projection: modules[4], storage: modules[5] };
 }
 
 async function run() {
-  const { vite, commands: commandsApi, finance, model, projection, storage } = await loadApis();
+  const { vite, commands: commandsApi, finance, model, profile, projection, storage } = await loadApis();
   const { CommandBus } = commandsApi;
   const { CanonicalStore } = storage;
   const {
-    acceptFinanceBatch, acceptFinanceTransactions, correctFinanceTransaction, createFinanceSourceId, parseFinanceCsv, parseFinanceStatementFactsCsv
+    acceptFinanceBatch, acceptFinanceTransactions, correctFinanceTransaction, createFinanceSourceId, parseFinanceCsv, parseFinanceCsvWithProfile, parseFinanceStatementFactsCsv, inspectFinanceCsvProfile
   } = finance;
+  const { assessFinanceParserProfile, createFinanceParserProfileDraft, loadFinanceParserProfile, saveFinanceParserProfile } = profile;
   const {
     classifyFinanceSource, createFinanceForecast, detectFinanceParserDrift, detectFinanceReviewCases, evaluateFinanceReviewCases,
     evaluateFinanceWhatIf, analyzeFinanceRecurrence, reconcileFinanceForecast
@@ -164,6 +168,27 @@ async function run() {
     const stableProfile = detectFinanceParserDrift(parserProfile, ["Date", "Description", "Amount", "Id"]);
     const driftedProfile = detectFinanceParserDrift(parserProfile, ["Date", "Description", "Debit", "Credit", "Id"]);
     check("parser-profile-stability-and-drift", stableProfile.status === "STABLE" && driftedProfile.status === "DRIFT" && driftedProfile.missingHeaders.includes("amount") && driftedProfile.addedHeaders.includes("debit"), "parser profile did not distinguish stable structure from sign/header drift");
+
+    const durableProfileSource = { ...checking, sourceId: "finance:checking:durable-profile", name: "durable-profile.csv", sha256: "f".repeat(64) };
+    const stableProfileText = "Date,Description,Amount,Id\n2026-01-08,Profile sentinel,-12.00,profile-1\n";
+    const stableObservation = inspectFinanceCsvProfile(stableProfileText);
+    const initialProfile = await saveFinanceParserProfile(commands, createFinanceParserProfileDraft(durableProfileSource, stableObservation));
+    const reloadedProfile = await loadFinanceParserProfile(commands, initialProfile.profile.scope);
+    const stableProfileRows = parseFinanceCsvWithProfile(stableProfileText, durableProfileSource, reloadedProfile);
+    check("durable-parser-profile-persistence", initialProfile.created && initialProfile.profile.profileRevision === 1 && reloadedProfile?.profileId === initialProfile.profile.profileId && stableProfileRows[0]?.lineage.parserProfile === "PERSISTED_PROFILE_V1" && stableProfileRows[0]?.lineage.parserProfileFingerprint === initialProfile.profile.fingerprint, "the account-scoped parser profile was not persisted, reloaded, and bound to imported lineage");
+
+    const driftedProfileText = "Date,Description,Debit,Credit,Id\n2026-01-08,Profile sentinel,12.00,,profile-1\n";
+    const driftedObservation = inspectFinanceCsvProfile(driftedProfileText);
+    const driftAssessment = assessFinanceParserProfile(reloadedProfile, { accountId: durableProfileSource.accountId, sourceClass: durableProfileSource.sourceClass, format: "CSV", delimiter: driftedObservation.delimiter, headers: driftedObservation.headers, signConvention: driftedObservation.signConvention });
+    let driftBlocked = false;
+    try {
+      parseFinanceCsvWithProfile(driftedProfileText, durableProfileSource, reloadedProfile);
+    } catch (error) {
+      driftBlocked = error instanceof Error && error.message.includes("cannot be applied");
+    }
+    const reviewedProfile = await saveFinanceParserProfile(commands, createFinanceParserProfileDraft(durableProfileSource, driftedObservation), { expectedPreviousFingerprint: reloadedProfile.fingerprint, reason: "Reviewed the bank export sign convention change" });
+    check("durable-parser-profile-drift-review", driftAssessment.status === "DRIFT" && !driftAssessment.canApply && driftBlocked && reviewedProfile.changed && reviewedProfile.profile.profileRevision === 2 && reviewedProfile.profile.admission === "EXPLICIT_REVIEW" && (reviewedProfile.profile.priorProfileFingerprints ?? []).includes(initialProfile.profile.fingerprint), "parser structure drift was not blocked, explicitly reviewed, and recorded as a new profile revision");
+    metrics.parserProfile = { profileId: reviewedProfile.profile.profileId, revision: reviewedProfile.profile.profileRevision, lineageBound: stableProfileRows[0]?.lineage.parserProfileId === initialProfile.profile.profileId, driftStatus: driftAssessment.status, historyEntries: reviewedProfile.profile.priorProfileFingerprints?.length ?? 0 };
 
     const unmatchedSource = { ...checking, sourceId: "finance:checking:unmatched", name: "unmatched.csv", sha256: "a".repeat(64), openingBalance: money("0"), closingBalance: money("-7000") };
     await acceptFinanceTransactions(commands, unmatchedSource, parseFinanceCsv("Date,Description,Amount,Id\n2026-01-07,Transfer to brokerage,-70.00,unmatched-transfer\n", unmatchedSource));
@@ -235,7 +260,7 @@ async function run() {
       metrics,
       limitations: [
         "Synthetic credential-free fixtures are used; no bank connector, institution credential, live statement, or financial advice is involved.",
-        "Parser profile detection is proven, but durable account-specific profile learning/re-detection and routine no-review UX remain open.",
+        "Durable account-scoped parser persistence, lineage binding, and explicit drift review are contract-tested; routine no-review UX, live connectors, and real institution formats remain open.",
         "This does not prove WebKit/Firefox, assistive technology, human acceptance, hostile XLSX/PDF round-trip, real quota/process faults, rollback, or cross-origin browser Vault restore.",
         "Bulk and model checks prove bounded source/runtime behavior; they do not establish release performance, tax correctness, investment suitability, or fraud detection accuracy."
       ]

@@ -15,7 +15,8 @@ import { MAX_VAULT_JSON_BYTES, parseVault } from "../core/vault";
 import { makeArtifactOriginalsExport, makeHumanReadableExport, parseArtifactOriginalsExport, verifyHumanReadableExport } from "../core/portable-export";
 import type { CanonicalStore } from "../core/storage";
 import { captureExpense, captureFinancePlan, captureHealthMeasurement } from "../core/workflows";
-import { acceptFinanceBatch, correctFinanceTransaction, createFinanceSourceId, deduplicateFinanceTransactions, extractFinanceStatementFacts, parseFinanceCsv, parseFinanceStatementFactsCsv, reconcileFinanceStatement, type FinanceBatchEntry, type FinanceStatementFacts, type FinanceStatementSource } from "../core/finance";
+import { acceptFinanceBatch, correctFinanceTransaction, createFinanceSourceId, deduplicateFinanceTransactions, extractFinanceStatementFacts, inspectFinanceCsvProfile, parseFinanceCsv, parseFinanceCsvWithProfile, parseFinanceStatementFactsCsv, reconcileFinanceStatement, type FinanceBatchEntry, type FinanceStatementFacts, type FinanceStatementSource } from "../core/finance";
+import { assessFinanceParserProfile, createFinanceParserProfileDraft, loadFinanceParserProfile, saveFinanceParserProfile, type FinanceParserProfile } from "../core/finance-profile";
 import { formatMoney, parseMoney } from "../core/money";
 import { classifyFinanceSource, summarizeFinanceTransactions } from "../core/finance-model";
 import { projectFinanceState } from "../core/finance-projection";
@@ -51,9 +52,9 @@ import type { PackageAutomationProposal } from "../core/package-automation-regis
 import { shouldAutoShowOnboarding } from "../core/onboarding";
 import { REVIEW_SESSION_SETTING, REVIEW_TEMPLATES, advanceReviewSession, getReviewTemplate, isReviewSession, makeReviewSession, type ReviewSession } from "../core/review";
 import { makeTelemetryPreviewInput, parseTelemetryPreviewMode, projectTelemetry, projectTelemetryConsiderations, parseTelemetryDispositions, parseTelemetryThresholds, TELEMETRY_DISPOSITIONS_SETTING, TELEMETRY_THRESHOLDS_SETTING, type TelemetryDispositions, type TelemetryThresholds } from "../core/telemetry";
-import { appendShellUpdateObservation, parseShellUpdateLedger, UPDATE_LEDGER_SETTING } from "../core/update-ledger";
+import { appendShellUpdateObservation, CLIENT_FENCE_SETTING, parseClientFenceState, parseShellUpdateLedger, UPDATE_LEDGER_SETTING } from "../core/update-ledger";
 import { enumerateRetirementCopies, type RetirementCopyObservation, type RetirementCopyState } from "../core/retirement";
-import { evaluateUpdate, parseUpdateCandidate, type UpdateCandidate, type UpdateEvaluation } from "../core/migration";
+import { evaluateUpdate, makeMigrationApproval, parseUpdateCandidate, type MigrationApproval, type UpdateCandidate, type UpdateEvaluation } from "../core/migration";
 
 function parseExternalEffectPayload(value: string): Record<string, unknown> | string {
   const raw = value.trim();
@@ -97,6 +98,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   let retirementCopyInventory: ReturnType<typeof enumerateRetirementCopies>;
   let updateActivationRequested = false;
   let pendingMigrationCandidate: UpdateCandidate | undefined;
+  let pendingMigrationApproval: MigrationApproval | undefined;
   let pendingMigrationEvaluation: UpdateEvaluation | undefined;
   const initialRecordCount = (await store.list()).length;
   const onboardingAutoShown = shouldAutoShowOnboarding(initialRecordCount, onboardingDismissed);
@@ -555,8 +557,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <button type="submit">${copy.saveFinancePlan}</button>
             <p id="finance-plan-status" class="hint" role="status"></p>
           </form>
-          <form id="finance-import-form" class="domain-form">
-            <h3>${copy.financeImportHeading}</h3>
+          <details id="finance-import-disclosure" class="domain-disclosure compact-panel" aria-labelledby="finance-import-heading">
+            <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.domains}</p><h3 id="finance-import-heading">${copy.financeImportHeading}</h3></span></summary>
+            <form id="finance-import-form" class="domain-form" aria-labelledby="finance-import-heading">
             <label for="finance-import-file">${copy.financeFile}</label>
             <input id="finance-import-file" type="file" accept="text/csv,text/tab-separated-values,.csv,.tsv" multiple required />
             <label for="finance-import-account">${copy.financeAccount}</label>
@@ -570,9 +573,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <p class="hint">${copy.financeImportHint}</p>
             <button type="submit">${copy.financeImport}</button>
             <p id="finance-import-status" class="hint" role="status"></p>
-          </form>
-          <form id="finance-correction-form" class="domain-form">
-            <h3>${copy.financeCorrectionHeading}</h3>
+            </form>
+          </details>
+          <details id="finance-correction-disclosure" class="domain-disclosure compact-panel" aria-labelledby="finance-correction-heading">
+            <summary class="compact-summary"><span class="compact-summary-copy"><p class="eyebrow">${copy.domains}</p><h3 id="finance-correction-heading">${copy.financeCorrectionHeading}</h3></span></summary>
+            <form id="finance-correction-form" class="domain-form" aria-labelledby="finance-correction-heading">
             <label for="finance-correction-record">${copy.financeCorrectionRecord}</label>
             <select id="finance-correction-record" required></select>
             <label for="finance-correction-amount">${copy.financeCorrectionAmount}</label>
@@ -586,7 +591,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
             <p class="hint">${copy.financeCorrectionHint}</p>
             <button type="submit">${copy.financeCorrectionSubmit}</button>
             <p id="finance-correction-status" class="hint" role="status"></p>
-          </form>
+            </form>
+          </details>
           <form id="health-form" class="domain-form">
             <h3>${copy.healthHeading}</h3>
             <label for="health-metric">${copy.metricName}</label>
@@ -1642,6 +1648,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const renderMigrationGate = async (registration: ServiceWorkerRegistration | undefined, status: ServiceWorkerStatusMessage | undefined): Promise<void> => {
     const waitingCanonical = Boolean(registration?.waiting && status?.updateKind === "CANONICAL_SCHEMA");
     pendingMigrationCandidate = waitingCanonical ? parseUpdateCandidate(status?.candidate) : undefined;
+    pendingMigrationApproval = undefined;
     pendingMigrationEvaluation = undefined;
     migrationGate.hidden = !waitingCanonical;
     migrationCreateBackup.disabled = !waitingCanonical;
@@ -1757,7 +1764,16 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     }
     try {
       const backup = await store.getVerifiedBackup();
-      const evaluation = evaluateUpdate(pendingMigrationCandidate, new Date().toISOString(), backup, true);
+      if (!backup) {
+        migrationGateStatus.textContent = copy.migrationBackup;
+        migrationApprove.disabled = true;
+        return;
+      }
+      const now = new Date().toISOString();
+      const clientFence = parseClientFenceState(await store.getSetting<unknown>(CLIENT_FENCE_SETTING));
+      const clientEpoch = clientFence?.epoch ?? 0;
+      const approval = makeMigrationApproval(pendingMigrationCandidate, backup.digest, backup.digest, clientEpoch, now);
+      const evaluation = evaluateUpdate(pendingMigrationCandidate, now, backup, approval, 24 * 60 * 60 * 1000, clientEpoch);
       pendingMigrationEvaluation = evaluation;
       if (evaluation.decision !== "APPLY_AFTER_APPROVAL") {
         migrationGateStatus.textContent = evaluation.reason;
@@ -1766,8 +1782,9 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       }
       const confirmed = await requestConfirmation(`${evaluation.reason}\n\n${copy.migrationAffected(evaluation.affectedRecordClasses.join(", "))}`, copy.migrationGateHeading, copy.migrationApprove);
       if (!confirmed) return;
+      pendingMigrationApproval = approval;
       updateActivationRequested = true;
-      registration.waiting.postMessage({ type: "OMNEVUM_SW_ACTIVATE" });
+      registration.waiting.postMessage({ type: "OMNEVUM_SW_ACTIVATE", migrationApproval: pendingMigrationApproval });
       migrationGateStatus.textContent = copy.migrationReady;
       updateLedgerStatus.textContent = copy.updateObserved("APPROVED", registration.waiting.scriptURL);
     } catch (error) {
@@ -4826,7 +4843,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       if (files.length === 0 || !accountId) throw new Error("Choose at least one statement file and enter an account identity");
       const openingBalance = financeImportOpening.value.trim() ? parseMoney(financeImportOpening.value.trim(), currency) : undefined;
       const closingBalance = financeImportClosing.value.trim() ? parseMoney(financeImportClosing.value.trim(), currency) : undefined;
-      const prepared: Array<{ file: File; inspection: Awaited<ReturnType<typeof inspectArtifact>>; entry: FinanceBatchEntry; summary: ReturnType<typeof summarizeFinanceTransactions> }> = [];
+      const prepared: Array<{ file: File; inspection: Awaited<ReturnType<typeof inspectArtifact>>; entry: FinanceBatchEntry; summary: ReturnType<typeof summarizeFinanceTransactions>; text: string; profileInput?: ReturnType<typeof inspectFinanceCsvProfile>; profile?: FinanceParserProfile; profileReview?: { expectedPreviousFingerprint: string; reasons: string[] } }> = [];
       for (const file of files) {
         const inspection = await inspectArtifact(file, file.name, file.type || "text/csv");
         const sourceId = createFinanceSourceId(inspection.sha256, accountId, currency);
@@ -4834,31 +4851,66 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         const headerFields = (text.split(/\r?\n/u, 1)[0] ?? "").split(/,|\t/u).map((header) => header.trim());
         const classification = classifyFinanceSource(file.name, headerFields);
         const statementClass = classification.sourceClass === "CREDIT_CARD" || classification.sourceClass === "INVESTMENT" || classification.sourceClass === "INSURANCE" ? classification.sourceClass : undefined;
-        const source: FinanceStatementSource = { sourceId, name: file.name, sha256: inspection.sha256, accountId, currency, ...(statementClass ? { sourceClass: statementClass } : {}), ...(openingBalance ? { openingBalance } : {}), ...(closingBalance ? { closingBalance } : {}) };
+        const source: FinanceStatementSource = { sourceId, name: file.name, sha256: inspection.sha256, accountId, currency, sourceClass: classification.sourceClass, ...(openingBalance ? { openingBalance } : {}), ...(closingBalance ? { closingBalance } : {}) };
+        let profileInput: ReturnType<typeof inspectFinanceCsvProfile> | undefined;
+        let profile: FinanceParserProfile | undefined;
+        let profileReview: { expectedPreviousFingerprint: string; reasons: string[] } | undefined;
+        try {
+          profileInput = inspectFinanceCsvProfile(text);
+          const candidate = createFinanceParserProfileDraft(source, profileInput);
+          const existing = await loadFinanceParserProfile(commands, candidate.scope);
+          if (existing) {
+            const assessment = assessFinanceParserProfile(existing, { accountId: source.accountId, sourceClass: source.sourceClass ?? "UNKNOWN", format: "CSV", ...profileInput });
+            if (assessment.status === "STABLE") profile = existing;
+            else profileReview = { expectedPreviousFingerprint: existing.fingerprint, reasons: assessment.reasons };
+          }
+        } catch (error) {
+          if (error instanceof Error && error.name === "FinanceParserProfileValidationError") throw error;
+          if (!statementClass) throw error;
+          profileInput = undefined;
+        }
         let transactions: Awaited<ReturnType<typeof parseFinanceCsv>> = [];
         let statementFacts: FinanceStatementFacts | undefined;
         try {
-          transactions = parseFinanceCsv(text, source);
+          transactions = profile ? parseFinanceCsvWithProfile(text, source, profile) : parseFinanceCsv(text, source);
           if (statementClass) statementFacts = extractFinanceStatementFacts(transactions, source, statementClass);
         } catch (error) {
           if (!statementClass) throw error;
           statementFacts = parseFinanceStatementFactsCsv(text, source, statementClass);
         }
-        prepared.push({ file, inspection, entry: { source, transactions, ...(statementFacts ? { statementFacts } : {}) }, summary: summarizeFinanceTransactions(transactions, currency) });
+        prepared.push({ file, inspection, entry: { source, transactions, ...(statementFacts ? { statementFacts } : {}) }, summary: summarizeFinanceTransactions(transactions, currency), text, ...(profileInput ? { profileInput } : {}), ...(profile ? { profile } : {}), ...(profileReview ? { profileReview } : {}) });
       }
       const previewExceptions = prepared.reduce((total, item) => {
         const deduplicated = deduplicateFinanceTransactions(item.entry.transactions);
         const reconciliation = reconcileFinanceStatement(item.entry.source, item.entry.transactions);
-        return total + deduplicated.conflicts.length + (reconciliation.status === "MATCH" ? 0 : 1) + (item.entry.statementFacts?.limitations.length ?? 0);
+        return total + deduplicated.conflicts.length + (reconciliation.status === "MATCH" ? 0 : 1) + (item.entry.statementFacts?.limitations.length ?? 0) + (item.profileReview ? 1 : 0);
       }, 0);
       const previewRows = prepared.reduce((total, item) => total + item.entry.transactions.length, 0);
-      if (!await requestConfirmation(`${copy.financeBatchPreview(prepared.length, previewRows, previewExceptions)}\n\n${copy.financeImportHint}`, copy.financeImport)) return;
+      const profileReviewCount = prepared.filter((item) => item.profileReview).length;
+      const profileNotice = profileReviewCount > 0 ? `\n${profileReviewCount} persisted Finance parser profile(s) changed structure or sign convention and require a separate explicit review before acceptance.` : "";
+      if (!await requestConfirmation(`${copy.financeBatchPreview(prepared.length, previewRows, previewExceptions)}${profileNotice}\n\n${copy.financeImportHint}`, copy.financeImport)) return;
       const entries: FinanceBatchEntry[] = [];
       for (const item of prepared) {
         const { source } = item.entry;
         const existingArtifact = (await commands.findBySourceId(source.sourceId)).find((record) => record.recordType === "artifact" && !record.deleted);
         const artifact = existingArtifact ?? await commands.createArtifact({ fileName: item.file.name, mimeType: item.file.type || "text/csv", blob: item.file, sourceId: source.sourceId, adapter: item.inspection.adapter, metadata: item.inspection.metadata, ...(item.inspection.derivedText ? { derivedText: item.inspection.derivedText } : {}) });
-        entries.push({ ...item.entry, source: { ...source, sourceArtifactId: artifact.id } });
+        const sourceWithArtifact = { ...source, sourceArtifactId: artifact.id };
+        let entry = { ...item.entry, source: sourceWithArtifact };
+        if (item.profileInput) {
+          let admittedProfile = item.profile;
+          if (item.profileReview) {
+            if (!await requestConfirmation(`Review and save the changed Finance parser profile for ${source.accountId}?\n\n${item.profileReview.reasons.join("; ")}`, copy.financeImport, "Review profile")) {
+              throw new Error("Finance parser profile change was not approved; the source Artifact was preserved and no Finance transactions were accepted");
+            }
+            admittedProfile = (await saveFinanceParserProfile(commands, createFinanceParserProfileDraft(sourceWithArtifact, item.profileInput), { expectedPreviousFingerprint: item.profileReview.expectedPreviousFingerprint, reason: "User reviewed the source structure or sign-convention change" })).profile;
+          } else if (!admittedProfile) {
+            admittedProfile = (await saveFinanceParserProfile(commands, createFinanceParserProfileDraft(sourceWithArtifact, item.profileInput))).profile;
+          }
+          if (!admittedProfile) throw new Error("Finance parser profile admission failed closed; no Finance transactions were accepted");
+          const profiledTransactions = parseFinanceCsvWithProfile(item.text, sourceWithArtifact, admittedProfile);
+          entry = { ...entry, transactions: profiledTransactions, ...(sourceWithArtifact.sourceClass === "CREDIT_CARD" || sourceWithArtifact.sourceClass === "INVESTMENT" || sourceWithArtifact.sourceClass === "INSURANCE" ? { statementFacts: extractFinanceStatementFacts(profiledTransactions, sourceWithArtifact, sourceWithArtifact.sourceClass) } : {}) };
+        }
+        entries.push(entry);
       }
       const result = await acceptFinanceBatch(commands, entries);
       financeChangedIds = result.records.map((record) => record.id);

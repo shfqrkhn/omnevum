@@ -216,6 +216,9 @@ select[multiple] { min-height: 9rem; }
 .search-group-heading { list-style: none; border-bottom: 1px solid var(--line); color: var(--accent); padding: 0.35rem 0.15rem; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.65rem; }
 .domain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+.domain-disclosure { min-width: 0; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-muted); padding: 0.15rem 0.8rem 0.8rem; }
+.domain-disclosure > .compact-summary { margin-inline: -0.1rem; }
+.domain-disclosure > .domain-form { border: 0; border-radius: 0; background: transparent; padding: 0.4rem 0 0; }
 .factory-preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
 .factory-game-board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.45rem; margin-top: 0.7rem; }
 .factory-game-board[data-columns="1"] { grid-template-columns: repeat(1, minmax(0, 1fr)); }

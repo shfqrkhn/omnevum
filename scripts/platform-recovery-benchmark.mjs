@@ -161,7 +161,7 @@ async function runStorageBenchmark({ CanonicalStore }) {
   }
 }
 
-async function runUpdateBenchmark({ migration, updateLedger }) {
+async function runUpdateBenchmark({ migration, updateLedger, vault }) {
   const shellCandidate = {
     releaseId: "shell-benchmark-2",
     shellVersion: "0.2.0",
@@ -201,10 +201,30 @@ async function runUpdateBenchmark({ migration, updateLedger }) {
   const staleBackup = { verifiedAt: "2026-09-18T00:00:00.000Z", digest: "c".repeat(64), recordCount: 1, artifactCount: 0 };
   const staleEvaluation = migration.evaluateUpdate(schemaCandidate, FIXTURE_TIME, staleBackup, true);
   const currentBackup = { verifiedAt: "2026-09-19T12:00:00.000Z", digest: "d".repeat(64), recordCount: 1, artifactCount: 0 };
-  const approvedEvaluation = migration.evaluateUpdate(schemaCandidate, FIXTURE_TIME, currentBackup, true);
+  const approvedEvaluation = migration.evaluateUpdate(schemaCandidate, FIXTURE_TIME, currentBackup, migration.makeMigrationApproval(schemaCandidate, "d".repeat(64), "d".repeat(64), 0, "2026-09-19T12:00:00.000Z"), 24 * 60 * 60 * 1000, 0);
   const approvedActivation = migration.evaluateShellActivation(schemaCandidate, true);
   check("migration-stale-backup-rejection", staleEvaluation.decision === "REQUIRE_APPROVAL" && staleEvaluation.backupState === "STALE" && staleEvaluation.backupRequired, "a stale backup receipt was treated as sufficient for schema migration");
   check("migration-approved-path", approvedEvaluation.decision === "APPLY_AFTER_APPROVAL" && approvedEvaluation.backupState === "CURRENT" && approvedActivation.decision === "ACTIVATE", "approved migration with a current verified backup did not reach the apply path");
+
+  const migrationSource = await vault.withVaultIntegrity({ format: "OMNEVUM_VAULT", version: 1, exportedAt: FIXTURE_TIME, records: [record("platform-recovery-journal-record", "journal sentinel")] });
+  const migrationSourceFingerprint = await vault.fingerprintVault(migrationSource);
+  const verifiedMigrationBackup = { verifiedAt: "2026-09-19T12:00:00.000Z", digest: migrationSourceFingerprint, recordCount: migrationSource.records.length, artifactCount: 0 };
+  const migrationApproval = migration.makeMigrationApproval(schemaCandidate, migrationSourceFingerprint, migrationSourceFingerprint, 3, "2026-09-19T23:00:00.000Z");
+  const boundEvaluation = migration.evaluateUpdate(schemaCandidate, FIXTURE_TIME, verifiedMigrationBackup, migrationApproval, 24 * 60 * 60 * 1000, 3);
+  const staleApprovalEvaluation = migration.evaluateUpdate(schemaCandidate, FIXTURE_TIME, verifiedMigrationBackup, migrationApproval, 24 * 60 * 60 * 1000, 4);
+  const preparedJournal = await migration.prepareMigrationJournal(schemaCandidate, migrationSource, verifiedMigrationBackup, migrationApproval, FIXTURE_TIME);
+  const runningJournal = await migration.startMigration(preparedJournal, schemaCandidate, migrationApproval, migrationSourceFingerprint, "2026-09-20T00:01:00.000Z", 3);
+  const interruptedJournal = migration.interruptMigration(runningJournal, schemaCandidate, migrationSourceFingerprint, "2026-09-20T00:02:00.000Z");
+  const rolledBackMigration = await migration.repairMigration(interruptedJournal, schemaCandidate, "ROLLBACK", migrationSourceFingerprint, "2026-09-20T00:03:00.000Z");
+  const migrationLedger = updateLedger.appendMigrationJournal([], preparedJournal);
+  check("fingerprint-bound-migration-journal", boundEvaluation.decision === "APPLY_AFTER_APPROVAL" && staleApprovalEvaluation.decision === "REQUIRE_APPROVAL" && preparedJournal.state === "PREPARED" && runningJournal.state === "RUNNING" && interruptedJournal.state === "INTERRUPTED" && rolledBackMigration.journal.state === "ROLLED_BACK" && rolledBackMigration.restoredVault?.records[0]?.id === "platform-recovery-journal-record" && updateLedger.parseMigrationLedger(migrationLedger)[0]?.journalId === preparedJournal.journalId, "the schema migration journal did not bind approval, backup identity, interruption, rollback, and bounded ledger persistence");
+
+  const initialFence = updateLedger.makeClientFenceState(migrationSourceFingerprint, "2026-09-20T00:00:00.000Z");
+  const lease = updateLedger.issueClientLease(initialFence, "platform-client-a", "2026-09-20T00:00:01.000Z");
+  const advancedFence = updateLedger.advanceClientFence(initialFence, "e".repeat(64), "2026-09-20T00:04:00.000Z");
+  const staleLease = updateLedger.evaluateClientFence(advancedFence, lease);
+  const refreshedLease = updateLedger.issueClientLease(advancedFence, "platform-client-a", "2026-09-20T00:04:01.000Z");
+  check("stale-client-fence-lease", staleLease.decision === "RELOAD_REQUIRED" && staleLease.stale && updateLedger.evaluateClientFence(advancedFence, refreshedLease).decision === "ALLOW_WRITE", "a client lease remained writable after a canonical transition or did not recover through a fresh lease");
 
   const waiting = updateLedger.appendShellUpdateObservation([], { releaseId: "omnevum-shell-benchmark", shellVersion: "0.2.0", cacheName: "omnevum-shell-benchmark", observedAt: FIXTURE_TIME, decision: "WAITING", rollbackPath: "retain-previous-shell-cache" });
   const rolledBack = updateLedger.appendShellUpdateObservation(waiting, { releaseId: "omnevum-shell-benchmark", shellVersion: "0.2.0", cacheName: "omnevum-shell-benchmark", observedAt: FIXTURE_TIME, decision: "ROLLED_BACK", rollbackPath: "retain-previous-shell-cache" });
@@ -215,7 +235,9 @@ async function runUpdateBenchmark({ migration, updateLedger }) {
     staleBackupState: staleEvaluation.backupState,
     approvedDecision: approvedEvaluation.decision,
     rollbackPathChecks: 4,
-    serviceWorkerLedgerEntries: rolledBack.length
+    serviceWorkerLedgerEntries: rolledBack.length,
+    migrationJournal: { stateAfterPrepare: preparedJournal.state, stateAfterInterrupt: interruptedJournal.state, stateAfterRollback: rolledBackMigration.journal.state, ledgerEntries: migrationLedger.length },
+    clientFence: { staleDecision: staleLease.decision, refreshedDecision: updateLedger.evaluateClientFence(advancedFence, refreshedLease).decision }
   };
 }
 
@@ -316,7 +338,7 @@ try {
     vite.ssrLoadModule("/src/core/presentation.ts")
   ]);
   await runStorageBenchmark(storage);
-  await runUpdateBenchmark({ migration, updateLedger });
+  await runUpdateBenchmark({ migration, updateLedger, vault });
   await runVaultBenchmark({ CanonicalStore: storage.CanonicalStore, vault });
   await runPresentationBenchmark({ CanonicalStore: storage.CanonicalStore, presentation });
   runStaticHostBenchmark();
@@ -329,7 +351,8 @@ try {
     coveredAreas: [
       "quota-pressure derived-state reclamation with canonical preservation",
       "interrupted IndexedDB migration and stale-client versionchange fencing",
-      "shell/schema update approval, migration interruption, and rollback paths",
+      "fingerprint-bound schema migration journal, interruption/rollback, and bounded migration ledger",
+      "monotonic client-fence lease invalidation after canonical transitions",
       "Vault integrity, tamper rejection, round-trip, and idempotent re-import",
       "Safe Mode recovery from an invalid presentation profile",
       "constrained static-host application controls and unavailable response-header controls"

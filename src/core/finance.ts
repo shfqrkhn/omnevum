@@ -2,6 +2,8 @@ import { addMoney, parseMoney, subtractMoney, type MoneyValue } from "./money";
 import { SENSITIVE_KEY_PATTERN } from "./safety";
 import type { CommandBus } from "./commands";
 import type { CanonicalRecord } from "./model";
+import { normalizeFinanceParserHeaders, requireFinanceParserProfileApplicable } from "./finance-profile";
+import type { FinanceParserColumnMap, FinanceParserProfile, FinanceParserProfileObservation, FinanceParserSignConvention } from "./finance-profile";
 
 export const MAX_FINANCE_CSV_BYTES = 5 * 1024 * 1024;
 export const MAX_FINANCE_ROWS = 10_000;
@@ -88,7 +90,10 @@ export interface FinanceLineage {
   sourceId: string;
   sourceSha256: string;
   sourceRow: number;
-  parserProfile: "CSV_HEADER_V1" | "STRUCTURED_V1";
+  parserProfile: "CSV_HEADER_V1" | "STRUCTURED_V1" | "PERSISTED_PROFILE_V1";
+  parserProfileId?: string;
+  parserProfileRevision?: number;
+  parserProfileFingerprint?: string;
   rawFields: Record<string, string>;
 }
 
@@ -166,6 +171,13 @@ export interface FinanceBatchResult {
   conflicts: FinanceTransactionConflict[];
 }
 
+export interface FinanceCsvProfileObservation {
+  delimiter: "," | "\t";
+  headers: string[];
+  columnMap: FinanceParserColumnMap;
+  signConvention: FinanceParserSignConvention;
+}
+
 export function createFinanceSourceId(sourceSha256: string, accountId: string, currency: string): string {
   if (!/^[a-f0-9]{64}$/i.test(sourceSha256)) throw new Error("Finance source SHA-256 is required");
   const normalizedAccount = accountId.trim().slice(0, 160);
@@ -225,6 +237,50 @@ export function parseFinanceCsv(text: string, source: FinanceStatementSource): F
   if (dataRows.length > MAX_FINANCE_ROWS) throw new Error(`Finance statement exceeds the bounded ${MAX_FINANCE_ROWS}-row limit`);
   const rawRows = mapDelimitedRows(dataRows, headers);
   return normalizeFinanceRows(rawRows, source, "CSV_HEADER_V1");
+}
+
+export function inspectFinanceCsvProfile(text: string): FinanceCsvProfileObservation {
+  const delimiter = detectDelimiter(text);
+  const rows = parseDelimited(text, delimiter);
+  const headerRow = rows.find((row) => row.values.some((value) => value.trim().length > 0));
+  if (!headerRow) throw new Error("Finance statement has no header row");
+  const headers = normalizeFinanceParserHeaders(headerRow.values);
+  const columnMap: Partial<Record<keyof FinanceParserColumnMap, string>> = {};
+  for (const header of headers) {
+    const semantic = headerAliases[header];
+    if (!semantic) continue;
+    const previous = columnMap[semantic as keyof FinanceParserColumnMap];
+    if (previous !== undefined && previous !== header) throw new Error(`Finance statement maps multiple columns to ${semantic}`);
+    columnMap[semantic as keyof FinanceParserColumnMap] = header;
+  }
+  if (!columnMap.postedAt || !columnMap.description) throw new Error("Finance statement requires date and description columns");
+  const signConvention: FinanceParserSignConvention = columnMap.amount ? "SIGNED_AMOUNT" : columnMap.debit || columnMap.credit ? "DEBIT_CREDIT" : (() => { throw new Error("Finance statement requires amount/debit/credit columns"); })();
+  return { delimiter, headers, columnMap: columnMap as FinanceParserColumnMap, signConvention };
+}
+
+export function parseFinanceCsvWithProfile(text: string, source: FinanceStatementSource, profile: FinanceParserProfile): FinanceTransaction[] {
+  assertSource(source);
+  if (new TextEncoder().encode(text).byteLength > MAX_FINANCE_CSV_BYTES) throw new Error("Finance statement exceeds the bounded 5 MiB CSV limit");
+  const observed = inspectFinanceCsvProfile(text);
+  const observation: FinanceParserProfileObservation = {
+    accountId: source.accountId,
+    sourceClass: source.sourceClass ?? "UNKNOWN",
+    format: "CSV",
+    delimiter: observed.delimiter,
+    headers: observed.headers,
+    signConvention: observed.signConvention
+  };
+  requireFinanceParserProfileApplicable(profile, observation);
+  const rows = parseDelimited(text, observed.delimiter);
+  const headerRow = rows.find((row) => row.values.some((value) => value.trim().length > 0));
+  if (!headerRow) throw new Error("Finance statement has no header row");
+  const dataRows = rows.slice(rows.indexOf(headerRow) + 1).filter((row) => row.values.some((value) => value.trim().length > 0));
+  if (dataRows.length > MAX_FINANCE_ROWS) throw new Error(`Finance statement exceeds the bounded ${MAX_FINANCE_ROWS}-row limit`);
+  const rawRows = mapDelimitedRows(dataRows, observed.headers).map((row) => ({
+    sourceRow: row.sourceRow,
+    fields: Object.fromEntries(Object.entries(profile.columnMap).map(([semantic, header]) => [semantic, row.fields[header] ?? ""]))
+  }));
+  return normalizeFinanceRows(rawRows, source, "PERSISTED_PROFILE_V1", { parserProfileId: profile.profileId, parserProfileRevision: profile.profileRevision, parserProfileFingerprint: profile.fingerprint });
 }
 
 export function parseFinanceStatementFactsCsv(text: string, source: FinanceStatementSource, sourceClass: FinanceStatementFacts["sourceClass"]): FinanceStatementFacts {
@@ -371,7 +427,7 @@ function extractStatementFactsFromRows(rows: FinanceRawRow[], source: FinanceSta
   return facts;
 }
 
-export function normalizeFinanceRows(rows: FinanceRawRow[], source: FinanceStatementSource, parserProfile: FinanceLineage["parserProfile"] = "STRUCTURED_V1"): FinanceTransaction[] {
+export function normalizeFinanceRows(rows: FinanceRawRow[], source: FinanceStatementSource, parserProfile: FinanceLineage["parserProfile"] = "STRUCTURED_V1", profileIdentity?: Pick<FinanceLineage, "parserProfileId" | "parserProfileRevision" | "parserProfileFingerprint">): FinanceTransaction[] {
   assertSource(source);
   if (rows.length > MAX_FINANCE_ROWS) throw new Error(`Finance statement exceeds the bounded ${MAX_FINANCE_ROWS}-row limit`);
   const sourceCurrency = parseMoney("0", source.currency).currency;
@@ -402,7 +458,7 @@ export function normalizeFinanceRows(rows: FinanceRawRow[], source: FinanceState
       ...(essential ? { essential: true } : {}),
       ...(sourceTransactionId ? { sourceTransactionId: sourceTransactionId.slice(0, 200) } : {}),
       naturalKey,
-      lineage: { sourceId: source.sourceId, sourceSha256: source.sha256, sourceRow: row.sourceRow, parserProfile, rawFields: fields }
+      lineage: { sourceId: source.sourceId, sourceSha256: source.sha256, sourceRow: row.sourceRow, parserProfile, ...(profileIdentity ?? {}), rawFields: fields }
     } satisfies FinanceTransaction;
   });
 }
