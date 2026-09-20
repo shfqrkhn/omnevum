@@ -555,8 +555,10 @@
         "line": 4033
       },
       "text": "A material canonical record is edited through several revisions; the user can inspect meaningful history/diff and safely revert an allowed change without using disaster backup. The owning domain's retention/deletion policy governs whether superseded sensitive revisions remain, and History/Version does not create a second writable copy or silently resurrect a deleted record.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-current-finance-platform-browser-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-048",

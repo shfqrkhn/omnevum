@@ -65,3 +65,14 @@ This is bounded implementation/runtime evidence for OMN-ACC-016, promoted to `PA
 ## Pages verification for the capability fault-boundary increment
 
 Commit `764c8cd98f71429111297929479f2c1953772625` passed CI workflow `35496653956` and Pages workflow `35496653998`. An independent HTTPS probe fetched all 10 published paths from `https://shfqrkhn.github.io/omnevum/` with HTTP 200 and matched every local byte sequence; the aggregate artifact digest remained `f9c5bb9c3cf91721d0abbb16c09c48c1d94f5f03c4ff2f4bde7762f709e295d2`, with service-worker cache `omnevum-shell-e5a581ec34b80448`. The capability test is test-only and does not change the production bundle. This refreshes deployment identity only; production rollback, browser-family, security/egress, assistive technology, and human acceptance remain open.
+
+## Canonical History/Version browser qualification
+
+Target: `http://127.0.0.1:4180/`, production `dist` served by the running Vite preview; Codex in-app Chromium tab `54`, isolated local-origin storage, compact density, 2026-09-20. The focused `src/core/history.test.ts` suite passed 1 file and 2 tests.
+
+- An explicit safe-route Capture created canonical record `record_aba7672c-74ee-4109-986f-4bd801c2e19e` owned by `core.knowledge`, revision 1.
+- The canonical detail editor changed its text through the owning command path, producing revision 2 and an explicit notice that the derived Search index was degraded rather than silently assumed healthy.
+- Recovery > Repair search index rebuilt only derived state. Search then exposed revision history with field-level changes and a visible `Revert to revision 1` action.
+- Reverting produced revision 3 with the original text; the visible history retained revisions 1, 2, and 3, and the record remained one canonical result with no lens-local writable copy. The detail breadcrumb remained `Lenses / Self / core.knowledge`.
+
+This is bounded `PARTIAL` evidence for OMN-ACC-047: meaningful edit history, diff visibility, canonical-owner revert, and derived-index honesty are proven in Chromium. Deletion-specific retention/resurrection policy, other browser families, assistive technology, and human acceptance remain open.
