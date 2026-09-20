@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "faa4f2f1f69bff21992a54b6b26e16ff500e2cc76297f2925f508819de08841d",
-        "bytes": 105201
+        "sha256": "6787c18dfddacc2e1cdcc1d26d925a63a45fdf8859ac359f8d24b67b0bd31781",
+        "bytes": 105365
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "4bfd12e27de31333661994cbda25a13bfb802d6cc22d666dbf3e24040c46be8a",
-        "bytes": 4412
+        "sha256": "9abe3ee361719b351bfb4bd1e1d9f32b048cf15ba17f02214e58e08170dde4de",
+        "bytes": 4526
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "0fe43f863ded6bcf9774e511d549be002a231c08799fdf7b3c72a6da39116f9c",
-        "bytes": 5957
+        "sha256": "b351ea015e37041e5482f24f7adecd50cbdaa7f0443229afcfe2edc5e7d9d7d1",
+        "bytes": 6276
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -264,8 +264,8 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "e1357db3c0a3393a0740ea00ecec0d5df211b8e75159e515e3a813bd878a0615",
-        "bytes": 2607
+        "sha256": "fe8a4a8973a7d59fe54369bb32b07f94cbde7808882d35f05b70d4d7c77d5540",
+        "bytes": 2684
       },
       {
         "path": "docs/control/release-evidence.json",
@@ -351,6 +351,11 @@
         "path": "docs/evidence/phase0-launchpad-workload-2026-09-19.md",
         "sha256": "98304a93d2eb4cb32bbc7d77c2a6c43830c786f9bbd2a89f30d86bba30f08281",
         "bytes": 5991
+      },
+      {
+        "path": "docs/evidence/phase0-optional-capability-boundaries-current-2026-09-19.md",
+        "sha256": "fa595b0469e7764b97c087bb0988d6e9d8737b5f8558788f346cd878754b7bd7",
+        "bytes": 1355
       },
       {
         "path": "docs/evidence/phase0-pages-deployment-2026-09-19.md",

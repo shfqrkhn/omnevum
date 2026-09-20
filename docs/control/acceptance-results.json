@@ -824,9 +824,10 @@
         "line": 4089
       },
       "text": "Provider currentness marks a consumer-web/OAuth-piggyback technique as TERMS_BLOCKED (for example current ChatGPT web automatic extraction or current Google legacy Gemini-CLI OAuth harvesting). Omnevum refuses that programmatic route without attempting stealth/browser impersonation and instead offers an official subscription agent, reverse integration, manual handoff, local model, or explicit API route where available.",
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/phase0-security-effects-2026-09-19.md"
+        "docs/evidence/phase0-security-effects-2026-09-19.md",
+        "docs/evidence/phase0-optional-capability-boundaries-current-2026-09-19.md"
       ]
     },
     {
@@ -896,9 +897,10 @@
         "line": 4103
       },
       "text": "If executable third-party extension support is claimed, a qualified isolation substrate passes adversarial tests for global/prototype escape, network/storage access, CPU/memory abuse, message validation, update revocation and capability leakage. If it does not, the release still supports declarative extensions but truthfully leaves executable third-party packages disabled.",
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/phase0-security-effects-2026-09-19.md"
+        "docs/evidence/phase0-security-effects-2026-09-19.md",
+        "docs/evidence/phase0-optional-capability-boundaries-current-2026-09-19.md"
       ]
     },
     {
