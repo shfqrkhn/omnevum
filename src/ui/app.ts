@@ -2315,8 +2315,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
   const readLensPins = (): PresentationLensId[] => [...lensPinOptions.querySelectorAll<HTMLInputElement>("input[data-presentation-lens-pin]:checked")].map((input) => input.value as PresentationLensId);
   const isStandaloneDisplayMode = (): boolean => window.matchMedia?.("(display-mode: standalone)").matches === true || (navigator as Navigator & { standalone?: boolean }).standalone === true;
   let primaryNavDisclosureInitialized = false;
-  let reviewDisclosureChoice: boolean | undefined;
-  let recordsDisclosureChoice: boolean | undefined;
+  let reviewDisclosureChoice: boolean | undefined = false;
+  let recordsDisclosureChoice: boolean | undefined = false;
   const applyPresentationProfile = (): void => {
     root.dataset.theme = presentation.theme;
     root.dataset.family = presentation.family;
@@ -2367,7 +2367,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     renderLensNavigation();
     void renderActiveLens();
     if (!primaryNavDisclosureInitialized) {
-      primaryNavMenu.open = !window.matchMedia("(max-width: 560px)").matches;
+      primaryNavMenu.open = presentation.density !== "compact" && !window.matchMedia("(max-width: 560px)").matches;
       primaryNavDisclosureInitialized = true;
     }
     primaryNavList.replaceChildren();
@@ -2460,7 +2460,7 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
     const link = (event.target as HTMLElement).closest<HTMLAnchorElement>("a[href^='#']");
     const sectionId = link?.getAttribute("href")?.slice(1) as PresentationSectionId | undefined;
     if (sectionId) root.querySelector<HTMLDetailsElement>(`#${sectionId}[data-section-disclosure]`)?.setAttribute("open", "");
-    if (window.matchMedia("(max-width: 560px)").matches) primaryNavMenu.open = false;
+    primaryNavMenu.open = false;
   });
   lensNavList.addEventListener("click", (event) => {
     const id = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-lens-id]")?.dataset.lensId as PresentationLensId | undefined;
