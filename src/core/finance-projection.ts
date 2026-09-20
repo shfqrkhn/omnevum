@@ -1,8 +1,8 @@
 import { projectAuthorizedDependencyImpact, projectDependencyGraph, type DependencyGraph, type DependencyImpact } from "./dependency-graph";
 import { addMoney, parseMoney, type MoneyValue } from "./money";
 import type { CanonicalRecord, TruthClass } from "./model";
-import type { FinanceLineage, FinanceStatementFacts, FinanceTransaction, FinanceTransactionStatus } from "./finance";
-import { allocateFinanceResource, assessFinanceDataQuality, analyzeFinanceGraph, detectFinanceReviewCases, inferFinanceRecurringPatterns, matchFinanceTransfers, planFinanceAllocationAlternatives, projectFinanceGoal, projectFireScenario, summarizeFinanceTransactions, type FinanceAllocationResult, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastVintage, type FinanceFundingAnalysis, type FinanceGoalPlan, type FinanceGoalTarget, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceReviewCase, type FinanceTransactionSummary, type FinanceTransferAnalysis, type FireScenarioInput, type FireScenarioProjection } from "./finance-model";
+import type { FinanceLineage, FinanceSourceClass, FinanceStatementFacts, FinanceTransaction, FinanceTransactionStatus } from "./finance";
+import { allocateFinanceResource, analyzeFinanceRecurrence, assessFinanceDataQuality, analyzeFinanceGraph, calculateFinanceRollingEssentialSpending, detectFinanceReviewCases, matchFinanceTransfers, planFinanceAllocationAlternatives, projectFinanceGoal, projectFireScenario, reconcileFinanceForecast, summarizeFinanceTransactions, type FinanceAllocationResult, type FinanceDataQuality, type FinanceDependencyGraph, type FinanceFactClass, type FinanceForecastActual, type FinanceForecastReconciliation, type FinanceForecastVintage, type FinanceFundingAnalysis, type FinanceGoalPlan, type FinanceGoalTarget, type FinanceGraphAnalysis, type FinanceRecurringPattern, type FinanceRecurringSignal, type FinanceReviewCase, type FinanceTransactionSummary, type FinanceTransferAnalysis, type FireScenarioInput, type FireScenarioProjection } from "./finance-model";
 
 /**
  * Read-only Finance projection over canonical records and the shared typed
@@ -13,8 +13,11 @@ export interface FinanceProjectionOptions {
   currency?: string;
   asOfDate?: string;
   requiredPeriods?: readonly string[];
+  requiredSourceIds?: readonly string[];
+  requiredSourceClasses?: readonly FinanceSourceClass[];
   changedIds?: readonly string[];
   forecastVintages?: readonly FinanceForecastVintage[];
+  forecastActuals?: readonly FinanceForecastActual[];
 }
 
 export interface FinanceTravelPlanProjection {
@@ -63,7 +66,9 @@ export interface FinanceUpdateBrief {
     goals: number;
     reviewItems: number;
     recurringPatterns: number;
+    recurringSignals: number;
     forecastVintages: number;
+    forecastActualizations: number;
     dataQualityLimitations: number;
   };
   limitations: string[];
@@ -80,6 +85,7 @@ export interface FinanceProjection {
   summary?: FinanceTransactionSummary;
   transferAnalysis: FinanceTransferAnalysis;
   recurringPatterns: FinanceRecurringPattern[];
+  recurringSignals: FinanceRecurringSignal[];
   reviewCases: FinanceReviewCase[];
   quality: FinanceDataQuality;
   dependencyGraph: DependencyGraph;
@@ -97,6 +103,7 @@ export interface FinanceProjection {
   crossDomain: FinanceCrossDomainProjection;
   invalidatedFinanceIds: string[];
   forecastVintages: FinanceForecastVintage[];
+  forecastReconciliations: FinanceForecastReconciliation[];
 }
 
 const FINANCE_NODE_KINDS = new Set([
@@ -130,14 +137,21 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
   const currency = resolveCurrency(options.currency, [...byCurrency.keys()]);
   const summary = currency ? summariesByCurrency[currency] : undefined;
   const selectedTransactions = currency ? byCurrency.get(currency) ?? [] : transactions;
-  const recurringPatterns = inferFinanceRecurringPatterns(selectedTransactions);
+  const recurrence = analyzeFinanceRecurrence(selectedTransactions, options.asOfDate ? { asOfDate: options.asOfDate } : {});
+  const recurringPatterns = recurrence.patterns;
+  const recurringSignals = recurrence.signals;
   const reviewCases = detectFinanceReviewCases(selectedTransactions);
   const availablePeriods = [...new Set(selectedTransactions.map((transaction) => transaction.postedAt.slice(0, 7)))].sort();
-  const quality = assessFinanceDataQuality({
+  const statementFacts = activeRecords.map(toFinanceStatementFacts).filter((facts): facts is FinanceStatementFacts => facts !== undefined).sort((left, right) => left.sourceId.localeCompare(right.sourceId));
+  const qualityInput = {
     requiredPeriods: [...(options.requiredPeriods ?? [])],
     availablePeriods,
+    availableSourceIds: [...new Set([...transactions.map((transaction) => transaction.lineage.sourceId), ...statementFacts.map((facts) => facts.sourceId)])],
+    availableSourceClasses: [...new Set(statementFacts.map((facts) => facts.sourceClass))],
+    unresolvedReconciliations: transferAnalysis.unresolvedMatches.length,
     unresolvedReviewCases: reviewCases.filter((review) => review.disposition === "UNRESOLVED").length
-  });
+  };
+  const quality = assessFinanceDataQuality({ ...qualityInput, ...(options.requiredSourceIds ? { requiredSourceIds: options.requiredSourceIds } : {}), ...(options.requiredSourceClasses ? { requiredSourceClasses: options.requiredSourceClasses } : {}) });
   const dependencyGraph = projectDependencyGraph([...activeRecords]);
   const dependencyImpact = projectAuthorizedDependencyImpact(activeRecords, [...(options.changedIds ?? [])]);
   const financeNodeIds = new Set(activeRecords.filter(isFinanceNode).map((record) => record.id));
@@ -161,16 +175,8 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
       else if (current.currency === amount.currency) fundedByGoal.set(goalId, addMoney(current, amount));
     }
   }
-  const essentialByCurrency = new Map<string, { totalMinor: bigint; periods: Set<string> }>();
-  for (const transaction of transactions) {
-    if (!transaction.essential || transaction.status !== "POSTED" || transaction.direction !== "OUTFLOW") continue;
-    const current = essentialByCurrency.get(transaction.amount.currency) ?? { totalMinor: 0n, periods: new Set<string>() };
-    current.totalMinor += -BigInt(transaction.amount.amountMinor);
-    current.periods.add(transaction.postedAt.slice(0, 7));
-    essentialByCurrency.set(transaction.amount.currency, current);
-  }
-  const essentialMonthlyByCurrency = new Map<string, MoneyValue>();
-  for (const [currencyKey, value] of essentialByCurrency) if (value.periods.size > 0) essentialMonthlyByCurrency.set(currencyKey, { amountMinor: (value.totalMinor / BigInt(value.periods.size)).toString(), currency: currencyKey });
+  const excludedTransferIdSet = new Set(excludedTransferIds);
+  const essentialTransactions = transactions.filter((transaction) => !excludedTransferIdSet.has(transaction.id));
   const financeGoalLimitations: string[] = [];
   const financeGoalPlans = activeRecords.filter((record) => record.data.kind === "finance-goal").flatMap((goal) => {
     const fixedTarget = recordMoneyField(goal, "targetAmountMinor");
@@ -180,7 +186,8 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
       const currencyValue = typeof goal.data.currency === "string" ? goal.data.currency : "";
       let normalizedCurrency: string | undefined;
       try { normalizedCurrency = parseMoney("0", currencyValue).currency; } catch { normalizedCurrency = undefined; }
-      const monthlyEssentialSpending = normalizedCurrency ? essentialMonthlyByCurrency.get(normalizedCurrency) : undefined;
+      const rollingEssential = normalizedCurrency && Number.isInteger(months) && months >= 1 && months <= 120 ? calculateFinanceRollingEssentialSpending(essentialTransactions, normalizedCurrency, months) : undefined;
+      const monthlyEssentialSpending = rollingEssential?.monthlyEssentialSpending;
       if (!Number.isInteger(months) || months < 1 || months > 120) financeGoalLimitations.push(`${goal.id}: rolling essential months is outside the supported range`);
       else if (!monthlyEssentialSpending) financeGoalLimitations.push(`${goal.id}: no posted essential-spending evidence is available for the rolling target`);
       else target = { kind: "ROLLING_ESSENTIAL_MONTHS", months, monthlyEssentialSpending };
@@ -213,7 +220,6 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
         }
       })()
     : undefined;
-  const statementFacts = activeRecords.map(toFinanceStatementFacts).filter((facts): facts is FinanceStatementFacts => facts !== undefined).sort((left, right) => left.sourceId.localeCompare(right.sourceId));
   const investmentBalances = new Map<string, { value: MoneyValue; sourceIds: string[] }>();
   for (const facts of statementFacts) {
     const valuation = facts.sourceClass === "INVESTMENT" ? facts.investment?.valuation : undefined;
@@ -243,6 +249,7 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
       return [];
     }
   }).sort((left, right) => left.recordId.localeCompare(right.recordId));
+  const forecastReconciliations = (options.forecastActuals && options.forecastActuals.length > 0 ? (options.forecastVintages ?? []) : []).map((vintage) => reconcileFinanceForecast(vintage, options.forecastActuals ?? [])).sort((left, right) => left.vintageId.localeCompare(right.vintageId));
   const updateBrief: FinanceUpdateBrief = {
     sourceIds: [...new Set([...transactions.map((transaction) => transaction.lineage.sourceId), ...statementFacts.map((facts) => facts.sourceId), ...crossDomain.sourceIds])].sort(),
     materialChange: (options.changedIds?.length ?? 0) > 0,
@@ -254,10 +261,12 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
       goals: financeGoalPlans.length,
       reviewItems: reviewCases.length,
       recurringPatterns: recurringPatterns.length,
+      recurringSignals: recurringSignals.length,
       forecastVintages: options.forecastVintages?.length ?? 0,
-      dataQualityLimitations: quality.limitations.length + crossDomain.limitations.length + financeGoalLimitations.length + fireScenarioLimitations.length
+      forecastActualizations: forecastReconciliations.reduce((count, reconciliation) => count + reconciliation.errors.length, 0),
+      dataQualityLimitations: quality.limitations.length + crossDomain.limitations.length + financeGoalLimitations.length + fireScenarioLimitations.length + forecastReconciliations.flatMap((reconciliation) => reconciliation.limitations).length
     },
-    limitations: [...new Set([...quality.limitations, ...crossDomain.limitations, ...financeGoalLimitations, ...fireScenarioLimitations])].sort(),
+    limitations: [...new Set([...quality.limitations, ...crossDomain.limitations, ...financeGoalLimitations, ...fireScenarioLimitations, ...forecastReconciliations.flatMap((reconciliation) => reconciliation.limitations)])].sort(),
     truthClass: "DERIVED"
   };
   const invalidatedFinanceIds = dependencyImpact.invalidatedDerivedIds.filter((id) => financeNodeIds.has(id)).sort();
@@ -272,6 +281,7 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
     ...(summary ? { summary } : {}),
     transferAnalysis,
     recurringPatterns,
+    recurringSignals,
     reviewCases,
     quality: transactions.length === 0 ? { ...quality, status: "UNKNOWN", limitations: ["no Finance transactions are available for this projection"] } : quality,
     dependencyGraph,
@@ -288,7 +298,8 @@ export function projectFinanceState(records: readonly CanonicalRecord[], options
     updateBrief,
     crossDomain,
     invalidatedFinanceIds,
-    forecastVintages: [...(options.forecastVintages ?? [])]
+    forecastVintages: [...(options.forecastVintages ?? [])],
+    forecastReconciliations
   };
 }
 

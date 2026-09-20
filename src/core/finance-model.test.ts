@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseFinanceCsv, type FinanceStatementSource } from "./finance";
-import { allocateFinanceResource, analyzeFinanceGraph, assessFinanceDataQuality, classifyFinanceSource, createFinanceForecast, detectFinanceParserDrift, detectFinanceReviewCases, evaluateFinanceFeedbackLoop, evaluateFinanceReviewCases, inferFinanceRecurringPatterns, matchFinanceTransfers, planFinanceAllocationAlternatives, projectFinanceGoal, projectFireScenario, propagateFinanceGraph, summarizeFinanceTransactions, type FinanceDependencyGraph } from "./finance-model";
+import { allocateFinanceResource, analyzeFinanceGraph, analyzeFinanceRecurrence, assessFinanceDataQuality, calculateFinanceRollingEssentialSpending, classifyFinanceSource, createFinanceForecast, detectFinanceParserDrift, detectFinanceReviewCases, evaluateFinanceFeedbackLoop, evaluateFinanceReviewCases, evaluateFinanceWhatIf, inferFinanceRecurringPatterns, matchFinanceTransfers, planFinanceAllocationAlternatives, projectFinanceGoal, projectFireScenario, propagateFinanceGraph, reconcileFinanceForecast, summarizeFinanceTransactions, type FinanceDependencyGraph } from "./finance-model";
 
 const source: FinanceStatementSource = { sourceId: "source:model", name: "model.csv", sha256: "c".repeat(64), accountId: "checking", currency: "CAD" };
 
@@ -83,6 +83,16 @@ describe("shared Finance/Synergy model", () => {
     expect(summary.transferNet.amountMinor).toBe("0");
   });
 
+  it("records ambiguous transfer/card-payment candidates instead of choosing a silent match", () => {
+    const outgoing = parseFinanceCsv("Date,Description,Amount,Id\n2026-01-02,Payment to credit card,-100.00,card-out\n", source);
+    const firstCandidate = parseFinanceCsv("Date,Description,Amount,Id\n2026-01-02,Credit card payment,100.00,card-in-1\n", { ...source, sourceId: "source:card-1", accountId: "credit-card-1", sha256: "1".repeat(64) });
+    const secondCandidate = parseFinanceCsv("Date,Description,Amount,Id\n2026-01-02,Credit card payment,100.00,card-in-2\n", { ...source, sourceId: "source:card-2", accountId: "credit-card-2", sha256: "2".repeat(64) });
+    const analysis = matchFinanceTransfers([...outgoing, ...firstCandidate, ...secondCandidate]);
+    expect(analysis.matches).toEqual([]);
+    expect(analysis.unmatchedTransactionIds).toHaveLength(3);
+    expect(analysis.unresolvedMatches.find((match) => match.transactionId === outgoing[0]?.id)).toMatchObject({ reason: "AMBIGUOUS_COUNTERPART", direction: "OUTGOING", candidateTransactionIds: [firstCandidate[0]?.id, secondCandidate[0]?.id] });
+  });
+
   it("returns deterministic review-only alternatives for conflicting soft goals", () => {
     const analysis = planFinanceAllocationAlternatives([
       { goalId: "travel", requiredMonthlyContribution: { amountMinor: "50000", currency: "CAD" } },
@@ -122,6 +132,74 @@ describe("shared Finance/Synergy model", () => {
     const quality = assessFinanceDataQuality({ requiredPeriods: ["2026-01", "2026-02"], availablePeriods: ["2026-01"], unresolvedReviewCases: 1 });
     expect(quality.status).toBe("UNKNOWN");
     expect(quality.limitations).toEqual(["missing periods: 2026-02", "1 unresolved review case(s)"]);
+  });
+
+  it("emits deterministic recurrence signals for missing, late, price-change, refund, periodic, and duplicate cases", () => {
+    const subscription = parseFinanceCsv("Date,Description,Amount\n2026-01-01,Streaming,-10\n2026-02-01,Streaming,-10\n2026-03-01,Streaming,-10\n2026-04-01,Streaming,-12\n", source);
+    const missing = parseFinanceCsv("Date,Description,Amount\n2026-01-01,Missing Bill,-20\n2026-02-01,Missing Bill,-20\n2026-03-01,Missing Bill,-20\n", source);
+    const late = parseFinanceCsv("Date,Description,Amount\n2026-01-01,Late Bill,-20\n2026-02-01,Late Bill,-20\n2026-03-01,Late Bill,-20\n2026-04-20,Late Bill,-20\n", source);
+    const reimbursement = parseFinanceCsv("Date,Description,Amount\n2026-01-01,Reimbursement,50\n2026-04-01,Reimbursement,50\n2026-07-01,Reimbursement,50\n", source);
+    const refund = parseFinanceCsv("Date,Description,Amount,Status\n2026-01-01,Refund Shop,-50,POSTED\n2026-02-20,Refund Shop,50,REFUNDED\n", source);
+    const payroll = parseFinanceCsv("Date,Description,Amount\n2026-01-01,Payroll,2000\n2026-02-01,Payroll,2000\n2026-03-01,Payroll,2000\n2026-04-05,Payroll,2000\n", source);
+    const duplicate = { ...subscription[0]!, id: "duplicate-streaming", lineage: { ...subscription[0]!.lineage, sourceRow: 99 } };
+    const analysis = analyzeFinanceRecurrence([...subscription, duplicate, ...missing, ...late, ...reimbursement, ...refund, ...payroll], { asOfDate: "2026-04-20" });
+    expect(analysis.patterns.find((pattern) => pattern.merchant === "reimbursement")?.cadence).toBe("PERIODIC");
+    expect(analysis.signals.map((signal) => signal.kind)).toEqual(expect.arrayContaining(["MISSING", "LATE", "PRICE_CHANGE", "REFUND", "DUPLICATE"]));
+    expect(analysis.signals.find((signal) => signal.kind === "REFUND" && signal.transactionIds.includes(refund[1]?.id ?? ""))?.reasons.join(" ")).toContain("later than the bounded review threshold");
+    expect(analysis.signals.find((signal) => signal.kind === "DUPLICATE")?.transactionIds).toEqual(["duplicate-streaming", subscription[0]?.id].sort());
+    expect(analysis.signals.some((signal) => signal.kind === "LATE" && signal.transactionIds.includes(payroll[3]?.id ?? ""))).toBe(false);
+  });
+
+  it("keeps weak anomaly history low-confidence and gives robust history an explicit baseline", () => {
+    const strongRows = Array.from({ length: 6 }, (_, index) => `2026-0${index + 1}-01,Annual Insurance,-1000`).join("\n");
+    const transactions = parseFinanceCsv(`Date,Description,Amount\n${strongRows}\n2026-07-01,Annual Insurance,-5000\n2026-01-10,Weak Merchant,-100\n2026-02-10,Weak Merchant,-500\n2024-01-15,Annual Renewal,-1000\n2025-01-15,Annual Renewal,-1000\n2026-01-15,Annual Renewal,-1000\n`, source);
+    const cases = detectFinanceReviewCases(transactions);
+    const strong = cases.find((review) => review.transactionId === transactions.find((transaction) => transaction.postedAt.startsWith("2026-07-01"))?.id);
+    const weak = cases.find((review) => review.transactionId === transactions.find((transaction) => transaction.postedAt.startsWith("2026-02-10"))?.id);
+    expect(strong).toMatchObject({ confidence: "HIGH", baseline: { scope: "MERCHANT", historyStrength: "STRONG" } });
+    expect(strong?.reasons.join(" ")).toContain("robust historical range");
+    expect(weak).toMatchObject({ confidence: "LOW", baseline: { historyStrength: "WEAK" } });
+    expect(weak?.reasons.join(" ")).toContain("insufficient for a robust baseline");
+    expect(cases.some((review) => review.transactionId === transactions.find((transaction) => transaction.postedAt.startsWith("2026-01-15"))?.id)).toBe(false);
+  });
+
+  it("actualizes elapsed forecast points while retaining the original vintage and recalculating the future", () => {
+    const vintage = createFinanceForecast({ vintageId: "vintage-actuals", createdAt: "2026-01-01T00:00:00.000Z", startMonth: "2026-04", openingCash: { amountMinor: "100000", currency: "CAD" }, monthlyIncome: { amountMinor: "300000", currency: "CAD" }, monthlySpending: { amountMinor: "200000", currency: "CAD" }, horizonMonths: 3, scenario: "BASE", sourceIds: ["forecast-source"] });
+    const reconciliation = reconcileFinanceForecast(vintage, [
+      { month: "2026-04", closingCash: { amountMinor: "250000", currency: "CAD" }, sourceIds: ["statement-april"] },
+      { month: "2026-05", closingCash: { amountMinor: "400000", currency: "CAD" }, sourceIds: ["statement-may"] }
+    ]);
+    expect(vintage.points[0]?.closingCash.amountMinor).toBe("200000");
+    expect(reconciliation.points.map((point) => point.closingCash.amountMinor)).toEqual(["250000", "400000", "500000"]);
+    expect(reconciliation.points.slice(0, 2).every((point) => point.actualized)).toBe(true);
+    expect(reconciliation.points[2]?.actualized).toBe(false);
+    expect(reconciliation.errors.map((error) => error.error.amountMinor)).toEqual(["50000", "100000"]);
+    expect(reconciliation.meanError.amountMinor).toBe("75000");
+  });
+
+  it("reports missing source identities/classes without coercing unavailable evidence", () => {
+    const essential = parseFinanceCsv("Date,Description,Amount,Essential\n2026-01-02,Rent,-100,true\n2026-02-02,Rent,-100,true\n2026-03-02,Rent,-200,true\n", source);
+    expect(calculateFinanceRollingEssentialSpending(essential, "CAD", 2)).toMatchObject({ observedPeriods: ["2026-02", "2026-03"], monthlyEssentialSpending: { amountMinor: "15000", currency: "CAD" } });
+    const quality = assessFinanceDataQuality({ requiredPeriods: [], availablePeriods: ["2026-01"], requiredSourceIds: ["card-2026-02", "investment-2026-02"], availableSourceIds: ["card-2026-01"], requiredSourceClasses: ["CREDIT_CARD", "INVESTMENT"], availableSourceClasses: ["CREDIT_CARD"] });
+    expect(quality).toMatchObject({ status: "UNKNOWN", missingSourceIds: ["investment-2026-02", "card-2026-02"].sort(), missingSourceClasses: ["INVESTMENT"] });
+    expect(quality.limitations).toEqual(["missing sources: card-2026-02, investment-2026-02", "missing source classes: INVESTMENT"]);
+  });
+
+  it("keeps bounded what-if values separate from the adopted baseline and exposes alternatives", () => {
+    const graph: FinanceDependencyGraph = {
+      nodes: ["income", "cash", "goal"].map((id) => ({ id, label: id, evidence: { truthClass: "OBSERVED", sourceIds: ["fixture"] } })),
+      edges: [
+        { id: "income-cash", from: "income", to: "cash", kind: "DEPENDENCY", evidence: { truthClass: "MODELED", sourceIds: ["fixture"] } },
+        { id: "cash-goal", from: "cash", to: "goal", kind: "DEPENDENCY", evidence: { truthClass: "MODELED", sourceIds: ["fixture"] } }
+      ]
+    };
+    const baseline = { income: 100, cash: 100, goal: 100 };
+    const result = evaluateFinanceWhatIf(graph, baseline, [{ nodeId: "income", value: 150, label: "Raise income", reason: "scenario" }], { scenarioId: "cash-upside", derive: (_id, inputs) => inputs.reduce((sum, value) => sum + value, 0), alternatives: [{ id: "cash-downside", label: "Lower income", changes: [{ nodeId: "income", value: 50, label: "Lower income" }] }] });
+    expect(result.baselineValues).toEqual(baseline);
+    expect(result.values).toMatchObject({ income: 150, cash: 150, goal: 150 });
+    expect(result.assumptions[0]).toMatchObject({ nodeId: "income", baselineValue: 100, delta: 50 });
+    expect(result.alternatives[0]?.values).toMatchObject({ income: 50, cash: 50, goal: 50 });
+    expect(baseline).toEqual({ income: 100, cash: 100, goal: 100 });
   });
 
   it("keeps authenticated or familiar payments distinct from legitimacy and scopes dispositions", () => {

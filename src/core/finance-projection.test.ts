@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { CanonicalRecord } from "./model";
+import { createFinanceForecast } from "./finance-model";
 import { projectFinanceState, toFinanceTransaction } from "./finance-projection";
 
 function record(id: string, data: Record<string, unknown>, overrides: Partial<CanonicalRecord> = {}): CanonicalRecord {
@@ -84,6 +85,30 @@ describe("canonical Finance projection", () => {
     const projection = projectFinanceState([essentialJanuary, essentialFebruary, goal]);
     expect(projection.financeGoalLimitations).toEqual([]);
     expect(projection.financeGoalPlans[0]?.plan).toMatchObject({ target: { amountMinor: "60000", currency: "CAD" }, remaining: { amountMinor: "60000", currency: "CAD" } });
+  });
+
+  it("uses the trailing observed essential periods for a dynamic rolling goal", () => {
+    const months = ["2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12"];
+    const essential = months.map((month, index) => record(`essential-${month}`, { kind: "finance-transaction", merchant: "rent", description: "Rent", amountMinor: index < 6 ? "-10000" : "-20000", currency: "CAD", accountId: "checking", postedAt: `${month}-02T00:00:00.000Z`, status: "POSTED", essential: true }, { truthClass: "IMPORTED_RECORD" }));
+    const goal = record("rolling-six-months", { kind: "finance-goal", label: "Emergency reserve", text: "Emergency reserve", targetKind: "ROLLING_ESSENTIAL_MONTHS", targetMonths: 6, currency: "CAD", targetDate: "2027-01-01" });
+    const projection = projectFinanceState([...essential, goal]);
+    expect(projection.financeGoalPlans[0]?.plan.target).toEqual({ amountMinor: "120000", currency: "CAD" });
+    expect(projection.financeGoalPlans[0]?.plan.remaining).toEqual({ amountMinor: "120000", currency: "CAD" });
+  });
+
+  it("projects recurrence signals, source gaps, and actualized forecast views without inventing missing values", () => {
+    const transactions = [
+      record("salary-jan", { kind: "finance-transaction", merchant: "payroll", description: "Payroll", amountMinor: "300000", currency: "CAD", accountId: "checking", postedAt: "2026-01-02T00:00:00.000Z", status: "POSTED" }, { truthClass: "IMPORTED_RECORD" }),
+      record("salary-feb", { kind: "finance-transaction", merchant: "payroll", description: "Payroll", amountMinor: "300000", currency: "CAD", accountId: "checking", postedAt: "2026-02-02T00:00:00.000Z", status: "POSTED" }, { truthClass: "IMPORTED_RECORD" }),
+      record("salary-mar", { kind: "finance-transaction", merchant: "payroll", description: "Payroll", amountMinor: "300000", currency: "CAD", accountId: "checking", postedAt: "2026-03-02T00:00:00.000Z", status: "POSTED" }, { truthClass: "IMPORTED_RECORD" })
+    ];
+    const vintage = createFinanceForecast({ vintageId: "projection-vintage", createdAt: "2026-01-01T00:00:00.000Z", startMonth: "2026-04", openingCash: { amountMinor: "100000", currency: "CAD" }, monthlyIncome: { amountMinor: "300000", currency: "CAD" }, monthlySpending: { amountMinor: "200000", currency: "CAD" }, horizonMonths: 2, scenario: "BASE", sourceIds: ["forecast-source"] });
+    const projection = projectFinanceState(transactions, { asOfDate: "2026-04-20", requiredSourceIds: ["missing-card-statement"], requiredSourceClasses: ["CREDIT_CARD", "INVESTMENT"], forecastVintages: [vintage], forecastActuals: [{ month: "2026-04", closingCash: { amountMinor: "250000", currency: "CAD" }, sourceIds: ["actual-source"] }] });
+    expect(projection.recurringSignals.some((signal) => signal.kind === "MISSING")).toBe(true);
+    expect(projection.quality.missingSourceIds).toEqual(["missing-card-statement"]);
+    expect(projection.quality.missingSourceClasses).toEqual(["CREDIT_CARD", "INVESTMENT"]);
+    expect(projection.forecastReconciliations[0]?.points[0]).toMatchObject({ actualized: true, closingCash: { amountMinor: "250000" } });
+    expect(projection.forecastVintages[0]?.points[0]?.closingCash.amountMinor).toBe("200000");
   });
 
   it("projects a portfolio funding conflict once and exposes review-only alternatives", () => {

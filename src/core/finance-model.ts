@@ -54,6 +54,55 @@ export interface FinancePropagationResult {
   graph: FinanceGraphAnalysis;
 }
 
+export interface FinanceWhatIfChange {
+  nodeId: string;
+  value: number;
+  label: string;
+  reason?: string;
+}
+
+export interface FinanceWhatIfAlternativeInput {
+  id: string;
+  label: string;
+  changes: readonly FinanceWhatIfChange[];
+}
+
+export interface FinanceWhatIfAssumption extends FinanceWhatIfChange {
+  baselineValue?: number;
+  delta?: number;
+}
+
+export interface FinanceWhatIfAlternativeResult {
+  id: string;
+  label: string;
+  assumptions: FinanceWhatIfAssumption[];
+  values: Record<string, number>;
+  changedNodeIds: string[];
+  invalidatedNodeIds: string[];
+}
+
+export interface FinanceWhatIfOptions {
+  scenarioId: string;
+  derive: NonNullable<FinancePropagationOptions["derive"]>;
+  fixedNodeIds?: readonly string[];
+  alternatives?: readonly FinanceWhatIfAlternativeInput[];
+  maxChanges?: number;
+  maxAlternatives?: number;
+}
+
+export interface FinanceWhatIfResult {
+  scenarioId: string;
+  baselineValues: Record<string, number>;
+  assumptions: FinanceWhatIfAssumption[];
+  values: Record<string, number>;
+  changedNodeIds: string[];
+  invalidatedNodeIds: string[];
+  alternatives: FinanceWhatIfAlternativeResult[];
+  graph: FinanceGraphAnalysis;
+  truthClass: "MODELED";
+  limitations: string[];
+}
+
 const propagationEdgeKinds = new Set<FinanceGraphEdgeKind>(["DEPENDENCY", "ALLOCATION"]);
 
 /**
@@ -163,6 +212,64 @@ export function propagateFinanceGraph(graph: FinanceDependencyGraph, initialValu
   }
   const changedNodeIds = Object.keys(values).filter((id) => values[id] !== initialValues[id]).sort();
   return { ...(options.scenarioId ? { scenarioId: options.scenarioId } : {}), values, changedNodeIds, invalidatedNodeIds: [...invalidated].sort(), graph: analysis };
+}
+
+/**
+ * Evaluate an isolated, bounded what-if without changing adopted values.
+ * Changes and alternatives are explicit inputs; this function never invents
+ * a recommendation and never writes through a canonical owner.
+ */
+export function evaluateFinanceWhatIf(graph: FinanceDependencyGraph, baselineValues: Record<string, number>, changes: readonly FinanceWhatIfChange[], options: FinanceWhatIfOptions): FinanceWhatIfResult {
+  if (!options.scenarioId.trim()) throw new Error("A what-if scenario ID is required");
+  const maxChanges = options.maxChanges ?? 32;
+  const maxAlternatives = options.maxAlternatives ?? 8;
+  if (!Number.isInteger(maxChanges) || maxChanges < 1 || maxChanges > 128 || !Number.isInteger(maxAlternatives) || maxAlternatives < 0 || maxAlternatives > 32) throw new Error("What-if bounds are invalid");
+  const graphNodeIds = new Set(graph.nodes.map((node) => node.id));
+  const analysis = analyzeFinanceGraph(graph, options.scenarioId);
+  const normalizeChanges = (items: readonly FinanceWhatIfChange[]): FinanceWhatIfAssumption[] => {
+    if (items.length === 0 || items.length > maxChanges) throw new Error("What-if changes are outside the supported bound");
+    const seen = new Set<string>();
+    return [...items].map((change) => {
+      if (!graphNodeIds.has(change.nodeId) || !change.nodeId.trim()) throw new Error(`What-if change references an unknown node: ${change.nodeId}`);
+      if (seen.has(change.nodeId)) throw new Error("What-if change node IDs must be unique");
+      seen.add(change.nodeId);
+      if (!Number.isFinite(change.value) || Math.abs(change.value) > Number.MAX_SAFE_INTEGER) throw new Error("What-if values must be finite and bounded");
+      if (!change.label.trim()) throw new Error("What-if change labels are required");
+      const baselineValue = baselineValues[change.nodeId];
+      return { ...change, label: change.label.trim().slice(0, 240), ...(baselineValue !== undefined ? { baselineValue, delta: change.value - baselineValue } : {}) };
+    }).sort((left, right) => left.nodeId.localeCompare(right.nodeId));
+  };
+  const project = (items: readonly FinanceWhatIfChange[]): FinancePropagationResult => {
+    const assumptions = normalizeChanges(items);
+    const scenarioValues = { ...baselineValues };
+    for (const assumption of assumptions) scenarioValues[assumption.nodeId] = assumption.value;
+    return propagateFinanceGraph(graph, scenarioValues, { scenarioId: options.scenarioId, derive: options.derive, fixedNodeIds: [...new Set([...(options.fixedNodeIds ?? []), ...assumptions.map((assumption) => assumption.nodeId)])] });
+  };
+  const assumptions = normalizeChanges(changes);
+  const main = project(changes);
+  if (options.alternatives && options.alternatives.length > maxAlternatives) throw new Error("What-if alternatives are outside the supported bound");
+  const alternativeIds = new Set<string>();
+  const alternatives = [...(options.alternatives ?? [])].map((alternative) => {
+    if (!alternative.id.trim() || !alternative.label.trim() || alternative.id === options.scenarioId || alternativeIds.has(alternative.id)) throw new Error("What-if alternative identities must be unique and non-empty");
+    alternativeIds.add(alternative.id);
+    const result = project(alternative.changes);
+    return { id: alternative.id, label: alternative.label.trim().slice(0, 240), assumptions: normalizeChanges(alternative.changes), values: result.values, changedNodeIds: result.changedNodeIds, invalidatedNodeIds: result.invalidatedNodeIds };
+  }).sort((left, right) => left.id.localeCompare(right.id));
+  return {
+    scenarioId: options.scenarioId,
+    baselineValues: { ...baselineValues },
+    assumptions,
+    values: main.values,
+    changedNodeIds: main.changedNodeIds,
+    invalidatedNodeIds: main.invalidatedNodeIds,
+    alternatives,
+    graph: analysis,
+    truthClass: "MODELED",
+    limitations: [
+      ...(main.invalidatedNodeIds.length > 0 ? ["cyclic or dependent values remain invalidated rather than being resolved by arbitrary ordering"] : []),
+      "what-if values are modeled alternatives and do not mutate the adopted plan"
+    ]
+  };
 }
 
 export interface FinanceFeedbackLoopOptions {
@@ -283,9 +390,24 @@ export interface FinanceTransferMatch {
   sourceIds: string[];
 }
 
+export type FinanceTransferUnresolvedReason = "NO_COUNTERPART" | "AMBIGUOUS_COUNTERPART" | "COUNTERPART_ALREADY_PAIRED";
+
+export interface FinanceTransferUnresolvedMatch {
+  id: string;
+  transactionId: string;
+  direction: "OUTGOING" | "INCOMING";
+  amount: MoneyValue;
+  kind: FinanceTransferKind;
+  candidateTransactionIds: string[];
+  reason: FinanceTransferUnresolvedReason;
+  sourceIds: string[];
+  evidence: FinanceEvidence;
+}
+
 export interface FinanceTransferAnalysis {
   matches: FinanceTransferMatch[];
   unmatchedTransactionIds: string[];
+  unresolvedMatches: FinanceTransferUnresolvedMatch[];
 }
 
 /**
@@ -305,15 +427,38 @@ export function matchFinanceTransfers(transactions: readonly FinanceTransaction[
   const incoming = candidates.filter((transaction) => BigInt(transaction.amount.amountMinor) > 0n);
   const matchedIds = new Set<string>();
   const matches: FinanceTransferMatch[] = [];
+  const unresolved = new Map<string, FinanceTransferUnresolvedMatch>();
+  const addUnresolved = (transaction: FinanceTransaction, candidates: readonly FinanceTransaction[], reason: FinanceTransferUnresolvedReason): void => {
+    const kind: FinanceTransferKind = /\b(?:card|credit card|payment to card|card payment)\b/iu.test(transaction.description) ? "CARD_PAYMENT" : "INTERNAL_TRANSFER";
+    unresolved.set(transaction.id, {
+      id: `finance-transfer-unresolved:${transaction.id}`,
+      transactionId: transaction.id,
+      direction: BigInt(transaction.amount.amountMinor) < 0n ? "OUTGOING" : "INCOMING",
+      amount: { amountMinor: absMinor(transaction.amount.amountMinor), currency: transaction.amount.currency },
+      kind,
+      candidateTransactionIds: [...new Set(candidates.map((candidate) => candidate.id))].sort(),
+      reason,
+      sourceIds: [...new Set([transaction.lineage.sourceId, ...candidates.flatMap((candidate) => [candidate.lineage.sourceId])])].sort(),
+      evidence: { truthClass: "DERIVED", sourceIds: [transaction.id, ...candidates.map((candidate) => candidate.id)].sort(), note: "The movement remains visible and requires reconciliation; no counterpart was silently selected." }
+    });
+  };
   for (const debit of outgoing) {
-    const ranked = incoming.filter((credit) => {
-      if (matchedIds.has(credit.id) || credit.accountId === debit.accountId || credit.amount.currency !== debit.amount.currency) return false;
+    const allCandidates = incoming.filter((credit) => {
+      if (credit.accountId === debit.accountId || credit.amount.currency !== debit.amount.currency) return false;
       if (absMinor(credit.amount.amountMinor) !== absMinor(debit.amount.amountMinor)) return false;
       return dayDistance(debit.postedAt, credit.postedAt) <= maxDayDistance;
-    }).map((credit) => ({ credit, score: transferMatchScore(debit, credit, maxDayDistance) })).sort((left, right) => right.score - left.score || left.credit.id.localeCompare(right.credit.id));
-    if (ranked.length === 0) continue;
+    });
+    const ranked = allCandidates.filter((credit) => !matchedIds.has(credit.id)).map((credit) => ({ credit, score: transferMatchScore(debit, credit, maxDayDistance) })).sort((left, right) => right.score - left.score || left.credit.id.localeCompare(right.credit.id));
+    if (ranked.length === 0) {
+      addUnresolved(debit, allCandidates, allCandidates.length > 0 ? "COUNTERPART_ALREADY_PAIRED" : "NO_COUNTERPART");
+      continue;
+    }
     const best = ranked[0]!;
-    if (ranked[1] && ranked[1].score === best.score) continue;
+    const tied = ranked.filter((candidate) => candidate.score === best.score).map((candidate) => candidate.credit);
+    if (tied.length > 1) {
+      addUnresolved(debit, tied, "AMBIGUOUS_COUNTERPART");
+      continue;
+    }
     const credit = best.credit;
     matchedIds.add(debit.id);
     matchedIds.add(credit.id);
@@ -329,7 +474,13 @@ export function matchFinanceTransfers(transactions: readonly FinanceTransaction[
       sourceIds: [...new Set([debit.lineage.sourceId, credit.lineage.sourceId])].sort()
     });
   }
-  return { matches: matches.sort((left, right) => left.id.localeCompare(right.id)), unmatchedTransactionIds: candidates.filter((transaction) => !matchedIds.has(transaction.id)).map((transaction) => transaction.id).sort() };
+  for (const credit of incoming) {
+    if (!matchedIds.has(credit.id) && !unresolved.has(credit.id)) {
+      const possibleDebits = outgoing.filter((debit) => debit.accountId !== credit.accountId && debit.amount.currency === credit.amount.currency && absMinor(debit.amount.amountMinor) === absMinor(credit.amount.amountMinor) && dayDistance(debit.postedAt, credit.postedAt) <= maxDayDistance);
+      addUnresolved(credit, possibleDebits, possibleDebits.length > 0 ? "COUNTERPART_ALREADY_PAIRED" : "NO_COUNTERPART");
+    }
+  }
+  return { matches: matches.sort((left, right) => left.id.localeCompare(right.id)), unmatchedTransactionIds: candidates.filter((transaction) => !matchedIds.has(transaction.id)).map((transaction) => transaction.id).sort(), unresolvedMatches: [...unresolved.values()].sort((left, right) => left.id.localeCompare(right.id)) };
 }
 
 /** A descriptive projection; it never changes transaction ownership or truth. */
@@ -440,7 +591,7 @@ export function detectFinanceParserDrift(profile: FinanceParserProfile, headers:
   return { status: "STABLE", missingHeaders, addedHeaders };
 }
 
-export type FinanceCadence = "MONTHLY" | "ANNUAL" | "IRREGULAR";
+export type FinanceCadence = "MONTHLY" | "ANNUAL" | "PERIODIC" | "IRREGULAR";
 
 export interface FinanceRecurringPattern {
   id: string;
@@ -454,32 +605,181 @@ export interface FinanceRecurringPattern {
   evidence: FinanceEvidence;
 }
 
-export function inferFinanceRecurringPatterns(transactions: readonly FinanceTransaction[], minimumOccurrences = 3): FinanceRecurringPattern[] {
-  if (!Number.isInteger(minimumOccurrences) || minimumOccurrences < 2 || minimumOccurrences > 100) throw new Error("Recurring-pattern occurrence bound is invalid");
+export type FinanceRecurringSignalKind = "MISSING" | "LATE" | "REFUND" | "DUPLICATE" | "PRICE_CHANGE";
+
+export interface FinanceRecurringSignal {
+  id: string;
+  patternId?: string;
+  kind: FinanceRecurringSignalKind;
+  severity: "INFO" | "REVIEW";
+  transactionIds: string[];
+  expectedAt?: string;
+  observedAt?: string;
+  amount?: MoneyValue;
+  reasons: string[];
+  sourceIds: string[];
+  evidence: FinanceEvidence;
+}
+
+export interface FinanceRecurringAnalysis {
+  patterns: FinanceRecurringPattern[];
+  signals: FinanceRecurringSignal[];
+}
+
+export interface FinanceRecurringOptions {
+  asOfDate?: string;
+  minimumOccurrences?: number;
+  graceDays?: number;
+}
+
+interface FinanceRecurringGroup {
+  key: string;
+  entries: FinanceTransaction[];
+  pattern: FinanceRecurringPattern | undefined;
+}
+
+function recurringGroupKey(transaction: FinanceTransaction): string {
+  return `${transaction.accountId}|${transaction.merchant}|${transaction.amount.currency}|${BigInt(transaction.amount.amountMinor) < 0n ? "OUTFLOW" : BigInt(transaction.amount.amountMinor) > 0n ? "INFLOW" : "NEUTRAL"}`;
+}
+
+function recurringEligible(transaction: FinanceTransaction): boolean {
+  return transaction.status !== "VOIDED" && transaction.status !== "REVERSED" && transaction.status !== "PENDING" && Number.isFinite(Date.parse(transaction.postedAt));
+}
+
+function recurringGroups(transactions: readonly FinanceTransaction[]): FinanceRecurringGroup[] {
   const groups = new Map<string, FinanceTransaction[]>();
   for (const transaction of transactions) {
-    if (transaction.status === "VOIDED" || transaction.status === "REVERSED" || transaction.status === "PENDING") continue;
-    const key = `${transaction.merchant}|${transaction.amount.currency}|${transaction.amount.amountMinor}`;
+    if (!recurringEligible(transaction)) continue;
+    const key = recurringGroupKey(transaction);
     groups.set(key, [...(groups.get(key) ?? []), transaction]);
   }
-  const patterns: FinanceRecurringPattern[] = [];
-  for (const [key, entries] of groups) {
-    if (entries.length < minimumOccurrences) continue;
-    const sorted = [...entries].sort((left, right) => Date.parse(left.postedAt) - Date.parse(right.postedAt));
-    const intervals = sorted.slice(1).map((entry, index) => Math.round((Date.parse(entry.postedAt) - Date.parse(sorted[index]!.postedAt)) / 86_400_000)).filter((days) => days > 0);
-    if (intervals.length === 0) continue;
-    const medianIntervalDays = median(intervals);
-    const cadence: FinanceCadence = medianIntervalDays >= 25 && medianIntervalDays <= 35 ? "MONTHLY" : medianIntervalDays >= 330 && medianIntervalDays <= 395 ? "ANNUAL" : "IRREGULAR";
-    if (cadence === "IRREGULAR") continue;
-    const last = sorted.at(-1)!;
-    const nextExpectedAt = new Date(Date.parse(last.postedAt) + medianIntervalDays * 86_400_000).toISOString();
-    patterns.push({ id: `finance-recurring:${financeModelKey(key)}`, merchant: last.merchant, amount: last.amount, occurrenceCount: entries.length, medianIntervalDays, cadence, nextExpectedAt, sourceIds: [...new Set(entries.map((entry) => entry.lineage.sourceId))].sort(), evidence: { truthClass: "OBSERVED", sourceIds: [...new Set(entries.map((entry) => entry.id))].sort(), note: "Pattern is descriptive; a holiday or known one-off can explain a delayed occurrence." } });
+  return [...groups.entries()].map(([key, entries]) => ({ key, entries: entries.sort((left, right) => Date.parse(left.postedAt) - Date.parse(right.postedAt) || left.id.localeCompare(right.id)), pattern: undefined })).sort((left, right) => left.key.localeCompare(right.key));
+}
+
+function recurringPattern(group: FinanceRecurringGroup, minimumOccurrences: number): FinanceRecurringPattern | undefined {
+  if (group.entries.length < minimumOccurrences) return undefined;
+  const intervals = group.entries.slice(1).map((entry, index) => Math.round((Date.parse(entry.postedAt) - Date.parse(group.entries[index]!.postedAt)) / 86_400_000)).filter((days) => days > 0);
+  if (intervals.length === 0) return undefined;
+  const medianIntervalDays = median(intervals);
+  const cadence: FinanceCadence = medianIntervalDays >= 25 && medianIntervalDays <= 35 ? "MONTHLY" : medianIntervalDays >= 330 && medianIntervalDays <= 395 ? "ANNUAL" : medianIntervalDays >= 7 && medianIntervalDays <= 329 ? "PERIODIC" : "IRREGULAR";
+  if (cadence === "IRREGULAR") return undefined;
+  const last = group.entries.at(-1)!;
+  const nextTime = Date.parse(last.postedAt) + medianIntervalDays * 86_400_000;
+  if (!Number.isFinite(nextTime)) return undefined;
+  return {
+    id: `finance-recurring:${financeModelKey(group.key)}`,
+    merchant: last.merchant,
+    amount: last.amount,
+    occurrenceCount: group.entries.length,
+    medianIntervalDays,
+    cadence,
+    nextExpectedAt: new Date(nextTime).toISOString(),
+    sourceIds: [...new Set(group.entries.map((entry) => entry.lineage.sourceId))].sort(),
+    evidence: { truthClass: "OBSERVED", sourceIds: [...new Set(group.entries.map((entry) => entry.id))].sort(), note: "Pattern is descriptive; a holiday or known one-off can explain a delayed occurrence." }
+  };
+}
+
+function recurringToleranceDays(pattern: FinanceRecurringPattern, override?: number): number {
+  if (override !== undefined) return override;
+  return Math.max(7, Math.ceil(pattern.medianIntervalDays * 0.2));
+}
+
+function recurringSignal(pattern: FinanceRecurringPattern | undefined, kind: FinanceRecurringSignalKind, transactionIds: readonly string[], sourceIds: readonly string[], reasons: readonly string[], values: { expectedAt?: string; observedAt?: string; amount?: MoneyValue } = {}): FinanceRecurringSignal {
+  const suffix = [...transactionIds].sort().join(":") || "none";
+  return {
+    id: `finance-recurring-signal:${kind.toLocaleLowerCase("en-CA")}:${financeModelKey(`${pattern?.id ?? "unscoped"}|${suffix}`)}`,
+    ...(pattern ? { patternId: pattern.id } : {}),
+    kind,
+    severity: "REVIEW",
+    transactionIds: [...new Set(transactionIds)].sort(),
+    ...(values.expectedAt ? { expectedAt: values.expectedAt } : {}),
+    ...(values.observedAt ? { observedAt: values.observedAt } : {}),
+    ...(values.amount ? { amount: values.amount } : {}),
+    reasons: [...new Set(reasons)].sort(),
+    sourceIds: [...new Set(sourceIds)].sort(),
+    evidence: { truthClass: "DERIVED", sourceIds: [...new Set(transactionIds)].sort(), note: "Recurring signal is descriptive and requires user review; it is not a fraud, refund, or payment recommendation." }
+  };
+}
+
+function materialAmountChange(current: MoneyValue, baseline: readonly MoneyValue[], minimumPercent = 5): boolean {
+  if (baseline.length === 0 || baseline.some((value) => value.currency !== current.currency)) return false;
+  const baselineMinor = medianBigInt(baseline.map((value) => (BigInt(value.amountMinor) < 0n ? -BigInt(value.amountMinor) : BigInt(value.amountMinor))));
+  const currentMinor = BigInt(current.amountMinor) < 0n ? -BigInt(current.amountMinor) : BigInt(current.amountMinor);
+  if (baselineMinor === 0n) return currentMinor !== 0n;
+  return (currentMinor > baselineMinor ? currentMinor - baselineMinor : baselineMinor - currentMinor) * 100n >= baselineMinor * BigInt(minimumPercent);
+}
+
+export function analyzeFinanceRecurrence(transactions: readonly FinanceTransaction[], options: FinanceRecurringOptions = {}): FinanceRecurringAnalysis {
+  const minimumOccurrences = options.minimumOccurrences ?? 3;
+  if (!Number.isInteger(minimumOccurrences) || minimumOccurrences < 2 || minimumOccurrences > 100) throw new Error("Recurring-pattern occurrence bound is invalid");
+  if (options.graceDays !== undefined && (!Number.isInteger(options.graceDays) || options.graceDays < 0 || options.graceDays > 90)) throw new Error("Recurring-signal grace bound is invalid");
+  const asOfTime = options.asOfDate === undefined ? Math.max(...transactions.filter(recurringEligible).map((transaction) => Date.parse(transaction.postedAt)), 0) : Date.parse(options.asOfDate);
+  if (!Number.isFinite(asOfTime)) throw new Error("Recurring as-of date is invalid");
+  const groups = recurringGroups(transactions);
+  for (const group of groups) group.pattern = recurringPattern(group, minimumOccurrences);
+  const patterns = groups.flatMap((group) => group.pattern ? [group.pattern] : []);
+  const signals: FinanceRecurringSignal[] = [];
+  for (const group of groups) {
+    const pattern = group.pattern;
+    if (!pattern) continue;
+    const tolerance = recurringToleranceDays(pattern, options.graceDays);
+    for (let index = 1; index < group.entries.length; index += 1) {
+      const previous = group.entries[index - 1]!;
+      const current = group.entries[index]!;
+      const interval = Math.round((Date.parse(current.postedAt) - Date.parse(previous.postedAt)) / 86_400_000);
+      if (interval > pattern.medianIntervalDays + tolerance) {
+        signals.push(recurringSignal(pattern, "LATE", [previous.id, current.id], [previous.lineage.sourceId, current.lineage.sourceId], [`occurrence arrived ${interval - pattern.medianIntervalDays} days after the learned interval tolerance`], { observedAt: current.postedAt, amount: current.amount }));
+      }
+      if (index >= 2 && materialAmountChange(current.amount, group.entries.slice(0, index).map((entry) => entry.amount))) {
+        signals.push(recurringSignal(pattern, "PRICE_CHANGE", [current.id], [current.lineage.sourceId, ...group.entries.slice(0, index).map((entry) => entry.lineage.sourceId)], ["recurring amount differs materially from its prior observed baseline"], { observedAt: current.postedAt, amount: current.amount }));
+      }
+    }
+    const expectedTime = Date.parse(pattern.nextExpectedAt);
+    if (asOfTime > expectedTime + tolerance * 86_400_000) {
+      signals.push(recurringSignal(pattern, "MISSING", [group.entries.at(-1)!.id], pattern.sourceIds, [`no ${pattern.cadence.toLocaleLowerCase("en-CA")} occurrence was observed by the supplied as-of date`], { expectedAt: pattern.nextExpectedAt, amount: pattern.amount }));
+    }
   }
-  return patterns.sort((left, right) => left.id.localeCompare(right.id));
+  const byNaturalKey = new Map<string, FinanceTransaction[]>();
+  for (const transaction of transactions.filter(recurringEligible)) byNaturalKey.set(transaction.naturalKey, [...(byNaturalKey.get(transaction.naturalKey) ?? []), transaction]);
+  for (const entries of byNaturalKey.values()) {
+    if (entries.length < 2) continue;
+    const ordered = [...entries].sort((left, right) => Date.parse(left.postedAt) - Date.parse(right.postedAt) || left.id.localeCompare(right.id));
+    const group = groups.find((candidate) => candidate.entries.some((entry) => entry.id === ordered[0]!.id));
+    for (const duplicate of ordered.slice(1)) signals.push(recurringSignal(group?.pattern, "DUPLICATE", [ordered[0]!.id, duplicate.id], [ordered[0]!.lineage.sourceId, duplicate.lineage.sourceId], ["the same natural transaction identity appears more than once"], { observedAt: duplicate.postedAt, amount: duplicate.amount }));
+  }
+  const posted = transactions.filter(recurringEligible);
+  for (const refund of posted.filter((transaction) => transaction.status === "REFUNDED" || /\b(?:refund|refunded|rebate|cashback|return|reimbursement)\b/iu.test(transaction.description))) {
+    const candidates = posted.filter((transaction) => transaction.id !== refund.id && transaction.accountId === refund.accountId && transaction.merchant === refund.merchant && transaction.amount.currency === refund.amount.currency && BigInt(transaction.amount.amountMinor) < 0n && BigInt(refund.amount.amountMinor) > 0n && (BigInt(transaction.amount.amountMinor) === -BigInt(refund.amount.amountMinor)) && Date.parse(transaction.postedAt) <= Date.parse(refund.postedAt));
+    const original = candidates.sort((left, right) => Date.parse(right.postedAt) - Date.parse(left.postedAt) || right.id.localeCompare(left.id))[0];
+    const explicitRefund = refund.status === "REFUNDED" || /\b(?:refund|refunded|rebate|cashback|return)\b/iu.test(refund.description);
+    if (!original && !explicitRefund) continue;
+    const delay = original ? Math.round((Date.parse(refund.postedAt) - Date.parse(original.postedAt)) / 86_400_000) : undefined;
+    const reasons = [original ? `refund follows the original charge after ${delay} days` : "refund or reimbursement terminology requires reconciliation"];
+    if (delay !== undefined && delay > 14) reasons.push("refund arrived later than the bounded review threshold");
+    signals.push(recurringSignal(undefined, "REFUND", original ? [original.id, refund.id] : [refund.id], [refund.lineage.sourceId, ...(original ? [original.lineage.sourceId] : [])], reasons, { observedAt: refund.postedAt, amount: refund.amount }));
+  }
+  return { patterns: patterns.sort((left, right) => left.id.localeCompare(right.id)), signals: signals.sort((left, right) => left.id.localeCompare(right.id)) };
+}
+
+export function inferFinanceRecurringPatterns(transactions: readonly FinanceTransaction[], minimumOccurrences = 3): FinanceRecurringPattern[] {
+  return analyzeFinanceRecurrence(transactions, { minimumOccurrences }).patterns;
+}
+
+export function detectFinanceRecurringSignals(transactions: readonly FinanceTransaction[], options: FinanceRecurringOptions = {}): FinanceRecurringSignal[] {
+  return analyzeFinanceRecurrence(transactions, options).signals;
 }
 
 export type FinanceReviewPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT_REVIEW";
 export type FinanceReviewDisposition = "UNRESOLVED" | "CONFIRMED_LEGITIMATE" | "POSSIBLE_SCAM_OR_COERCION" | "CONFIRMED_UNAUTHORIZED";
+
+export interface FinanceReviewBaseline {
+  scope: "MERCHANT" | "ACCOUNT";
+  sampleCount: number;
+  medianAmount: MoneyValue;
+  medianAbsoluteDeviation: MoneyValue;
+  upperBound: MoneyValue;
+  historyStrength: "WEAK" | "MODERATE" | "STRONG";
+}
 
 export interface FinanceReviewCase {
   id: string;
@@ -489,6 +789,7 @@ export interface FinanceReviewCase {
   confidence: "LOW" | "MEDIUM" | "HIGH";
   reasons: string[];
   sourceIds: string[];
+  baseline?: FinanceReviewBaseline;
   evidence: FinanceEvidence;
 }
 
@@ -496,25 +797,38 @@ export interface FinanceReviewCase {
 export function detectFinanceReviewCases(transactions: readonly FinanceTransaction[]): FinanceReviewCase[] {
   const posted = transactions.filter((transaction) => transaction.status === "POSTED" || transaction.status === "CORRECTED" || transaction.status === "REFUNDED");
   const byMerchant = new Map<string, FinanceTransaction[]>();
-  for (const transaction of posted) byMerchant.set(transaction.merchant, [...(byMerchant.get(transaction.merchant) ?? []), transaction]);
+  const byAccount = new Map<string, FinanceTransaction[]>();
+  for (const transaction of posted) {
+    const merchantKey = `${transaction.accountId}|${transaction.merchant}`;
+    byMerchant.set(merchantKey, [...(byMerchant.get(merchantKey) ?? []), transaction]);
+    byAccount.set(transaction.accountId, [...(byAccount.get(transaction.accountId) ?? []), transaction]);
+  }
   const byNaturalKey = new Map<string, FinanceTransaction[]>();
   for (const transaction of posted) byNaturalKey.set(transaction.naturalKey, [...(byNaturalKey.get(transaction.naturalKey) ?? []), transaction]);
   const cases: FinanceReviewCase[] = [];
   for (const transaction of posted) {
-    const history = byMerchant.get(transaction.merchant) ?? [];
+    const history = byMerchant.get(`${transaction.accountId}|${transaction.merchant}`) ?? [];
     const prior = history.filter((candidate) => candidate.id !== transaction.id);
+    const accountHistory = (byAccount.get(transaction.accountId) ?? []).filter((candidate) => candidate.id !== transaction.id);
     const reasons: string[] = [];
     if (prior.length === 0) reasons.push("first observed merchant in this account history");
-    const historicalAmounts = prior.map((candidate) => Math.abs(Number(candidate.amount.amountMinor))).filter(Number.isFinite);
-    const baseline = historicalAmounts.length > 0 ? median(historicalAmounts) : 0;
-    const currentAbsolute = Math.abs(Number(transaction.amount.amountMinor));
-    if (baseline > 0 && currentAbsolute >= baseline * 3) reasons.push("amount materially exceeds the merchant's observed baseline");
+    const merchantAmounts = prior.filter((candidate) => candidate.amount.currency === transaction.amount.currency).map((candidate) => candidate.amount);
+    const baselineTransactions = merchantAmounts.length > 0 ? prior.filter((candidate) => candidate.amount.currency === transaction.amount.currency) : accountHistory.filter((candidate) => candidate.amount.currency === transaction.amount.currency);
+    const baseline = createFinanceReviewBaseline(baselineTransactions, merchantAmounts.length > 0 ? "MERCHANT" : "ACCOUNT", transaction.amount.currency);
+    const currentAbsolute = absoluteMoneyMinor(transaction.amount.amountMinor);
+    const robustOutlier = baseline && baseline.sampleCount >= 3 ? currentAbsolute > BigInt(baseline.upperBound.amountMinor) : false;
+    const weakComparisonOutlier = baseline && baseline.sampleCount > 0 && baseline.sampleCount < 3 && currentAbsolute >= BigInt(baseline.medianAmount.amountMinor) * 3n;
+    if (robustOutlier) reasons.push(`amount materially exceeds the ${baseline?.scope === "MERCHANT" ? "merchant's" : "account's"} robust historical range`);
+    else if (weakComparisonOutlier) reasons.push("history is insufficient for a robust baseline; the amount comparison is provisional");
     if ((byNaturalKey.get(transaction.naturalKey)?.length ?? 0) > 1) reasons.push("duplicate natural transaction identity appears more than once");
-    const sameDay = history.filter((candidate) => candidate.postedAt.slice(0, 10) === transaction.postedAt.slice(0, 10));
+    const sameDay = accountHistory.filter((candidate) => candidate.postedAt.slice(0, 10) === transaction.postedAt.slice(0, 10));
     if (sameDay.length >= 3) reasons.push("rapid repeated sequence on the same posting date");
     if (reasons.length === 0) continue;
-    const highImpact = baseline > 0 && currentAbsolute >= baseline * 10;
-    cases.push({ id: `finance-review:${financeModelKey(transaction.id)}`, transactionId: transaction.id, priority: highImpact ? "HIGH" : reasons.length >= 2 ? "MEDIUM" : "LOW", disposition: "UNRESOLVED", confidence: prior.length < 3 ? "LOW" : reasons.length >= 2 ? "MEDIUM" : "LOW", reasons, sourceIds: [transaction.lineage.sourceId], evidence: { truthClass: "DERIVED", sourceIds: [transaction.id], note: "Signals require user review and do not establish fraud, authorization, or coercion." } });
+    const historyStrength = baseline?.historyStrength ?? "WEAK";
+    const confidence: FinanceReviewCase["confidence"] = robustOutlier && historyStrength === "STRONG" || (byNaturalKey.get(transaction.naturalKey)?.length ?? 0) > 1 && accountHistory.length >= 6 ? "HIGH" : baseline && baseline.sampleCount >= 3 ? "MEDIUM" : "LOW";
+    const highImpact = robustOutlier && confidence === "HIGH";
+    const sourceIds = [...new Set([transaction.lineage.sourceId, ...baselineTransactions.map((candidate) => candidate.lineage.sourceId)])].sort();
+    cases.push({ id: `finance-review:${financeModelKey(transaction.id)}`, transactionId: transaction.id, priority: highImpact ? "HIGH" : reasons.length >= 2 ? "MEDIUM" : "LOW", disposition: "UNRESOLVED", confidence, reasons, sourceIds, ...(baseline ? { baseline } : {}), evidence: { truthClass: "DERIVED", sourceIds: [transaction.id, ...baselineTransactions.map((candidate) => candidate.id)].sort(), note: "Signals require user review and do not establish fraud, authorization, or coercion." } });
   }
   return cases.sort((left, right) => left.id.localeCompare(right.id));
 }
@@ -658,6 +972,30 @@ export interface FinanceForecastError {
   forecastClosingCash: MoneyValue;
   actualClosingCash: MoneyValue;
   error: MoneyValue;
+  sourceIds?: string[];
+}
+
+export interface FinanceForecastActual {
+  month: string;
+  closingCash: MoneyValue;
+  sourceIds: string[];
+}
+
+export interface FinanceForecastActualizedPoint extends FinanceForecastPoint {
+  forecastClosingCash: MoneyValue;
+  actualClosingCash?: MoneyValue;
+  actualized: boolean;
+}
+
+export interface FinanceForecastReconciliation {
+  vintageId: string;
+  points: FinanceForecastActualizedPoint[];
+  errors: FinanceForecastError[];
+  meanError: MoneyValue;
+  meanAbsoluteError: MoneyValue;
+  sourceIds: string[];
+  limitations: string[];
+  evidence: FinanceEvidence;
 }
 
 export function compareFinanceForecastToActual(vintage: FinanceForecastVintage, actuals: ReadonlyArray<{ month: string; closingCash: MoneyValue }>): FinanceForecastError[] {
@@ -668,9 +1006,63 @@ export function compareFinanceForecastToActual(vintage: FinanceForecastVintage, 
   });
 }
 
+/** Retain the immutable vintage while replacing only elapsed projection points in a derived view. */
+export function reconcileFinanceForecast(vintage: FinanceForecastVintage, actuals: readonly FinanceForecastActual[]): FinanceForecastReconciliation {
+  const actualByMonth = new Map<string, FinanceForecastActual>();
+  const limitations: string[] = [];
+  for (const actual of actuals) {
+    if (!/^\d{4}-\d{2}$/.test(actual.month)) throw new Error("Forecast actual month must use YYYY-MM format");
+    if (actual.closingCash.currency !== vintage.points[0]?.closingCash.currency) throw new Error("Forecast actuals must use the vintage currency");
+    if (actualByMonth.has(actual.month)) throw new Error("Forecast actual months must be unique");
+    if (actual.sourceIds.some((sourceId) => !sourceId.trim())) throw new Error("Forecast actual source identities must be non-empty");
+    actualByMonth.set(actual.month, actual);
+  }
+  const vintageMonths = new Set(vintage.points.map((point) => point.month));
+  for (const actual of actuals) if (!vintageMonths.has(actual.month)) limitations.push(`actual ${actual.month} is outside the retained forecast horizon`);
+  let cash = vintage.points[0]?.openingCash;
+  const points = vintage.points.map((point) => {
+    const actual = actualByMonth.get(point.month);
+    const openingCash = cash ?? point.openingCash;
+    const actualized = Boolean(actual && actual.closingCash.currency === point.closingCash.currency);
+    const closingCash = actualized ? actual!.closingCash : addMoney(openingCash, point.expectedNet);
+    const result: FinanceForecastActualizedPoint = { ...point, openingCash, closingCash, forecastClosingCash: point.closingCash, actualized, ...(actualized ? { actualClosingCash: actual!.closingCash } : {}) };
+    cash = closingCash;
+    return result;
+  });
+  const errors = actuals.flatMap((actual) => {
+    const forecast = vintage.points.find((point) => point.month === actual.month);
+    if (!forecast || forecast.closingCash.currency !== actual.closingCash.currency) return [];
+    return [{ month: actual.month, forecastClosingCash: forecast.closingCash, actualClosingCash: actual.closingCash, error: subtractMoney(actual.closingCash, forecast.closingCash), sourceIds: [...new Set(actual.sourceIds)].sort() }];
+  }).sort((left, right) => left.month.localeCompare(right.month));
+  let totalError = 0n;
+  let totalAbsoluteError = 0n;
+  for (const error of errors) {
+    const value = BigInt(error.error.amountMinor);
+    totalError += value;
+    totalAbsoluteError += value < 0n ? -value : value;
+  }
+  const currency = vintage.points[0]?.closingCash.currency ?? vintage.assumptions.monthlyIncome.currency;
+  const divisor = BigInt(errors.length || 1);
+  const sourceIds = [...new Set([...vintage.sourceIds, ...actuals.flatMap((actual) => actual.sourceIds)])].sort();
+  return {
+    vintageId: vintage.id,
+    points,
+    errors,
+    meanError: moneyFromMinor(errors.length > 0 ? totalError / divisor : 0n, currency),
+    meanAbsoluteError: moneyFromMinor(errors.length > 0 ? totalAbsoluteError / divisor : 0n, currency),
+    sourceIds,
+    limitations: [...new Set(limitations)].sort(),
+    evidence: { truthClass: "DERIVED", sourceIds, note: "Actualized forecast view retains the original forecast vintage and uses supplied actual observations only for elapsed points." }
+  };
+}
+
 export interface FinanceDataQualityInput {
   requiredPeriods: string[];
   availablePeriods: string[];
+  requiredSourceIds?: readonly string[];
+  availableSourceIds?: readonly string[];
+  requiredSourceClasses?: readonly FinanceSourceClass[];
+  availableSourceClasses?: readonly FinanceSourceClass[];
   staleSources?: string[];
   unresolvedReconciliations?: number;
   unresolvedReviewCases?: number;
@@ -679,6 +1071,8 @@ export interface FinanceDataQualityInput {
 export interface FinanceDataQuality {
   status: "SUFFICIENT" | "LIMITED" | "UNKNOWN";
   missingPeriods: string[];
+  missingSourceIds: string[];
+  missingSourceClasses: FinanceSourceClass[];
   staleSources: string[];
   unresolvedReconciliations: number;
   unresolvedReviewCases: number;
@@ -688,16 +1082,22 @@ export interface FinanceDataQuality {
 export function assessFinanceDataQuality(input: FinanceDataQualityInput): FinanceDataQuality {
   const available = new Set(input.availablePeriods);
   const missingPeriods = [...new Set(input.requiredPeriods)].filter((period) => !available.has(period)).sort();
+  const availableSourceIds = new Set((input.availableSourceIds ?? []).filter((sourceId) => sourceId.trim()));
+  const missingSourceIds = [...new Set((input.requiredSourceIds ?? []).filter((sourceId) => sourceId.trim()))].filter((sourceId) => !availableSourceIds.has(sourceId)).sort();
+  const availableSourceClasses = new Set(input.availableSourceClasses ?? []);
+  const missingSourceClasses = [...new Set(input.requiredSourceClasses ?? [])].filter((sourceClass) => !availableSourceClasses.has(sourceClass)).sort();
   const staleSources = [...new Set(input.staleSources ?? [])].sort();
   const unresolvedReconciliations = Math.max(0, input.unresolvedReconciliations ?? 0);
   const unresolvedReviewCases = Math.max(0, input.unresolvedReviewCases ?? 0);
   const limitations = [
     ...(missingPeriods.length > 0 ? [`missing periods: ${missingPeriods.join(", ")}`] : []),
+    ...(missingSourceIds.length > 0 ? [`missing sources: ${missingSourceIds.join(", ")}`] : []),
+    ...(missingSourceClasses.length > 0 ? [`missing source classes: ${missingSourceClasses.join(", ")}`] : []),
     ...(staleSources.length > 0 ? [`stale sources: ${staleSources.join(", ")}`] : []),
     ...(unresolvedReconciliations > 0 ? [`${unresolvedReconciliations} unresolved reconciliation(s)`] : []),
     ...(unresolvedReviewCases > 0 ? [`${unresolvedReviewCases} unresolved review case(s)`] : [])
   ];
-  return { status: limitations.length === 0 ? "SUFFICIENT" : missingPeriods.length > 0 || staleSources.length > 0 ? "UNKNOWN" : "LIMITED", missingPeriods, staleSources, unresolvedReconciliations, unresolvedReviewCases, limitations };
+  return { status: limitations.length === 0 ? "SUFFICIENT" : missingPeriods.length > 0 || missingSourceIds.length > 0 || missingSourceClasses.length > 0 || staleSources.length > 0 ? "UNKNOWN" : "LIMITED", missingPeriods, missingSourceIds, missingSourceClasses, staleSources, unresolvedReconciliations, unresolvedReviewCases, limitations };
 }
 
 function normalizeFinanceHeader(value: string): string {
@@ -709,6 +1109,36 @@ function median(values: readonly number[]): number {
   if (sorted.length === 0) return 0;
   const middle = Math.floor(sorted.length / 2);
   return sorted.length % 2 === 0 ? (sorted[middle - 1]! + sorted[middle]!) / 2 : sorted[middle]!;
+}
+
+function medianBigInt(values: readonly bigint[]): bigint {
+  const sorted = [...values].sort((left, right) => left < right ? -1 : left > right ? 1 : 0);
+  if (sorted.length === 0) return 0n;
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0 ? (sorted[middle - 1]! + sorted[middle]!) / 2n : sorted[middle]!;
+}
+
+function absoluteMoneyMinor(value: string): bigint {
+  const minor = BigInt(value);
+  return minor < 0n ? -minor : minor;
+}
+
+function createFinanceReviewBaseline(transactions: readonly FinanceTransaction[], scope: FinanceReviewBaseline["scope"], currency: string): FinanceReviewBaseline | undefined {
+  const amounts = transactions.filter((transaction) => transaction.amount.currency === currency).map((transaction) => absoluteMoneyMinor(transaction.amount.amountMinor));
+  if (amounts.length === 0) return undefined;
+  const center = medianBigInt(amounts);
+  const deviations = amounts.map((amount) => amount > center ? amount - center : center - amount);
+  const deviation = medianBigInt(deviations);
+  const spread = deviation > 0n ? deviation * 3n : center * 3n;
+  const upperBound = center + (spread > 0n ? spread : 1n);
+  return {
+    scope,
+    sampleCount: amounts.length,
+    medianAmount: moneyFromMinor(center, currency),
+    medianAbsoluteDeviation: moneyFromMinor(deviation, currency),
+    upperBound: moneyFromMinor(upperBound, currency),
+    historyStrength: amounts.length >= 6 ? "STRONG" : amounts.length >= 3 ? "MODERATE" : "WEAK"
+  };
 }
 
 function scaleMoney(value: MoneyValue, factor: number): MoneyValue {
@@ -728,6 +1158,38 @@ function financeModelKey(value: string): string {
   let hash = 14695981039346656037n;
   for (const character of value) hash = BigInt.asUintN(64, (hash ^ BigInt(character.charCodeAt(0))) * 1099511628211n);
   return hash.toString(16).padStart(16, "0");
+}
+
+export interface FinanceRollingEssentialSpending {
+  currency: string;
+  windowMonths: number;
+  observedPeriods: string[];
+  monthlyEssentialSpending: MoneyValue;
+  sourceIds: string[];
+  evidence: FinanceEvidence;
+}
+
+/** Compute a trailing observed-period average without treating missing months as zero. */
+export function calculateFinanceRollingEssentialSpending(transactions: readonly FinanceTransaction[], currency: string, windowMonths: number): FinanceRollingEssentialSpending | undefined {
+  if (!Number.isInteger(windowMonths) || windowMonths < 1 || windowMonths > 120) throw new Error("Rolling essential-month window is outside the supported range");
+  const normalizedCurrency = parseMoney("0", currency).currency;
+  const byPeriod = new Map<string, { totalMinor: bigint; sourceIds: string[]; transactionIds: string[] }>();
+  for (const transaction of transactions) {
+    if (!transaction.essential || (transaction.status !== "POSTED" && transaction.status !== "CORRECTED") || transaction.direction !== "OUTFLOW" || transaction.amount.currency !== normalizedCurrency) continue;
+    const period = transaction.postedAt.slice(0, 7);
+    if (!/^\d{4}-\d{2}$/.test(period)) continue;
+    const current = byPeriod.get(period) ?? { totalMinor: 0n, sourceIds: [], transactionIds: [] };
+    current.totalMinor += absoluteMoneyMinor(transaction.amount.amountMinor);
+    current.sourceIds.push(transaction.lineage.sourceId);
+    current.transactionIds.push(transaction.id);
+    byPeriod.set(period, current);
+  }
+  const observedPeriods = [...byPeriod.keys()].sort().slice(-windowMonths);
+  if (observedPeriods.length === 0) return undefined;
+  const totalMinor = observedPeriods.reduce((total, period) => total + byPeriod.get(period)!.totalMinor, 0n);
+  const sourceIds = [...new Set(observedPeriods.flatMap((period) => byPeriod.get(period)!.sourceIds))].sort();
+  const transactionIds = observedPeriods.flatMap((period) => byPeriod.get(period)!.transactionIds);
+  return { currency: normalizedCurrency, windowMonths, observedPeriods, monthlyEssentialSpending: moneyFromMinor(totalMinor / BigInt(observedPeriods.length), normalizedCurrency), sourceIds, evidence: { truthClass: "OBSERVED", sourceIds: [...new Set(transactionIds)].sort(), note: "Trailing average uses observed essential-spending periods only; absent periods are not coerced to zero." } };
 }
 
 export interface FinanceGoalPlan {
