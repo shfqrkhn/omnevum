@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "e0ae7c64495e48d9b7666db6b9bde59e810ed8d11b490d040059c13afb45ddeb"
+      "sha256": "ef939bb1a8594d53659021cdaab76e365e2131dc5a62d12e162c6cef68745b53"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -174,12 +174,12 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "09658141624da8744dcabe1a2b30ea09bde74a3ccc6e817b76d184621fc5eab8",
-        "bytes": 113670
+        "sha256": "21892d33f2b2614b13f47e3f98f0bff6b1ac85ae0e4ae477e85739d1fc4f25df",
+        "bytes": 113952
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
-        "sha256": "1e82197bfd310cb8da2cbbb8951ef1ffa9df9fc539cc900e357506c288f83805",
+        "sha256": "09ee751480a6c0e8bebb6a56827d709e4a791b207f547de7ddc98b76b49ebff6",
         "bytes": 92597
       },
       {
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "d366d032540058b74a393abd3d00234906ad2387b661937788961c4ad9e3d8f0",
-        "bytes": 3734
+        "sha256": "cbf3bf3af9b960827aace668f2f07d8a1b444730ae4f704689d09617a7ef901a",
+        "bytes": 3288
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -219,7 +219,7 @@
       },
       {
         "path": "docs/control/dependency-sbom.json",
-        "sha256": "6b77847f2d67400d3785ccce2179395edc2d2da75f2f7d9ff280111c9c599e7d",
+        "sha256": "6b3fc6fe8f1cba56173c75dcb4221454d35fc6346b0a3efc6a6d4f71ed192f44",
         "bytes": 35272
       },
       {
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "74d1b97de8a33b0e106062991ae46e7f311fe8ceb3ac6ea5409225de2158231d",
-        "bytes": 10145
+        "sha256": "0b18cc0a3cdae7d6b544429ba1fcfa8790bf07738b2c07bc9cf261eb2d663a13",
+        "bytes": 10659
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -264,23 +264,23 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "d8c1dccffbd748a09389fe219e954fafef06ee15a2759474268cb01889f93df2",
-        "bytes": 3907
+        "sha256": "c69066e0c393628e1dde3e115946f1d4d4c2adf305c9b95098a8cadb46a174c2",
+        "bytes": 3974
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "3d3acee2dc0c2f755430f9fbf1437bc32870224a8b3af745301018a410cd1b0e",
-        "bytes": 10770
+        "sha256": "055f9f249915ba11a090fbe5dcc21e252b5a63e5a256aedd3f58f42840de4b5c",
+        "bytes": 10699
       },
       {
         "path": "docs/control/requirements.json",
-        "sha256": "a116499edb947d4d7329ba89c1edeb1a21a60ae751c28e0e0f280d04b93d9889",
+        "sha256": "df1175d91d8df03e63b616a245308f1063bc4c647a7c93acb33f0c56b2817e92",
         "bytes": 376120
       },
       {
         "path": "docs/control/risk-threat-register.json",
-        "sha256": "c755e3da9c93b82bb3d268dfca54b6f0e9557142d6c607282ab603d7e93989cb",
-        "bytes": 2257
+        "sha256": "b41737580bf526ba367ae40130e4a83f956f0c9178fcde80ff057e1fc7a97ddc",
+        "bytes": 2324
       },
       {
         "path": "docs/control/support-matrix.json",
@@ -393,6 +393,11 @@
         "bytes": 2644
       },
       {
+        "path": "docs/evidence/phase0-launchpad-transplant-current-2026-09-20.md",
+        "sha256": "e7f15d7b0fe06b7b6bce0ad78bdc3842c54526905ed2053404a56b75d200076d",
+        "bytes": 3491
+      },
+      {
         "path": "docs/evidence/phase0-launchpad-workload-2026-09-19.md",
         "sha256": "98304a93d2eb4cb32bbc7d77c2a6c43830c786f9bbd2a89f30d86bba30f08281",
         "bytes": 5991
@@ -464,8 +469,8 @@
       },
       {
         "path": "package.json",
-        "sha256": "e0ae7c64495e48d9b7666db6b9bde59e810ed8d11b490d040059c13afb45ddeb",
-        "bytes": 2498
+        "sha256": "ef939bb1a8594d53659021cdaab76e365e2131dc5a62d12e162c6cef68745b53",
+        "bytes": 2629
       },
       {
         "path": "public/icon.svg",
@@ -546,6 +551,11 @@
         "path": "scripts/generate-control.mjs",
         "sha256": "1cb8d1a6fe97a6b3013cb02567e9202a2cf0e457dda07f4c2e85063fb0f80a74",
         "bytes": 15380
+      },
+      {
+        "path": "scripts/launchpad-transplant-benchmark.mjs",
+        "sha256": "e92ab480edb3a1502fa7f2535331b35c13ceadd7413039dd0b54ec372c25500e",
+        "bytes": 9147
       },
       {
         "path": "scripts/license-audit.mjs",
@@ -1034,13 +1044,13 @@
       },
       {
         "path": "src/core/launchpad-transplant.test.ts",
-        "sha256": "8b7473e464f45765d8585079b8a85a6a01966d7f8caa3d522b6d8fecbbc908c2",
-        "bytes": 3123
+        "sha256": "4fcdeba47783136ea0e0c6414df5938fe5b45cbd6e6f880a6885b996c40ba358",
+        "bytes": 3794
       },
       {
         "path": "src/core/launchpad-transplant.ts",
-        "sha256": "424493e2ddac229a49872c2ea6f36be9c31741fd07fbbc8c5adb25b75c1315db",
-        "bytes": 4939
+        "sha256": "0778db111cf7ecc4986c8ca53f867268c0ff4b9b6df31ec562b3973100716eb4",
+        "bytes": 5806
       },
       {
         "path": "src/core/lenses.test.ts",

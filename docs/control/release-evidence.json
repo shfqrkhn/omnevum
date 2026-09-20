@@ -5,22 +5,22 @@
   "authority": "MPES Sections 21 and 22",
   "releaseIdentity": {
     "version": "v0.18.0-overhaul-candidate",
-    "artifactDigest": "90ff59b7dd66e0dba9f7acd6927b3e3d5fcaf679363aac763dda52af337d8710",
-    "sourceRevision": "bc6b32a",
-    "serviceWorkerCache": "omnevum-shell-f91483fea7635266"
+    "artifactDigest": "a5ab8f3d6e15fb82f502036925a6e4474ac51539d2589e02b3045f72e63be1ce",
+    "sourceRevision": "aca722b",
+    "serviceWorkerCache": "omnevum-shell-318ce7c54643a886"
   },
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF.",
   "artifactFiles": [
     {"path": "dist/assets/index-Bzh0zw-4.css", "publicPath": "assets/index-Bzh0zw-4.css", "sha256": "9795defcf51ae78c19860be612eb856805a729b321222a0264b6c613a49c2b35", "bytes": 28185},
     {"path": "dist/assets/index-DZngAqEf.js", "publicPath": "assets/index-DZngAqEf.js", "sha256": "6b242d8d27e025d6c74b9d0d7fff9c14bc29fb98ef315afb3df46c10fc7e242f", "bytes": 557214},
-    {"path": "dist/assets/index-DZngAqEf.js.map", "publicPath": "assets/index-DZngAqEf.js.map", "sha256": "90ad141c6d0079bf456b098697ea2d14244a19bb7d6702d4e928868e0316eaca", "bytes": 1608034},
+    {"path": "dist/assets/index-DZngAqEf.js.map", "publicPath": "assets/index-DZngAqEf.js.map", "sha256": "32b1e4f3804a4822dc8f43faf5a52b8b8b532ff4d53f162e4d2ae18f216f87de", "bytes": 1608932},
     {"path": "dist/icon.svg", "publicPath": "icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
     {"path": "dist/index.html", "publicPath": "index.html", "sha256": "02db035a3c2b181ec65baab289b31c37184dbaa910c51ccbe7f5fab8982491c7", "bytes": 972},
     {"path": "dist/llms.txt", "publicPath": "llms.txt", "sha256": "6959289274212f429a26f9bbaea60e685ab2b3b4deeda5e6757f14670703b1ff", "bytes": 593},
     {"path": "dist/manifest.webmanifest", "publicPath": "manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
     {"path": "dist/recovery.html", "publicPath": "recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
     {"path": "dist/robots.txt", "publicPath": "robots.txt", "sha256": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95", "bytes": 23},
-    {"path": "dist/sw.js", "publicPath": "sw.js", "sha256": "f2df5f8411806967e1ce52987bf79bf9a0d56eb8b2245359bcfeb27293936a86", "bytes": 3622}
+    {"path": "dist/sw.js", "publicPath": "sw.js", "sha256": "1a50811a5923034ba63e94ea71c6ef6e490c0413c293cd54a81d46e2259cfd16", "bytes": 3622}
   ],
   "deploymentObservations": [
     {"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35481320651", "sourceRevision": "542b665b361d579ee6d8e3ab2f331ce3afca5cd6", "artifactByteMatch": "8/8 local dist files matched the served Pages files after switching Pages from legacy master:/ to the Actions artifact source; published-entry smoke guard passed", "date": "2026-09-19"},
@@ -41,5 +41,5 @@
   ],
   "requiredEvidence": ["control-generation-and-drift", "structure-reference-architecture-audit", "type-static-and-unit-tests", "browser-e2e-responsive-accessibility-input-i18n", "offline-static-host-and-service-worker", "storage-quota-corruption-migration-and-recovery", "Vault-cross-origin-restore", "security-egress-untrusted-content-and-credential-boundaries", "dependency-license-SBOM-vulnerability-provenance", "deploy-smoke-rollback", "human-acceptance-where-required"],
   "evidencePolicy": "The clean v0.18 baseline inherits no release artifact or acceptance claim. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains UNKNOWN.",
-  "currentDecision": "The current Finance/platform candidate from source bc6b32a6ebd52e9a795f71d2913f1f33899f2c99 is deployed by Pages workflow 35492113413 from trigger commit 9284f4807718fdcb8806eab86f719419f820caef; CI workflow 35492113341 passed. All 10 public paths match artifact 90ff59b7dd66e0dba9f7acd6927b3e3d5fcaf679363aac763dda52af337d8710 by exact HTTP SHA-256 and byte length, with cache omnevum-shell-f91483fea7635266. Production rollback, real offline/update/fault qualification, materially different browser-family Vault restore, security/egress, WebKit/Firefox, assistive technology, human acceptance, and all mandatory acceptance gates remain open, so release readiness is not claimed."
+  "currentDecision": "The current local candidate from source aca722b568008a526b25287fb61e44ebbf509b0e builds artifact a5ab8f3d6e15fb82f502036925a6e4474ac51539d2589e02b3045f72e63be1ce with cache omnevum-shell-318ce7c54643a886; the prior Pages observation remains bound to the predecessor artifact until this candidate's deployment and HTTP byte probe complete. Production rollback, real offline/update/fault qualification, materially different browser-family Vault restore, security/egress, WebKit/Firefox, assistive technology, human acceptance, and all mandatory acceptance gates remain open, so release readiness is not claimed."
 }

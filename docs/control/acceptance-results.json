@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "e0ae7c64495e48d9b7666db6b9bde59e810ed8d11b490d040059c13afb45ddeb"
+      "sha256": "ef939bb1a8594d53659021cdaab76e365e2131dc5a62d12e162c6cef68745b53"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -1934,7 +1934,8 @@
         "docs/evidence/phase0-launchpad-workload-2026-09-19.md",
         "docs/evidence/phase0-donor-characterization-2026-09-19.md",
         "docs/evidence/phase0-launchpad-owner-boundary-2026-09-19.md",
-        "docs/evidence/phase0-launchpad-automation-artifact-2026-09-19.md"
+        "docs/evidence/phase0-launchpad-automation-artifact-2026-09-19.md",
+        "docs/evidence/phase0-launchpad-transplant-current-2026-09-20.md"
       ]
     },
     {
@@ -1949,7 +1950,8 @@
         "docs/evidence/phase0-launchpad-workload-2026-09-19.md",
         "docs/evidence/phase0-donor-characterization-2026-09-19.md",
         "docs/evidence/phase0-launchpad-owner-boundary-2026-09-19.md",
-        "docs/evidence/phase0-launchpad-automation-artifact-2026-09-19.md"
+        "docs/evidence/phase0-launchpad-automation-artifact-2026-09-19.md",
+        "docs/evidence/phase0-launchpad-transplant-current-2026-09-20.md"
       ]
     },
     {
@@ -1962,9 +1964,10 @@
       "status": "PASS",
       "evidence": [
         "docs/evidence/phase0-donor-characterization-2026-09-19.md",
-        "docs/evidence/phase0-donor-workload-qualification-2026-09-19.md"
+        "docs/evidence/phase0-donor-workload-qualification-2026-09-19.md",
+        "docs/evidence/phase0-launchpad-transplant-current-2026-09-20.md"
       ],
-      "notes": "The exact current NeumanOS, Kurumi, OneBench, and Utopia identities were compared against one executable six-flow Omnevum workload. Role-specific runtime checks, a feature harvest map, exact licenses/provenance, and explicit owner-boundary dispositions are recorded; no donor authority is admitted."
+      "notes": "The exact current NeumanOS, Kurumi, OneBench, and Utopia identities were compared against one executable six-flow Omnevum workload. The current fresh-process benchmark records exact owners, stable identities, Vault restore/idempotence, and no admitted donor authority."
     },
     {
       "id": "OMN-ACC-176",
@@ -1977,9 +1980,10 @@
       "evidence": [
         "docs/evidence/phase0-donor-characterization-2026-09-19.md",
         "docs/evidence/phase0-launchpad-workload-2026-09-19.md",
-        "docs/evidence/phase0-launchpad-route-reassessment-2026-09-19.md"
+        "docs/evidence/phase0-launchpad-route-reassessment-2026-09-19.md",
+        "docs/evidence/phase0-launchpad-transplant-current-2026-09-20.md"
       ],
-      "notes": "The exact donor runtime exercise reproduced a material Notes failure and exposed duplicate module-store authorities. The required retain/adapt/harvest/greenfield review explicitly rejects retaining the donor UI and selects the existing Omnevum shell with selective contract-bound harvest. OMN-FOSS-014 and the retained-flow rows remain open."
+      "notes": "The exact donor runtime exercise reproduced a material Notes failure and exposed duplicate module-store authorities. The required retain/adapt/harvest/greenfield review rejects retaining the donor UI and selects the existing Omnevum shell with selective contract-bound harvest; the current benchmark re-proves the selected route without sunk-cost churn."
     }
   ]
 }
