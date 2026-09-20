@@ -11,7 +11,7 @@
     "acceptanceScenarios": 176
   },
   "completionClaim": "100_PERCENT_COMPLETE is prohibited until every mandatory requirement and applicable acceptance scenario has evidence-backed PASS or justified NOT_APPLICABLE and no material UNKNOWN/stale/open blocker remains.",
-  "lastVerifiedIncrement": "Clean v0.18.0 rebaseline plus local/hosted browser smoke, green CI, current donor identity refresh, and executable six-flow Omnevum command/Vault workload. OMN-ACC-173 and OMN-ACC-174 are PARTIAL only; 174 scenarios remain UNKNOWN and no release claim is promoted.",
+  "lastVerifiedIncrement": "Clean v0.18.0 rebaseline plus local/hosted browser smoke, green CI, current donor identity refresh, executable six-flow command/Vault workload, and role-specific donor comparison. OMN-ACC-173..175 are PARTIAL only; 173 scenarios remain UNKNOWN and no release claim is promoted.",
   "gates": [
     {"id": "PLATFORM_READY_FOR_CORE", "phase": 0, "status": "IN_PROGRESS", "blockers": ["complete OMN-FOSS-014 retained-donor/UI workload and Recovery proof", "production deployment/browser/accessibility/offline/fault/security qualification", "all current implementation and human-acceptance evidence"]},
     {"id": "MVP_RELEASE_READY", "phase": 1, "status": "NOT_STARTED", "blockers": ["Phase 0 gate"]},

@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "6b042f2bb20c2b8170bb0b6f21823c82c597ebc8a4157c752bf60d77dd7c0f00",
-        "bytes": 101687
+        "sha256": "cdfdf54943ed10e3a1db07c43e5a472e65a437c663c0520ad7c59828a0ef5ba8",
+        "bytes": 101762
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "3c15cb5cf9ecb4d99c5e0d9df10bb1eb5a712ee4d65a12639941e52486150b66",
-        "bytes": 2483
+        "sha256": "9074bc92a8a5b28df0f25b8cf48def410e3d0c3f140730ae3136ee342c3b705a",
+        "bytes": 2496
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -209,8 +209,8 @@
       },
       {
         "path": "docs/control/currentness-radar.json",
-        "sha256": "14149e8639212a7c6d1f80cafff394ec0f8a52e0bf0d3b605df68812bbdf2c39",
-        "bytes": 1648
+        "sha256": "f48821ce3ab7798990a48041c61017f7329afc44bb1021d5fdc92a45f120dffe",
+        "bytes": 1693
       },
       {
         "path": "docs/control/decision-log.json",
@@ -264,8 +264,8 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "31ec0e1ebd0dea156402e409e7a49e018a2ab251f8989b784dff991d7b63bd80",
-        "bytes": 1729
+        "sha256": "ad07db2c183be8f51796390655e75a010adbdd7050e7185d4e7645bc275ccc0c",
+        "bytes": 1790
       },
       {
         "path": "docs/control/release-evidence.json",
@@ -289,13 +289,18 @@
       },
       {
         "path": "docs/control/upstream.json",
-        "sha256": "e8b04b3b8618c12f745af7ce547b218f18983224e59963c325d55b629ed93f7d",
-        "bytes": 5442
+        "sha256": "d112316a90f82f89a8043437a1ffd8f40d5d9391d77ed8fe5b880ff51e792c10",
+        "bytes": 5908
       },
       {
         "path": "docs/evidence/phase0-browser-qa-2026-09-19.md",
         "sha256": "d591f1c4763f6189304449d32b8fd59ae2ff3db38291f459216e37c7df7f286a",
         "bytes": 2581
+      },
+      {
+        "path": "docs/evidence/phase0-donor-characterization-2026-09-19.md",
+        "sha256": "38426d766e5515e1cae0e3e8b29ca6ac1b2318eec51426aed7ce56821380ae55",
+        "bytes": 3411
       },
       {
         "path": "docs/evidence/phase0-launchpad-workload-2026-09-19.md",
