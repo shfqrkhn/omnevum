@@ -22,6 +22,7 @@
     "The repository structure/reference/architecture/license/security/typecheck/test/build/static/recovery/drift gates are required before handoff.",
     "The clean-clone fresh-agent benchmark at dfea7897b05dd64cec84a588ce48eb6c10769fa0 passed npm ci, recovery audit, full CI, and deliberate factory interruption/resume without the original conversation; OMN-ACC-021 is now PASS."
     ,"Commit 93650343b0e46ef2db3c5a36f01bb74f471c79c4 binds the live Capture routes for Note/Knowledge, Task/Project, Calendar/Time, and Habit/Routine to one typed CommandBus launchpad seam; the local production-preview browser receipt records exact owner results and no console errors."
+    ,"Commit 4fa52945d42ad2017815c5aeeda86fcbe5048344 adds a real CanonicalStore launchpad Automation integration proof: package-scoped rule lifecycle persistence, explicit proposal confirmation, normal CommandBus mutation, Vault export/import, and fresh-runtime restore of the stable rule. The current browser receipt records Automation install/preview/confirm/apply and retained Artifact persistence while explicitly leaving fresh file-picker proof open."
   ],
   "unverified": [
     "OMN-FOSS-014 retained-donor UI workload and OMN-ACC-173..175 complete six-flow transplantability, duplicate-authority, and donor-boundary proof; retained NeumanOS UI is rejected, four replacement Capture owner routes are qualified, and Document/Artifact plus Automation browser/Recovery proof remains open",
@@ -29,6 +30,6 @@
     "Real schema-transform interruption/repair, production rollback, browser/support/accessibility/human acceptance, offline/update qualification, storage quota/fault qualification, materially different browser-family Vault restore, security, FOSS, and Recovery qualification",
     "142 acceptance scenarios remain UNKNOWN; Phase 1 MVP daily slice and all later phase gates remain open"
   ],
-  "nextAction": "Complete current browser and Recovery qualification for Document/Artifact and Automation on the selected shell, add explicit direct-store rejection and stable-ID/Vault receipts for all six flows, then run schema-transform interruption/repair, quota/eviction, rollback, security/egress, accessibility, and remaining browser-target proofs. Promote only exact evidence-backed rows and advance Phase 0; synthetic tests, pressure fixtures, historical receipts, and workflow configuration are not product PASS evidence.",
+  "nextAction": "Complete fresh current browser and Recovery qualification for Document/Artifact, add the explicit direct-store rejection receipt, and close the remaining six-flow evidence gap on the selected shell. Then run schema-transform interruption/repair, quota/eviction, rollback, security/egress, accessibility, and remaining browser-target proofs. Promote only exact evidence-backed rows and advance Phase 0; synthetic tests, pressure fixtures, historical receipts, and workflow configuration are not product PASS evidence.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }

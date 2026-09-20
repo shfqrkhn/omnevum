@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "bde18d8cef804aad2bbdf6250b6a07a19a8e6203f734e82cf2da56f01123536b",
-        "bytes": 104916
+        "sha256": "e6f35a6d0d72d2a671604ec42baddaffc5ba756e5f4512e34df97fc4e5322551",
+        "bytes": 105068
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "97ec86073c3a3cdfdf7e49e75542168b11c366f881257ca459e8e1f7bb778d6a",
-        "bytes": 4044
+        "sha256": "91f079257d76fe400b5e780ba053125100d1a4b41891c2c752a34bc2c4804f84",
+        "bytes": 4178
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "63ceeedc9bb8c9af32404f93cda797739ceae9f5785e6dddee85308067b7259c",
-        "bytes": 4860
+        "sha256": "6c7431b37673ad2272f89c27daebffa8333c18dc5f1ab2674885e8878d3bd93f",
+        "bytes": 5321
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -264,8 +264,8 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "377b84e2779e47dc79fbfe434a85224e832c37067d909e235297b4cbcbf3952d",
-        "bytes": 2344
+        "sha256": "9d00ea4af726763a686ec901a913fe16f9d3b4b3369b0693105e8eba2803846b",
+        "bytes": 2412
       },
       {
         "path": "docs/control/release-evidence.json",
@@ -321,6 +321,11 @@
         "path": "docs/evidence/phase0-fresh-edge-flow-2026-09-19.md",
         "sha256": "fbf54d96de90a6fd1a856e7c9a8a1d61ec2d36a1f61842210e9799c6c3f3b37d",
         "bytes": 1648
+      },
+      {
+        "path": "docs/evidence/phase0-launchpad-automation-artifact-2026-09-19.md",
+        "sha256": "d8ed136f1be3fa0acc7366007787d6818e74274cad30edbc930a8da3c0c5f05c",
+        "bytes": 3127
       },
       {
         "path": "docs/evidence/phase0-launchpad-owner-boundary-2026-09-19.md",
@@ -906,6 +911,11 @@
         "path": "src/core/incremental-repository.ts",
         "sha256": "baf8ac60f2322aff433c485cf4a100c80e0393af43fccb27e6c74a7e6198242c",
         "bytes": 11372
+      },
+      {
+        "path": "src/core/launchpad-automation.integration.test.ts",
+        "sha256": "6cf9dcff060d699eb5cc38364ea7f38c300cc7b00119a73c7dacdceefcbfccfe",
+        "bytes": 3205
       },
       {
         "path": "src/core/launchpad-transplant.integration.test.ts",
