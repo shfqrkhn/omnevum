@@ -11,4 +11,6 @@ Date: 2026-09-20
 
 An independent Node HTTPS probe fetched the ten control-bound public paths (`index.html`, CSS, JavaScript, source map, icon, manifest, recovery route, crawler metadata, and `sw.js`). Every response was HTTP 200 and every served byte length and SHA-256 matched `docs/control/release-evidence.json`; the recomputed served aggregate digest was exactly `90ff59b7dd66e0dba9f7acd6927b3e3d5fcaf679363aac763dda52af337d8710`.
 
+An isolated Chromium spot check against the same deployed URL at 390x844 CSS pixels, DPR 2, touch, and dark mode found zero horizontal overflow, zero visible controls below 44 CSS pixels, zero controls missing both `id` and `name`, zero console messages, and Lighthouse Accessibility, Best Practices, SEO, and Agentic Browsing scores of 100. The deployed search-degraded preview began at `LOCAL - 1 degraded`; its repair action rebuilt the index to healthy `LOCAL` state. No user browser context was used.
+
 This is exact deployment and artifact identity evidence only. It does not prove rollback, response-header control, WebKit/Firefox behavior, real quota/process faults, cross-browser Vault restore, security/egress, assistive technology, or human acceptance. Release readiness and `100_PERCENT_COMPLETE` remain unclaimed.
