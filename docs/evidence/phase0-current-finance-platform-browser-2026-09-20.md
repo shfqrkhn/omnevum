@@ -38,3 +38,13 @@ The follow-up source candidate is commit `adababe663b190b65b04d859f89c68eaf7b2bd
 - Hosted follow-up: CI workflow `35496026535` and Pages workflow `35496026549` passed for repository commit `8c4ecb1fb61d83df002ab7e84cd3b0aace864c63`; an independent HTTPS fetch matched all 10 public paths to the local candidate by HTTP 200, byte length, and SHA-256. This binds deployment identity, not rollback, cross-browser, or human acceptance.
 
 This follow-up supports bounded `PARTIAL` evidence for compact progressive disclosure, search-result visibility, batch triage, canonical records, responsive-overflow behavior, and exact hosted artifact identity. It does not promote a row to release `PASS`: browser interaction remains one Chromium-based emulation and local preview; Firefox/WebKit, assistive technology, real touch hardware, cross-origin Vault restore, fault/rollback/update, live security/egress, and human acceptance remain open.
+
+## Follow-up canonical-lens identity qualification
+
+The runtime candidate remains commit `750c41f19fbfbce5a4bcb2edcb50a7a9f545ef88` (`750c41f`); executable proof was strengthened in test-only commit `979bb2b9aec137af9c61332401ad698e55c0a63d` (`979bb2b`). The test-only change does not alter the production bundle. Target: `http://127.0.0.1:4180/`, production `dist` served by the running Vite preview; Codex in-app Chromium tab `54`, isolated local-origin storage, 2026-09-20.
+
+- With the Direction lens active, the visible task `Second task for relation` exposed `data-lens-record-id=record_68b2b852-1619-4d19-96a2-f38c97082b8d`.
+- With the Self lens active, the same task exposed the identical canonical record ID, alongside the separate note record. The lens rows exposed only `Open record`; opening the task used the canonical detail owner (`Lenses / Self / core.task`) rather than a lens-local editor.
+- `src/core/lenses.ts` projects by filtering and sorting `CanonicalRecord` references. `src/core/lenses.test.ts` now asserts both deterministic lens membership and object identity (`toBe(shared)`) for Direction and Work; the focused suite passed 3/3 tests.
+
+This is exact evidence for OMN-ACC-007: the same canonical record is reused across authorized projections without an unsynchronized writable copy. Scope remains the exercised Chromium/local target; it does not claim Firefox/WebKit, assistive-technology, or human acceptance coverage for unrelated scenarios.

@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "e88155c7ececdaa57cdc1707ccc7ff270e4e59664e1603c8a0278ae559d49add",
-        "bytes": 117994
+        "sha256": "ed28310b067d382cc5c69eb68f7791d077a882585d9211623a79489ffab6599e",
+        "bytes": 118076
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "eca1fd54c94c36a2ef00aff5cc083214a05e9642ad68383347dddda7c806b6db",
-        "bytes": 3383
+        "sha256": "52a864c4ca42268c3bf0c8eb468883bca93ac34a82a02f1f951275d6de000011",
+        "bytes": 3668
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "10473238586d717970d99285c21e0967ef74f7ac0b7dd684931d65fab10e984f",
-        "bytes": 15137
+        "sha256": "417074670b9cf0558504400bde209b1a9dcd8bbb90497fb4cc84cf18197c0938",
+        "bytes": 15591
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "8e70d342d869b8ff5bc0d5ff818176afbab83a5e790c26a83583bfc72cba028f",
-        "bytes": 14318
+        "sha256": "8d5faf4a4b7bacc6db472bd249335425835f317ef0aa3bdcf9e68a22339f33d1",
+        "bytes": 14983
       },
       {
         "path": "docs/control/requirements.json",
@@ -329,8 +329,8 @@
       },
       {
         "path": "docs/evidence/phase0-current-finance-platform-browser-2026-09-20.md",
-        "sha256": "fa919cb775d837cbaa10bb17d00125ba07de096494c99e998ab41b1413c3afee",
-        "bytes": 6863
+        "sha256": "e6c01f0f318715687e4de4849d5cc67b53e0223ffb8755cae771ab150a86a6c2",
+        "bytes": 8337
       },
       {
         "path": "docs/evidence/phase0-donor-characterization-2026-09-19.md",
@@ -1074,8 +1074,8 @@
       },
       {
         "path": "src/core/lenses.test.ts",
-        "sha256": "664932d6015e528ac948b2ced054756b6edb51cc266d28a5e4d89a55d8776073",
-        "bytes": 2994
+        "sha256": "27a9b3d239c4010b1192fe640a1005be9bb38aa58d5ac2b575cb51aa0fbc5647",
+        "bytes": 3183
       },
       {
         "path": "src/core/lenses.ts",
