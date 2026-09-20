@@ -222,8 +222,10 @@
         "line": 3971
       },
       "text": "One first-party module fails during startup/runtime; Home/System/Recovery and unrelated modules remain usable.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-current-finance-platform-browser-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-017",

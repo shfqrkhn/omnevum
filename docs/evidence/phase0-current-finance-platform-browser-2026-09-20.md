@@ -52,3 +52,12 @@ This is exact evidence for OMN-ACC-007: the same canonical record is reused acro
 ## Pages verification for the canonical-lens increment
 
 Repository commit `54ce8e84dec3bee6792842120c55a6fd6e7ca690` passed CI workflow `35496441891` and Pages workflow `35496441789`. An independent Node HTTPS probe of `https://shfqrkhn.github.io/omnevum/` fetched all 10 published paths with HTTP 200; every local byte sequence matched its hosted counterpart, and the aggregate artifact digest was `f9c5bb9c3cf91721d0abbb16c09c48c1d94f5f03c4ff2f4bde7762f709e295d2` with service-worker cache `omnevum-shell-e5a581ec34b80448`. The test-only lens proof changes no production bundle. This proves deployment identity only; rollback, browser-family, security/egress, assistive technology, and human acceptance remain open.
+
+## Capability fault-boundary qualification
+
+Test commit `9268cb3e84ac4f1ecc88a369fee72c6550b71ca4` strengthens the first-party capability-runtime proof. `npm test -- --run src/core/capability-runtime.test.ts` passed 1 file and 5 tests.
+
+- Startup fixture: critical `core.home` and `core.recovery` start successfully while an optional parser throws; the failed module is isolated as `DEGRADED` with a bounded visible reason, and both critical modules remain `READY`.
+- Runtime fixture: `core.search` fails during an operation and becomes `DEGRADED`; `core.home` and `core.recovery` continue to execute successfully. Credential-shaped failure text is redacted, and a repaired capability can be retried to `READY`.
+
+This is bounded implementation/runtime evidence for OMN-ACC-016, promoted to `PARTIAL`: the independent capability boundary is executable and fail-closed, while injection of a production module fault, browser-family behavior, assistive technology, and human acceptance remain open.
