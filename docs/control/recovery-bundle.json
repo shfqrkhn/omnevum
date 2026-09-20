@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "87527150e5c81cd24a99fd2df9bac2c99725f9ccfdf2d996e3766fdda5280676",
-        "bytes": 3143
+        "sha256": "fab7dd59a25a4eca1155bfcec8d9bb008331fc58bda48d7734ac3ba839566c33",
+        "bytes": 3179
       },
       {
         "path": "docs/control/requirements.json",
@@ -299,7 +299,7 @@
       },
       {
         "path": "docs/evidence/phase0-browser-qa-current-2026-09-19.md",
-        "sha256": "55c15236c4f648c662010ff0a8989d14b19de5eb92e0ad590034db89f7d48ce9",
+        "sha256": "f47a37c738a80f16c2e2756ef10c6763abc905ac10502f653af13b3866132a81",
         "bytes": 1602
       },
       {
@@ -314,8 +314,8 @@
       },
       {
         "path": "docs/evidence/phase0-pages-deployment-2026-09-19.md",
-        "sha256": "3d28d61a75fec1e1b64d78a21b9a938dbfe3c49f8a0f86e0d50899a0d97a5b6c",
-        "bytes": 2156
+        "sha256": "f721f426114830ca0448b8b8718f23c3f019fd41ba8c467f5e906eb18986661e",
+        "bytes": 2199
       },
       {
         "path": "docs/evidence/phase0-security-effects-2026-09-19.md",

@@ -6,7 +6,7 @@
   "releaseIdentity": {
     "version": "v0.18.0-overhaul-candidate",
     "artifactDigest": "03a6eb2e8c3bbfdac6cc29c0abfa1210e7cfddd76062195874f543881ddf47aa",
-    "sourceRevision": "d0f992305f9edbd1542b8759942b5f3eef607da9",
+    "sourceRevision": "542b665b361d579ee6d8e3ab2f331ce3afca5cd6",
     "serviceWorkerCache": "omnevum-shell-4b0fcf7bba597af9"
   },
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF.",
@@ -21,7 +21,7 @@
     {"path": "dist/sw.js", "sha256": "398279c9d70dcaeb6e13d15dde332ad6448dd62cdc03f7b7c818e362f210f0eb", "bytes": 3501}
   ],
   "deploymentObservations": [
-    {"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35480963972", "sourceRevision": "d0f992305f9edbd1542b8759942b5f3eef607da9", "artifactByteMatch": "8/8 local dist files matched the served Pages files after switching Pages from legacy master:/ to the Actions artifact source", "date": "2026-09-19"}
+    {"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35481320651", "sourceRevision": "542b665b361d579ee6d8e3ab2f331ce3afca5cd6", "artifactByteMatch": "8/8 local dist files matched the served Pages files after switching Pages from legacy master:/ to the Actions artifact source; published-entry smoke guard passed", "date": "2026-09-19"}
   ],
   "requiredEvidence": ["control-generation-and-drift", "structure-reference-architecture-audit", "type-static-and-unit-tests", "browser-e2e-responsive-accessibility-input-i18n", "offline-static-host-and-service-worker", "storage-quota-corruption-migration-and-recovery", "Vault-cross-origin-restore", "security-egress-untrusted-content-and-credential-boundaries", "dependency-license-SBOM-vulnerability-provenance", "deploy-smoke-rollback", "human-acceptance-where-required"],
   "evidencePolicy": "The clean v0.18 baseline inherits no release artifact or acceptance claim. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains UNKNOWN.",

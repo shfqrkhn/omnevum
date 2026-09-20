@@ -1,7 +1,7 @@
 # v0.18.0 current hosted browser QA receipt
 
 - Date: 2026-09-19 (America/Toronto)
-- Source revision: `d0f992305f9edbd1542b8759942b5f3eef607da9`
+- Source revision: `542b665b361d579ee6d8e3ab2f331ce3afca5cd6`
 - Target: [https://shfqrkhn.github.io/omnevum/](https://shfqrkhn.github.io/omnevum/)
 - Artifact: `03a6eb2e8c3bbfdac6cc29c0abfa1210e7cfddd76062195874f543881ddf47aa`; service-worker cache `omnevum-shell-4b0fcf7bba597af9`
 - Browser: Codex in-app Chromium tab 42; responsive rows were exercised with temporary DevTools viewport emulation
