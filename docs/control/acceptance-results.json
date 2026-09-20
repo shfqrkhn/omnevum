@@ -1302,8 +1302,10 @@
         "line": 4185
       },
       "text": "A shell-only update applies silently and appears in the version ledger with time and rollback path. An update carrying a canonical schema migration does not apply silently: it states the migrations, affected record classes, verified backup state and age, and rollback path, and offers to create a backup when none is recent. The migration is then interrupted and the system neither silently resets data nor loses the rollback path.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-browser-fault-recovery-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-124",

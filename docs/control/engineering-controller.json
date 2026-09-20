@@ -15,16 +15,16 @@
     "Generated control projections are bound to the exact v0.18.0 MPES hash.",
     "Deprecated implementation-era acceptance statuses and qualification receipts were removed from the active baseline; current evidence promotes one exact Chromium PASS, bounded PARTIAL rows, and keeps UNKNOWN release-visible.",
     "The current hosted browser receipt proves compact responsive layout, built relative assets, cached offline Search, and bounded capture/triage/search/Vault behavior; it does not close a release gate.",
-    "GitHub Pages deployment run 35481320651 is green for source 542b665 and its eight served dist files byte-match the local candidate artifact; the published-entry smoke guard prevents regression to the legacy source deployment.",
-    "Storage/Vault/migration/Recovery and security/effect/context-boundary contracts have focused executable characterization; live Chromium search-index corruption/rebuild is PASS, cross-origin manual Vault restore, normal canonical corruption repair, and the independent recovery-console read/export are PARTIAL, and target/browser/fault and human proofs remain open.",
+    "GitHub Pages deployment run 35482142333 is green for source 24ae8d602e3738aae445e1cb27e42d8a3c626970 and its published-entry smoke guard passed; the guard prevents regression to the legacy source deployment.",
+    "Storage/Vault/migration/Recovery and security/effect/context-boundary contracts have focused executable characterization; live Chromium search-index corruption/rebuild is PASS, cross-origin manual Vault restore, shell-update waiting/activation, normal canonical corruption repair, and the independent recovery-console read/export are PARTIAL, and target/browser/fault and human proofs remain open.",
     "The repository structure/reference/architecture/license/security/typecheck/test/build/static/recovery/drift gates are required before handoff."
   ],
   "unverified": [
     "OMN-FOSS-014 retained-donor UI workload and OMN-ACC-173..176 complete six-flow transplantability, duplicate-authority, donor-boundary, and route-reopen proof",
     "All existing source modules and UI behavior under current v0.18.0 contracts",
-    "Production deployment/rollback, browser/support/accessibility/human acceptance, offline/update, storage fault, cross-origin Vault, security, FOSS, and Recovery qualification",
-    "146 acceptance scenarios remain UNKNOWN; Phase 1 MVP daily slice and all later phase gates remain open"
+    "Production rollback, browser/support/accessibility/human acceptance, offline/update qualification, storage quota/fault qualification, materially different browser-family Vault restore, security, FOSS, and Recovery qualification",
+    "145 acceptance scenarios remain UNKNOWN; Phase 1 MVP daily slice and all later phase gates remain open"
   ],
-  "nextAction": "Run real-browser update/interruption, quota, cross-origin Vault, security/egress, rollback, and accessibility target proofs; exercise retained launchpad UI behind Omnevum owners; then promote only exact evidence-backed rows and advance Phase 0. Synthetic tests, historical receipts, and workflow configuration are not product PASS evidence.",
+  "nextAction": "Run real-browser schema-migration interruption/repair, quota, security/egress, rollback, and accessibility target proofs; exercise retained launchpad UI behind Omnevum owners; then promote only exact evidence-backed rows and advance Phase 0. Synthetic tests, historical receipts, and workflow configuration are not product PASS evidence.",
   "completionClaim": "Do not claim 100_PERCENT_COMPLETE until all mandatory requirements and scenarios have evidence-backed PASS or justified NOT_APPLICABLE."
 }

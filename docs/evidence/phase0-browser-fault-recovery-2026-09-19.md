@@ -40,6 +40,14 @@ This independently proves the read/export route and upgrades `OMN-ACC-125` only 
 
 This is real browser, cross-origin manual portability evidence and strengthens `OMN-ACC-010` only to `PARTIAL`; it is not the materially different browser-family proof required for PASS.
 
+## Disposable shell-update ledger proof
+
+- On a disposable Vite origin `http://127.0.0.1:4357/`, the active service worker initially reported `omnevum-shell-v1`. A temporary QA-only script revision with `CACHE_NAME = "omnevum-shell-qa-update"` (fixture hash `bd257f599877297477438739107f9209b89de788d4f90a1c72c924ac81020ca6`) was served only by that stopped local test server; the committed `public/sw.js` was restored to hash `ee209c3b183ba5b372717555dc9fec0b6e96c894bcb362701024bf73bc84fa96` immediately afterward.
+- The visible Recovery > Shell update ledger detected `WAITING - omnevum-shell-v1`, exposed `Activate waiting shell`, and showed the declared rollback path. After explicit activation and reload it reported `Active shell cache: omnevum-shell-qa-update` and an `ACTIVATED` ledger entry.
+- Cleanup unregistered 1 disposable service worker, deleted 3 disposable caches, deleted the disposable `omnevum-canonical-v1` database, and stopped the temporary server. No committed application source or user origin was left modified.
+
+This is bounded browser evidence for the shell-only waiting/activation portion of `OMN-ACC-123` and supports `PARTIAL`; canonical schema-migration approval, interruption, and repair remain open.
+
 ## Source hashes
 
 - `src/core/storage.ts`: `b1aec9639873716b2566576862c93592f0a33f29b87b457cda933d4c6815c189`
