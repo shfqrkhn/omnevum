@@ -69,36 +69,20 @@
       "path": "package-lock.json"
     }
   ],
-  "historicalSources": [
-    {
-      "path": "docs/Omnevum-MPES-v0_17_4.md",
-      "sha256": "ab323b33db49286420f15164d7ded7950b22d6c3bd4ef07f3f480b4b4b5cb8a6",
-      "replacement": "docs/Omnevum-MPES-v0_18_0.md",
-      "preservation": "git-history-and-relocation-receipt"
-    },
-    {
-      "path": "docs/Omnevum-MPES-v0.12.0-converged.md",
-      "sha256": "585e2f178e47ca344c576eec16367585d1f347c2776a3c0c93a7cd4f9be4b6f3",
-      "replacement": "docs/Omnevum-MPES-v0_18_0.md",
-      "preservation": "git-history-and-relocation-receipt"
-    }
-  ],
-  "relocations": [
-    {
-      "from": "docs/Omnevum-MPES-v0_17_4.md",
-      "to": "docs/Omnevum-MPES-v0_18_0.md",
-      "reason": "v0.18.0-converged supersedes the v0.17.4 controlling baseline; prior source remains immutable in Git history."
-    },
-    {
-      "from": "docs/Omnevum-MPES-v0.12.0-converged.md",
-      "to": "docs/Omnevum-MPES-v0_18_0.md",
-      "reason": "v0.18.0-converged supersedes the v0.12 controlling baseline through the v0.17.4 predecessor; prior source remains immutable in Git history."
-    }
-  ],
-  "retiredPaths": [
-    "docs/Omnevum-MPES-v0_17_4.md",
-    "docs/Omnevum-MPES-v0.12.0-converged.md"
-  ],
+  "authorityBoundary": "Only docs/Omnevum-MPES-v0_18_0.md and docs/Omni_3.32.0.md are active authorities. Deprecated specifications and prior qualification overlays are not loaded into active control generation; Git history is the provenance record.",
+  "archivedHistory": {
+    "authority": "non-authoritative provenance only; archived material cannot create implementation, security, release, or acceptance evidence",
+    "paths": [
+      "docs/archive/v0_17_4-evidence/phase0-bakeoff-2026-09-17.md",
+      "docs/archive/v0_17_4-evidence/phase0-browser-smoke-2026-09-17.md",
+      "docs/archive/v0_17_4-evidence/phase0-dependency-check-2026-09-17.md",
+      "docs/archive/v0_17_4-evidence/phase0-production-preview-2026-09-17.md",
+      "docs/archive/v0_17_4-evidence/phase0-research-2026-09-17.md",
+      "docs/archive/v0_17_4-evidence/phase0-upstream-characterization-2026-09-17.md",
+      "docs/archive/v0_17_4-evidence/phase1-mvp-nucleus-smoke-2026-09-17.md",
+      "docs/archive/v0_17_4-evidence/phase2-contract-spike-2026-09-17.md"
+    ]
+  },
   "counts": {
     "requirements": 544,
     "acceptanceScenarios": 176,

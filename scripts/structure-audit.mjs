@@ -9,7 +9,7 @@ const documentationRoots = entries.filter((entry) => entry.isDirectory() && ["do
 const allowedRootFiles = new Set([".git", ".gitattributes", ".gitignore", "AGENTS.md", "README.md", "index.html", "package-lock.json", "package.json", "tsconfig.json", "vite.config.ts"]);
 const allowedRootDirectories = new Set([".git", ".github", "docs", "dist", "node_modules", "public", "scripts", "src", "coverage", ".vite"]);
 const allowedDocsFiles = new Set(["README.md", "Omni_3.32.0.md", "Omnevum-MPES-v0_18_0.md"]);
-const allowedDocsDirectories = new Set(["control", "evidence"]);
+const allowedDocsDirectories = new Set(["archive", "control", "evidence"]);
 const required = [
   "AGENTS.md",
   "README.md",

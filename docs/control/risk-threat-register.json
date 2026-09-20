@@ -1,15 +1,16 @@
 {
   "schemaVersion": 1,
   "kind": "risk-threat-register",
-  "status": "PHASE1_CONTRACT_SPIKE_UNQUALIFIED",
-  "authority": "MPES Sections 18, 19, 21, 22, and 23",
+  "status": "V018_REQUALIFICATION_REQUIRED",
+  "authority": "MPES Sections 18, 19, 21, 22, 23, and 30",
   "items": [
-    {"id": "RISK-001", "risk": "canonical data loss or reset", "control": "transactional IndexedDB, Vault restore, read-only retained-state snapshot, explicit repair-from-snapshot, migration receipts, interrupted-upgrade reopen, derived-state fault injection, and explicit quota guidance", "evidence": "src/core/storage.test.ts; docs/evidence/phase0-production-preview-2026-09-17.md#storage-faultrecovery-follow-up; docs/evidence/phase0-production-preview-2026-09-17.md#recovery-snapshot-follow-up; docs/evidence/phase0-production-preview-2026-09-17.md#interrupted-canonical-migration-follow-up; docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-recovery-repair-follow-up", "status": "PARTIAL"},
-    {"id": "RISK-002", "risk": "stale import resurrects deleted meaning", "control": "revision/tombstone precedence and sync qualification", "evidence": "src/core/sync.test.ts; docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-partial-sync-failure-follow-up", "status": "PARTIAL"},
-    {"id": "RISK-003", "risk": "untrusted imported/rendered content executes", "control": "bounded inert Acquire parsing, secret-shaped field scrubbing, URL scheme/credential/size guards, literal-text browser rendering, sanitizer fixtures, hostile spreadsheet/PDF active-content detection, worker/resource bounds, and no authority escalation", "evidence": "src/core/acquire.test.ts; src/core/artifact.test.ts; docs/evidence/phase0-production-preview-2026-09-17.md#untrusted-acquire-follow-up; docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-hostile-spreadsheet-pdf-intake-receipt; docs/evidence/phase0-production-preview-2026-09-17.md#current-build-browser-follow-up", "status": "PARTIAL_OPEN"},
-    {"id": "RISK-004", "risk": "credential or AI context crosses owner boundary", "control": "credential/key broker, context broker, capability handles, command admission", "evidence": "src/core/credential.test.ts; src/core/ai.test.ts; contract spike only", "status": "PARTIAL_OPEN"},
-    {"id": "RISK-005", "risk": "static host silently lacks required runtime behavior", "control": "frozen support matrix, truthful PLATFORM_LIMITED states, offline smoke", "evidence": "docs/control/support-matrix.json; docs/evidence/phase0-production-preview-2026-09-17.md#current-built-artifact-release-offline-follow-up", "status": "PARTIAL_OPEN"},
-    {"id": "RISK-006", "risk": "supply-chain or license defect reaches release", "control": "lockfile, SBOM, exact-source register, automated license metadata gate, high-severity advisory gate, license/currentness/security gates", "evidence": "npm run audit:licenses; npm run audit:security; docs/control/dependency-sbom.json; docs/control/license-provenance.json; docs/evidence/phase0-dependency-check-2026-09-17.md", "status": "PARTIAL_OPEN"}
+    {"id": "V018-RISK-001", "risk": "canonical data loss or duplicate authority", "control": "one owner registry, semantic commands, transactional storage, Vault integrity, migration rollback, fault injection", "status": "UNKNOWN"},
+    {"id": "V018-RISK-002", "risk": "launchpad writes bypass Omnevum ownership", "control": "six-flow transplant proof, direct-store write traps, adapter seams, duplicate-authority tests", "status": "UNKNOWN"},
+    {"id": "V018-RISK-003", "risk": "untrusted import/rendered content executes", "control": "inert Acquire parsing, size/scheme/secret guards, isolation, hostile fixtures, no authority escalation", "status": "UNKNOWN"},
+    {"id": "V018-RISK-004", "risk": "credential or AI context crosses scope", "control": "credential/key broker, context policy, permission preflight, no raw secrets in modules", "status": "UNKNOWN"},
+    {"id": "V018-RISK-005", "risk": "static host lacks required runtime behavior", "control": "frozen support matrix, truthful degradation, offline/update and deployment smoke", "status": "UNKNOWN"},
+    {"id": "V018-RISK-006", "risk": "supply-chain/license/currentness defect reaches release", "control": "lockfile, SBOM, exact provenance, license/security/currentness gates", "status": "UNKNOWN"},
+    {"id": "V018-RISK-007", "risk": "external effect duplicates or replays", "control": "platform Effect/Outbox, idempotency, reconciliation, revocation, Recovery", "status": "UNKNOWN"}
   ],
   "rule": "UNKNOWN, stale, skipped, or unverified controls are not PASS and remain release-visible."
 }

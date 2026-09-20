@@ -3,31 +3,15 @@
   "kind": "release-evidence-register",
   "status": "NOT_RELEASE_READY",
   "authority": "MPES Sections 21 and 22",
-  "releaseIdentity": {"version": "0.1.0-foundation", "artifactDigest": "e019fb357b34bfcccdd975f11907c2d2682b74620f1379fe59e8044ee74c6cc2", "sourceRevision": "17806e5", "serviceWorkerCache": "omnevum-shell-0185ac748cc5a004"},
-  "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF; captured after the full npm run build on 2026-09-19.",
-  "artifactFiles": [
-    {"path": "dist/assets/index-2dS7YBYR.js", "sha256": "f363d00c4908fbd112cace6adc8654f7a0c952da28fbf753d0df8e67a61a2ecc", "bytes": 533197},
-    {"path": "dist/assets/index-2dS7YBYR.js.map", "sha256": "106d8a0ed401c0f1fee1e0ebe9753249ca0bbbb145e2a713bced3a76c0f3199e", "bytes": 1524509},
-    {"path": "dist/assets/index-1nEyWL5r.css", "sha256": "285345490b9c35c9369a7b9de482909a59f6bca805b2413a1acc090202167226", "bytes": 25384},
-    {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "aee060067977ab37fda3ad081200bf9e214bc990eed7437faa494ccb0aff41ff", "bytes": 933},
-    {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
-    {"path": "dist/recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
-    {"path": "dist/sw.js", "sha256": "60d96143a10e3a5e9537c22e5e3c0b2e1590c522559ffb5391696c78829be533", "bytes": 3501}
-  ],
-  "requiredEvidence": [
-    "control-generation-and-drift",
-    "structure-reference-architecture-audit",
-    "type-static-and-unit-tests",
-    "browser-e2e-responsive-accessibility-input-i18n",
-    "offline-static-host-and-service-worker",
-    "storage-quota-corruption-migration-and-recovery",
-    "Vault-cross-origin-restore",
-    "security-egress-untrusted-content-and-credential-boundaries",
-    "dependency-license-SBOM-vulnerability-provenance",
-    "deploy-smoke-rollback",
-    "human-acceptance-where-required"
-  ],
-  "evidencePolicy": "Generated status text cannot create PASS. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains NOT_RUN/UNKNOWN.",
-  "currentDecision": "Continue Phase 0; the current artifact groups Recovery backup/restore, repair/platform, local retirement, and copy inventory behind labelled native disclosures while preserving existing owner paths. Closed compact disclosures suppress non-summary content, and the update-ledger status pill wraps within the compact Recovery summary at narrow 200% scale; the bounded lens chip row remains an explicit local scroller. Copy inventory now persists one typed observation per local origin, sync replica, off-origin backup, and remote artifact tier; configured copies are labelled deletable, request-only, or unreachable, unreachable remains UNKNOWN, and hard clear refuses unresolved configured remote copies. The experimental Arabic profile activates document lang/RTL direction with English fallback for untranslated copy; confidence/provenance remains hidden by default and reports UNKNOWN honestly. Bounded Share, service-worker update/rollback/offline, Effect/Outbox approval/reconciliation, credentialed restart, and independent last-resort Recovery remain receipt-bound. Compact/loopback evidence does not close real-provider/OAuth/ACL, native key restoration, remote deployment/rollback, target/accessibility, native fault, or human-acceptance gaps. OMN-ACC-094 remains bounded NOT_APPLICABLE and no completion or production-release claim is made."
+  "releaseIdentity": {
+    "version": "v0.18.0-overhaul-unreleased",
+    "artifactDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sourceRevision": "631cac1",
+    "serviceWorkerCache": "omnevum-shell-0185ac748cc5a004"
+  },
+  "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF.",
+  "artifactFiles": [],
+  "requiredEvidence": ["control-generation-and-drift", "structure-reference-architecture-audit", "type-static-and-unit-tests", "browser-e2e-responsive-accessibility-input-i18n", "offline-static-host-and-service-worker", "storage-quota-corruption-migration-and-recovery", "Vault-cross-origin-restore", "security-egress-untrusted-content-and-credential-boundaries", "dependency-license-SBOM-vulnerability-provenance", "deploy-smoke-rollback", "human-acceptance-where-required"],
+  "evidencePolicy": "The clean v0.18 baseline inherits no release artifact or acceptance claim. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains UNKNOWN.",
+  "currentDecision": "The v0.18 overhaul is not release-ready. Existing dist/source behavior is a candidate only; rebuild and requalify after the launchpad proof and Phase 0 gates."
 }

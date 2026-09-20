@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -8,10 +8,6 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const docsRoot = join(root, "docs");
 const controlRoot = join(docsRoot, "control");
 const mpesPath = join(docsRoot, "Omnevum-MPES-v0_18_0.md");
-const predecessorMpesPath = "docs/Omnevum-MPES-v0_17_4.md";
-const predecessorMpesSha256 = "ab323b33db49286420f15164d7ded7950b22d6c3bd4ef07f3f480b4b4b5cb8a6";
-const legacyMpesPath = "docs/Omnevum-MPES-v0.12.0-converged.md";
-const legacyMpesSha256 = "585e2f178e47ca344c576eec16367585d1f347c2776a3c0c93a7cd4f9be4b6f3";
 const omniPath = join(docsRoot, "Omni_3.32.0.md");
 const packagePath = join(root, "package.json");
 const lockPath = join(root, "package-lock.json");
@@ -28,6 +24,14 @@ const source = {
   package: { path: relative(root, packagePath).replaceAll("\\", "/"), sha256: sha256(readFileSync(packagePath)) },
   lockfile: { path: relative(root, lockPath).replaceAll("\\", "/"), sha256: sha256(readFileSync(lockPath)) }
 };
+const listFiles = (directory) => {
+  if (!existsSync(directory)) return [];
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const path = join(directory, entry.name);
+    return entry.isDirectory() ? listFiles(path) : [relative(root, path).replaceAll("\\", "/")];
+  }).sort();
+};
+const archivedHistory = listFiles(join(docsRoot, "archive"));
 
 const requirements = [];
 const normativePattern = /\b(?:SHALL NOT|MUST NOT|SHALL|MUST)\b/gi;
@@ -211,15 +215,11 @@ writeJson("control-manifest.json", {
     { id: "package-manifest", path: source.package.path },
     { id: "lockfile", path: source.lockfile.path }
   ],
-  historicalSources: [
-    { path: predecessorMpesPath, sha256: predecessorMpesSha256, replacement: source.mpes.path, preservation: "git-history-and-relocation-receipt" },
-    { path: legacyMpesPath, sha256: legacyMpesSha256, replacement: source.mpes.path, preservation: "git-history-and-relocation-receipt" }
-  ],
-  relocations: [
-    { from: predecessorMpesPath, to: source.mpes.path, reason: "v0.18.0-converged supersedes the v0.17.4 controlling baseline; prior source remains immutable in Git history." },
-    { from: legacyMpesPath, to: source.mpes.path, reason: "v0.18.0-converged supersedes the v0.12 controlling baseline through the v0.17.4 predecessor; prior source remains immutable in Git history." }
-  ],
-  retiredPaths: [predecessorMpesPath, legacyMpesPath],
+  authorityBoundary: "Only docs/Omnevum-MPES-v0_18_0.md and docs/Omni_3.32.0.md are active authorities. Deprecated specifications and prior qualification overlays are not loaded into active control generation; Git history is the provenance record.",
+  archivedHistory: {
+    authority: "non-authoritative provenance only; archived material cannot create implementation, security, release, or acceptance evidence",
+    paths: archivedHistory
+  },
   counts: { requirements: requirements.length, acceptanceScenarios: acceptance.length, lockedPackages: lockedPackages.length }
 });
 

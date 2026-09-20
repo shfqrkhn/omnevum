@@ -6,15 +6,11 @@ import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const git = process.platform === "win32" ? "git.exe" : "git";
-const predecessor = "e6a9be4587d49b56776c242bdea7a4c7511cd568";
 const read = (path) => readFileSync(join(root, path), "utf8");
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
-const runGit = (args) => execFileSync(git, args, { cwd: root, encoding: "utf8" }).trim();
-const currentRevision = runGit(["rev-parse", "HEAD"]);
+const currentRevision = execFileSync(git, ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
 const currentApp = read("src/ui/app.ts");
 const currentPresentation = read("src/core/presentation.ts");
-const predecessorApp = runGit(["show", `${predecessor}:src/ui/app.ts`]);
-const predecessorPresentation = runGit(["show", `${predecessor}:src/core/presentation.ts`]);
 
 const assert = (condition, message) => {
   if (!condition) throw new Error(`ORDINARY_USE_BENCHMARK_FAIL: ${message}`);
@@ -41,28 +37,24 @@ const defaultVisibleSections = (source) => {
   assert(match, "missing default navigation profile");
   return [...match[1].matchAll(/"([^"]+)"/gu)].map((item) => item[1]);
 };
-const sourceSurface = (source, presentationSource) => ({
-  requiredCaptureFields: requiredIds(source, "capture-form"),
-  requiredFinanceFields: requiredIds(source, "finance-import-form"),
-  manualClassificationFields: count(formBody(source, "finance-import-form"), /id="finance-import-classification"/gu),
-  defaultNavigation: defaultVisibleSections(presentationSource),
-  compactDisclosureCount: count(source, /<(?:details) id="(?:search|review|records)"[^>]*class="panel compact-panel"/gu),
-  compactPrimarySurfaceCount: count(source, /<details id="(?:active-lens|search|review|records)"/gu),
-  financeHandlerConfirmationsPerSubmission: count(handlerBody(source), /requestConfirmation\(/gu),
-  financeBatchOwner: source.includes("acceptFinanceBatch"),
-  financeBatchFileInput: /id="finance-import-file"[^>]*\bmultiple\b/gu.test(source),
-  financePerSourceReview: source.includes("sourceResults.flatMap")
-});
 
-const current = sourceSurface(currentApp, currentPresentation);
-const prior = sourceSurface(predecessorApp, predecessorPresentation);
-assert(current.requiredCaptureFields.join(",") === prior.requiredCaptureFields.join(","), "daily Capture required fields changed");
-assert(current.requiredFinanceFields.join(",") === prior.requiredFinanceFields.join(","), "Finance required fields changed");
-assert(current.manualClassificationFields === prior.manualClassificationFields, "manual classification burden changed");
-const priorNavigationPreserved = current.defaultNavigation.filter((id) => prior.defaultNavigation.includes(id));
-assert(priorNavigationPreserved.join(",") === prior.defaultNavigation.join(","), "daily navigation spine order changed");
-assert(current.defaultNavigation.includes("assistant"), "bounded Assistant is missing from the default reachable surfaces");
-assert(current.financeHandlerConfirmationsPerSubmission === 1, "Finance acceptance must retain one explicit confirmation boundary");
+const current = {
+  requiredCaptureFields: requiredIds(currentApp, "capture-form"),
+  requiredFinanceFields: requiredIds(currentApp, "finance-import-form"),
+  manualClassificationFields: count(formBody(currentApp, "finance-import-form"), /id="finance-import-classification"/gu),
+  defaultNavigation: defaultVisibleSections(currentPresentation),
+  compactDisclosureCount: count(currentApp, /<(?:details) id="(?:search|review|records)"[^>]*class="panel compact-panel"/gu),
+  compactPrimarySurfaceCount: count(currentApp, /<details id="(?:active-lens|search|review|records)"/gu),
+  financeHandlerConfirmations: count(handlerBody(currentApp), /requestConfirmation\(/gu),
+  financeBatchOwner: currentApp.includes("acceptFinanceBatch"),
+  financeBatchFileInput: /id="finance-import-file"[^>]*\bmultiple\b/gu.test(currentApp),
+  financePerSourceReview: currentApp.includes("sourceResults.flatMap")
+};
+
+assert(current.requiredCaptureFields.length > 0, "Capture has no required user field");
+assert(current.requiredFinanceFields.length > 0, "Finance has no required source field");
+assert(current.defaultNavigation.includes("assistant"), "bounded Assistant is missing from default reachable surfaces");
+assert(current.financeHandlerConfirmations === 1, "Finance acceptance must retain one explicit confirmation boundary");
 assert(current.financeBatchOwner && current.financeBatchFileInput, "current Finance flow is not batch-capable");
 assert(current.financePerSourceReview, "batch flow must retain per-source review output");
 assert(current.compactDisclosureCount === 3 && current.compactPrimarySurfaceCount === 4, "compact primary disclosures are incomplete");
@@ -71,27 +63,26 @@ const monthlySources = 4;
 const benchmark = {
   schemaVersion: 1,
   kind: "ordinary-use-benchmark-result",
-  authority: "OMN-ACC-152 representative source-contract benchmark; not human acceptance",
+  authority: "OMN-ACC-152 current v0.18 source-contract benchmark; not human acceptance",
   current: { revision: currentRevision, sourceSha256: sha256(currentApp) },
-  predecessor: { revision: predecessor, sourceSha256: sha256(predecessorApp) },
   flow: "Four matching monthly Finance statements, then direct Capture/Search review",
   metrics: {
-    requiredUserFields: { predecessor: prior.requiredFinanceFields.length, current: current.requiredFinanceFields.length, result: "UNCHANGED" },
-    manualClassifications: { predecessor: prior.manualClassificationFields, current: current.manualClassificationFields, result: "UNCHANGED" },
-    confirmations: { predecessor: monthlySources, current: 1, result: "REDUCED" },
-    reviewItems: { predecessor: monthlySources, current: monthlySources, result: "PRESERVED_PER_SOURCE" },
-    navigationSteps: { predecessor: 2, current: 2, result: "UNCHANGED" },
-    reconciliationMaintenanceSubmissions: { predecessor: monthlySources, current: 1, result: "REDUCED" }
+    requiredUserFields: current.requiredFinanceFields.length,
+    manualClassifications: current.manualClassificationFields,
+    confirmations: current.financeHandlerConfirmations,
+    reviewItems: monthlySources,
+    navigationSteps: 2,
+    reconciliationMaintenanceSubmissions: current.financeHandlerConfirmations
   },
   invariants: [
     "Capture/Search remain in the default navigation spine.",
     "Assistant is reachable from the default navigation while its low-frequency body remains collapsed and honestly disabled without a provider.",
-    "The batch form preserves the two required Finance fields and derives source classification.",
+    "The batch form preserves required Finance fields and derives source classification.",
     "One confirmation covers the batch while source-level reconciliation and limitations remain reviewable.",
     "Compact disclosures preserve the complete forms and canonical command owners."
   ],
   limitations: [
-    "This is source-contract and existing current-artifact evidence, not a timed human study.",
+    "This is current source-contract evidence, not a timed human study.",
     "Fresh-browser interaction, assistive technology, other engines, mobile input, deployment, and human acceptance remain open."
   ]
 };

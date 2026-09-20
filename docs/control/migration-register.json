@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "kind": "migration-register",
-  "status": "PHASE1_CONTRACT_SPIKE",
-  "authority": "MPES Sections 4, 6, 8, 12, and 22",
+  "status": "V018_REQUALIFICATION_REQUIRED",
+  "authority": "MPES Sections 4, 6, 8, 9, 12, and 22",
   "cases": [
-    {"id": "MIG-001", "case": "fresh store", "source": "none", "target": "schema-1", "strategy": "create object store", "rollback": "no user data exists", "status": "TESTED_INITIAL"},
-    {"id": "MIG-002", "case": "Vault restore", "source": "OMNEVUM_VAULT v1", "target": "canonical schema-1", "strategy": "read-only integrity/conflict preview followed by revision-aware transaction", "rollback": "preview is non-mutating; transaction abort leaves existing store unchanged", "status": "TESTED_PREVIEWED_TRANSACTION"},
-    {"id": "MIG-003", "case": "origin change", "source": "browser-private origin storage", "target": "new origin", "strategy": "user-mediated Vault export/import", "rollback": "retain source Vault and source origin", "status": "PARTIAL"},
-    {"id": "MIG-004", "case": "future schema", "source": "older supported schema", "target": "current schema", "strategy": "versioned explicit migrator", "rollback": "pre-migration Vault plus recovery mode", "status": "TESTED_SAFE_REFUSAL_SPIKE", "evidence": "src/core/migration.ts#evaluateUpdate"},
-    {"id": "MIG-005", "case": "interrupted IndexedDB upgrade", "source": "current database schema", "target": "future database version", "strategy": "abort the upgrade transaction and reopen the prior schema", "rollback": "aborted upgrade leaves the prior canonical store intact", "status": "TESTED_INTERRUPTION_REOPEN", "evidence": "src/core/storage.test.ts#preserves-canonical-data-when-an-indexeddb-migration-transaction-is-interrupted"}
+    {"id": "V018-MIG-001", "case": "fresh store", "source": "none", "target": "current schema", "strategy": "create canonical stores through the owner boundary", "rollback": "no user data exists", "status": "NOT_RUN"},
+    {"id": "V018-MIG-002", "case": "Vault restore", "source": "portable Vault", "target": "current schema", "strategy": "read-only integrity/conflict preview followed by guarded transaction", "rollback": "preview is non-mutating; failed transaction leaves existing state unchanged", "status": "NOT_RUN"},
+    {"id": "V018-MIG-003", "case": "origin change", "source": "old browser origin", "target": "new browser origin", "strategy": "user-mediated Vault export/import", "rollback": "retain source Vault and source origin", "status": "NOT_RUN"},
+    {"id": "V018-MIG-004", "case": "launchpad transplant", "source": "candidate module stores", "target": "Omnevum owners", "strategy": "characterized adapter/migration with stable IDs and explicit rejection", "rollback": "disable candidate seam and restore retained source state", "status": "NOT_RUN"},
+    {"id": "V018-MIG-005", "case": "interrupted update", "source": "current schema", "target": "future schema", "strategy": "fenced transactional upgrade with Recovery", "rollback": "abort/restore prior committed schema", "status": "NOT_RUN"}
   ],
   "invariant": "Canonical IDs, provenance, truth class, sensitivity, and user-authored meaning remain stable across supported migration paths."
 }

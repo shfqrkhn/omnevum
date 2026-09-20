@@ -2,75 +2,10 @@
   "schemaVersion": 1,
   "kind": "decision-log",
   "items": [
-    {
-      "id": "OMN-DEC-001",
-      "title": "Phase 0 shell substrate",
-      "status": "PROVISIONAL",
-      "decision": "Use Vite, TypeScript, native DOM, and native IndexedDB for the initial foundation.",
-      "why": "Minimizes runtime dependencies and duplicate authority while keeping the public contracts replaceable.",
-      "alternatives": ["React launchpad", "Svelte launchpad", "NeumanOS adaptation", "Kurumi adaptation"],
-      "revisitWhen": "After exact-source NeumanOS/Kurumi characterization and schema-driven UI bake-off.",
-      "evidence": ["docs/evidence/phase0-research-2026-09-17.md"]
-    },
-    {
-      "id": "OMN-DEC-002",
-      "title": "Whole-application launchpad route",
-      "status": "DECIDED_FOR_PHASE0",
-      "decision": "Keep the small Omnevum Vite/TypeScript/native-DOM foundation as the launchpad; harvest NeumanOS and Kurumi patterns in isolated qualification work rather than adopting either whole application.",
-      "why": "Both candidates have high feature and test value, but importing either would introduce a second application authority, framework-specific route/store ownership, and lifecycle surface before Omnevum contracts are proven.",
-      "alternatives": ["adopt NeumanOS whole app", "adopt Kurumi whole app", "defer all reuse"],
-      "revisitWhen": "A representative benchmark proves an exact candidate can satisfy Omnevum canonical ownership, static-host, accessibility, migration, security, and replacement gates with lower total lifecycle cost.",
-      "evidence": ["docs/evidence/phase0-upstream-characterization-2026-09-17.md", "docs/control/capability-coverage.json"]
-    },
-    {
-      "id": "OMN-DEC-003",
-      "title": "Vault and sync candidate route",
-      "status": "DECIDED_FOR_PHASE0",
-      "decision": "Retain the native small Vault path for Phase 0 and qualify SelfStore as the leading Phase 2 encrypted backup/replica candidate; qualify remoteStorage.js only as an optional endpoint adapter.",
-      "why": "SelfStore has the strongest portable archive, crypto, target, merge, Recovery, and test seams; remoteStorage.js adds a useful open endpoint protocol but requires external service/auth/CORS and cannot be the static-core dependency.",
-      "alternatives": ["bespoke sync only", "adopt SelfStore immediately", "make remoteStorage mandatory"],
-      "revisitWhen": "Contract, security, quota, crash, migration, provider, and cross-origin tests pass on representative Vault fixtures.",
-      "evidence": ["docs/evidence/phase0-upstream-characterization-2026-09-17.md", "docs/evidence/phase2-contract-spike-2026-09-17.md", "docs/control/effect-outbox-policy.json", "docs/control/credential-key-policy.json"]
-    },
-    {
-      "id": "OMN-DEC-004",
-      "title": "Device/Input outcome route",
-      "status": "DECIDED_FOR_PHASE0",
-      "decision": "Expose user-triggered browser Device/Input actions through one bounded broker, stage captured values through the existing Acquire/Place owners, release media immediately, and retain manual/file fallback; do not create a device-owned database.",
-      "why": "The user outcome is explicit capture and truthful degradation, not ambient authority or another canonical store. Reusing Acquire/Place preserves one action spine, provenance, and canonical ownership while avoiding a bespoke subsystem.",
-      "alternatives": ["ambient device APIs in each domain module", "private camera/location database", "new universal device-import subsystem"],
-      "revisitWhen": "Permission-denial, hardware capture routing, target breadth, assistive-technology, and human acceptance evidence expose a contract gap.",
-      "evidence": ["src/core/device.ts", "src/core/device.test.ts", "docs/evidence/phase0-production-preview-2026-09-17.md#current-edge-deviceinput-boundary-follow-up", "docs/evidence/phase0-production-preview-2026-09-17.md#current-in-app-browser-deviceinput-boundary-follow-up"]
-    },
-    {
-      "id": "OMN-DEC-005",
-      "title": "Finite extension boundary",
-      "status": "DECIDED_FOR_PHASE0",
-      "decision": "Admit declarative data-only extensions behind platform contracts; do not claim executable third-party extension support in the finite static-core profile, and keep executable packages disabled until a real isolation model passes the MPES threat model.",
-      "why": "The governing baseline explicitly keeps arbitrary remote trusted code and same-origin untrusted plugins out of scope unless isolation proves authority, resource, update, and revocation boundaries. The implemented policy preserves the safe declarative path without inventing sandbox evidence.",
-      "alternatives": ["claim executable extensions without isolation proof", "disable all extensions", "admit a qualified isolated executable runtime"],
-      "revisitWhen": "A Phase 8 candidate supplies current source/license/provenance and passes adversarial authority-leakage, resource-abuse, message-validation, update-revocation, and target tests.",
-      "evidence": ["src/core/extension-policy.ts", "src/core/extension-policy.test.ts", "docs/control/capability-catalogue.json", "docs/evidence/phase0-production-preview-2026-09-17.md#current-finite-extension-boundary-follow-up"]
-    },
-    {
-      "id": "OMN-DEC-006",
-      "title": "Finite search, UI, and analysis substrate profile",
-      "status": "DECIDED_FOR_PHASE0",
-      "decision": "Keep native DOM/TypeScript as the static-core UI owner and MiniSearch as the selected rebuildable multilingual text-search adapter. Keep JSON Forms/RJSF, DuckDB-Wasm, PDF.js, and SheetJS isolated as deferred candidates rather than adding them to the core runtime without target, bundle, worker, accessibility, cancellation, active-content, and offline evidence.",
-      "why": "The repeatable bake-off found MiniSearch met the representative accent-normalized workload and the native UI already preserves the action spine with lower lifecycle cost. The deferred candidates either add substantial runtime weight or require separate worker, parser, security, and target qualification that is not necessary for the finite Phase 0/MVP profile.",
-      "alternatives": ["admit a schema UI framework to the core", "admit DuckDB-Wasm to the core", "replace MiniSearch before target qualification", "build bespoke full document/analytical engines"],
-      "revisitWhen": "A representative accepted target/workload demonstrates a material capability gap or lower lifecycle-cost candidate, with exact current source, license, security, migration, accessibility, resource, and replacement evidence.",
-      "evidence": ["docs/evidence/phase0-bakeoff-2026-09-17.md", "docs/control/capability-coverage.json", "src/core/search.ts", "src/core/search.test.ts"]
-    },
-    {
-      "id": "OMN-DEC-007",
-      "title": "Passkey/WebAuthn scope boundary",
-      "status": "DECIDED_FOR_PHASE0",
-      "decision": "Do not admit a passkey/WebAuthn device-unlock wrapper in the v0.17.4 static-core release. Keep the credential/key broker and portable Vault/recovery path active; represent passkey convenience as a deferred PLATFORM_LIMITED candidate until exact authenticator capability, origin/profile loss, portable recovery, and re-enrolment evidence is qualified.",
-      "why": "The MPES makes passkey convenience optional and prohibits it from becoming the sole recovery authority. No current implementation or qualified authenticator harness exists in this release, so treating OMN-ACC-069 as an admitted capability would overclaim security and origin portability. The bounded core remains usable without it.",
-      "alternatives": ["admit an unqualified WebAuthn wrapper", "make passkey the only protected Vault key", "qualify a WebAuthn-PRF or equivalent wrapper in a future isolated candidate"],
-      "revisitWhen": "A current browser/authenticator candidate passes origin/profile-loss, independent recovery, re-enrolment, revocation, secret-handling, target, accessibility, and human acceptance gates.",
-      "evidence": ["docs/control/credential-key-policy.json", "src/core/credential.ts", "docs/evidence/phase0-production-preview-2026-09-17.md#current-v0174-passkey-scope-boundary-receipt"]
-    }
+    {"id": "V018-DEC-001", "title": "Active authority", "status": "DECIDED", "decision": "Only docs/Omnevum-MPES-v0_18_0.md and docs/Omni_3.32.0.md govern the active overhaul.", "why": "Deprecated implementation-era overlays must not shape current product decisions."},
+    {"id": "V018-DEC-002", "title": "Launchpad route", "status": "PROVISIONAL", "decision": "NeumanOS is tested first as a launchpad/harvest candidate, subject to OMN-FOSS-014 and OMN-ACC-173..176.", "why": "Retained value is a hypothesis, not authority."},
+    {"id": "V018-DEC-003", "title": "Role-specific donors", "status": "DECIDED", "decision": "Kurumi, OneBench, and Utopia are evaluated by seam; no donor becomes a second canonical owner.", "why": "A scalar winner would import incompatible runtime and ownership assumptions."},
+    {"id": "V018-DEC-004", "title": "Qualification reset", "status": "DECIDED", "decision": "All prior capability statuses and acceptance evidence are requalified from UNKNOWN under v0.18.0.", "why": "Overhaul requires current-source evidence rather than inherited claims."},
+    {"id": "V018-DEC-005", "title": "Optional surfaces", "status": "DECIDED", "decision": "AI, sync, connectors, and extensions remain optional and truthfully degraded until their gates close.", "why": "The no-AI/local core and canonical safety boundaries are mandatory."}
   ]
 }

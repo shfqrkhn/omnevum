@@ -114,8 +114,8 @@
       },
       {
         "path": "README.md",
-        "sha256": "ced4748dda076627722258fc88f7e8875e072279ef85af9fd5724e5115eb2025",
-        "bytes": 2687
+        "sha256": "173ba71c07b07a8c8bf0577887579b6fa1cc70678dbf6c29dbe2c38c57e443c7",
+        "bytes": 2659
       },
       {
         "path": "docs/Omnevum-MPES-v0_18_0.md",
@@ -129,13 +129,53 @@
       },
       {
         "path": "docs/README.md",
-        "sha256": "be06b7247cc412f1ffaf3030bffad038b4a6603cdcd08c64ea2ca52f985b0d9e",
-        "bytes": 1161
+        "sha256": "1dafb3df8632398181ba3992b720c091d0a363bd55a2689dcee0f4ad71d11a2f",
+        "bytes": 1337
+      },
+      {
+        "path": "docs/archive/v0_17_4-evidence/phase0-bakeoff-2026-09-17.md",
+        "sha256": "97d6e9a289b9b81645f97de7dc0d11f4cf5bb0858d4daace77abc3bd96607b30",
+        "bytes": 4108
+      },
+      {
+        "path": "docs/archive/v0_17_4-evidence/phase0-browser-smoke-2026-09-17.md",
+        "sha256": "80fec19b166d16884f43a3cabd412716c2cfd87c31db0ed219e752195a73a27c",
+        "bytes": 1625
+      },
+      {
+        "path": "docs/archive/v0_17_4-evidence/phase0-dependency-check-2026-09-17.md",
+        "sha256": "d73952fa8fe0fa2f639bcab015387dae0c84e0becb71e03492e4022f234473c2",
+        "bytes": 2720
+      },
+      {
+        "path": "docs/archive/v0_17_4-evidence/phase0-production-preview-2026-09-17.md",
+        "sha256": "4426970f174b8cfb0dec072feda046db9f92bebfb61154c176c6f2e86a4b5ce1",
+        "bytes": 391911
+      },
+      {
+        "path": "docs/archive/v0_17_4-evidence/phase0-research-2026-09-17.md",
+        "sha256": "3ea8c7333eb5ffe82cc8ace4427c2d4ebb502f8583fd23459f30d050d85defd3",
+        "bytes": 4502
+      },
+      {
+        "path": "docs/archive/v0_17_4-evidence/phase0-upstream-characterization-2026-09-17.md",
+        "sha256": "fc020e8bfe6aa3b847770f9f0657208b98d16662c9f8b356d1ed47c2982d45ea",
+        "bytes": 8136
+      },
+      {
+        "path": "docs/archive/v0_17_4-evidence/phase1-mvp-nucleus-smoke-2026-09-17.md",
+        "sha256": "56cea1036439d493c23c9a377f961add44b94d106c88c9b2b6b124e40a009e80",
+        "bytes": 7948
+      },
+      {
+        "path": "docs/archive/v0_17_4-evidence/phase2-contract-spike-2026-09-17.md",
+        "sha256": "59e5dfe1d7e2150e8a54fe12905d2f943796f3847078d0aa0c1dd3c15ba87a8b",
+        "bytes": 3068
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "94e67900c17a8dc15ae9fcdfbfd513565adb1c840002995d0a73355799d80d9b",
-        "bytes": 245477
+        "sha256": "8d5918f4b9ccb6efcef89940bf3b408d8839b18ef548150b7ff4a3ef18988876",
+        "bytes": 101545
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -149,33 +189,33 @@
       },
       {
         "path": "docs/control/capability-coverage.json",
-        "sha256": "1b67e017a2467c2a3cc890fd299b8ed90420850573491dd040b10b8f1a98cf96",
-        "bytes": 7518
+        "sha256": "643264baad325eae536be1862a5fa4970b251b7f6e86b5e1f697014d14619614",
+        "bytes": 1924
       },
       {
         "path": "docs/control/compatibility-matrix.json",
-        "sha256": "98ec4963e67fa8c65dae6eba2db6102abebf26f90062deea55d3d620a908b289",
-        "bytes": 1471
+        "sha256": "966822c0b847e5da3eba5ff5fe8ddb7e5fe7ea79a7df579768b1f8b3481b5827",
+        "bytes": 1339
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "956a20ccc6102243802333fb1d1fa15cf594fafcbac3cba158e13545b86ca762",
-        "bytes": 3733
+        "sha256": "387900ce20e706cc3e4d7063bbaddc5eac781738118d749fe59188e57bee5812",
+        "bytes": 2523
       },
       {
         "path": "docs/control/credential-key-policy.json",
-        "sha256": "e39de95d98379448509b8750df7f6a52a65aae2529a332a3f15f2dd14bb90c56",
-        "bytes": 1613
+        "sha256": "6e5a9a221ec8ef678ee30bf9642fa7989ae25b8127022b31356641a1c486c0f2",
+        "bytes": 1223
       },
       {
         "path": "docs/control/currentness-radar.json",
-        "sha256": "f95fe0d963c6ddc84bfd45c214fbdb8dcc850e853002925ea8c14cf66ad6ebcb",
-        "bytes": 2654
+        "sha256": "14149e8639212a7c6d1f80cafff394ec0f8a52e0bf0d3b605df68812bbdf2c39",
+        "bytes": 1648
       },
       {
         "path": "docs/control/decision-log.json",
-        "sha256": "18a558af04713b7de4111335cb8798fab14e20825a1cb323201c0e4c82f0ee8c",
-        "bytes": 8225
+        "sha256": "f6c5dce7f87d2dea5b433c2a032c31f7a12457a92da907b638d7e43b7962856f",
+        "bytes": 1425
       },
       {
         "path": "docs/control/dependency-sbom.json",
@@ -189,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "d731ae39d0edeab8ddae55042b9b09645bd1b48fb60845079ab73b47daf8ae5f",
-        "bytes": 99011
+        "sha256": "d581a620610709e7addf59b43205e33c5693707de2fc1a0265ad7b81c5ba4bbc",
+        "bytes": 1954
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -199,18 +239,18 @@
       },
       {
         "path": "docs/control/license-provenance.json",
-        "sha256": "8ebaca6c71aaff24d48a8277256808675bef2c1f843f92f387475078a2426424",
-        "bytes": 1534
+        "sha256": "8220d634679655b748938b232f9d19972ff57cfa941aefea755e61f030eda33e",
+        "bytes": 1220
       },
       {
         "path": "docs/control/migration-register.json",
-        "sha256": "fdfc73027bc86700b05a009ec8a6458811048f9894ed555c254b656cd15dc0c1",
-        "bytes": 1806
+        "sha256": "45b3c277238e89141a66151a95a1189b28faa95c9f14b35873d3d401cad45165",
+        "bytes": 1631
       },
       {
         "path": "docs/control/mvp-acceptance.json",
-        "sha256": "c5bdf43c413173b196b9c2bfc4d323c17f8184fb3c9147dfc342006196921317",
-        "bytes": 1433
+        "sha256": "32148c5fcc8f2fb541104b3dc9b6602bbf463f1baf8e99f31d6c237618754d1c",
+        "bytes": 1223
       },
       {
         "path": "docs/control/owner-registry.json",
@@ -219,18 +259,18 @@
       },
       {
         "path": "docs/control/patch-fork-delta.json",
-        "sha256": "75817374a101dfaf17e0e6854838dd37eda140012b08ab2432af87ddb714adc3",
-        "bytes": 5202
+        "sha256": "22c1b68c3abcae85620edf21691bd227e766407a8134d19e196e27b17dbccc90",
+        "bytes": 2699
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "a1f5a9f9a01c8bfe6394e34e4666f2d36d85a2c4fdaeb1e163b2148f7ea96ad4",
-        "bytes": 9255
+        "sha256": "2cd79575dc558817e654ac63a8b591d727a608f37ebb353dc01d5b839aaab1c7",
+        "bytes": 1568
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "4d7569c3241c8afffe29acc18bfc9fc7fe4df103e88ca50ba477eb43dc6f0e89",
-        "bytes": 3805
+        "sha256": "ad7328e404d36c00ab08fd3aa2862e2fe6803e4538065180036048f85516fe1b",
+        "bytes": 1502
       },
       {
         "path": "docs/control/requirements.json",
@@ -239,13 +279,13 @@
       },
       {
         "path": "docs/control/risk-threat-register.json",
-        "sha256": "278a3dc567a890728d954002470864f79898737154d5994557ed5ac8dbb55005",
-        "bytes": 3112
+        "sha256": "63c8524dfc3c1b04645dd5ab0c4e4b0e189b7a0c053f24249fb175108a07278e",
+        "bytes": 1735
       },
       {
         "path": "docs/control/support-matrix.json",
-        "sha256": "2d21d14efe9b415568ebcd624bf68f65e6439098a37d7b99ff017e4226041d50",
-        "bytes": 2553
+        "sha256": "f524ca10662b4bcabed4a7b251f8c27e428d5ca57eccd5b0f986d8a5bddfc7b2",
+        "bytes": 1655
       },
       {
         "path": "docs/control/upstream.json",
@@ -253,44 +293,9 @@
         "bytes": 5442
       },
       {
-        "path": "docs/evidence/phase0-bakeoff-2026-09-17.md",
-        "sha256": "97d6e9a289b9b81645f97de7dc0d11f4cf5bb0858d4daace77abc3bd96607b30",
-        "bytes": 4108
-      },
-      {
-        "path": "docs/evidence/phase0-browser-smoke-2026-09-17.md",
-        "sha256": "80fec19b166d16884f43a3cabd412716c2cfd87c31db0ed219e752195a73a27c",
-        "bytes": 1625
-      },
-      {
-        "path": "docs/evidence/phase0-dependency-check-2026-09-17.md",
-        "sha256": "d73952fa8fe0fa2f639bcab015387dae0c84e0becb71e03492e4022f234473c2",
-        "bytes": 2720
-      },
-      {
-        "path": "docs/evidence/phase0-production-preview-2026-09-17.md",
-        "sha256": "4426970f174b8cfb0dec072feda046db9f92bebfb61154c176c6f2e86a4b5ce1",
-        "bytes": 391911
-      },
-      {
-        "path": "docs/evidence/phase0-research-2026-09-17.md",
-        "sha256": "3ea8c7333eb5ffe82cc8ace4427c2d4ebb502f8583fd23459f30d050d85defd3",
-        "bytes": 4502
-      },
-      {
-        "path": "docs/evidence/phase0-upstream-characterization-2026-09-17.md",
-        "sha256": "fc020e8bfe6aa3b847770f9f0657208b98d16662c9f8b356d1ed47c2982d45ea",
-        "bytes": 8136
-      },
-      {
-        "path": "docs/evidence/phase1-mvp-nucleus-smoke-2026-09-17.md",
-        "sha256": "56cea1036439d493c23c9a377f961add44b94d106c88c9b2b6b124e40a009e80",
-        "bytes": 7948
-      },
-      {
-        "path": "docs/evidence/phase2-contract-spike-2026-09-17.md",
-        "sha256": "59e5dfe1d7e2150e8a54fe12905d2f943796f3847078d0aa0c1dd3c15ba87a8b",
-        "bytes": 3068
+        "path": "docs/evidence/phase0-v018-rebaseline-2026-09-19.md",
+        "sha256": "50b28dadd93ed3e054557e68c0e55912d4fa2db0632e20d9b238e0754c01da70",
+        "bytes": 1362
       },
       {
         "path": "index.html",
@@ -364,8 +369,8 @@
       },
       {
         "path": "scripts/generate-control.mjs",
-        "sha256": "3cada8c88c6cbb6138346676d9ad9101e9f4be81e09fa22924b49b6919b7cd85",
-        "bytes": 15634
+        "sha256": "1cb8d1a6fe97a6b3013cb02567e9202a2cf0e457dda07f4c2e85063fb0f80a74",
+        "bytes": 15380
       },
       {
         "path": "scripts/license-audit.mjs",
@@ -374,8 +379,8 @@
       },
       {
         "path": "scripts/ordinary-use-benchmark.mjs",
-        "sha256": "8ab0011b38532925e62715915d41d4b5b9473e2ec0027380eac1ec6de29d0691",
-        "bytes": 6428
+        "sha256": "70d136fa036afc122b0e427c42bb779fe1a94ea3e80f4a885d6e828f9430f536",
+        "bytes": 5104
       },
       {
         "path": "scripts/preview-effect-fixture.mjs",
@@ -409,8 +414,8 @@
       },
       {
         "path": "scripts/structure-audit.mjs",
-        "sha256": "333cf899c846491d87a81ad4388effa324cc2ea8fe8fa28e0e25ce1b9f4ffeba",
-        "bytes": 7114
+        "sha256": "bb8273c5dd2ef614f65409808351db3ccd5d3bce3e9698ebaafcf2120a392e5a",
+        "bytes": 7125
       },
       {
         "path": "scripts/sync-loopback-fixture.mjs",
@@ -831,6 +836,16 @@
         "path": "src/core/incremental-repository.ts",
         "sha256": "baf8ac60f2322aff433c485cf4a100c80e0393af43fccb27e6c74a7e6198242c",
         "bytes": 11372
+      },
+      {
+        "path": "src/core/launchpad-transplant.test.ts",
+        "sha256": "a7d0b78460b48289a3de629a1b504afa14f6710c17f5dd9045c8cd72eca3b414",
+        "bytes": 1971
+      },
+      {
+        "path": "src/core/launchpad-transplant.ts",
+        "sha256": "9fe9a73c630a85c9d58e7f400f72bfed98762a30711cc01ffa7e698cb6f37aac",
+        "bytes": 3045
       },
       {
         "path": "src/core/lenses.test.ts",
