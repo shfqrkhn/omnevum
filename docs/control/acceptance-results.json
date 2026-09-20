@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "12540fd650cb014b435e5ac3ab512e98014eaf1b4452d84c690c9405fd1ae931"
+      "sha256": "8f3c5ac3d179e661bfa69296a280ba0d5c4e6b836f43d0ac1cf2d43fd04b17fd"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -1728,8 +1728,10 @@
         "line": 4260
       },
       "text": "One canonical savings account and one recurring monthly surplus are linked to an emergency reserve, retirement goal, FIRE goal, home goal, and vacation goal. The records are stored once; each goal sees the same underlying source values through typed relationships; explicit allocations prevent exclusive dollars from being multiply claimed; and changing the balance or surplus automatically updates every materially dependent trajectory.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-compact-mobile-and-benchmark-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-160",
@@ -1738,8 +1740,10 @@
         "line": 4262
       },
       "text": "A user changes a planned vacation's estimated cost/date in the Travel-owned plan. Finance receives only the authorized financial projection, updates the vacation funding requirement and cash-flow forecast, recalculates affected home/retirement/FIRE trajectories where the shared resource conflict is material, and leaves itinerary/travel semantics under the Travel owner.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-compact-mobile-and-benchmark-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-161",
@@ -1748,8 +1752,10 @@
         "line": 4264
       },
       "text": "A compensation change is imported from a supported Work/pay source. Without duplicate entry, Omnevum updates actual/forecast income, budget capacity, savings rate, debt capacity, retirement contributions/trajectory, FIRE trajectory, and other dependent goals. The impact view identifies the common originating change and does not represent each downstream update as an independent source fact.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-compact-mobile-and-benchmark-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-162",
@@ -1758,8 +1764,10 @@
         "line": 4266
       },
       "text": "A user-defined FIRE goal is modeled as a composite dependency graph containing at least observed savings/investments, a spending assumption, contribution rate, retirement/FIRE date, and at least one current-rule or user-assumption input. Changing one assumption recomputes the model, preserves the prior scenario for comparison, labels assumptions versus facts, and does not present FIRE as a recommended objective or one magic-number truth.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-compact-mobile-and-benchmark-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-163",
@@ -1768,8 +1776,10 @@
         "line": 4268
       },
       "text": "A constrained monthly surplus cannot fully fund all active goals. Omnevum detects the shared-resource conflict once, shows the aggregate shortfall and affected goals, and prepares multiple feasible alternatives that preserve user-defined hard constraints. It does not silently lower a goal priority, double-count the same dollar, or optimize to a hidden score.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-compact-mobile-and-benchmark-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-164",
@@ -1778,8 +1788,10 @@
         "line": 4270
       },
       "text": "A candidate intervention has supported positive effects on two goals and a modeled downside on a third domain. Omnevum surfaces both the synergy and conflict, identifies evidence/assumption status for each edge, and preserves the option to take no action. A merely correlated historical pattern is not promoted to a causal synergy claim.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-compact-mobile-and-benchmark-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-165",
@@ -1788,8 +1800,10 @@
         "line": 4272
       },
       "text": "A material canonical record is corrected or removed. Dependency traversal identifies every materially affected authorized projection across at least three different lenses/domains, recomputes safe derived state, invalidates uncertain outputs, and presents one concise change-impact explanation without requiring manual cross-module repair.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-compact-mobile-and-benchmark-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-166",
@@ -1798,8 +1812,10 @@
         "line": 4274
       },
       "text": "Cross-domain relationship discovery is tested with one deterministic high-confidence link, one ambiguous link, and one prohibited/out-of-scope source. The deterministic reversible link is created automatically, the ambiguous link remains a proposal/UNKNOWN until resolved, and the excluded source contributes no relationship or inference. Link creation alone grants no new permission or disclosure authority.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-compact-mobile-and-benchmark-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-167",
@@ -1808,8 +1824,10 @@
         "line": 4276
       },
       "text": "A dependency graph contains both an accidental cycle and an intentionally modeled feedback loop. Ordinary propagation detects and quarantines the accidental cycle without recursion, oscillation, arbitrary last-write ordering, or canonical corruption. The intentional loop executes only inside a Model with explicit state/time, assumptions, termination/convergence and failure behavior; a non-convergent run is reported rather than forced to a value. Scenario edges remain isolated from the adopted baseline.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-compact-mobile-and-benchmark-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-168",
@@ -1843,8 +1861,10 @@
         "line": 4282
       },
       "text": "Suspicious-transaction evaluation includes an authenticated/user-initiated transfer that contextual evidence indicates may be scam-induced, a familiar-merchant high-impact anomaly, and a benign anomaly. Finance does not treat authentication/familiarity as proof of legitimacy, keeps possible scam/coercion distinct from confirmed unauthorized activity, learns the benign resolution only within its valid scope, measures false-positive/observable missed-known-issue behavior when enough history exists, and never treats absence of an alert as proof of safety.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-compact-mobile-and-benchmark-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-171",
@@ -1853,8 +1873,10 @@
         "line": 4284
       },
       "text": "A long-horizon retirement/FIRE scenario uses investment balances, contributions, withdrawals, inflation, fees, taxes, and a retirement date. The projection keeps nominal/real and pre/post-tax bases consistent, exposes sequence/path and longevity assumptions, preserves deterministic and stochastic/sensitivity outputs as model results rather than facts, and shows how changing one assumption propagates through the connected goal portfolio without silently changing the user's adopted plan.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-compact-mobile-and-benchmark-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-172",
@@ -1863,8 +1885,10 @@
         "line": 4286
       },
       "text": "A generated first-party package or durable workflow is handed to a fresh qualified engineer without chat history or this MPES. Its native project/spec/manifest and referenced public contracts contain or enforce the applicable local truth, authority, privacy/security, accessibility, update/invalidation, verification, recovery, versioning, maintenance, retirement, and onward-descendant obligations needed to continue correctly. A generated non-self-executing artifact that cannot carry such behavior is instead protected by an explicit generation/validation/update boundary; no applicable requirement disappears merely because the descendant medium is simpler.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-compact-mobile-and-benchmark-2026-09-20.md"
+      ]
     },
     {
       "id": "OMN-ACC-173",
