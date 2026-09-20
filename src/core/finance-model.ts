@@ -394,7 +394,10 @@ export interface FinanceSourceClassification {
 }
 
 export function classifyFinanceSource(name: string, headers: readonly string[] = []): FinanceSourceClassification {
-  const haystack = `${name} ${headers.join(" ")}`.toLocaleLowerCase("en-CA");
+  const haystack = `${name} ${headers.join(" ")}`
+    .toLocaleLowerCase("en-CA")
+    .replace(/[_-]+/gu, " ")
+    .replace(/\s+/gu, " ");
   const candidates: Array<[FinanceSourceClass, string, string]> = [
     ["CREDIT_CARD", "credit card|card statement|visa|mastercard|amex", "credit-card terminology"],
     ["INVESTMENT", "investment|broker|brokerage|holding|portfolio|market value", "investment terminology"],

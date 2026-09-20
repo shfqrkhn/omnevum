@@ -107,6 +107,7 @@ describe("shared Finance/Synergy model", () => {
 
   it("keeps source-class/parser drift, recurrence, anomaly, forecast, and quality state explicit", () => {
     expect(classifyFinanceSource("March credit card statement.csv", ["Date", "Description", "Amount"]).sourceClass).toBe("CREDIT_CARD");
+    expect(classifyFinanceSource("credit-card-statement.csv", ["StatementBalance", "DueDate", "MinimumDue"]).sourceClass).toBe("CREDIT_CARD");
     const profile = { id: "profile-1", sourceClass: "TRANSACTION_ACCOUNT" as const, requiredHeaders: ["date", "description", "amount"], headerFingerprint: "amount|date|description", signConvention: "SIGNED_AMOUNT" as const };
     expect(detectFinanceParserDrift(profile, ["Date", "Description", "Amount"]).status).toBe("STABLE");
     expect(detectFinanceParserDrift(profile, ["Date", "Description", "Debit", "Credit"]).status).toBe("DRIFT");
