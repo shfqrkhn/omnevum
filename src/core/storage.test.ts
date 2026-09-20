@@ -351,10 +351,43 @@ describe("CanonicalStore", () => {
     expect((await store.getSearchHealth()).valid).toBe(true);
 
     const health = await store.health();
-    expect(health.storage).toMatchObject({ pressure: "ELEVATED", persistence: "GRANTED", reclaimedDerivedState: true });
+    expect(health.storage).toMatchObject({ pressure: "ELEVATED", persistence: "GRANTED", reclaimedDerivedState: false });
     expect(await store.get(original.id)).toEqual(original);
-    expect(await store.getSearchHealth()).toMatchObject({ valid: false, invalidReason: "PRESSURE_RECLAIM" });
+    expect(await store.getSearchHealth()).toMatchObject({ valid: true });
     store.close();
+  });
+
+  it("does not reclaim a repaired derived index repeatedly during one pressure episode", async () => {
+    let usageBytes = 10;
+    const databaseName = `omnevum-test-${Date.now()}-pressure-episode`;
+    const store = new CanonicalStore(databaseName, {
+      estimateStorage: async () => ({ usageBytes, quotaBytes: 100 })
+    });
+    await store.open();
+    const original = record("record-pressure-episode");
+    await store.put(original);
+    await store.search("hello");
+    expect((await store.getSearchHealth()).valid).toBe(true);
+
+    usageBytes = 90;
+    const elevated = await store.health();
+    expect(elevated.storage).toMatchObject({ pressure: "ELEVATED", reclaimedDerivedState: true });
+    expect((await store.getSearchHealth()).valid).toBe(false);
+
+    await store.rebuildSearchIndex();
+    expect((await store.getSearchHealth()).valid).toBe(true);
+    const repaired = await store.health();
+    expect(repaired.storage).toMatchObject({ pressure: "ELEVATED", reclaimedDerivedState: false });
+    expect((await store.getSearchHealth()).valid).toBe(true);
+    expect(await store.get(original.id)).toEqual(original);
+    store.close();
+
+    const reopened = new CanonicalStore(databaseName, { estimateStorage: async () => ({ usageBytes, quotaBytes: 100 }) });
+    await reopened.open();
+    await reopened.rebuildSearchIndex();
+    expect((await reopened.getSearchHealth()).valid).toBe(true);
+    expect((await reopened.health()).storage).toMatchObject({ pressure: "ELEVATED", reclaimedDerivedState: false });
+    reopened.close();
   });
 
   it("can retry persistent storage from an explicit recovery action", async () => {

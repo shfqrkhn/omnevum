@@ -174,6 +174,8 @@ export class CanonicalStore {
   private database: IDBDatabase | null = null;
   private persistence: PersistenceState = "UNAVAILABLE";
   private changeChannel: BroadcastChannel | null = null;
+  private pressureEpisode: "NORMAL" | "ELEVATED" | "UNKNOWN" = "UNKNOWN";
+  private pressureReclaimed = false;
   private readonly changeListeners = new Set<(change: CanonicalStoreChange) => void>();
 
   public constructor(private readonly databaseName = "omnevum-canonical-v1", private readonly options: CanonicalStoreOptions = {}) {}
@@ -561,7 +563,7 @@ export class CanonicalStore {
 
   public async health(): Promise<StoreHealth> {
     const storage = await this.readStorageHealth();
-    const reclaimedDerivedState = storage?.pressure === "ELEVATED" ? await this.reclaimDerivedState() : false;
+    const reclaimedDerivedState = await this.reclaimDerivedStateForPressure(storage);
     const [records, history, search, artifacts, effects] = await Promise.all([
       this.list(true),
       this.history(),
@@ -829,6 +831,11 @@ export class CanonicalStore {
 
   public async rebuildSearchIndex(): Promise<void> {
     await this.rebuildSearchIndexInternal();
+    const storage = await this.readStorageHealth();
+    if (storage?.pressure === "ELEVATED") {
+      this.pressureEpisode = "ELEVATED";
+      this.pressureReclaimed = true;
+    }
   }
 
   public async reclaimDerivedState(): Promise<boolean> {
@@ -836,6 +843,7 @@ export class CanonicalStore {
     transaction.objectStore(SEARCH_STORE).clear();
     transaction.objectStore(SEARCH_META_STORE).put({ id: "default", version: SEARCH_INDEX_VERSION, valid: false, invalidReason: "PRESSURE_RECLAIM" } satisfies SearchIndexMeta);
     await transactionDone(transaction);
+    this.pressureReclaimed = true;
     return true;
   }
 
@@ -939,7 +947,18 @@ export class CanonicalStore {
 
   private async reclaimDerivedStateUnderPressure(): Promise<void> {
     const storage = await this.readStorageHealth();
-    if (storage?.pressure === "ELEVATED") await this.reclaimDerivedState();
+    await this.reclaimDerivedStateForPressure(storage);
+  }
+
+  private async reclaimDerivedStateForPressure(storage: Omit<NonNullable<StoreHealth["storage"]>, "reclaimedDerivedState"> | undefined): Promise<boolean> {
+    const pressure = storage?.pressure ?? "UNKNOWN";
+    if (pressure !== this.pressureEpisode) {
+      this.pressureEpisode = pressure;
+      this.pressureReclaimed = false;
+    }
+    if (pressure !== "ELEVATED" || this.pressureReclaimed) return false;
+    await this.reclaimDerivedState();
+    return true;
   }
 
   private async readStorageHealth(): Promise<Omit<NonNullable<StoreHealth["storage"]>, "reclaimedDerivedState"> | undefined> {
