@@ -14,7 +14,7 @@
     },
     "package": {
       "path": "package.json",
-      "sha256": "9130933db8abbb786d3bc807d0e14c35024fb67d7c30f07fe8a851947ee57756"
+      "sha256": "12540fd650cb014b435e5ac3ab512e98014eaf1b4452d84c690c9405fd1ae931"
     },
     "lockfile": {
       "path": "package-lock.json",
@@ -174,12 +174,12 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "915bdbc456747aff0e69497deb149949381aa846ee8276907e0ba2f52373409c",
+        "sha256": "b40fccc8d20babdbcd917f2249c66fd07207917683b2c0a350606b3b4a5d38d0",
         "bytes": 110827
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
-        "sha256": "be88cf93c78b207666c0e509b9508bb65fa4039ce069b1a704023c635f90a1f3",
+        "sha256": "a5600975e8f7f28390fe783a09351c45aa337f036b7e64a5ecf9d214cafb3b0f",
         "bytes": 92597
       },
       {
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "b4ca20cf4e20237858d047e2f50b423198a81c8873e0c1e9811023495c4ffc69",
-        "bytes": 2862
+        "sha256": "94123458ef6814b44af4e70e10fa028a41382039d018697a7e25b8e9ea5138c4",
+        "bytes": 3150
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -219,7 +219,7 @@
       },
       {
         "path": "docs/control/dependency-sbom.json",
-        "sha256": "80d9451360ec1777e845498f4b881b6f28f26b26827f3cae219485e1555b1ce4",
+        "sha256": "41b717fcd466c93b53244e5819f45e201bf2e85cef855dffb85499585704b8da",
         "bytes": 35272
       },
       {
@@ -269,12 +269,12 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "7a2459d8b99a6836feb82d87619f4ebe50f55af41a55cb1712eade9a01637ed5",
-        "bytes": 8685
+        "sha256": "a4276966ae1c18a47ebdf178e73ecdf38677f3371f3eb6f341b0547876f4de67",
+        "bytes": 8787
       },
       {
         "path": "docs/control/requirements.json",
-        "sha256": "05563829db10c71b3d33996b019720b80f17a4f894404a0b18c3eddab0b1d8b2",
+        "sha256": "6d4f4ed9c5f5f7fd2220aeeae21cbb0cccb17b53492d9c81fa3d082c32931fc2",
         "bytes": 376120
       },
       {
@@ -439,8 +439,8 @@
       },
       {
         "path": "package.json",
-        "sha256": "9130933db8abbb786d3bc807d0e14c35024fb67d7c30f07fe8a851947ee57756",
-        "bytes": 2018
+        "sha256": "12540fd650cb014b435e5ac3ab512e98014eaf1b4452d84c690c9405fd1ae931",
+        "bytes": 2129
       },
       {
         "path": "public/icon.svg",
@@ -539,8 +539,8 @@
       },
       {
         "path": "scripts/stamp-service-worker.test.mjs",
-        "sha256": "83f18f15ccb21f24fee9084836d81e0b7b03e87f5d29f01a1d6c17ccf07cde1e",
-        "bytes": 1610
+        "sha256": "071a5a6f9d917b21068383070d4e470ee8762f0729f4ec1fe6baf80ea0d252bf",
+        "bytes": 2409
       },
       {
         "path": "scripts/static-audit.mjs",
