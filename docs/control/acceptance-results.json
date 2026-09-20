@@ -256,8 +256,11 @@
         "line": 3979
       },
       "text": "A fresh AI engineer creates a nontrivial game using the same package/lifecycle infrastructure and proves save/resume, touch input, responsive behavior, and Recovery.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-factory-preview-2026-09-19.md"
+      ],
+      "notes": "The current factory contract, deterministic game preview, canonical package-state save/load, and interruption/resume benchmark pass. Native touch, full target matrix, independent game-save Recovery, and human acceptance remain open."
     },
     {
       "id": "OMN-ACC-021",
@@ -598,8 +601,11 @@
         "line": 4045
       },
       "text": "A fresh AI engineer defines an ordinary record-oriented first-party package using package/domain schema plus Omnevum capability declarations and obtains a generated baseline list/detail/form/capture experience with responsive, accessible, localized, themed behavior. The generated UI contains no direct-store or permission bypass and can be replaced by a specialized hand-composed workflow without data migration.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-factory-preview-2026-09-19.md"
+      ],
+      "notes": "The generated declarative package definition, localized fields, baseline form/list surface, canonical CommandBus capture, and local production-preview record are proven. Full responsive/accessibility/theme qualification and specialized replacement/no-migration proof remain open."
     },
     {
       "id": "OMN-ACC-054",

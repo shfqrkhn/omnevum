@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "c1db537f7221c5bbb51f31c3455917ba2e4e55d17af98bd8523e131454710f73",
-        "bytes": 105754
+        "sha256": "a720a5ab147299fffcb90f972d56fbd982741e5b7b16a2b74a2870085b3f7876",
+        "bytes": 106439
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "951c5c453d11792cebc9aa5b0ab2a5bd53d4587f8b8398aebdfa7ecc35eaaf9f",
-        "bytes": 4399
+        "sha256": "3fd131e1a74ced7e9ac8449578034d5113a56e2f7321bc4db4bc304ffe44a9d8",
+        "bytes": 4535
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "f43fe0002a714e5877a6cb513289f32a89e1b836b42441b4e541fd5ec97c52b4",
-        "bytes": 6561
+        "sha256": "26a5d6c9a736fd0a4b936674c50e11fd3eff10466d95b7f69ac49f04cadf9a63",
+        "bytes": 6972
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -264,8 +264,8 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "9fff260c98a5241866996e7a7c0ab7921480f1c4d03a528070a7ed730a2ed951",
-        "bytes": 2796
+        "sha256": "947750735d0c44bcc71f0edc041c060beac032dfba0b50b5a95387c6c1fa102a",
+        "bytes": 2850
       },
       {
         "path": "docs/control/release-evidence.json",
@@ -321,6 +321,11 @@
         "path": "docs/evidence/phase0-donor-workload-qualification-2026-09-19.md",
         "sha256": "9be5ef65a8f3c85963ffc38bf736c19d0746a4bebe076bf99869791e9d78d652",
         "bytes": 4934
+      },
+      {
+        "path": "docs/evidence/phase0-factory-preview-2026-09-19.md",
+        "sha256": "1d65cbb3455617606f3bac5796043946879d6d87a80eec227d35c611d54d45f8",
+        "bytes": 2572
       },
       {
         "path": "docs/evidence/phase0-fresh-agent-resumption-2026-09-19.md",
