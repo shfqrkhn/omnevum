@@ -51,8 +51,10 @@
         "line": 3943
       },
       "text": "After the app shell is cached, the user performs core local workflows offline and sees explicit degradation only for capabilities that actually require network access.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/evidence/phase0-browser-qa-current-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-003",

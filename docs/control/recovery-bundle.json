@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "cdfdf54943ed10e3a1db07c43e5a472e65a437c663c0520ad7c59828a0ef5ba8",
-        "bytes": 101762
+        "sha256": "c3d00fa3c17aeab74df8d0f341f87cc60341c2f50b92212fc4ca0d486d13df56",
+        "bytes": 101833
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "9074bc92a8a5b28df0f25b8cf48def410e3d0c3f140730ae3136ee342c3b705a",
-        "bytes": 2496
+        "sha256": "d2500462f4419bd160f5e5408865563ec64ee44d1fc897f9c32dcc90ec874bfa",
+        "bytes": 2529
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -264,13 +264,13 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "ad07db2c183be8f51796390655e75a010adbdd7050e7185d4e7645bc275ccc0c",
-        "bytes": 1790
+        "sha256": "72f9aadacf99b0ee986d8e42df948e76cf936ba05e027dcf3ca5933eed725d06",
+        "bytes": 1885
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "c9f82aea6847ffc85fec80296ed4309cace904b9507266e920ebae7ecae76eaf",
-        "bytes": 3069
+        "sha256": "87527150e5c81cd24a99fd2df9bac2c99725f9ccfdf2d996e3766fdda5280676",
+        "bytes": 3143
       },
       {
         "path": "docs/control/requirements.json",
@@ -298,6 +298,11 @@
         "bytes": 2581
       },
       {
+        "path": "docs/evidence/phase0-browser-qa-current-2026-09-19.md",
+        "sha256": "55c15236c4f648c662010ff0a8989d14b19de5eb92e0ad590034db89f7d48ce9",
+        "bytes": 1602
+      },
+      {
         "path": "docs/evidence/phase0-donor-characterization-2026-09-19.md",
         "sha256": "38426d766e5515e1cae0e3e8b29ca6ac1b2318eec51426aed7ce56821380ae55",
         "bytes": 3411
@@ -309,8 +314,8 @@
       },
       {
         "path": "docs/evidence/phase0-pages-deployment-2026-09-19.md",
-        "sha256": "1f354379b6a7d3c1eb1a66e89f32904f62c8f8687dd3d4948400a3e3fbe226a4",
-        "bytes": 1823
+        "sha256": "3d28d61a75fec1e1b64d78a21b9a938dbfe3c49f8a0f86e0d50899a0d97a5b6c",
+        "bytes": 2156
       },
       {
         "path": "docs/evidence/phase0-v018-rebaseline-2026-09-19.md",
