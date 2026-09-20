@@ -46,6 +46,7 @@ const current = {
   compactDisclosureCount: count(currentApp, /<(?:details) id="(?:search|review|records)"[^>]*class="panel compact-panel"/gu),
   compactPrimarySurfaceCount: count(currentApp, /<details id="(?:active-lens|search|review|records)"/gu),
   financeHandlerConfirmations: count(handlerBody(currentApp), /requestConfirmation\(/gu),
+  financeProfileReviewConfirmation: currentApp.includes("Review and save the changed Finance parser profile") && currentApp.includes("profileReview"),
   financeBatchOwner: currentApp.includes("acceptFinanceBatch"),
   financeBatchFileInput: /id="finance-import-file"[^>]*\bmultiple\b/gu.test(currentApp),
   financePerSourceReview: currentApp.includes("sourceResults.flatMap")
@@ -54,7 +55,7 @@ const current = {
 assert(current.requiredCaptureFields.length > 0, "Capture has no required user field");
 assert(current.requiredFinanceFields.length > 0, "Finance has no required source field");
 assert(current.defaultNavigation.includes("assistant"), "bounded Assistant is missing from default reachable surfaces");
-assert(current.financeHandlerConfirmations === 1, "Finance acceptance must retain one explicit confirmation boundary");
+assert(current.financeHandlerConfirmations >= 1 && current.financeProfileReviewConfirmation, "Finance acceptance must retain a batch confirmation and an explicit changed-parser-profile review boundary");
 assert(current.financeBatchOwner && current.financeBatchFileInput, "current Finance flow is not batch-capable");
 assert(current.financePerSourceReview, "batch flow must retain per-source review output");
 assert(current.compactDisclosureCount === 3 && current.compactPrimarySurfaceCount === 4, "compact primary disclosures are incomplete");
@@ -70,6 +71,7 @@ const benchmark = {
     requiredUserFields: current.requiredFinanceFields.length,
     manualClassifications: current.manualClassificationFields,
     confirmations: current.financeHandlerConfirmations,
+    profileReviewConfirmation: current.financeProfileReviewConfirmation,
     reviewItems: monthlySources,
     navigationSteps: 2,
     reconciliationMaintenanceSubmissions: current.financeHandlerConfirmations
@@ -78,7 +80,7 @@ const benchmark = {
     "Capture/Search remain in the default navigation spine.",
     "Assistant is reachable from the default navigation while its low-frequency body remains collapsed and honestly disabled without a provider.",
     "The batch form preserves required Finance fields and derives source classification.",
-    "One confirmation covers the batch while source-level reconciliation and limitations remain reviewable.",
+    "One confirmation covers the routine batch while a changed parser profile receives a separate explicit review; source-level reconciliation and limitations remain reviewable.",
     "Compact disclosures preserve the complete forms and canonical command owners."
   ],
   limitations: [
