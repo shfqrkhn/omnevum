@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "43878b955bf32825382cf4d66b8a37f1c9596f61feea0ad0e1d5ac46ca61e38b",
-        "bytes": 5539
+        "sha256": "169d73e90628df27d72b0f9f394a9d521901211ec583583a015366a9286b3cff",
+        "bytes": 5956
       },
       {
         "path": "docs/control/requirements.json",
@@ -304,8 +304,8 @@
       },
       {
         "path": "docs/evidence/phase0-browser-qa-current-2026-09-19.md",
-        "sha256": "90d3052c3107a5bb55ec07b68d10f3cfe069a72dc5a785e115fac681e13923b0",
-        "bytes": 6231
+        "sha256": "30e996a2b620ee70f92a832367265cefd0c1e39174f382b91235d20945554a31",
+        "bytes": 7225
       },
       {
         "path": "docs/evidence/phase0-donor-characterization-2026-09-19.md",

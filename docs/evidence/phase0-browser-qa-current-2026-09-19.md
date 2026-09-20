@@ -52,3 +52,10 @@ This receipt supports only partial offline/deployment/responsive evidence. It is
 - `scrollWidth === clientWidth` at both phone rows (`390` and `320`). A real Capture submission created one Review item and updated the hidden health snapshot; no horizontal overflow occurred.
 - At `1440x900`, compact layout retained a `1180px` main/navigation width and `scrollWidth === clientWidth` (`1425` observed client width). Desktop ordering was unchanged.
 - This qualifies the compact first-screen presentation and primary Capture interaction only. It is not Safari/WebKit, Firefox, assistive-technology, touch-hardware, quota/corruption/migration, cross-origin Vault, rollback, security/egress, or human-acceptance proof.
+
+## Hosted compact-mobile deployment
+
+- Source/deployment revision: `d4b24ce62d336b12a3bb6b2efaa1653ed448eb15`; Pages workflow [35485154851](https://github.com/shfqrkhn/omnevum/actions/runs/35485154851); target [https://shfqrkhn.github.io/omnevum/](https://shfqrkhn.github.io/omnevum/).
+- The repository CI workflow [35485154843](https://github.com/shfqrkhn/omnevum/actions/runs/35485154843) and Pages build/deploy plus published-entry smoke test completed successfully.
+- Independent HTTP verification returned `200` and exact byte/SHA-256 matches for all 8 artifact files: `index.html`, CSS, JS, source map, icon, manifest, recovery page, and service worker. Artifact digest: `6aa7c2ac90a36359965091957299e78b924d149754df3cb773d9050428752fe8`; service-worker cache: `omnevum-shell-f731757bbae3c4cb`.
+- This confirms deployment integrity for the compact-mobile candidate only; it does not close browser-family, storage-fault, cross-origin Vault, rollback, security, or human-acceptance gates.
