@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "86ba80de0b8e8bdc12066653bff8242fd571a460eb3b6f22b7d4a76821fb5b7e",
-        "bytes": 3036
+        "sha256": "c9f82aea6847ffc85fec80296ed4309cace904b9507266e920ebae7ecae76eaf",
+        "bytes": 3069
       },
       {
         "path": "docs/control/requirements.json",
@@ -299,8 +299,8 @@
       },
       {
         "path": "docs/evidence/phase0-launchpad-workload-2026-09-19.md",
-        "sha256": "208b86f0ef278bacec1180a6b8af4e201ab395e0df0d2b04a1dfa444c5cc8269",
-        "bytes": 2962
+        "sha256": "d26345573b9be14bb924dd20e114c65dfb5857c2781e6d1ea9ee621f63e438e3",
+        "bytes": 3191
       },
       {
         "path": "docs/evidence/phase0-pages-deployment-2026-09-19.md",
