@@ -22,8 +22,8 @@
     }
   },
   "repository": {
-    "revision": "e09de2224a60ebe25c8fadc41085245649f5f2ab",
-    "revisionPolicy": "generation-base-commit-retained-until-divergence",
+    "revision": "2d0d7d3b68e74f0fcd185de1688abad97f8f6186",
+    "revisionPolicy": "exact-head-at-generation",
     "pathsAreRepositoryRelative": true,
     "secretsIncluded": false
   },
@@ -269,7 +269,7 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "ad7328e404d36c00ab08fd3aa2862e2fe6803e4538065180036048f85516fe1b",
+        "sha256": "b6c637c4ffe5add938968bedabd837b067d6df24716413f9d15105699817c83a",
         "bytes": 1502
       },
       {
@@ -369,8 +369,8 @@
       },
       {
         "path": "scripts/generate-control.mjs",
-        "sha256": "1cb8d1a6fe97a6b3013cb02567e9202a2cf0e457dda07f4c2e85063fb0f80a74",
-        "bytes": 15380
+        "sha256": "8dfca111e55bd98d2b28132c82b419550cce963167a6db80d4cb60ccb845fe25",
+        "bytes": 14766
       },
       {
         "path": "scripts/license-audit.mjs",
@@ -389,8 +389,8 @@
       },
       {
         "path": "scripts/recovery-audit.mjs",
-        "sha256": "91e5fb39fd61f8c808fa844c52e6f11d04b4a9a94b1dca4876d08f69002e5fe1",
-        "bytes": 3016
+        "sha256": "48503cda436b689d5743aa426b93f6ad92f9421d1606f0e815e09e2c94258de5",
+        "bytes": 2992
       },
       {
         "path": "scripts/reference-audit.mjs",

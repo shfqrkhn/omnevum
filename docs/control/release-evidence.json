@@ -6,7 +6,7 @@
   "releaseIdentity": {
     "version": "v0.18.0-overhaul-unreleased",
     "artifactDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "sourceRevision": "631cac1",
+    "sourceRevision": "2d0d7d3",
     "serviceWorkerCache": "omnevum-shell-0185ac748cc5a004"
   },
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF.",
