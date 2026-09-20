@@ -2123,9 +2123,12 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       label.className = "check-row";
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
+      checkbox.id = `presentation-lens-${id}`;
+      checkbox.name = "lensPin";
       checkbox.checked = presentation.lensPins.includes(id);
       checkbox.value = id;
       checkbox.dataset.presentationLensPin = "true";
+      label.htmlFor = checkbox.id;
       label.append(checkbox, document.createTextNode(PRESENTATION_LENS_DEFINITIONS[id].label));
       row.append(label);
       lensPinOptions.append(row);
@@ -2303,10 +2306,13 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         label.className = "check-row";
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
+        checkbox.id = `presentation-${optionName}-${id}`;
+        checkbox.name = `${optionName}Visibility`;
         checkbox.checked = visible.includes(id);
         checkbox.disabled = required.includes(id);
         checkbox.dataset.presentationVisibility = optionName;
         checkbox.value = id;
+        label.htmlFor = checkbox.id;
         label.append(checkbox, document.createTextNode(labelFor(id)));
         const actions = document.createElement("span");
         actions.className = "presentation-order-actions";
@@ -3580,8 +3586,11 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       selectLabel.className = "check-row triage-select-row";
       const select = document.createElement("input");
       select.type = "checkbox";
+      select.id = `triage-select-${record.id}`;
+      select.name = "triageSelection";
       select.checked = selectedTriageIds.has(record.id);
       select.setAttribute("aria-label", copy.triageSelectItem(recordText(record)));
+      selectLabel.htmlFor = select.id;
       select.addEventListener("change", () => {
         if (select.checked) selectedTriageIds.add(record.id);
         else selectedTriageIds.delete(record.id);
@@ -3628,6 +3637,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       updateTriage("REVIEWED", copy.markReviewed);
       const deferUntil = document.createElement("input");
       deferUntil.type = "datetime-local";
+      deferUntil.id = `triage-defer-until-${record.id}`;
+      deferUntil.name = "triageDeferUntil";
       deferUntil.setAttribute("aria-label", copy.deferUntil);
       deferUntil.value = new Date(Date.now() + 24 * 60 * 60 * 1000 - new Date().getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 16);
       const defer = document.createElement("button");
@@ -3648,6 +3659,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const targets = linkTargets.filter((target) => target.id !== record.id);
       if (targets.length > 0) {
         const targetSelect = document.createElement("select");
+        targetSelect.id = `triage-link-target-${record.id}`;
+        targetSelect.name = "triageLinkTarget";
         targetSelect.setAttribute("aria-label", copy.targetRecord);
         for (const target of targets) {
           const option = document.createElement("option");
@@ -3670,6 +3683,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         actions.append(targetSelect, link);
       }
       const routeSelect = document.createElement("select");
+      routeSelect.id = `triage-route-${record.id}`;
+      routeSelect.name = "triageRoute";
       routeSelect.setAttribute("aria-label", copy.route);
       for (const [value, label] of [["note", copy.note], ["task", copy.task]] as const) {
         const option = document.createElement("option");
@@ -3694,6 +3709,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
       const splitControls = document.createElement("div");
       splitControls.className = "triage-split";
       const splitType = document.createElement("select");
+      splitType.id = `triage-split-type-${record.id}`;
+      splitType.name = "triageSplitType";
       splitType.setAttribute("aria-label", copy.splitKind);
       for (const [value, label] of [["note", copy.note], ["task", copy.task]] as const) {
         const option = document.createElement("option");
@@ -3702,6 +3719,8 @@ export async function mountApp(root: HTMLElement, store: CanonicalStore, command
         splitType.append(option);
       }
       const splitParts = document.createElement("textarea");
+      splitParts.id = `triage-split-parts-${record.id}`;
+      splitParts.name = "triageSplitParts";
       splitParts.rows = 2;
       splitParts.maxLength = 8000;
       splitParts.placeholder = copy.splitHint;

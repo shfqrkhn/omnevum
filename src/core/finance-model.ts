@@ -818,6 +818,7 @@ export function detectFinanceReviewCases(transactions: readonly FinanceTransacti
     const currentAbsolute = absoluteMoneyMinor(transaction.amount.amountMinor);
     const robustOutlier = baseline && baseline.sampleCount >= 3 ? currentAbsolute > BigInt(baseline.upperBound.amountMinor) : false;
     const weakComparisonOutlier = baseline && baseline.sampleCount > 0 && baseline.sampleCount < 3 && currentAbsolute >= BigInt(baseline.medianAmount.amountMinor) * 3n;
+    const weakHighImpact = weakComparisonOutlier && baseline !== undefined && currentAbsolute >= BigInt(baseline.medianAmount.amountMinor) * 10n;
     if (robustOutlier) reasons.push(`amount materially exceeds the ${baseline?.scope === "MERCHANT" ? "merchant's" : "account's"} robust historical range`);
     else if (weakComparisonOutlier) reasons.push("history is insufficient for a robust baseline; the amount comparison is provisional");
     if ((byNaturalKey.get(transaction.naturalKey)?.length ?? 0) > 1) reasons.push("duplicate natural transaction identity appears more than once");
@@ -826,7 +827,7 @@ export function detectFinanceReviewCases(transactions: readonly FinanceTransacti
     if (reasons.length === 0) continue;
     const historyStrength = baseline?.historyStrength ?? "WEAK";
     const confidence: FinanceReviewCase["confidence"] = robustOutlier && historyStrength === "STRONG" || (byNaturalKey.get(transaction.naturalKey)?.length ?? 0) > 1 && accountHistory.length >= 6 ? "HIGH" : baseline && baseline.sampleCount >= 3 ? "MEDIUM" : "LOW";
-    const highImpact = robustOutlier && confidence === "HIGH";
+    const highImpact = (robustOutlier && confidence === "HIGH") || weakHighImpact;
     const sourceIds = [...new Set([transaction.lineage.sourceId, ...baselineTransactions.map((candidate) => candidate.lineage.sourceId)])].sort();
     cases.push({ id: `finance-review:${financeModelKey(transaction.id)}`, transactionId: transaction.id, priority: highImpact ? "HIGH" : reasons.length >= 2 ? "MEDIUM" : "LOW", disposition: "UNRESOLVED", confidence, reasons, sourceIds, ...(baseline ? { baseline } : {}), evidence: { truthClass: "DERIVED", sourceIds: [transaction.id, ...baselineTransactions.map((candidate) => candidate.id)].sort(), note: "Signals require user review and do not establish fraud, authorization, or coercion." } });
   }
@@ -889,6 +890,7 @@ export function evaluateFinanceReviewCases(
       confidence: review?.confidence ?? "LOW",
       reasons: uniqueReasons,
       sourceIds: [...new Set([...(review?.sourceIds ?? []), transaction.lineage.sourceId, ...(context.evidence ?? [])])].sort(),
+      ...(review?.baseline ? { baseline: review.baseline } : {}),
       evidence: { truthClass: "DERIVED", sourceIds: [transaction.id], note: "Context changes review priority and explanation only; it does not prove authorization, coercion, or fraud." }
     });
   }
