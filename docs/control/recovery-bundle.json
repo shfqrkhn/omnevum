@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "8f6a63efb1c9849679545fd3391eb6223176eaa7f60c21632b19b0f125cba5dc",
-        "bytes": 3323
+        "sha256": "ebf8f4ce4657fff8ceea6040ce7d4794eea8dc6e76b54ad27e86e97a2b86311d",
+        "bytes": 3446
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "066e3516497f0c67a237b051a33e96d238cfbd6ea2b4c61eac2e985558f2a2b2",
-        "bytes": 3383
+        "sha256": "e893b817e7326d1a3802b23d5a23d9cf164d143b416ac81c50a910034f55a110",
+        "bytes": 3805
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -269,8 +269,8 @@
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "913d9f8983094b6c1a8204271dcd042842a23c50425e5390b501229c5de6a5e7",
-        "bytes": 4511
+        "sha256": "1ba2df7f7f745c2b6dc3e27e3bd0a74c579b2253ac51f6038ecbd608ca9f6668",
+        "bytes": 4558
       },
       {
         "path": "docs/control/requirements.json",
@@ -304,8 +304,8 @@
       },
       {
         "path": "docs/evidence/phase0-browser-qa-current-2026-09-19.md",
-        "sha256": "f47a37c738a80f16c2e2756ef10c6763abc905ac10502f653af13b3866132a81",
-        "bytes": 1602
+        "sha256": "0a4e21e4eb58a9ad0407bb13f20c6c933f5f4f9332c142f727f86a6633d51b74",
+        "bytes": 2741
       },
       {
         "path": "docs/evidence/phase0-donor-characterization-2026-09-19.md",
@@ -1264,8 +1264,8 @@
       },
       {
         "path": "src/styles.css",
-        "sha256": "3d6e2ff00623302ee186071485df8a1dea4fd8456b51329f0cb688c606d33558",
-        "bytes": 29066
+        "sha256": "eb928e480d9a27a397d617b183a4b950c18c14b7d2dbf48ad9f592a66d4a68bd",
+        "bytes": 29984
       },
       {
         "path": "src/test/setup.ts",
@@ -1274,8 +1274,8 @@
       },
       {
         "path": "src/ui/app.ts",
-        "sha256": "15d9d176b2376917933e3d167d319dec4d114d54cb40986c763ad60c012302db",
-        "bytes": 347855
+        "sha256": "01289211289a8391b3846d4d375785f087679bb157b2d0aca6f6f03627e1d974",
+        "bytes": 347856
       },
       {
         "path": "tsconfig.json",

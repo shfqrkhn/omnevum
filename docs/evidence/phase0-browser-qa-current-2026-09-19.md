@@ -16,3 +16,12 @@
 ## Boundaries
 
 This receipt supports only partial offline/deployment/responsive evidence. It is not a Safari/WebKit, Firefox, assistive-technology, touch-hardware, quota/corruption/migration, cross-origin Vault, rollback, security/egress, or human-acceptance proof. It does not promote a release or `100_PERCENT_COMPLETE` claim.
+
+## Candidate compact-layout verification (pre-deployment)
+
+- Candidate source revision: `048494990cce4ba98f38ce0d8bb744f2b0e37178`.
+- Target: `http://127.0.0.1:4358/` Vite candidate, Codex in-app Chromium tab 46; this is local candidate evidence and does not replace the hosted receipt above.
+- At `390x844`, `768x1024`, and `1440x900`, `document.documentElement.scrollWidth` equaled `clientWidth` (`390`, `753`, and `1425` observed client widths); no horizontal overflow was observed.
+- Compact default rendered the primary navigation as a closed disclosure, and Review and Canonical Records remained closed until explicitly requested. Opening navigation rendered its eight visible links in a grid without overflow; selecting Search opened that section and closed navigation.
+- The desktop content container expanded to `1180px` at the `1280px` desktop viewport while preserving the same no-overflow invariant.
+- This bounded check covers the layout change only; it is not Safari/WebKit, Firefox, assistive-technology, touch-hardware, quota/corruption/migration, cross-origin Vault, rollback, security/egress, or human-acceptance proof.

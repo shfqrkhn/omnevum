@@ -5,20 +5,20 @@
   "authority": "MPES Sections 21 and 22",
   "releaseIdentity": {
     "version": "v0.18.0-overhaul-candidate",
-    "artifactDigest": "ba20418eff8713bab4b70618753ec3738b69760b47ae9d92eedcc944c120c1ba",
-    "sourceRevision": "d2741d19e805940ed344e967a4055d8582e756b1",
-    "serviceWorkerCache": "omnevum-shell-9141a005de18279e"
+    "artifactDigest": "f046f093dea26e87a7d4e367126dc7fef87945b343dcb4622876d8c707d61849",
+    "sourceRevision": "048494990cce4ba98f38ce0d8bb744f2b0e37178",
+    "serviceWorkerCache": "omnevum-shell-38d33a5565348e83"
   },
   "artifactDigestMethod": "SHA-256 of repository-relative UTF-8 lines formatted as dist/relativePath|fileSHA256|byteLength, sorted by deterministic code-point order, separated by LF with no trailing LF.",
   "artifactFiles": [
-    {"path": "dist/assets/index-1nEyWL5r.css", "sha256": "285345490b9c35c9369a7b9de482909a59f6bca805b2413a1acc090202167226", "bytes": 25384},
-    {"path": "dist/assets/index-k10gpYz6.js", "sha256": "58d158741a824e865d52c5af93e7bb601c1ef8eb0464eb8d62119a80f6d91cde", "bytes": 543294},
-    {"path": "dist/assets/index-k10gpYz6.js.map", "sha256": "bceb48a00d792976eea2d78eb109b66e60fdf0b2e09bc5f0c5d5043a50e89214", "bytes": 1554355},
+    {"path": "dist/assets/index-BM_Xb9D6.css", "sha256": "1ba369b90f76b64b833af7215adf95c17b736420586784007578eb3cc83df8dc", "bytes": 26172},
+    {"path": "dist/assets/index-DOSCdEIf.js", "sha256": "d52b0863efb93f328c4ad3af3cff8e8c795d55a2e70986df7f96636c2330f672", "bytes": 543272},
+    {"path": "dist/assets/index-DOSCdEIf.js.map", "sha256": "2e4aec50ad7aaa44650347e3666d52261861a35a68ced68fcaf21367dc4c8b08", "bytes": 1554353},
     {"path": "dist/icon.svg", "sha256": "1ad0c79812f746d185f07861f57c1834689dc856dbebccbb29138853425af13f", "bytes": 301},
-    {"path": "dist/index.html", "sha256": "c553e02d808dedaa6aec193a985868ddd20ecaf4dafa19ce28465ccbd4c87666", "bytes": 933},
+    {"path": "dist/index.html", "sha256": "ec3f6ad353f036564da05690c776fa2ab14d99e6132223f25536eb4c424fb929", "bytes": 933},
     {"path": "dist/manifest.webmanifest", "sha256": "a0116ca453248ab6b553d38bbb3c638deeab7ff3855f96d2a16931e7a4fc1bd4", "bytes": 470},
     {"path": "dist/recovery.html", "sha256": "9f55fd72b899a429660514f6c165d961e7bd664acf3856fffcb1613f35f3aea8", "bytes": 16665},
-    {"path": "dist/sw.js", "sha256": "95eec3adad6c7910a6fd066631e45ea6f11067f3c6a2c7c7663a8c5984a0697e", "bytes": 3594}
+    {"path": "dist/sw.js", "sha256": "9c4f75b05ad39d321f9917cc0cef3bf86a18aecb0c6e4a5317de40d9bca16ecc", "bytes": 3594}
   ],
   "deploymentObservations": [
     {"status": "PASS_WITH_LIMITATIONS", "target": "https://shfqrkhn.github.io/omnevum/", "workflowRun": "https://github.com/shfqrkhn/omnevum/actions/runs/35481320651", "sourceRevision": "542b665b361d579ee6d8e3ab2f331ce3afca5cd6", "artifactByteMatch": "8/8 local dist files matched the served Pages files after switching Pages from legacy master:/ to the Actions artifact source; published-entry smoke guard passed", "date": "2026-09-19"},
@@ -28,5 +28,5 @@
   ],
   "requiredEvidence": ["control-generation-and-drift", "structure-reference-architecture-audit", "type-static-and-unit-tests", "browser-e2e-responsive-accessibility-input-i18n", "offline-static-host-and-service-worker", "storage-quota-corruption-migration-and-recovery", "Vault-cross-origin-restore", "security-egress-untrusted-content-and-credential-boundaries", "dependency-license-SBOM-vulnerability-provenance", "deploy-smoke-rollback", "human-acceptance-where-required"],
   "evidencePolicy": "The clean v0.18 baseline inherits no release artifact or acceptance claim. Each PASS must identify exact source, environment, fixture, command, output, and date; missing evidence remains UNKNOWN.",
-  "currentDecision": "The d2741d1 candidate is deployed and byte-verified on GitHub Pages; it remains not release-ready until launchpad, rollback, offline/update, storage fault, materially different browser-family Vault restore, security, human acceptance, and all mandatory acceptance gates are independently closed."
+  "currentDecision": "The 0484949 candidate is built locally and has not yet been deployed to GitHub Pages; it remains not release-ready until deployment byte verification, launchpad, rollback, offline/update, storage fault, materially different browser-family Vault restore, security, human acceptance, and all mandatory acceptance gates are independently closed."
 }
