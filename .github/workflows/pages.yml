@@ -48,3 +48,21 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Smoke-test published build entry
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            body="$(curl --fail --silent --show-error --location "$PAGE_URL")"
+            if printf '%s' "$body" | grep -Fq './assets/' && ! printf '%s' "$body" | grep -Fq '/src/'; then
+              asset="$(printf '%s' "$body" | sed -n 's/.*src="\(\.\/assets\/[^" ]*\.js\)".*/\1/p' | head -n 1)"
+              test -n "$asset"
+              curl --fail --silent --show-error --location --output /dev/null "${PAGE_URL%/}/$asset"
+              echo "PAGES_PUBLISHED_BUILD_PASS asset=$asset"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "PAGES_PUBLISHED_BUILD_FAIL: published entry was not the built relative artifact" >&2
+          exit 1
