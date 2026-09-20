@@ -1,4 +1,6 @@
-# v0.18.0 current hosted browser QA receipt
+# v0.18.0 hosted browser QA receipts
+
+## Historical baseline receipt
 
 - Date: 2026-09-19 (America/Toronto)
 - Source revision: `542b665b361d579ee6d8e3ab2f331ce3afca5cd6`
@@ -25,3 +27,13 @@ This receipt supports only partial offline/deployment/responsive evidence. It is
 - Compact default rendered the primary navigation as a closed disclosure, and Review and Canonical Records remained closed until explicitly requested. Opening navigation rendered its eight visible links in a grid without overflow; selecting Search opened that section and closed navigation.
 - The desktop content container expanded to `1180px` at the `1280px` desktop viewport while preserving the same no-overflow invariant.
 - This bounded check covers the layout change only; it is not Safari/WebKit, Firefox, assistive-technology, touch-hardware, quota/corruption/migration, cross-origin Vault, rollback, security/egress, or human-acceptance proof.
+
+## Deployed compact-layout qualification
+
+- Source revision: `048494990cce4ba98f38ce0d8bb744f2b0e37178`.
+- Target: [https://shfqrkhn.github.io/omnevum/](https://shfqrkhn.github.io/omnevum/); Pages workflow run [35483960007](https://github.com/shfqrkhn/omnevum/actions/runs/35483960007); live Codex in-app Chromium tab 42.
+- Published artifact: `f046f093dea26e87a7d4e367126dc7fef87945b343dcb4622876d8c707d61849`; all 8 local `dist` files matched the published files by HTTP SHA-256 and byte length. Published entry smoke test passed.
+- Live loaded assets were `assets/index-DOSCdEIf.js` and `assets/index-BM_Xb9D6.css`; the service worker controlled the page.
+- At `390x844`, `768x1024`, and `1440x900`, `scrollWidth === clientWidth` (`390`, `753`, and `1425` observed client widths); navigation, Review, and Records were closed by default, and the compact navigation summary was visible.
+- At the `1440x900` row, the live main and navigation containers were `1180px`; no horizontal overflow was observed. The local interaction proof (open navigation grid, select Search, menu closes and Search opens) remains bounded to the same candidate source and asset behavior.
+- This proves only the compact-layout/deployment slice. Safari/WebKit, Firefox, assistive technology, touch hardware, quota/corruption/migration, cross-origin Vault, rollback, security/egress, and human acceptance remain open.
