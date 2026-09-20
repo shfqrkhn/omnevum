@@ -264,13 +264,13 @@
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "a19822cb015adfc3efa13ab397b6c6e8c105252dd548d3b2acbaead147b8b2d3",
-        "bytes": 2214
+        "sha256": "77ef52ea84836d1a2fdaa1040d48c812b0c882a1136949f87dc1c09bebf750e3",
+        "bytes": 2279
       },
       {
         "path": "docs/control/release-evidence.json",
-        "sha256": "169d73e90628df27d72b0f9f394a9d521901211ec583583a015366a9286b3cff",
-        "bytes": 5956
+        "sha256": "7a017d22a1834092da701f4a98a02c571af30f227b975718845316ef2b8518c9",
+        "bytes": 5949
       },
       {
         "path": "docs/control/requirements.json",
@@ -326,6 +326,11 @@
         "path": "docs/evidence/phase0-launchpad-owner-boundary-2026-09-19.md",
         "sha256": "eaa9be16e4871d4085294709bb08ff80cdb0df26c13ce2c4b7686d8fc3eefda8",
         "bytes": 2785
+      },
+      {
+        "path": "docs/evidence/phase0-launchpad-release-artifact-2026-09-19.md",
+        "sha256": "352c5edae36d323887373081361a3b965eef743591a2d6915f995511290eb716",
+        "bytes": 1037
       },
       {
         "path": "docs/evidence/phase0-launchpad-route-reassessment-2026-09-19.md",
