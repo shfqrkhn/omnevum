@@ -10,10 +10,10 @@
       "source": "https://github.com/travisjneuman/neumanos",
       "sourceIdentity": "f4b2a174a339fc60524645a19417daedaf69ac91",
       "license": "MIT",
-      "route": "PROVISIONAL_LAUNCHPAD_HARVEST",
-      "delta": "No adoption until OMN-FOSS-014 proves six-flow transplantability and removes duplicate canonical stores behind Omnevum owners.",
+      "route": "RETAINED_UI_REJECTED_SELECTIVE_HARVEST",
+      "delta": "The exact UI route failed the Notes/Knowledge exercise and duplicate-store boundary review; no donor shell or store is adopted. Only isolated patterns may be harvested behind Omnevum owners.",
       "tests": "six-flow characterization, write-trap, migration, restore, rollback, and Recovery fixtures",
-      "exitCondition": "Reject/reopen if canonical-owner migration, target support, rights, security, or retained value fails."
+      "exitCondition": "Future donor-derived code remains rejected unless an isolated owner-bound adapter passes canonical, target, rights, security, migration, rollback, and Recovery gates."
     },
     {
       "id": "V018-DELTA-002",

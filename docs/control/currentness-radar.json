@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "kind": "ecosystem-currentness-radar",
-  "status": "V018_CHARACTERIZED_PARTIAL",
+  "status": "V018_ROUTE_RESOLVED_SELECTIVE_HARVEST",
   "authority": "MPES Sections 13, 22, and 30",
   "snapshotDate": "2026-09-19",
   "items": [
-    {"id": "V018-RADAR-001", "candidate": "NeumanOS", "role": "whole-app launchpad/harvest", "status": "ROLE_CHARACTERIZED_PARTIAL_REOPENED", "next": "isolate the Notes error and qualify an owner-bound adapter; otherwise harvest only proven UI/mechanics"},
+    {"id": "V018-RADAR-001", "candidate": "NeumanOS", "role": "whole-app launchpad/harvest", "status": "RETAINED_UI_REJECTED_SELECTIVE_HARVEST", "next": "do not import donor authority; harvest only isolated UI/mechanics after owner-bound, license, security, migration, and Recovery qualification"},
     {"id": "V018-RADAR-002", "candidate": "Kurumi", "role": "capture/knowledge donor", "status": "ROLE_CHARACTERIZED_PARTIAL", "next": "qualify retained Capture/Search/Sync patterns behind Omnevum contracts with hostile-input and Recovery fixtures"},
     {"id": "V018-RADAR-003", "candidate": "OneBench", "role": "static-PWA/workbench donor", "status": "ROLE_CHARACTERIZED_PARTIAL", "next": "qualify packaging/workbench value without importing authority or deployment assumptions"},
     {"id": "V018-RADAR-004", "candidate": "Utopia", "role": "package-runtime/app-factory architecture donor", "status": "ARCHITECTURE_CHARACTERIZED_LICENSE_RUNTIME_LIMITED", "next": "remain architecture-only unless rights and static-PWA runtime are separately qualified"},

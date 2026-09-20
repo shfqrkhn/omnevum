@@ -266,8 +266,10 @@
         "line": 3981
       },
       "text": "The engineering run is interrupted mid-project and a fresh agent resumes from repository/control state without the original conversation or repeated owner questions.",
-      "status": "UNKNOWN",
-      "evidence": []
+      "status": "PASS",
+      "evidence": [
+        "docs/evidence/phase0-fresh-agent-resumption-2026-09-19.md"
+      ]
     },
     {
       "id": "OMN-ACC-022",
@@ -1860,12 +1862,13 @@
         "line": 4294
       },
       "text": "The whole-app route is re-evaluated after either (a) the canonical-core transplantability proof fails a material acceptance gate or produces lifecycle/migration cost that defeats the retained-value rationale, or (b) a current entrant demonstrably offers materially stronger qualified retained value under the same hard gates. The engineering record compares retain/adapt/harvest/greenfield alternatives without sunk-cost preference; unchanged evidence does not trigger churn.",
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/phase0-donor-characterization-2026-09-19.md",
-        "docs/evidence/phase0-launchpad-workload-2026-09-19.md"
+        "docs/evidence/phase0-launchpad-workload-2026-09-19.md",
+        "docs/evidence/phase0-launchpad-route-reassessment-2026-09-19.md"
       ],
-      "notes": "The exact donor runtime exercise reproduced a material Notes failure and exposed duplicate module-store authorities, triggering a retain/adapt/harvest/greenfield route review. No whole-app route is promoted while owner-bound transplant and Recovery remain unqualified."
+      "notes": "The exact donor runtime exercise reproduced a material Notes failure and exposed duplicate module-store authorities. The required retain/adapt/harvest/greenfield review explicitly rejects retaining the donor UI and selects the existing Omnevum shell with selective contract-bound harvest. OMN-FOSS-014 and the retained-flow rows remain open."
     }
   ]
 }

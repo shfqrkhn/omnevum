@@ -7,7 +7,7 @@
     {"source": "Omnevum semantic kernel/canonical owners", "capability": "canonical records, IDs, revisions, provenance, commands", "disposition": "REQUALIFY", "coverage": "V018_UNQUALIFIED"},
     {"source": "Omnevum shared fabric", "capability": "Acquire, Triage, Track, Data, Artifact, Time, Relate, Space, Search, Visualize, Compose/View", "disposition": "REQUALIFY", "coverage": "V018_UNQUALIFIED"},
     {"source": "Omnevum platform safety", "capability": "Vault, Recovery, migration, credential/key, Effect/Outbox, Device/Input", "disposition": "REQUALIFY", "coverage": "V018_UNQUALIFIED"},
-    {"source": "NeumanOS", "capability": "whole-application launchpad/harvest candidate", "disposition": "PROVE_OMN_FOSS_014_FIRST", "coverage": "V018_SPIKE_OPEN"},
+    {"source": "NeumanOS", "capability": "whole-application launchpad/harvest candidate", "disposition": "RETAINED_ROUTE_REJECTED_SELECTIVE_HARVEST", "coverage": "V018_ROUTE_RESOLVED_PARTIAL"},
     {"source": "Kurumi", "capability": "capture/knowledge/local-first donor", "disposition": "HARVEST_REFERENCE", "coverage": "V018_SPIKE_OPEN"},
     {"source": "OneBench", "capability": "static-PWA/workbench/package donor", "disposition": "HARVEST_REFERENCE", "coverage": "V018_SPIKE_OPEN"},
     {"source": "Utopia", "capability": "package-runtime/app-factory architecture donor", "disposition": "ARCHITECTURE_ONLY_LICENSE_LIMITED", "coverage": "V018_SPIKE_OPEN"},

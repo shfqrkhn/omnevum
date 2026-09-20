@@ -174,8 +174,8 @@
       },
       {
         "path": "docs/control/acceptance-results.json",
-        "sha256": "b0ad5e6b970fe62479da127332a055472e6fcf4114bce852ff9b50b33a0f40e2",
-        "bytes": 104557
+        "sha256": "d355a4c8e099b992ca261aa921c09377fc8fdb9cba034f1ceef26303fbd8f39b",
+        "bytes": 104774
       },
       {
         "path": "docs/control/acceptance-scenarios.json",
@@ -189,8 +189,8 @@
       },
       {
         "path": "docs/control/capability-coverage.json",
-        "sha256": "643264baad325eae536be1862a5fa4970b251b7f6e86b5e1f697014d14619614",
-        "bytes": 1924
+        "sha256": "8912cfc100cb6c26574a14a58d9c4103b4c1f4ed9b5e4347238b0265e20274d6",
+        "bytes": 1953
       },
       {
         "path": "docs/control/compatibility-matrix.json",
@@ -199,8 +199,8 @@
       },
       {
         "path": "docs/control/completion-ledger.json",
-        "sha256": "1509f4f46429c71e43396348aeb891bed54f5e621963bff0a7a4028a8a9ebc0b",
-        "bytes": 3722
+        "sha256": "175fe4ab852579f5c6b0d50957e813065e8f85fc6e491c758431effe3ca50162",
+        "bytes": 3926
       },
       {
         "path": "docs/control/credential-key-policy.json",
@@ -209,13 +209,13 @@
       },
       {
         "path": "docs/control/currentness-radar.json",
-        "sha256": "7321c7700928e72eddea5f6e92b2c278f440afa80792012431931ed535fac079",
-        "bytes": 1825
+        "sha256": "f241b3f4f37c24894324eb0f7ffb2641cf4712421737c3f400ddef16de8a0fd9",
+        "bytes": 1878
       },
       {
         "path": "docs/control/decision-log.json",
-        "sha256": "f6c5dce7f87d2dea5b433c2a032c31f7a12457a92da907b638d7e43b7962856f",
-        "bytes": 1425
+        "sha256": "a18141efab6753af8cfacc18258e144e2ca0823c355d99f54f53c25894aad4cf",
+        "bytes": 2306
       },
       {
         "path": "docs/control/dependency-sbom.json",
@@ -229,8 +229,8 @@
       },
       {
         "path": "docs/control/engineering-controller.json",
-        "sha256": "a9a3ebe17459feb70efe27d3a91335c130058f4489b492a43ff3d2b279874fa1",
-        "bytes": 4230
+        "sha256": "c6982ef40835f340ea8930f58c32c88a6e027b521f56c7e201a7d276df52a1fc",
+        "bytes": 4509
       },
       {
         "path": "docs/control/foss-compliance.json",
@@ -259,13 +259,13 @@
       },
       {
         "path": "docs/control/patch-fork-delta.json",
-        "sha256": "aa92ee454caf44182de93d761a8eb591183abfad12fbd7b77fede93638b2cff6",
-        "bytes": 2699
+        "sha256": "6c058c632a4e9fe15856225746154a51d518d0d3bbb1843a1f6e363463f1f8b1",
+        "bytes": 2836
       },
       {
         "path": "docs/control/phase0-acceptance.json",
-        "sha256": "4abcefca7a5a70703b640d5e9f30fa0eec234ab7874d969c07d1bf29632bdc28",
-        "bytes": 2023
+        "sha256": "9c14b36799a65e5a9dc253c7bdae506c07b06ab716a880e2e6b3f291428544bb",
+        "bytes": 2151
       },
       {
         "path": "docs/control/release-evidence.json",
@@ -313,9 +313,19 @@
         "bytes": 5173
       },
       {
+        "path": "docs/evidence/phase0-fresh-agent-resumption-2026-09-19.md",
+        "sha256": "dba19dd1507c29661dacdd1b492e2598c81fce292100b31a478ab1f03c36d9fe",
+        "bytes": 1105
+      },
+      {
         "path": "docs/evidence/phase0-fresh-edge-flow-2026-09-19.md",
         "sha256": "fbf54d96de90a6fd1a856e7c9a8a1d61ec2d36a1f61842210e9799c6c3f3b37d",
         "bytes": 1648
+      },
+      {
+        "path": "docs/evidence/phase0-launchpad-route-reassessment-2026-09-19.md",
+        "sha256": "40bec453dba6687c00264981989f359b7feba3e1e64129182b823959030455b0",
+        "bytes": 2644
       },
       {
         "path": "docs/evidence/phase0-launchpad-workload-2026-09-19.md",
